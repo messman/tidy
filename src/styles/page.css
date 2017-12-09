@@ -1,0 +1,11 @@
+html {
+	box-sizing: border-box;
+	font-family: "Arial";
+	color: #333;
+	background-color: #ececec;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+}
