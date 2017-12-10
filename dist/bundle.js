@@ -675,10 +675,84 @@ module.exports = function (css) {
 "use strict";
 
 
+var _requests = __webpack_require__(7);
+
+var Requests = _interopRequireWildcard(_requests);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 // Entry point to application
 document.addEventListener("DOMContentLoaded", function () {
 	console.log("Ready!");
+
+	// Check for fetch support
+	if (!window.fetch) {
+		alert("This browser is not supported. Please use a more modern browser.");
+	}
+
+	Requests.refreshData().then(function (values) {
+		console.log(values);
+	});
 });
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.refreshData = refreshData;
+// API documentation: https://tidesandcurrents.noaa.gov/api/
+var api = "https://tidesandcurrents.noaa.gov/api/datagetter";
+
+var fetch_options = {
+	station: 8419317, // Default: Wells, ME https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
+	application: "messman/quick-tides",
+	format: "json",
+	time_zone: "lst", // Local Time
+	units: "english", // english | metric
+	range: 24 // Last 24 hours
+};
+
+function createRequest(opts) {
+	opts = Object.assign({}, fetch_options, opts);
+	var optsString = Object.keys(opts).map(function (key) {
+		return key + "=" + encodeURIComponent(opts[key]);
+	}).join("&");
+	return api + "?" + optsString;
+}
+
+var products = {
+	water_level: { product: "water_level", datum: "mllw" },
+	water_level_prediction: { product: "predictions", datum: "mllw" },
+	air_temp: { product: "air_temperature" },
+	water_temp: { product: "water_temperature" },
+	wind: { product: "wind" },
+	visibility: { product: "visibility" }
+};
+
+var lastRequestTime = -1;
+var naturalRefreshTime = 6000 * 60; // 6 minutes, per the API
+
+function refreshData() {
+	var promises = Object.keys(products).map(function (key) {
+		var url = createRequest(products[key]);
+		return fetch(url).then(function (response) {
+			if (response.ok) {
+				return [key, response.json()];
+			} else {
+				[key, Promise.reject(response)];
+			}
+		}).catch(function () {
+			alert("Error"); // TODO
+		});
+	});
+	return Promise.all(promises);
+}
 
 /***/ })
 /******/ ]);
