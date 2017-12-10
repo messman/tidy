@@ -5,7 +5,10 @@ html {
 	background-color: #ececec;
 }
 
+$test: red;
+
 html, body {
 	margin: 0;
 	padding: 0;
+	background-color: $test;
 }

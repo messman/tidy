@@ -70,18 +70,104 @@
 "use strict";
 
 
-__webpack_require__(1);
+__webpack_require__(3);
 
-__webpack_require__(6);
+__webpack_require__(1);
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+var _requests = __webpack_require__(2);
+
+var Requests = _interopRequireWildcard(_requests);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+// Entry point to application
+document.addEventListener("DOMContentLoaded", function () {
+	console.log("Ready!");
+
+	// Check for fetch support
+	if (!window.fetch) {
+		alert("This browser is not supported. Please use a more modern browser.");
+	}
+
+	Requests.refreshData().then(function (values) {
+		console.log(values);
+	});
+});
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.refreshData = refreshData;
+// API documentation: https://tidesandcurrents.noaa.gov/api/
+var api = "https://tidesandcurrents.noaa.gov/api/datagetter";
+
+var fetch_options = {
+	station: 8419317, // Default: Wells, ME https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
+	application: "messman/quick-tides",
+	format: "json",
+	time_zone: "lst", // Local Time
+	units: "english", // english | metric
+	range: 24 // Last 24 hours
+};
+
+function createRequest(opts) {
+	opts = Object.assign({}, fetch_options, opts);
+	var optsString = Object.keys(opts).map(function (key) {
+		return key + "=" + encodeURIComponent(opts[key]);
+	}).join("&");
+	return api + "?" + optsString;
+}
+
+var products = {
+	water_level: { product: "water_level", datum: "mllw" },
+	water_level_prediction: { product: "predictions", datum: "mllw" },
+	air_temp: { product: "air_temperature" },
+	water_temp: { product: "water_temperature" },
+	wind: { product: "wind" },
+	visibility: { product: "visibility" }
+};
+
+var lastRequestTime = -1;
+var naturalRefreshTime = 6000 * 60; // 6 minutes, per the API
+
+function refreshData() {
+	var promises = Object.keys(products).map(function (key) {
+		var url = createRequest(products[key]);
+		return fetch(url).then(function (response) {
+			if (response.ok) {
+				return [key, response.json()];
+			} else {
+				[key, Promise.reject(response)];
+			}
+		}).catch(function () {
+			alert("Error"); // TODO
+		});
+	});
+	return Promise.all(promises);
+}
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(2);
+var content = __webpack_require__(4);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -89,14 +175,14 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(6)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!./page.css", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!./page.css");
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./page.scss", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./page.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -106,21 +192,21 @@ if(false) {
 }
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(3)(undefined);
+exports = module.exports = __webpack_require__(5)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "html {\n\tbox-sizing: border-box;\n\tfont-family: \"Arial\";\n\tcolor: #333;\n\tbackground-color: #ececec;\n}\n\nhtml, body {\n\tmargin: 0;\n\tpadding: 0;\n}", ""]);
+exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Arial\";\n  color: #333;\n  background-color: #ececec; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  background-color: red; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports) {
 
 /*
@@ -202,7 +288,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -258,7 +344,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(5);
+var	fixUrls = __webpack_require__(7);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -574,7 +660,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 
@@ -667,92 +753,6 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _requests = __webpack_require__(7);
-
-var Requests = _interopRequireWildcard(_requests);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-// Entry point to application
-document.addEventListener("DOMContentLoaded", function () {
-	console.log("Ready!");
-
-	// Check for fetch support
-	if (!window.fetch) {
-		alert("This browser is not supported. Please use a more modern browser.");
-	}
-
-	Requests.refreshData().then(function (values) {
-		console.log(values);
-	});
-});
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.refreshData = refreshData;
-// API documentation: https://tidesandcurrents.noaa.gov/api/
-var api = "https://tidesandcurrents.noaa.gov/api/datagetter";
-
-var fetch_options = {
-	station: 8419317, // Default: Wells, ME https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
-	application: "messman/quick-tides",
-	format: "json",
-	time_zone: "lst", // Local Time
-	units: "english", // english | metric
-	range: 24 // Last 24 hours
-};
-
-function createRequest(opts) {
-	opts = Object.assign({}, fetch_options, opts);
-	var optsString = Object.keys(opts).map(function (key) {
-		return key + "=" + encodeURIComponent(opts[key]);
-	}).join("&");
-	return api + "?" + optsString;
-}
-
-var products = {
-	water_level: { product: "water_level", datum: "mllw" },
-	water_level_prediction: { product: "predictions", datum: "mllw" },
-	air_temp: { product: "air_temperature" },
-	water_temp: { product: "water_temperature" },
-	wind: { product: "wind" },
-	visibility: { product: "visibility" }
-};
-
-var lastRequestTime = -1;
-var naturalRefreshTime = 6000 * 60; // 6 minutes, per the API
-
-function refreshData() {
-	var promises = Object.keys(products).map(function (key) {
-		var url = createRequest(products[key]);
-		return fetch(url).then(function (response) {
-			if (response.ok) {
-				return [key, response.json()];
-			} else {
-				[key, Promise.reject(response)];
-			}
-		}).catch(function () {
-			alert("Error"); // TODO
-		});
-	});
-	return Promise.all(promises);
-}
 
 /***/ })
 /******/ ]);
