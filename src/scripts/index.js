@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		alert("This browser is not supported. Please use a more modern browser.");
 	}
 
-	Requests.refreshData()
-		.then((values) => {
-			console.log(values);
-		});
+	//Requests.refreshData()
+	//	.then((values) => {
+	//		console.log(values);
+	//	});
 });

@@ -1,14 +1,20 @@
+@import "./common";
+
 html {
 	box-sizing: border-box;
-	font-family: "Arial";
-	color: #333;
-	background-color: #ececec;
-}
+	font-family: $lato;
+	color: $dark-blue;
 
-$test: red;
+	background-image: linear-gradient(139deg, $pale-blue 0%, $light-blue 28%, $medium-blue 100%);
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+}
 
 html, body {
 	margin: 0;
 	padding: 0;
-	background-color: $test;
+}
+
+header {
+	text-align: center;
 }

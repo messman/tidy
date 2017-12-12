@@ -72,6 +72,8 @@
 
 __webpack_require__(3);
 
+__webpack_require__(8);
+
 __webpack_require__(1);
 
 /***/ }),
@@ -96,9 +98,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		alert("This browser is not supported. Please use a more modern browser.");
 	}
 
-	Requests.refreshData().then(function (values) {
-		console.log(values);
-	});
+	//Requests.refreshData()
+	//	.then((values) => {
+	//		console.log(values);
+	//	});
 });
 
 /***/ }),
@@ -197,10 +200,10 @@ if(false) {
 
 exports = module.exports = __webpack_require__(5)(undefined);
 // imports
-
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
 
 // module
-exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Arial\";\n  color: #333;\n  background-color: #ececec; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  background-color: red; }\n", ""]);
+exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Lato\", sans-serif;\n  color: #11394D;\n  background-image: linear-gradient(139deg, #A3CED4 0%, #1CAAB8 28%, #10597C 100%);\n  background-repeat: no-repeat;\n  background-attachment: fixed; }\n\nhtml, body {\n  margin: 0;\n  padding: 0; }\n\nheader {\n  text-align: center; }\n", ""]);
 
 // exports
 
@@ -752,6 +755,51 @@ module.exports = function (css) {
 	// send back the fixed css
 	return fixedCss;
 };
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(9);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(6)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./waiting.scss", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./waiting.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(5)(undefined);
+// imports
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
+
+// module
+exports.push([module.i, ".waiting {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: transparent;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center; }\n\n.waiting-outer {\n  width: 75vmin;\n  height: 75vmin;\n  background-color: #DEE3E7;\n  border-radius: 50%;\n  border: 3vmin solid #979AAB;\n  position: relative;\n  overflow: hidden;\n  z-index: 1; }\n\n.waiting-wave {\n  position: absolute;\n  height: 100%;\n  width: 400%;\n  bottom: -60%;\n  left: -100%;\n  opacity: .4;\n  background: linear-gradient(to top, #10597C 50%, #1CAAB8 100%); }\n\n.waiting-wave:nth-child(1) {\n  animation: swell 8s ease-in-out 0s infinite, rock 8s ease-in-out -2s infinite; }\n\n.waiting-wave:nth-child(2) {\n  animation: swell 6s ease-in-out -1.5s infinite, rock 6s ease-in-out -3s infinite; }\n\n.waiting-wave:nth-child(3) {\n  animation: swell 8s ease-in-out -4s infinite, rock 8s ease-in-out -6s infinite; }\n\n@keyframes rock {\n  0%, 100% {\n    transform: rotate(5deg); }\n  50% {\n    transform: rotate(-17deg); } }\n\n@keyframes swell {\n  0% {\n    bottom: -60%; }\n  40% {\n    border-top-right-radius: 80%; }\n  50% {\n    bottom: -50%; }\n  100% {\n    border-radius: 0; } }\n", ""]);
+
+// exports
 
 
 /***/ })
