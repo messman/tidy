@@ -7,7 +7,6 @@ const fetch_options = {
 	format: "json",
 	time_zone: "lst", // Local Time
 	units: "english", // english | metric
-	range: 24 // Last 24 hours
 }
 
 function createRequest(opts) {
@@ -17,12 +16,11 @@ function createRequest(opts) {
 }
 
 const products = {
-	water_level: { product: "water_level", datum: "mllw" },
-	water_level_prediction: { product: "predictions", datum: "mllw" },
-	air_temp: { product: "air_temperature" },
-	water_temp: { product: "water_temperature" },
-	wind: { product: "wind" },
-	visibility: { product: "visibility" }
+	water_level: { product: "water_level", datum: "mllw", range: 24 },
+	water_level_prediction: { product: "predictions", datum: "mllw", range: 24 },
+	air_temp: { product: "air_temperature", date: "latest" },
+	water_temp: { product: "water_temperature", date: "latest" },
+	wind: { product: "wind", date: "latest" },
 }
 
 let lastRequestTime = -1;
@@ -34,11 +32,15 @@ export function refreshData() {
 		return fetch(url)
 			.then((response) => {
 				if (response.ok) {
-					return [key, response.json()];
+					return response.json();
 				}
 				else {
-					[key, Promise.reject(response)];
+					return Promise.reject(response);
 				}
+			})
+			.then((data) => {
+				data.key = key;
+				return data;
 			})
 			.catch(() => {
 				alert("Error"); // TODO

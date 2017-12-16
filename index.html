@@ -10,16 +10,38 @@
 </head>
 
 <body>
-	<header>
-		<h1>Wells, Maine</h1>
-	</header>
 	<main>
+		<header>
+			<h1>Wells, Maine</h1>
+		</header>
+		<div class="viewer">
+			<div class="viewer-nums">
+				<div class="viewer-nums-air">
+					<h2>Air</h2>
+					<div class="viewer-content">
+						<h3 id="ui-air-temp">N/A</h3>
+						<h3 id="ui-air-wind">N/A</h3>
+					</div>
+				</div>
+				<div class="viewer-nums-water">
+					<h2>Water</h2>
+					<div class="viewer-content">
+						<h3 id="ui-water-temp">N/A</h3>
+						<h3 id="ui-water-level">N/A</h3>
+					</div>
+				</div>
+			</div>
+			<div class="viewer-tides">
+			</div>
+		</div>
 	</main>
-	<div id="waiting" class="waiting">
-		<div class="waiting-outer">
-			<div class="waiting-wave"></div>
-			<div class="waiting-wave"></div>
-			<div class="waiting-wave"></div>
+	<div>
+		<div id="waiting" class="waiting">
+			<!-- <div class="waiting-outer">
+				<div class="waiting-wave"></div>
+				<div class="waiting-wave"></div>
+				<div class="waiting-wave"></div>
+			</div> -->
 		</div>
 	</div>
 </body>

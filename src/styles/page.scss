@@ -18,3 +18,22 @@ html, body {
 header {
 	text-align: center;
 }
+
+main, .viewer {
+	display: flex;
+	flex-direction: column;
+}
+
+.viewer, .viewer-tides {
+	flex: 1;
+}
+
+.viewer-nums {
+	display: flex;
+	flex-direction: horizontal;
+
+	> * {
+		flex: 1;
+		padding: 1em 2em;
+	}
+}
