@@ -19,7 +19,8 @@ export function fillNums(data) {
 		airTempUI.innerHTML = first.v + "&deg;";
 	}
 	else {
-		airTempUI.innerHTML = "?"
+		airTempUI.innerHTML = "?";
+		waterTempUI.style.color = "";
 	}
 
 	// Wind
@@ -27,10 +28,33 @@ export function fillNums(data) {
 	const windUI = document.getElementById(ui.air.wind);
 	if (windData.data) {
 		const first = windData.data[0];
-		const mph = Math.round(first.s * (6076 / 5280) * 100) / 100;
-		windUI.innerHTML = `${mph} mph ${first.dr} (${first.d}&deg;)`;
+		const mph = Math.round(first.s * (6076 / 5280) * 10) / 10;
+		windUI.innerHTML = `${mph}mph ${first.dr}`;// (${first.d}&deg;)`;
 	}
 	else {
 		windUI.innerHTML = "?"
+	}
+
+	// Water Temp
+	const waterTempData = data["water_temp"];
+	const waterTempUI = document.getElementById(ui.water.temp);
+	if (waterTempData.data) {
+		const first = waterTempData.data[0];
+		waterTempUI.innerHTML = first.v + "&deg;";
+	}
+	else {
+		waterTempUI.innerHTML = "?"
+		waterTempUI.style.color = "";
+	}
+
+	// Water Level
+	const waterLevelData = data["water_level"];
+	const waterLevelUI = document.getElementById(ui.water.level);
+	if (waterLevelData.data) {
+		const first = waterLevelData.data[0];
+		waterLevelUI.innerHTML = first.v + "ft";
+	}
+	else {
+		waterLevelUI.innerHTML = "?"
 	}
 }

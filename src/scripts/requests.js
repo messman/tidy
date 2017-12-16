@@ -16,8 +16,8 @@ function createRequest(opts) {
 }
 
 const products = {
-	water_level: { product: "water_level", datum: "mllw", range: 24 },
-	water_level_prediction: { product: "predictions", datum: "mllw", range: 24 },
+	water_level: { product: "water_level", datum: "mtl", range: 24 },
+	water_level_prediction: { product: "predictions", datum: "mtl", range: 24 },
 	air_temp: { product: "air_temperature", date: "latest" },
 	water_temp: { product: "water_temperature", date: "latest" },
 	wind: { product: "wind", date: "latest" },

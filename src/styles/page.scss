@@ -2,9 +2,10 @@
 
 html {
 	box-sizing: border-box;
-	font-family: $lato;
+	font-family: $comfortaa;
 	color: $dark-blue;
-
+	font-size: 120%;
+	
 	background-image: linear-gradient(139deg, $pale-blue 0%, $light-blue 28%, $medium-blue 100%);
 	background-repeat: no-repeat;
     background-attachment: fixed;
@@ -15,6 +16,13 @@ html, body {
 	padding: 0;
 }
 
+h1 {
+	text-shadow: 2px 2px rgba(0, 0, 0, .2);
+}
+h2 {
+	text-shadow: 1px 1px rgba(0, 0, 0, .1);
+}
+	
 header {
 	text-align: center;
 }
@@ -34,6 +42,5 @@ main, .viewer {
 
 	> * {
 		flex: 1;
-		padding: 1em 2em;
 	}
 }

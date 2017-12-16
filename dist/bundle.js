@@ -526,6 +526,8 @@ function updateLink (link, options, obj) {
 
 __webpack_require__(3);
 
+__webpack_require__(12);
+
 __webpack_require__(6);
 
 __webpack_require__(8);
@@ -570,7 +572,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
 
 // module
-exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Lato\", sans-serif;\n  color: #11394D;\n  background-image: linear-gradient(139deg, #A3CED4 0%, #1CAAB8 28%, #10597C 100%);\n  background-repeat: no-repeat;\n  background-attachment: fixed; }\n\nhtml, body {\n  margin: 0;\n  padding: 0; }\n\nheader {\n  text-align: center; }\n\nmain, .viewer {\n  display: flex;\n  flex-direction: column; }\n\n.viewer, .viewer-tides {\n  flex: 1; }\n\n.viewer-nums {\n  display: flex;\n  flex-direction: horizontal; }\n  .viewer-nums > * {\n    flex: 1;\n    padding: 1em 2em; }\n", ""]);
+exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Comfortaa\", cursive;\n  color: #11394D;\n  font-size: 120%;\n  background-image: linear-gradient(139deg, #A3CED4 0%, #1CAAB8 28%, #10597C 100%);\n  background-repeat: no-repeat;\n  background-attachment: fixed; }\n\nhtml, body {\n  margin: 0;\n  padding: 0; }\n\nh1 {\n  text-shadow: 2px 2px rgba(0, 0, 0, 0.2); }\n\nh2 {\n  text-shadow: 1px 1px rgba(0, 0, 0, 0.1); }\n\nheader {\n  text-align: center; }\n\nmain, .viewer {\n  display: flex;\n  flex-direction: column; }\n\n.viewer, .viewer-tides {\n  flex: 1; }\n\n.viewer-nums {\n  display: flex;\n  flex-direction: horizontal; }\n  .viewer-nums > * {\n    flex: 1; }\n", ""]);
 
 // exports
 
@@ -790,8 +792,8 @@ function createRequest(opts) {
 }
 
 var products = {
-	water_level: { product: "water_level", datum: "mllw", range: 24 },
-	water_level_prediction: { product: "predictions", datum: "mllw", range: 24 },
+	water_level: { product: "water_level", datum: "mtl", range: 24 },
+	water_level_prediction: { product: "predictions", datum: "mtl", range: 24 },
 	air_temp: { product: "air_temperature", date: "latest" },
 	water_temp: { product: "water_temperature", date: "latest" },
 	wind: { product: "wind", date: "latest" }
@@ -3074,6 +3076,7 @@ function fillNums(data) {
 		airTempUI.innerHTML = first.v + "&deg;";
 	} else {
 		airTempUI.innerHTML = "?";
+		waterTempUI.style.color = "";
 	}
 
 	// Wind
@@ -3081,12 +3084,78 @@ function fillNums(data) {
 	var windUI = document.getElementById(ui.air.wind);
 	if (windData.data) {
 		var _first = windData.data[0];
-		var mph = Math.round(_first.s * (6076 / 5280) * 100) / 100;
-		windUI.innerHTML = mph + " mph " + _first.dr + " (" + _first.d + "&deg;)";
+		var mph = Math.round(_first.s * (6076 / 5280) * 10) / 10;
+		windUI.innerHTML = mph + "mph " + _first.dr; // (${first.d}&deg;)`;
 	} else {
 		windUI.innerHTML = "?";
 	}
+
+	// Water Temp
+	var waterTempData = data["water_temp"];
+	var waterTempUI = document.getElementById(ui.water.temp);
+	if (waterTempData.data) {
+		var _first2 = waterTempData.data[0];
+		waterTempUI.innerHTML = _first2.v + "&deg;";
+	} else {
+		waterTempUI.innerHTML = "?";
+		waterTempUI.style.color = "";
+	}
+
+	// Water Level
+	var waterLevelData = data["water_level"];
+	var waterLevelUI = document.getElementById(ui.water.level);
+	if (waterLevelData.data) {
+		var _first3 = waterLevelData.data[0];
+		waterLevelUI.innerHTML = _first3.v + "ft";
+	} else {
+		waterLevelUI.innerHTML = "?";
+	}
 }
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(13);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./nums.scss", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./nums.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(undefined);
+// imports
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
+
+// module
+exports.push([module.i, ".nums {\n  padding: 0 1em; }\n\n.nums-content {\n  text-align: center;\n  font-family: \"Lato\", sans-serif;\n  border-bottom: 1px solid #11394D; }\n  .nums-content h1, .nums-content h2, .nums-content h3 {\n    margin: .5em;\n    margin-top: 0; }\n\n.nums-title {\n  margin: .2em; }\n\n.nums-left .nums-title {\n  text-align: left; }\n\n.nums-right .nums-title {\n  text-align: right; }\n", ""]);
+
+// exports
+
 
 /***/ })
 /******/ ]);

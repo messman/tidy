@@ -1,0 +1,30 @@
+@import "./common";
+
+.nums {
+	padding: 0 1em;
+
+	
+}
+
+.nums-content {
+	text-align: center;
+	font-family: $lato;
+
+	h1, h2, h3 {
+		margin: .5em;
+		margin-top: 0;
+	}
+
+	border-bottom: 1px solid $dark-blue;
+}
+
+.nums-title {
+	margin: .2em;
+}
+
+.nums-left .nums-title {
+	text-align: left;
+}
+.nums-right .nums-title {
+	text-align: right;
+}
