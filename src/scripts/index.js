@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	Data.data.forEach(function (datapiece) {
 		data[datapiece.key] = datapiece;
 	});
+
 	display(Data.now, data);
 });
 

@@ -571,10 +571,10 @@ if(false) {
 
 exports = module.exports = __webpack_require__(0)(undefined);
 // imports
-exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
+
 
 // module
-exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Comfortaa\", cursive;\n  color: #11394D;\n  font-size: 120%;\n  background-image: linear-gradient(139deg, #A3CED4 0%, #1CAAB8 28%, #10597C 100%);\n  background-repeat: no-repeat;\n  background-attachment: fixed; }\n\nhtml, body, main {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nh1 {\n  text-shadow: 2px 2px rgba(0, 0, 0, 0.2); }\n\nh2 {\n  text-shadow: 1px 1px rgba(0, 0, 0, 0.1); }\n\nheader {\n  text-align: center; }\n\nmain, .viewer {\n  display: flex;\n  flex-direction: column; }\n\n.viewer, .viewer-tides {\n  flex: 1; }\n\n.viewer-nums {\n  display: flex;\n  flex-direction: row; }\n  .viewer-nums > * {\n    flex: 1; }\n", ""]);
+exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Futura\", \"Trebuchet MS\", Helvetica, sans-serif;\n  color: #11394D;\n  font-size: 120%;\n  background-image: linear-gradient(139deg, #A3CED4 0%, #1CAAB8 28%, #10597C 100%);\n  background-repeat: no-repeat;\n  background-attachment: fixed; }\n\nhtml, body, main {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nh1 {\n  text-shadow: 2px 2px rgba(0, 0, 0, 0.2); }\n\nh2 {\n  text-shadow: 1px 1px rgba(0, 0, 0, 0.1); }\n\nheader {\n  text-align: center; }\n\nmain, .viewer {\n  display: flex;\n  flex-direction: column; }\n\n.viewer, .viewer-tides {\n  flex: 1; }\n\n.viewer-nums {\n  display: flex;\n  flex-direction: row; }\n  .viewer-nums > * {\n    flex: 1; }\n", ""]);
 
 // exports
 
@@ -711,7 +711,7 @@ if(false) {
 
 exports = module.exports = __webpack_require__(0)(undefined);
 // imports
-exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
+
 
 // module
 exports.push([module.i, ".waiting {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: transparent;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center; }\n\n.waiting-outer {\n  width: 75vmin;\n  height: 75vmin;\n  background-color: #DEE3E7;\n  border-radius: 50%;\n  border: 3vmin solid #979AAB;\n  position: relative;\n  overflow: hidden;\n  z-index: 1; }\n\n.waiting-wave {\n  position: absolute;\n  height: 100%;\n  width: 400%;\n  bottom: -60%;\n  left: -100%;\n  opacity: .4;\n  background: linear-gradient(to top, #10597C 50%, #1CAAB8 100%); }\n\n.waiting-wave:nth-child(1) {\n  animation: swell 8s ease-in-out 0s infinite, rock 8s ease-in-out -2s infinite; }\n\n.waiting-wave:nth-child(2) {\n  animation: swell 6s ease-in-out -1.5s infinite, rock 6s ease-in-out -3s infinite; }\n\n.waiting-wave:nth-child(3) {\n  animation: swell 8s ease-in-out -4s infinite, rock 8s ease-in-out -6s infinite; }\n\n@keyframes rock {\n  0%, 100% {\n    transform: rotate(5deg); }\n  50% {\n    transform: rotate(-17deg); } }\n\n@keyframes swell {\n  0% {\n    bottom: -60%; }\n  40% {\n    border-top-right-radius: 80%; }\n  50% {\n    bottom: -50%; }\n  100% {\n    border-radius: 0; } }\n", ""]);
@@ -765,6 +765,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	Data.data.forEach(function (datapiece) {
 		data[datapiece.key] = datapiece;
 	});
+
 	display(Data.now, data);
 });
 
@@ -1933,10 +1934,10 @@ if(false) {
 
 exports = module.exports = __webpack_require__(0)(undefined);
 // imports
-exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
+
 
 // module
-exports.push([module.i, ".nums {\n  padding: 0 1em; }\n\n.nums-content {\n  text-align: center;\n  font-family: \"Lato\", sans-serif;\n  border-bottom: 1px solid #11394D; }\n  .nums-content h1, .nums-content h2, .nums-content h3 {\n    margin: .5em;\n    margin-top: 0; }\n\n.nums-title {\n  margin: .2em; }\n\n.nums-left .nums-title {\n  text-align: left; }\n\n.nums-right .nums-title {\n  text-align: right; }\n", ""]);
+exports.push([module.i, ".nums {\n  padding: 0 1em; }\n\n.nums-content {\n  text-align: center;\n  font-family: \"Futura\", \"Trebuchet MS\", Helvetica, sans-serif;\n  border-bottom: 1px solid #11394D; }\n  .nums-content h1, .nums-content h2, .nums-content h3 {\n    margin: .5em;\n    margin-top: 0; }\n\n.nums-title {\n  margin: .2em; }\n\n.nums-left .nums-title {\n  text-align: left; }\n\n.nums-right .nums-title {\n  text-align: right; }\n", ""]);
 
 // exports
 
@@ -1993,6 +1994,34 @@ function setup() {
 	resize();
 }
 
+var drawNums = null;
+
+function parseTime(timeString) {
+	// Parse for Safari
+	// year-month-date HH:mm
+	timeString = timeString.trim();
+	var parts = timeString.split(" ");
+	var date = parts[0];
+	var dateParts = date.split("-");
+	var year = dateParts[0];
+	var month = dateParts[1];
+	var dateDay = dateParts[2];
+
+	var time = parts[1];
+	var timeParts = time.split(":");
+	var hours = timeParts[0];
+	var minutes = timeParts[1];
+
+	var newDate = new Date();
+	newDate.setFullYear(year, month - 1, dateDay);
+	newDate.setHours(hours);
+	newDate.setMinutes(minutes);
+	newDate.setSeconds(0);
+	newDate.setMilliseconds(0);
+
+	return newDate;
+}
+
 function update(now, data) {
 	var p = data["water_level_prediction"].predictions;
 	if (!p || !p.length) return;
@@ -2016,7 +2045,7 @@ function update(now, data) {
 		}
 		if (add) {
 			points.push({
-				time: curr.t,
+				time: parseTime(curr.t),
 				val: parseFloat(curr.v),
 				index: i
 			});
@@ -2025,19 +2054,56 @@ function update(now, data) {
 	});
 
 	var nowDate = new Date(now);
+	nowDate.setHours(nowDate.getHours() + 4);
 	var currentLevel = parseFloat(data["water_level"].data[0].v);
 
+	var closestHigh = null;
+	var closestLow = null;
 	points.forEach(function (point) {
-		var pointDate = new Date(point.time);
-		var diff = pointDate - nowDate;
-
-		console.log(diff, point.val, currentLevel);
+		if (point.val < currentLevel) {
+			if (!closestLow || Math.abs(nowDate - point.time) < Math.abs(now - closestLow.time)) closestLow = point;
+		} else {
+			if (!closestHigh || Math.abs(nowDate - point.time) < Math.abs(now - closestHigh.time)) closestHigh = point;
+		}
 	});
+
+	var diff = closestLow.time - closestHigh.time;
+	isRising = diff < 0;
+	var angle = void 0;
+	if (isRising) {
+		angle = (nowDate - closestLow.time) / Math.abs(diff) * Math.PI + Math.PI;
+	} else {
+		angle = (nowDate - closestHigh.time) / Math.abs(diff) * Math.PI;
+	}
+
+	drawNums = {
+		now: nowDate,
+		low: closestLow.time,
+		high: closestHigh.time,
+		isRising: isRising,
+		angle: angle
+	};
+	console.log(drawNums);
 
 	redraw();
 }
 
+var colors = {
+	darkBlue: "#11394D",
+	mediumBlue: "#10597C",
+	lightBlue: "#1CAAB8",
+	paleBlue: "#A3CED4",
+	light: "#DEE3E7",
+	gray: "#979AAB"
+};
+
+var centerRadiusPercent = .3;
+var dialThicknessPercent = .1;
+var tidalAreaHeightPercent = .20;
+
 function redraw() {
+	if (!drawNums) return;
+
 	var ctx = canvas.getContext("2d");
 
 	// So we don't get cut off due to rounding
@@ -2056,8 +2122,118 @@ function redraw() {
 		bounds.y += -diff;
 	}
 
-	console.log(bounds);
-	ctx.strokeRect(bounds.x, bounds.y, bounds.size, bounds.size);
+	ctx.rect(bounds.x, bounds.y, bounds.size, bounds.size);
+	ctx.save();
+
+	var radius = bounds.size / 2;
+	var centerX = bounds.x + radius;
+	var centerY = bounds.y + radius;
+
+	var centerRadius = radius * centerRadiusPercent;
+	var tidalAreaHeight = bounds.size * tidalAreaHeightPercent;
+	var dialThickness = bounds.size * dialThicknessPercent;
+
+	try {
+
+		// Draw the oval
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+		ctx.closePath();
+		ctx.fillStyle = colors.paleBlue;
+		ctx.fill();
+		ctx.strokeStyle = colors.paleBlue;
+		ctx.lineWidth = 2;
+		ctx.globalCompositeOperation = "destination-out";
+		ctx.stroke();
+		ctx.globalCompositeOperation = "source-over";
+		ctx.clip();
+
+		// Draw the high / low tide areas as a step "gradient"
+		drawTidalAreaGradient(ctx, centerX, bounds.y - radius, radius * 2);
+		drawTidalAreaGradient(ctx, centerX, centerY + radius * 2, radius * 2);
+
+		// Draw the turner
+		try {
+			ctx.save();
+			ctx.translate(centerX, centerY);
+			ctx.rotate(drawNums.angle - Math.PI * .5);
+			ctx.translate(-centerX, -centerY);
+			ctx.fillStyle = colors.darkBlue;
+			ctx.fillRect(centerX, centerY - dialThickness / 2, radius, dialThickness);
+		} finally {
+			ctx.restore();
+		}
+
+		// Draw the center
+		ctx.fillStyle = colors.light;
+		ctx.fillRect(centerX - centerRadius, centerY - centerRadius / 2, centerRadius * 2, centerRadius);
+
+		var timeNow = twelveHourDate(drawNums.now);
+		setFont(ctx, centerRadius / 2.5);
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		ctx.fillStyle = colors.darkBlue;
+		ctx.fillText(timeNow, centerX, centerY);
+
+		// Draw the high
+		ctx.fillStyle = colors.light;
+		ctx.globalAlpha = .5;
+		ctx.fillRect(centerX - centerRadius, bounds.y - centerRadius / 3, centerRadius * 2, centerRadius);
+		ctx.globalAlpha = 1;
+
+		var timeHigh = twelveHourDate(drawNums.high);
+		setFont(ctx, centerRadius / 2.5);
+		ctx.fillStyle = colors.darkBlue;
+		ctx.fillText(timeHigh, centerX, bounds.y + centerRadius / 3);
+
+		// Draw the low
+		ctx.fillStyle = colors.light;
+		ctx.globalAlpha = .5;
+		ctx.fillRect(centerX - centerRadius, bounds.y + bounds.size - centerRadius * 2 / 3, centerRadius * 2, centerRadius);
+		ctx.globalAlpha = 1;
+
+		var timeLow = twelveHourDate(drawNums.low);
+		setFont(ctx, centerRadius / 2.5);
+		ctx.fillStyle = colors.darkBlue;
+		ctx.fillText(timeLow, centerX, bounds.y + bounds.size - centerRadius / 3);
+	} finally {
+		ctx.restore();
+	}
+}
+
+function setFont(ctx, size) {
+	ctx.font = size + "px \"Gill Sans\", \"Gill Sans MT\", Calibri, sans-serif";
+}
+
+function drawTidalAreaGradient(ctx, centerX, centerY, radius) {
+	var zone = 1;
+	var stop = .5;
+	var step = .1;
+
+	while (zone > stop) {
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, radius * zone, 0, Math.PI * 2);
+		ctx.closePath();
+		ctx.globalAlpha = Math.min((1 - (zone - stop)) / stop - 1, 1);
+		ctx.fillStyle = "black";
+		ctx.globalCompositeOperation = "destination-out";
+		ctx.fill();
+
+		zone -= step;
+	}
+
+	ctx.globalCompositeOperation = "source-over";
+	ctx.globalAlpha = 1;
+}
+
+function twelveHourDate(date) {
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var ampm = hours >= 12 ? "PM" : "AM";
+	hours = hours % 12;
+	if (hours === 0) hours = 12;
+	minutes = minutes < 10 ? "0" + minutes : minutes;
+	return hours + ":" + minutes + " " + ampm;
 }
 
 /***/ }),
@@ -2097,10 +2273,10 @@ if(false) {
 
 exports = module.exports = __webpack_require__(0)(undefined);
 // imports
-exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
+
 
 // module
-exports.push([module.i, ".viewer-tides {\n  padding: 10px;\n  position: relative; }\n  .viewer-tides canvas {\n    position: absolute;\n    top: 0;\n    left: 0; }\n", ""]);
+exports.push([module.i, ".viewer-tides {\n  position: relative; }\n  .viewer-tides canvas {\n    position: absolute;\n    top: 0;\n    left: 0; }\n", ""]);
 
 // exports
 
