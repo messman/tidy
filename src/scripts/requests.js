@@ -16,8 +16,8 @@ function createRequest(opts) {
 }
 
 const products = {
-	water_level: { product: "water_level", datum: "mtl", range: 24 },
-	water_level_prediction: { product: "predictions", datum: "mtl", range: 24 },
+	water_level_prediction: { product: "predictions", datum: "mtl" },
+	water_level: { product: "water_level", datum: "mtl", date: "latest" },
 	air_temp: { product: "air_temperature", date: "latest" },
 	water_temp: { product: "water_temperature", date: "latest" },
 	wind: { product: "wind", date: "latest" },
@@ -26,7 +26,26 @@ const products = {
 let lastRequestTime = -1;
 let naturalRefreshTime = 6000 * 60; // 6 minutes, per the API
 
+// Return a formatted date minus X hours
+function formatDate(minusHours) {
+	//yyyyMMdd HH:mm
+	const d = new Date();
+	d.setHours(d.getHours() - minusHours);
+	let twos = [d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes()];
+	twos = twos.map(function (num) {
+		return num.toString().padStart(2, "0");
+	});
+	return `${d.getFullYear()}${twos[0]}${twos[1]} ${twos[2]}:${twos[3]}`;
+}
+
+const predictionHoursRadius = 20;
+
 export function refreshData() {
+	// Update the water_level_prediction to be X hours before and X hours after
+	const predictions = products["water_level_prediction"];
+	predictions["begin_date"] = formatDate(predictionHoursRadius);
+	predictions["range"] = predictionHoursRadius * 2;
+
 	const promises = Object.keys(products).map((key) => {
 		const url = createRequest(products[key]);
 		return fetch(url)
