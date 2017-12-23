@@ -26,8 +26,8 @@ function resize() {
 	canvas.style.width = "100%";
 	canvas.style.height = "100%";
 	const rect = canvas.getBoundingClientRect();
-	canvasWidth = rect.width;
-	canvasHeight = rect.height;
+	canvasWidth = Math.floor(rect.width);
+	canvasHeight = Math.floor(rect.height);
 	canvas.width = canvasWidth * ratio;
 	canvas.height = canvasHeight * ratio;
 
@@ -72,7 +72,6 @@ export function update(now, data) {
 		}
 		prev = curr;
 	});
-	console.log(points);
 
 	const nowDate = new Date(now);
 	const currentLevel = parseFloat(data["water_level"].data[0].v);
@@ -85,6 +84,24 @@ export function update(now, data) {
 	});
 
 	const ctx = canvas.getContext("2d");
-	console.log(canvasWidth, canvasHeight);
-	ctx.strokeRect(5, 5, canvasWidth - 10, canvasHeight - 10);
+
+	// So we don't get cut off due to rounding
+	const padding = 10;
+	const totalWidth = canvasWidth - (padding * 2);
+	const totalHeight = canvasHeight - (padding * 2);
+	let bounds = { x: padding, y: padding, size: 0 };
+	const diff = (totalWidth - totalHeight) / 2;
+	if (diff > 0) {
+		// Longer than tall
+		bounds.size = totalHeight;
+		bounds.x += diff;
+	}
+	else if (diff < 0) {
+		// Taller than long
+		bounds.size = totalWidth;
+		bounds.y += -diff;
+	}
+
+	console.log(bounds);
+	ctx.strokeRect(bounds.x, bounds.y, bounds.size, bounds.size);
 }

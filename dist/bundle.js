@@ -1977,8 +1977,8 @@ function resize() {
 	canvas.style.width = "100%";
 	canvas.style.height = "100%";
 	var rect = canvas.getBoundingClientRect();
-	canvasWidth = rect.width;
-	canvasHeight = rect.height;
+	canvasWidth = Math.floor(rect.width);
+	canvasHeight = Math.floor(rect.height);
 	canvas.width = canvasWidth * ratio;
 	canvas.height = canvasHeight * ratio;
 
@@ -2021,7 +2021,6 @@ function update(now, data) {
 		}
 		prev = curr;
 	});
-	console.log(points);
 
 	var nowDate = new Date(now);
 	var currentLevel = parseFloat(data["water_level"].data[0].v);
@@ -2034,8 +2033,25 @@ function update(now, data) {
 	});
 
 	var ctx = canvas.getContext("2d");
-	console.log(canvasWidth, canvasHeight);
-	ctx.strokeRect(5, 5, canvasWidth - 10, canvasHeight - 10);
+
+	// So we don't get cut off due to rounding
+	var padding = 10;
+	var totalWidth = canvasWidth - padding * 2;
+	var totalHeight = canvasHeight - padding * 2;
+	var bounds = { x: padding, y: padding, size: 0 };
+	var diff = (totalWidth - totalHeight) / 2;
+	if (diff > 0) {
+		// Longer than tall
+		bounds.size = totalHeight;
+		bounds.x += diff;
+	} else if (diff < 0) {
+		// Taller than long
+		bounds.size = totalWidth;
+		bounds.y += -diff;
+	}
+
+	console.log(bounds);
+	ctx.strokeRect(bounds.x, bounds.y, bounds.size, bounds.size);
 }
 
 /***/ }),
