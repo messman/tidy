@@ -1944,7 +1944,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, ".nums {\n  padding: 0 1em; }\n\n.nums-content {\n  text-align: center;\n  font-family: \"Futura\", \"Trebuchet MS\", Helvetica, sans-serif;\n  border-bottom: 1px solid #11394D; }\n  .nums-content h1, .nums-content h2, .nums-content h3 {\n    margin: .5em;\n    margin-top: 0; }\n\n.nums-title {\n  margin: .2em; }\n\n.nums-left .nums-title {\n  text-align: left; }\n\n.nums-right .nums-title {\n  text-align: right; }\n", ""]);
+exports.push([module.i, ".nums {\n  padding: 0 1em; }\n\n.nums-content {\n  text-align: center;\n  font-family: \"Futura\", \"Trebuchet MS\", Helvetica, sans-serif;\n  border-bottom: 1px solid #11394D; }\n  .nums-content h1, .nums-content h2, .nums-content h3, .nums-content h4 {\n    margin: 0;\n    margin-bottom: .5em; }\n\n.nums-title {\n  margin: .2em; }\n\n.nums-left .nums-title {\n  text-align: left; }\n\n.nums-right .nums-title {\n  text-align: right; }\n", ""]);
 
 // exports
 
