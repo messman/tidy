@@ -744,6 +744,8 @@ var TideWheel = _interopRequireWildcard(_tidewheel);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+var debug = false;
+
 // Entry point to application
 document.addEventListener("DOMContentLoaded", function () {
 	console.log("Ready!");
@@ -755,18 +757,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	TideWheel.setup();
 
-	// Requests.refreshData()
-	// 	.then((values) => {
-	// 		console.log(values);
-	// 		window.stuff = values;
-	// 	});
+	if (!debug) {
+		Requests.refreshData().then(function (values) {
+			var data = {};
+			values.forEach(function (datapiece) {
+				data[datapiece.key] = datapiece;
+			});
+			display(Date.now(), data);
+		});
+	} else {
 
-	var data = {};
-	Data.data.forEach(function (datapiece) {
-		data[datapiece.key] = datapiece;
-	});
+		var data = {};
+		Data.data.forEach(function (datapiece) {
+			data[datapiece.key] = datapiece;
+		});
 
-	display(Data.now, data);
+		display(Data.now, data);
+	}
 });
 
 function display(now, data) {
@@ -2054,7 +2061,6 @@ function update(now, data) {
 	});
 
 	var nowDate = new Date(now);
-	nowDate.setHours(nowDate.getHours() + 4);
 	var currentLevel = parseFloat(data["water_level"].data[0].v);
 
 	var closestHigh = null;

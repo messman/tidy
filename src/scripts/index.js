@@ -3,6 +3,8 @@ import * as Data from "./sample_data.js";
 import * as UI from "./ui.js";
 import * as TideWheel from "./tidewheel.js";
 
+const debug = false;
+
 // Entry point to application
 document.addEventListener("DOMContentLoaded", function () {
 	console.log("Ready!");
@@ -14,18 +16,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	TideWheel.setup();
 
-	// Requests.refreshData()
-	// 	.then((values) => {
-	// 		console.log(values);
-	// 		window.stuff = values;
-	// 	});
+	if (!debug) {
+		Requests.refreshData()
+			.then((values) => {
+				let data = {};
+				values.forEach(function (datapiece) {
+					data[datapiece.key] = datapiece;
+				});
+				display(Date.now(), data);
+			});
+	}
+	else {
 
-	const data = {};
-	Data.data.forEach(function (datapiece) {
-		data[datapiece.key] = datapiece;
-	});
+		const data = {};
+		Data.data.forEach(function (datapiece) {
+			data[datapiece.key] = datapiece;
+		});
 
-	display(Data.now, data);
+		display(Data.now, data);
+	}
 });
 
 function display(now, data) {

@@ -104,7 +104,6 @@ export function update(now, data) {
 	});
 
 	const nowDate = new Date(now);
-	nowDate.setHours(nowDate.getHours() + 4);
 	const currentLevel = parseFloat(data["water_level"].data[0].v);
 
 	let closestHigh = null;
