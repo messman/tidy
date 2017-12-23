@@ -39,7 +39,7 @@ main, .viewer {
 
 .viewer-nums {
 	display: flex;
-	flex-direction: horizontal;
+	flex-direction: row;
 
 	> * {
 		flex: 1;

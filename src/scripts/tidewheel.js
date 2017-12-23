@@ -32,6 +32,8 @@ function resize() {
 	canvas.height = canvasHeight * ratio;
 
 	ctx.scale(ratio, ratio);
+
+	redraw();
 };
 window.onresize = resize;
 
@@ -83,6 +85,10 @@ export function update(now, data) {
 		console.log(diff, point.val, currentLevel);
 	});
 
+	redraw();
+}
+
+function redraw() {
 	const ctx = canvas.getContext("2d");
 
 	// So we don't get cut off due to rounding

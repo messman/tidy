@@ -574,7 +574,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
 
 // module
-exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Comfortaa\", cursive;\n  color: #11394D;\n  font-size: 120%;\n  background-image: linear-gradient(139deg, #A3CED4 0%, #1CAAB8 28%, #10597C 100%);\n  background-repeat: no-repeat;\n  background-attachment: fixed; }\n\nhtml, body, main {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nh1 {\n  text-shadow: 2px 2px rgba(0, 0, 0, 0.2); }\n\nh2 {\n  text-shadow: 1px 1px rgba(0, 0, 0, 0.1); }\n\nheader {\n  text-align: center; }\n\nmain, .viewer {\n  display: flex;\n  flex-direction: column; }\n\n.viewer, .viewer-tides {\n  flex: 1; }\n\n.viewer-nums {\n  display: flex;\n  flex-direction: horizontal; }\n  .viewer-nums > * {\n    flex: 1; }\n", ""]);
+exports.push([module.i, "html {\n  box-sizing: border-box;\n  font-family: \"Comfortaa\", cursive;\n  color: #11394D;\n  font-size: 120%;\n  background-image: linear-gradient(139deg, #A3CED4 0%, #1CAAB8 28%, #10597C 100%);\n  background-repeat: no-repeat;\n  background-attachment: fixed; }\n\nhtml, body, main {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nh1 {\n  text-shadow: 2px 2px rgba(0, 0, 0, 0.2); }\n\nh2 {\n  text-shadow: 1px 1px rgba(0, 0, 0, 0.1); }\n\nheader {\n  text-align: center; }\n\nmain, .viewer {\n  display: flex;\n  flex-direction: column; }\n\n.viewer, .viewer-tides {\n  flex: 1; }\n\n.viewer-nums {\n  display: flex;\n  flex-direction: row; }\n  .viewer-nums > * {\n    flex: 1; }\n", ""]);
 
 // exports
 
@@ -1983,6 +1983,8 @@ function resize() {
 	canvas.height = canvasHeight * ratio;
 
 	ctx.scale(ratio, ratio);
+
+	redraw();
 };
 window.onresize = resize;
 
@@ -2032,6 +2034,10 @@ function update(now, data) {
 		console.log(diff, point.val, currentLevel);
 	});
 
+	redraw();
+}
+
+function redraw() {
 	var ctx = canvas.getContext("2d");
 
 	// So we don't get cut off due to rounding
@@ -2094,7 +2100,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Comfortaa|Lato:700);", ""]);
 
 // module
-exports.push([module.i, ".viewer-tides {\n  padding: 10px; }\n", ""]);
+exports.push([module.i, ".viewer-tides {\n  padding: 10px;\n  position: relative; }\n  .viewer-tides canvas {\n    position: absolute;\n    top: 0;\n    left: 0; }\n", ""]);
 
 // exports
 
