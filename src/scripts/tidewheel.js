@@ -151,7 +151,8 @@ const colors = {
 };
 
 const centerRadiusPercent = .3;
-const dialThicknessPercent = .1;
+const dialThicknessPercent = .05;
+const dialLengthPercent = .85;
 const tidalAreaHeightPercent = .20;
 
 function redraw() {
@@ -187,6 +188,7 @@ function redraw() {
 	const centerRadius = radius * centerRadiusPercent;
 	const tidalAreaHeight = bounds.size * tidalAreaHeightPercent;
 	const dialThickness = bounds.size * dialThicknessPercent;
+	const dialLength = radius * dialLengthPercent;
 
 	try {
 
@@ -214,7 +216,7 @@ function redraw() {
 			ctx.rotate(drawNums.angle - (Math.PI * .5));
 			ctx.translate(-centerX, -centerY);
 			ctx.fillStyle = colors.darkBlue;
-			ctx.fillRect(centerX, centerY - dialThickness / 2, radius, dialThickness);
+			ctx.fillRect(centerX, centerY - dialThickness / 2, dialLength, dialThickness);
 		}
 		finally {
 			ctx.restore();

@@ -526,13 +526,13 @@ function updateLink (link, options, obj) {
 
 __webpack_require__(3);
 
-__webpack_require__(12);
-
 __webpack_require__(6);
 
-__webpack_require__(15);
-
 __webpack_require__(8);
+
+__webpack_require__(10);
+
+__webpack_require__(12);
 
 /***/ }),
 /* 3 */
@@ -695,8 +695,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./waiting.scss", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./waiting.scss");
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./nums.scss", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./nums.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -714,7 +714,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, ".waiting {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: transparent;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center; }\n\n.waiting-outer {\n  width: 75vmin;\n  height: 75vmin;\n  background-color: #DEE3E7;\n  border-radius: 50%;\n  border: 3vmin solid #979AAB;\n  position: relative;\n  overflow: hidden;\n  z-index: 1; }\n\n.waiting-wave {\n  position: absolute;\n  height: 100%;\n  width: 400%;\n  bottom: -60%;\n  left: -100%;\n  opacity: .4;\n  background: linear-gradient(to top, #10597C 50%, #1CAAB8 100%); }\n\n.waiting-wave:nth-child(1) {\n  animation: swell 8s ease-in-out 0s infinite, rock 8s ease-in-out -2s infinite; }\n\n.waiting-wave:nth-child(2) {\n  animation: swell 6s ease-in-out -1.5s infinite, rock 6s ease-in-out -3s infinite; }\n\n.waiting-wave:nth-child(3) {\n  animation: swell 8s ease-in-out -4s infinite, rock 8s ease-in-out -6s infinite; }\n\n@keyframes rock {\n  0%, 100% {\n    transform: rotate(5deg); }\n  50% {\n    transform: rotate(-17deg); } }\n\n@keyframes swell {\n  0% {\n    bottom: -60%; }\n  40% {\n    border-top-right-radius: 80%; }\n  50% {\n    bottom: -50%; }\n  100% {\n    border-radius: 0; } }\n", ""]);
+exports.push([module.i, ".nums {\n  padding: 0 1em; }\n\n.nums-content {\n  text-align: center;\n  font-family: \"Futura\", \"Trebuchet MS\", Helvetica, sans-serif;\n  border-bottom: 1px solid #11394D; }\n  .nums-content h1, .nums-content h2, .nums-content h3, .nums-content h4 {\n    margin: 0;\n    margin-bottom: .5em; }\n\n.nums-title {\n  margin: .2em; }\n\n.nums-left .nums-title {\n  text-align: left; }\n\n.nums-right .nums-title {\n  text-align: right; }\n", ""]);
 
 // exports
 
@@ -723,22 +723,112 @@ exports.push([module.i, ".waiting {\n  position: absolute;\n  top: 0;\n  left: 0
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(9);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./waiting.scss", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./waiting.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".waiting {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: transparent;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center; }\n\n.waiting-outer {\n  width: 75vmin;\n  height: 75vmin;\n  background-color: #DEE3E7;\n  border-radius: 50%;\n  border: 3vmin solid #979AAB;\n  position: relative;\n  overflow: hidden;\n  z-index: 1; }\n\n.waiting-wave {\n  position: absolute;\n  height: 100%;\n  width: 400%;\n  bottom: -60%;\n  left: -100%;\n  opacity: .4;\n  background: linear-gradient(to top, #10597C 50%, #1CAAB8 100%); }\n\n.waiting-wave:nth-child(1) {\n  animation: swell 8s ease-in-out 0s infinite, rock 8s ease-in-out -2s infinite; }\n\n.waiting-wave:nth-child(2) {\n  animation: swell 6s ease-in-out -1.5s infinite, rock 6s ease-in-out -3s infinite; }\n\n.waiting-wave:nth-child(3) {\n  animation: swell 8s ease-in-out -4s infinite, rock 8s ease-in-out -6s infinite; }\n\n@keyframes rock {\n  0%, 100% {\n    transform: rotate(5deg); }\n  50% {\n    transform: rotate(-17deg); } }\n\n@keyframes swell {\n  0% {\n    bottom: -60%; }\n  40% {\n    border-top-right-radius: 80%; }\n  50% {\n    bottom: -50%; }\n  100% {\n    border-radius: 0; } }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(11);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./tidewheel.scss", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./tidewheel.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".viewer-tides {\n  position: relative; }\n  .viewer-tides canvas {\n    position: absolute;\n    top: 0;\n    left: 0; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
-var _requests = __webpack_require__(9);
+var _requests = __webpack_require__(13);
 
 var Requests = _interopRequireWildcard(_requests);
 
-var _sample_data = __webpack_require__(10);
+var _sample_data = __webpack_require__(14);
 
 var Data = _interopRequireWildcard(_sample_data);
 
-var _ui = __webpack_require__(11);
+var _ui = __webpack_require__(15);
 
 var UI = _interopRequireWildcard(_ui);
 
-var _tidewheel = __webpack_require__(14);
+var _tidewheel = __webpack_require__(16);
 
 var TideWheel = _interopRequireWildcard(_tidewheel);
 
@@ -782,7 +872,7 @@ function display(now, data) {
 }
 
 /***/ }),
-/* 9 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -861,7 +951,7 @@ function refreshData() {
 }
 
 /***/ }),
-/* 10 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1837,7 +1927,7 @@ var data = exports.data = [{
 }];
 
 /***/ }),
-/* 11 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1905,52 +1995,7 @@ function fillNums(data) {
 }
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(13);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {"hmr":true}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./nums.scss", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./nums.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".nums {\n  padding: 0 1em; }\n\n.nums-content {\n  text-align: center;\n  font-family: \"Futura\", \"Trebuchet MS\", Helvetica, sans-serif;\n  border-bottom: 1px solid #11394D; }\n  .nums-content h1, .nums-content h2, .nums-content h3, .nums-content h4 {\n    margin: 0;\n    margin-bottom: .5em; }\n\n.nums-title {\n  margin: .2em; }\n\n.nums-left .nums-title {\n  text-align: left; }\n\n.nums-right .nums-title {\n  text-align: right; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2104,7 +2149,8 @@ var colors = {
 };
 
 var centerRadiusPercent = .3;
-var dialThicknessPercent = .1;
+var dialThicknessPercent = .05;
+var dialLengthPercent = .85;
 var tidalAreaHeightPercent = .20;
 
 function redraw() {
@@ -2138,6 +2184,7 @@ function redraw() {
 	var centerRadius = radius * centerRadiusPercent;
 	var tidalAreaHeight = bounds.size * tidalAreaHeightPercent;
 	var dialThickness = bounds.size * dialThicknessPercent;
+	var dialLength = radius * dialLengthPercent;
 
 	try {
 
@@ -2165,7 +2212,7 @@ function redraw() {
 			ctx.rotate(drawNums.angle - Math.PI * .5);
 			ctx.translate(-centerX, -centerY);
 			ctx.fillStyle = colors.darkBlue;
-			ctx.fillRect(centerX, centerY - dialThickness / 2, radius, dialThickness);
+			ctx.fillRect(centerX, centerY - dialThickness / 2, dialLength, dialThickness);
 		} finally {
 			ctx.restore();
 		}
@@ -2241,51 +2288,6 @@ function twelveHourDate(date) {
 	minutes = minutes < 10 ? "0" + minutes : minutes;
 	return hours + ":" + minutes + " " + ampm;
 }
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(16);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {"hmr":true}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./tidewheel.scss", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./tidewheel.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".viewer-tides {\n  position: relative; }\n  .viewer-tides canvas {\n    position: absolute;\n    top: 0;\n    left: 0; }\n", ""]);
-
-// exports
-
 
 /***/ })
 /******/ ]);
