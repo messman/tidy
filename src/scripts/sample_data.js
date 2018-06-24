@@ -1,3 +1,11 @@
+/*
+	Sample data, to use for debugging.
+
+	Current Time: 6:10:47 PM, Saturday, Dec 16 2017
+	LOW: 2017-12-16 16:06
+	HIGH: 2017-12-16 22:24
+
+*/
 export const now = 1513465847306;
 export const data = [
 	{
@@ -507,6 +515,7 @@ export const data = [
 				"v": "-4.755"
 			},
 			{
+				// LOW
 				"t": "2017-12-16 16:06",
 				"v": "-4.764"
 			},
@@ -759,6 +768,7 @@ export const data = [
 				"v": "3.744"
 			},
 			{
+				// HIGH
 				"t": "2017-12-16 22:24",
 				"v": "3.749"
 			},

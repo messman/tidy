@@ -834,20 +834,23 @@ var TideWheel = _interopRequireWildcard(_tidewheel);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var debug = false;
+var DEBUG = false;
+var DEBUG_DATA = false;
 
 // Entry point to application
 document.addEventListener("DOMContentLoaded", function () {
-	console.log("Ready!");
+	if (DEBUG) console.log("Ready!");
 
 	// Check for fetch support
 	if (!window.fetch) {
 		alert("This browser is not supported. Please use a more modern browser.");
+		return;
 	}
 
+	// Set up the canvas for the tide wheel.
 	TideWheel.setup();
 
-	if (!debug) {
+	if (!DEBUG_DATA) {
 		Requests.refreshData().then(function (values) {
 			var data = {};
 			values.forEach(function (datapiece) {
@@ -868,7 +871,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function display(now, data) {
 	UI.fillNums(data);
-	TideWheel.update(now, data);
+	TideWheel.update(now, data, DEBUG);
 }
 
 /***/ }),
@@ -889,7 +892,7 @@ var fetch_options = {
 	station: 8419317, // Default: Wells, ME https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
 	application: "messman/quick-tides",
 	format: "json",
-	time_zone: "lst", // Local Time
+	time_zone: "lst_ldt", // Local Time
 	units: "english" // english | metric
 };
 
@@ -960,6 +963,14 @@ function refreshData() {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+/*
+	Sample data, to use for debugging.
+
+	Current Time: 6:10:47 PM, Saturday, Dec 16 2017
+	LOW: 2017-12-16 16:06
+	HIGH: 2017-12-16 22:24
+
+*/
 var now = exports.now = 1513465847306;
 var data = exports.data = [{
 	"predictions": [{
@@ -1341,6 +1352,7 @@ var data = exports.data = [{
 		"t": "2017-12-16 16:00",
 		"v": "-4.755"
 	}, {
+		// LOW
 		"t": "2017-12-16 16:06",
 		"v": "-4.764"
 	}, {
@@ -1530,6 +1542,7 @@ var data = exports.data = [{
 		"t": "2017-12-16 22:18",
 		"v": "3.744"
 	}, {
+		// HIGH
 		"t": "2017-12-16 22:24",
 		"v": "3.749"
 	}, {
@@ -2023,6 +2036,7 @@ var canvasHeight = 0;
 var devicePixelRatio = window.devicePixelRatio || 1;
 
 function resize() {
+	// Keep the canvas crisp for high-resolution displays.
 	var ctx = canvas.getContext("2d");
 	var backingStoreRatio = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
 	var ratio = devicePixelRatio / backingStoreRatio;
@@ -2042,6 +2056,7 @@ function resize() {
 window.onresize = resize;
 
 function setup() {
+	// Get the canvas and resize it.
 	canvas = document.getElementById("tides-canvas");
 	resize();
 }
@@ -2074,7 +2089,7 @@ function parseTime(timeString) {
 	return newDate;
 }
 
-function update(now, data) {
+function update(now, data, DEBUG) {
 	var p = data["water_level_prediction"].predictions;
 	if (!p || !p.length) return;
 
@@ -2104,6 +2119,8 @@ function update(now, data) {
 		}
 		prev = curr;
 	});
+
+	if (DEBUG) console.log(points);
 
 	var nowDate = new Date(now);
 	var currentLevel = parseFloat(data["water_level"].data[0].v);

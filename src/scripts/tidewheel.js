@@ -15,6 +15,7 @@ let canvasHeight = 0;
 const devicePixelRatio = window.devicePixelRatio || 1;
 
 function resize() {
+	// Keep the canvas crisp for high-resolution displays.
 	const ctx = canvas.getContext("2d");
 	const backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
 		ctx.mozBackingStorePixelRatio ||
@@ -38,6 +39,7 @@ function resize() {
 window.onresize = resize;
 
 export function setup() {
+	// Get the canvas and resize it.
 	canvas = document.getElementById("tides-canvas");
 	resize();
 }
@@ -70,7 +72,7 @@ function parseTime(timeString) {
 	return newDate;
 }
 
-export function update(now, data) {
+export function update(now, data, DEBUG) {
 	const p = data["water_level_prediction"].predictions;
 	if (!p || !p.length)
 		return;
@@ -102,6 +104,9 @@ export function update(now, data) {
 		}
 		prev = curr;
 	});
+
+	if (DEBUG)
+		console.log(points);
 
 	const nowDate = new Date(now);
 	const currentLevel = parseFloat(data["water_level"].data[0].v);
