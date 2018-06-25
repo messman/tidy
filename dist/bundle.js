@@ -892,7 +892,7 @@ var fetch_options = {
 	station: 8419317, // Default: Wells, ME https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
 	application: "messman/quick-tides",
 	format: "json",
-	time_zone: "lst_ldt", // Local Time
+	time_zone: "lst_ldt", // Local Time with DST offset
 	units: "english" // english | metric
 };
 
@@ -2123,12 +2123,11 @@ function update(now, data, DEBUG) {
 	if (DEBUG) console.log(points);
 
 	var nowDate = new Date(now);
-	var currentLevel = parseFloat(data["water_level"].data[0].v);
 
 	var closestHigh = null;
 	var closestLow = null;
 	points.forEach(function (point) {
-		if (point.val < currentLevel) {
+		if (point.val < 0) {
 			if (!closestLow || Math.abs(nowDate - point.time) < Math.abs(now - closestLow.time)) closestLow = point;
 		} else {
 			if (!closestHigh || Math.abs(nowDate - point.time) < Math.abs(now - closestHigh.time)) closestHigh = point;

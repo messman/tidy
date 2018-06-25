@@ -109,12 +109,11 @@ export function update(now, data, DEBUG) {
 		console.log(points);
 
 	const nowDate = new Date(now);
-	const currentLevel = parseFloat(data["water_level"].data[0].v);
 
 	let closestHigh = null;
 	let closestLow = null;
 	points.forEach(function (point) {
-		if (point.val < currentLevel) {
+		if (point.val < 0) {
 			if (!closestLow || (Math.abs(nowDate - point.time) < Math.abs(now - closestLow.time)))
 				closestLow = point;
 		}
