@@ -1,7 +1,7 @@
-import * as Requests from "./requests.js";
-import * as Data from "./sample_data.js";
-import * as UI from "./ui.js";
-import * as TideWheel from "./tidewheel.js";
+import * as Requests from "./requests";
+import * as Data from "./sample_data";
+import * as UI from "./ui";
+import * as TideWheel from "./tidewheel";
 
 const DEBUG = false;
 const DEBUG_DATA = false;

@@ -9,14 +9,14 @@
 */
 
 // The canvas we will draw to.
-let canvas = null;
+let canvas: HTMLCanvasElement = null;
 let canvasWidth = 0;
 let canvasHeight = 0;
 const devicePixelRatio = window.devicePixelRatio || 1;
 
 function resize() {
 	// Keep the canvas crisp for high-resolution displays.
-	const ctx = canvas.getContext("2d");
+	const ctx = canvas.getContext("2d") as any;
 	const backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
 		ctx.mozBackingStorePixelRatio ||
 		ctx.msBackingStorePixelRatio ||
@@ -40,13 +40,13 @@ window.onresize = resize;
 
 export function setup() {
 	// Get the canvas and resize it.
-	canvas = document.getElementById("tides-canvas");
+	canvas = document.getElementById("tides-canvas") as HTMLCanvasElement;
 	resize();
 }
 
-let drawNums = null;
+let drawNums: any = null;
 
-function parseTime(timeString) {
+function parseTime(timeString: any) {
 	// Parse for Safari
 	// year-month-date HH:mm
 	timeString = timeString.trim();
@@ -72,7 +72,7 @@ function parseTime(timeString) {
 	return newDate;
 }
 
-export function update(now, data, DEBUG) {
+export function update(now: any, data: any, DEBUG: any) {
 	const p = data["water_level_prediction"].predictions;
 	if (!p || !p.length)
 		return;
@@ -108,7 +108,7 @@ export function update(now, data, DEBUG) {
 	if (DEBUG)
 		console.log(points);
 
-	const nowDate = new Date(now);
+	const nowDate = new Date(now) as any;
 
 	let closestHigh = null;
 	let closestLow = null;

@@ -27,12 +27,12 @@ let lastRequestTime = -1;
 let naturalRefreshTime = 6000 * 60; // 6 minutes, per the API
 
 // Return a formatted date minus X hours
-function formatDate(minusHours) {
+function formatDate(minusHours: any) {
 	//yyyyMMdd HH:mm
 	const d = new Date();
 	d.setHours(d.getHours() - minusHours);
-	let twos = [d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes()];
-	twos = twos.map(function (num) {
+	let twosNum = [d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes()];
+	const twos = twosNum.map(function (num) {
 		return num.toString().padStart(2, "0");
 	});
 	return `${d.getFullYear()}${twos[0]}${twos[1]} ${twos[2]}:${twos[3]}`;

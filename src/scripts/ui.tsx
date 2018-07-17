@@ -9,7 +9,7 @@ const ui = {
 	}
 };
 
-export function fillNums(data) {
+export function fillNums(data: any) {
 
 	// Air Temp
 	const airTempData = data["air_temp"];
@@ -20,7 +20,7 @@ export function fillNums(data) {
 	}
 	else {
 		airTempUI.innerHTML = "?";
-		waterTempUI.style.color = "";
+		airTempUI.style.color = "";
 	}
 
 	// Wind
