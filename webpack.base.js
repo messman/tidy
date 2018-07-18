@@ -40,7 +40,7 @@ const baseWebpackOptions = {
 		]
 	},
 	output: {
-		filename: "entry.[name].[chunkhash].js",
+		filename: "[name].[chunkhash].js",
 		hashDigestLength: 10,
 		path: path.resolve(__dirname, "./dist"),
 		publicPath: "./dist/"
@@ -69,7 +69,7 @@ const baseWebpackOptions = {
 
 	plugins: [
 		// Clean the "dist" folder each time
-		new CleanWebpackPlugin(["./dist"]),
+		new CleanWebpackPlugin(["./dist"], /*{ watch: true }*/),
 		// Filter out all the vendor libraries and put that in its own chunk
 		new webpack.optimize.CommonsChunkPlugin({
 			name: "vendor"

@@ -3,7 +3,7 @@
 html {
 	font-family: $font;
 	color: $c-main;
-	background-color: $c-back;
+	background-color: $m-light;
 }
 
 * {
@@ -17,8 +17,10 @@ html, body {
 }
 
 main {
+	background-color: $c-back;
 	max-width: 700px;
 	margin: 0 auto;
-	padding: .5em;
+	padding: 0;
 	height: 100%;
+	outline: 1px solid $m-dark;
 }
