@@ -1,0 +1,31 @@
+.react-tabs {
+	.tab-titles {
+		display: flex;
+		overflow: hidden;
+	}
+	.tab-title {
+		font-size: 1.3rem;
+		position: relative;
+		border: 1px solid #ddd;
+		border-radius: 5px 5px 0 0;
+		padding: 10px 20px;
+
+		&:not(.tab-active) {
+			cursor: pointer;
+			background-color: #eee;
+			color: #555;
+		}
+	}
+	.tab-active {
+		border-bottom: 0;
+		cursor: default;
+		z-index: 5;
+	}
+
+	.tab-panes {
+		border-bottom: 1px solid #ddd;
+		padding: 5px 2px;
+	}
+
+	margin-bottom: 5px;
+}

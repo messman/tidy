@@ -33,7 +33,7 @@ const DEFINE = {
 
 const baseWebpackOptions = {
 	entry: {
-		index: "./src/index.tsx",
+		index: "./src/views/index.tsx",
 		vendor: [
 			"react",
 			"react-dom",
@@ -51,7 +51,7 @@ const baseWebpackOptions = {
 		extensions: [".ts", ".tsx", ".js", ".json"],
 
 		// Resolve imports from node_modules or src
-		modules: ["node_modules"]
+		modules: ["node_modules", "src"]
 	},
 
 	module: {
@@ -69,7 +69,7 @@ const baseWebpackOptions = {
 
 	plugins: [
 		// Clean the "dist" folder each time
-		//new CleanWebpackPlugin(["./dist"]),
+		new CleanWebpackPlugin(["./dist"]),
 		// Filter out all the vendor libraries and put that in its own chunk
 		new webpack.optimize.CommonsChunkPlugin({
 			name: "vendor"
