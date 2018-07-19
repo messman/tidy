@@ -27,6 +27,9 @@ const DEFINE = {
 		BUILD: {
 			IS_PRODUCTION: JSON.stringify(false),
 			TIME: JSON.stringify(buildTime)
+		},
+		DEBUG: {
+			LOCAL_REQUEST_DATA: JSON.stringify(true)
 		}
 	}
 }

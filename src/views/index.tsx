@@ -5,8 +5,10 @@ import * as ReactDOM from "react-dom";
 
 import { Tabs, Tab, TabView, TabButton } from "../components";
 import { Tide } from "./tide/tide";
+import { Settings } from "./settings/settings";
 
 import { DEFINE } from "../services/define";
+import { WaterLevel } from "../services/noaa";
 
 console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${DEFINE.BUILD.TIME}`);
 
@@ -15,6 +17,8 @@ interface AppProps {
 
 interface AppState {
 	selectedTab: number,
+	waterLevel: WaterLevel,
+	waterLevelIsRequesting: boolean
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -24,8 +28,21 @@ class App extends React.Component<AppProps, AppState> {
 
 		// Set initial tab to 0 (TODO: add routing)
 		this.state = {
-			selectedTab: 0
+			selectedTab: 0,
+			waterLevel: null,
+			waterLevelIsRequesting: false
 		}
+	}
+
+	beginWaterLevelRequest = () => {
+		this.setState({ waterLevelIsRequesting: true });
+	}
+
+	endWaterLevelRequest = (waterLevel: WaterLevel) => {
+		this.setState({
+			waterLevel,
+			waterLevelIsRequesting: false
+		});
 	}
 
 	render() {
@@ -41,7 +58,12 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Tides</span>
 					</TabButton>
 					<TabView>
-						<Tide />
+						<Tide waterLevel={{
+							data: this.state.waterLevel,
+							isRequesting: this.state.waterLevelIsRequesting,
+							onRequestBegin: this.beginWaterLevelRequest,
+							onRequestEnd: this.endWaterLevelRequest
+						}} />
 					</TabView>
 				</Tab>
 				<Tab>
@@ -74,7 +96,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Settings</span>
 					</TabButton>
 					<TabView>
-						<div>Settings</div>
+						<Settings />
 					</TabView>
 				</Tab>
 			</Tabs>

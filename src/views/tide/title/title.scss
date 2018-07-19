@@ -1,0 +1,56 @@
+@import "src/styles/common";
+
+header {
+
+	margin: .5rem;
+
+	.top {
+		.right {
+			float: right;
+		}
+
+		&::after {
+			content: "";
+			clear: both;
+		}
+	}
+
+	.title {
+		background-color: $c-main;
+		color: $c-back;
+		fill: $c-back;
+		border-radius: 6px;
+		padding: 0 1rem;
+		overflow: hidden;
+
+		text-align: center;
+
+		h2 {
+			font-size: 1rem;
+			margin: 0;
+			margin-bottom: .5rem;
+		}
+	}
+
+	.head {
+		
+
+		svg {
+			height: 30px;
+			display: inline-block;
+			margin-right: .5rem;
+			margin-top: .8rem;
+		}
+		
+		h2 {
+			vertical-align: top;
+			display: inline-block;
+			margin: 0;
+			margin-top: .25rem;
+			font-size: 1.8rem;
+		}
+	}
+
+
+
+}
