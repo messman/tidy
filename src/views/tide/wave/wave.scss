@@ -1,0 +1,46 @@
+@import "src/styles/common";
+
+.wave {
+	
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+
+	.animation {
+		flex: 1;
+		flex-basis: auto;
+		min-height: 4rem;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.gradient-out {
+		background: -moz-linear-gradient(top, $c-alt1 0%, $c-back 100%);
+		background: -webkit-linear-gradient(top, $c-alt1 0%,$c-back 100%);
+		background: linear-gradient(to bottom, $c-alt1 0%,$c-back 100%);
+		flex: 1;
+	}
+
+	.wave {
+		position: absolute;
+		bottom: -5px;
+		width: 100%;
+		height: 100%;
+	}
+
+	.wave-lower {
+		fill: $c-alt1;
+	}
+	.wave-higher {
+		fill: $c-alt2;
+	}
+
+	.rocks {
+		position: absolute;
+		bottom: -.5rem;
+		right: -.5rem;
+		width: calc(42 * .33rem);
+		height: calc(30 * .33rem);
+	}
+}
+

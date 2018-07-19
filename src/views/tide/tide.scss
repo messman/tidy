@@ -1,2 +1,7 @@
 @import "src/styles/common";
 
+.tide {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}

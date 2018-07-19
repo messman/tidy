@@ -53,7 +53,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".tide {\n  height: 100%;\n  display: flex;\n  flex-direction: column; }\n", ""]);
 
 // exports
 
@@ -68,7 +68,22 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "header {\n  margin: .5rem; }\n  header .top .right {\n    float: right; }\n  header .top::after {\n    content: \"\";\n    clear: both; }\n  header .title {\n    background-color: #19576D;\n    color: #DFEEF4;\n    fill: #DFEEF4;\n    border-radius: 6px;\n    padding: 0 1rem;\n    overflow: hidden;\n    text-align: center; }\n    header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.lastnext {\n  margin: 1.5rem;\n  display: flex; }\n\n.lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #DFEEF4; }\n  .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
+exports.push([module.i, "header {\n  margin: .5rem;\n  margin-bottom: 2rem; }\n  header .top .right {\n    float: right; }\n  header .top::after {\n    content: \"\";\n    clear: both; }\n  header .title {\n    background-color: #19576D;\n    color: #DFEEF4;\n    fill: #DFEEF4;\n    border-radius: 6px;\n    padding: 0 1rem;\n    overflow: hidden;\n    text-align: center; }\n    header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.lastnext {\n  margin: 1.5rem;\n  display: flex; }\n\n.lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #DFEEF4; }\n  .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/sass-loader/lib/loader.js!./src/views/tide/wave/wave.scss":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".wave {\n  flex: 1;\n  display: flex;\n  flex-direction: column; }\n  .wave .animation {\n    flex: 1;\n    flex-basis: auto;\n    min-height: 4rem;\n    position: relative;\n    overflow: hidden; }\n  .wave .gradient-out {\n    background: -moz-linear-gradient(top, #8DC2D5 0%, #DFEEF4 100%);\n    background: -webkit-linear-gradient(top, #8DC2D5 0%, #DFEEF4 100%);\n    background: linear-gradient(to bottom, #8DC2D5 0%, #DFEEF4 100%);\n    flex: 1; }\n  .wave .wave {\n    position: absolute;\n    bottom: -5px;\n    width: 100%;\n    height: 100%; }\n  .wave .wave-lower {\n    fill: #8DC2D5; }\n  .wave .wave-higher {\n    fill: #B5DCE8; }\n  .wave .rocks {\n    position: absolute;\n    bottom: -.5rem;\n    right: -.5rem;\n    width: calc(42 * .33rem);\n    height: calc(30 * .33rem); }\n", ""]);
 
 // exports
 
@@ -903,7 +918,7 @@ Object.defineProperty(exports, "__esModule", {
 var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
-        TIME: "Thu Jul 19 2018 14:49:14 GMT-0400 (EDT)"
+        TIME: "Thu Jul 19 2018 18:08:18 GMT-0400 (EDT)"
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -1444,6 +1459,8 @@ var _noaa = __webpack_require__("./src/services/noaa.tsx");
 
 var _title = __webpack_require__("./src/views/tide/title/title.tsx");
 
+var _wave = __webpack_require__("./src/views/tide/wave/wave.tsx");
+
 __webpack_require__("./src/views/tide/tide.scss");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -1496,7 +1513,7 @@ var Tide = exports.Tide = function (_React$Component) {
                 return React.createElement("p", null, "Requesting...");
             } else {
                 var data = waterLevel.data;
-                return React.createElement(_title.Title, { waterLevel: data });
+                return React.createElement("div", { className: "tide" }, React.createElement(_title.Title, { waterLevel: data }), React.createElement(_wave.Wave, { waterLevel: data }));
             }
         }
     }]);
@@ -1615,7 +1632,7 @@ var Title = exports.Title = function (_React$Component) {
                     lastNext = React.createElement("div", { className: "lastnext" }, React.createElement(LastNext, { name: "left", title: "Last " + (data.previous.isHigh ? "High" : "Low"), prettyTime: Time.createPrettyTime(data.previous.time) }), React.createElement(LastNext, { name: "center", title: "Next " + (data.next.isHigh ? "High" : "Low"), prettyTime: Time.createPrettyTime(data.next.time) }), React.createElement(LastNext, { name: "right", title: "Next " + (data.predictionsAfterCurrent[1].isHigh ? "High" : "Low"), prettyTime: Time.createPrettyTime(data.predictionsAfterCurrent[1].time) }));
                 }
             }
-            return React.createElement(React.Fragment, null, React.createElement("header", null, React.createElement("div", { className: "top" }, React.createElement("span", { className: "left" }, "Wells, Maine"), React.createElement("span", { className: "right" }, "8419317")), React.createElement("div", { className: "title" }, React.createElement("div", { className: "head" }, svg, React.createElement("h2", null, title)), React.createElement("h2", null, message))), lastNext);
+            return React.createElement("header", null, React.createElement("div", { className: "top" }, React.createElement("span", { className: "left" }, "Wells, Maine"), React.createElement("span", { className: "right" }, "8419317")), React.createElement("div", { className: "title" }, React.createElement("div", { className: "head" }, svg, React.createElement("h2", null, title)), React.createElement("h2", null, message)), lastNext);
         }
     }]);
 
@@ -1644,7 +1661,166 @@ var LastNext = exports.LastNext = function (_React$Component2) {
     return LastNext;
 }(React.Component);
 
+/***/ }),
+
+/***/ "./src/views/tide/wave/wave.scss":
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/sass-loader/lib/loader.js!./src/views/tide/wave/wave.scss");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__("./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {
+	module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/sass-loader/lib/loader.js!./wave.scss", function() {
+		var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/sass-loader/lib/loader.js!./wave.scss");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./src/views/tide/wave/wave.tsx":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.SVGWave = exports.Wave = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__("./node_modules/react/index.js");
+
+var React = _interopRequireWildcard(_react);
+
+__webpack_require__("./src/views/tide/wave/wave.scss");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Wave = exports.Wave = function (_React$Component) {
+    _inherits(Wave, _React$Component);
+
+    function Wave() {
+        _classCallCheck(this, Wave);
+
+        return _possibleConstructorReturn(this, (Wave.__proto__ || Object.getPrototypeOf(Wave)).apply(this, arguments));
+    }
+
+    _createClass(Wave, [{
+        key: "render",
+        value: function render() {
+            var data = this.props.waterLevel;
+            if (!data || data.errors) {
+                return React.createElement("div", null, "TODO");
+            }
+            return React.createElement("div", { className: "wave" }, React.createElement("div", { className: "animation" }, React.createElement(SVGWave, { percentFallen: .65, percentMin: .2, percentRange: .6, colorClass: "wave-higher", duration: 7.5 }), Wave.rock_svg, React.createElement(SVGWave, { percentFallen: .7, percentMin: .3, percentRange: .6, colorClass: "wave-lower", duration: 6 })), React.createElement("div", { className: "gradient-out" }));
+        }
+    }]);
+
+    return Wave;
+}(React.Component);
+
+Wave.rock_svg = React.createElement("svg", { className: "rocks", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "42", height: "30", viewBox: "0 0 42 30" }, React.createElement("path", { fill: "#a49081", d: "M23.1 10.253l3.75-6.646 5.85-3.608 6.45 2.848h6.15l-1.65 25.823-18.75 1.329z" }), React.createElement("path", { fill: "#7c6c60", d: "M10.242 15.967l8.349-6.689c0.117-0.094 0.255-0.157 0.403-0.183l5.632-1.016 12.023 6.4 8.146-6.72c0.383-0.316 0.951-0.262 1.267 0.121 0.187 0.226 0.251 0.529 0.174 0.811l-4.028 14.653c-0.092 0.335-0.369 0.587-0.712 0.648l-28.514 5.028c-0.489 0.086-0.956-0.241-1.043-0.73l-2.021-11.464c-0.057-0.324 0.067-0.653 0.324-0.859z" }), React.createElement("path", { fill: "#938071", d: "M13.806 14.886l5.682-0.699c0.161-0.020 0.314-0.083 0.442-0.182l5.987-4.647 9.202-0.722 4.326 5.15c0.064 0.076 0.114 0.162 0.15 0.254l3.38 8.739c0.179 0.464-0.051 0.985-0.515 1.164-0.070 0.027-0.144 0.045-0.219 0.054l-27.844 3.303c-0.494 0.059-0.941-0.294-1-0.788-0.003-0.025-0.005-0.049-0.006-0.074l-0.376-10.627c-0.017-0.466 0.326-0.868 0.79-0.925z" }), React.createElement("path", { fill: "#6b5b50", d: "M14.1 23.475l8.369-6.525 10.945 3.026 4.237 4.539-2.85 5.485h-34.8l5.25-7.376z" }), React.createElement("path", { fill: "#a49081", d: "M23.85 24.483l6.15-6.278 8.1-3.805 5.7 3.805-1.050 11.795h-21.15z" }));
+
+var SVGWave = exports.SVGWave = function (_React$Component2) {
+    _inherits(SVGWave, _React$Component2);
+
+    function SVGWave() {
+        _classCallCheck(this, SVGWave);
+
+        return _possibleConstructorReturn(this, (SVGWave.__proto__ || Object.getPrototypeOf(SVGWave)).apply(this, arguments));
+    }
+
+    _createClass(SVGWave, [{
+        key: "render",
+        value: function render() {
+            // Should be between 0 and 1 inclusive
+            var p = Math.min(Math.max(this.props.percentFallen, 0), 1);
+            // Transform to between .3 and .9, inclusive, steps by .1
+            var min = this.props.percentMin;
+            var range = this.props.percentRange;
+            var transformedP = Math.floor((p * range + min) * 100) / 100;
+            console.log(transformedP);
+            // Get the path
+            var path = SVGWave.getPath(transformedP, .05, 1.5, .3, 100, 100, 0);
+            console.log(path);
+            var name = "wave_" + this.props.colorClass;
+            return React.createElement("svg", { className: "wave " + this.props.colorClass, version: "1.1", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 100 100", preserveAspectRatio: "none" }, React.createElement("defs", null, React.createElement("path", { id: name, d: path })), React.createElement("use", { xlinkHref: "#" + name, x: "0", y: "0" }, React.createElement("animate", { attributeName: "x", from: "-100", to: "0", dur: this.props.duration + "s", repeatCount: "indefinite" })));
+        }
+    }], [{
+        key: "getPath",
+        value: function getPath(topDistanceOutOf1, ampOutOf1, periodOutOf1, controlPointOutOf1, viewBoxX, viewBoxY, timePassed) {
+            var y = topDistanceOutOf1 * viewBoxY;
+            var r = ampOutOf1 * viewBoxY;
+            var p = viewBoxX / 2; // half of the period; one bezier distance
+            // Control Point of 1 means the distance between the two points of the bezier curve
+            var cp1 = p * controlPointOutOf1;
+            var cp2 = p - p * controlPointOutOf1;
+            console.log({ y: y, r: r, p: p, cp1: cp1, cp2: cp2 });
+            var singleWaveBezier = "c " + cp1 + " -" + r + ", " + cp2 + " -" + r + ", " + p + " 0, c" + cp1 + " " + r + ", " + cp2 + " " + r + ", " + p + " 0";
+            /*
+                One wave:
+                     ____
+                    /    \
+                (A)/      \       /
+                           \     /
+                            -----
+                Where (A) is the top distance
+            */
+            // Make 2 waves (first of which covers the whole viewbox - second of which is completely offscreen) so we are 2X the viewbox width
+            return "M0 " + y + ", " + singleWaveBezier + " " + singleWaveBezier + " v" + (viewBoxY - y) + " h-" + viewBoxX * 2 + " v-" + (viewBoxY - y) + " z";
+            // M0,${p} c13,0 20.3,-${r} 33.3,-${r} c13,0 20.3,${r} 33.3,${r} c13,0 20.3,-${r} 33.3,-${r} v100 h-100 v-${100 - p} z
+        }
+    }]);
+
+    return SVGWave;
+}(React.Component);
+
 /***/ })
 
 },["./src/views/index.tsx"]);
-//# sourceMappingURL=index.d9caee2f42.js.map
+//# sourceMappingURL=index.a89c6d4bfa.js.map

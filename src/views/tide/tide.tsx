@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { getWaterLevelData, WaterLevel } from "../../services/noaa";
 import { Title } from "./title/title";
+import { Wave } from "./wave/wave";
 
 import "./tide.scss";
 
@@ -54,7 +55,10 @@ export class Tide extends React.Component<TideProps, TideState> {
 		else {
 			const data = waterLevel.data;
 			return (
-				<Title waterLevel={data} />
+				<div className="tide">
+					<Title waterLevel={data} />
+					<Wave waterLevel={data} />
+				</div>
 			)
 		}
 	}

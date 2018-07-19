@@ -62,22 +62,20 @@ export class Title extends React.Component<TitleProps, TitleState> {
 
 
 		return (
-			<>
-				<header>
-					<div className="top">
-						<span className="left">Wells, Maine</span>
-						<span className="right">8419317</span>
+			<header>
+				<div className="top">
+					<span className="left">Wells, Maine</span>
+					<span className="right">8419317</span>
+				</div>
+				<div className="title">
+					<div className="head">
+						{svg}
+						<h2>{title}</h2>
 					</div>
-					<div className="title">
-						<div className="head">
-							{svg}
-							<h2>{title}</h2>
-						</div>
-						<h2>{message}</h2>
-					</div>
-				</header>
+					<h2>{message}</h2>
+				</div>
 				{lastNext}
-			</>
+			</header>
 		);
 	}
 }
