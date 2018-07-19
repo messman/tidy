@@ -68,7 +68,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "header {\n  margin: .5rem; }\n  header .top .right {\n    float: right; }\n  header .top::after {\n    content: \"\";\n    clear: both; }\n  header .title {\n    background-color: #19576D;\n    color: #DFEEF4;\n    fill: #DFEEF4;\n    border-radius: 6px;\n    padding: 0 1rem;\n    overflow: hidden;\n    text-align: center; }\n    header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n", ""]);
+exports.push([module.i, "header {\n  margin: .5rem; }\n  header .top .right {\n    float: right; }\n  header .top::after {\n    content: \"\";\n    clear: both; }\n  header .title {\n    background-color: #19576D;\n    color: #DFEEF4;\n    fill: #DFEEF4;\n    border-radius: 6px;\n    padding: 0 1rem;\n    overflow: hidden;\n    text-align: center; }\n    header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.lastnext {\n  margin: 1.5rem;\n  display: flex; }\n\n.lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #DFEEF4; }\n  .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
 
 // exports
 
@@ -903,7 +903,7 @@ Object.defineProperty(exports, "__esModule", {
 var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
-        TIME: "Thu Jul 19 2018 14:15:14 GMT-0400 (EDT)"
+        TIME: "Thu Jul 19 2018 14:49:14 GMT-0400 (EDT)"
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -1095,6 +1095,40 @@ function parseWaterLevel(response) {
         waterLevel.predictionsAfterCurrent = response.predictions.slice(indexOfClosestBefore + 1);
     }
     return waterLevel;
+}
+
+/***/ }),
+
+/***/ "./src/services/time.tsx":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.createPrettyTime = createPrettyTime;
+exports.createPrettyTimespan = createPrettyTimespan;
+function createPrettyTime(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    var minutesString = minutes.toString().padStart(2, "0");
+    return {
+        time: hours + ":" + minutesString,
+        ampm: ampm
+    };
+}
+function createPrettyTimespan(time) {
+    var minutes = Math.ceil(time / 1000 / 60);
+    if (minutes <= 1) return "right about now";
+    if (minutes < 100) return "in " + minutes + " min";
+    var hours = Math.round(minutes / 60);
+    if (hours === 1) return "in an hour";
+    return "in " + hours + " hours";
 }
 
 /***/ }),
@@ -1532,7 +1566,7 @@ if(false) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.Title = undefined;
+exports.LastNext = exports.Title = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1541,6 +1575,10 @@ var _react = __webpack_require__("./node_modules/react/index.js");
 var React = _interopRequireWildcard(_react);
 
 __webpack_require__("./src/views/tide/title/title.scss");
+
+var _time = __webpack_require__("./src/services/time.tsx");
+
+var Time = _interopRequireWildcard(_time);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1566,16 +1604,18 @@ var Title = exports.Title = function (_React$Component) {
             var title = "Cannot load data";
             var message = "Please try again.";
             var svg = null;
+            var lastNext = null;
             if (data) {
                 if (data.errors) {} else {
                     title = "The tide is " + (data.currentIsRising ? "rising" : "falling") + ".";
                     var timeUntilNext = Math.abs(data.next.time.getTime() - data.current.time.getTime());
-                    var currentPrettyTime = createPrettyTime(data.current.time);
-                    message = "As of " + currentPrettyTime.time + " " + currentPrettyTime.ampm + ", " + (data.currentIsRising ? "high" : "low") + " tide is " + prettyTimespan(timeUntilNext) + ".";
+                    var currentPrettyTime = Time.createPrettyTime(data.current.time);
+                    message = "As of " + currentPrettyTime.time + " " + currentPrettyTime.ampm + ", " + (data.currentIsRising ? "high" : "low") + " tide is " + Time.createPrettyTimespan(timeUntilNext) + ".";
                     if (data.currentIsRising) svg = Title.svgTideRising;else svg = Title.svgTideFalling;
+                    lastNext = React.createElement("div", { className: "lastnext" }, React.createElement(LastNext, { name: "left", title: "Last " + (data.previous.isHigh ? "High" : "Low"), prettyTime: Time.createPrettyTime(data.previous.time) }), React.createElement(LastNext, { name: "center", title: "Next " + (data.next.isHigh ? "High" : "Low"), prettyTime: Time.createPrettyTime(data.next.time) }), React.createElement(LastNext, { name: "right", title: "Next " + (data.predictionsAfterCurrent[1].isHigh ? "High" : "Low"), prettyTime: Time.createPrettyTime(data.predictionsAfterCurrent[1].time) }));
                 }
             }
-            return React.createElement(React.Fragment, null, React.createElement("header", null, React.createElement("div", { className: "top" }, React.createElement("span", { className: "left" }, "Wells, Maine"), React.createElement("span", { className: "right" }, "8419317")), React.createElement("div", { className: "title" }, React.createElement("div", { className: "head" }, svg, React.createElement("h2", null, title)), React.createElement("h2", null, message))), React.createElement("div", null));
+            return React.createElement(React.Fragment, null, React.createElement("header", null, React.createElement("div", { className: "top" }, React.createElement("span", { className: "left" }, "Wells, Maine"), React.createElement("span", { className: "right" }, "8419317")), React.createElement("div", { className: "title" }, React.createElement("div", { className: "head" }, svg, React.createElement("h2", null, title)), React.createElement("h2", null, message))), lastNext);
         }
     }]);
 
@@ -1584,28 +1624,27 @@ var Title = exports.Title = function (_React$Component) {
 
 Title.svgTideRising = React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M0.469 15c0-8.027 6.504-14.531 14.531-14.531s14.531 6.504 14.531 14.531-6.504 14.531-14.531 14.531-14.531-6.504-14.531-14.531zM17.578 21.797v-6.797h4.154c0.627 0 0.943-0.762 0.498-1.201l-6.732-6.697c-0.275-0.275-0.715-0.275-0.99 0l-6.738 6.697c-0.445 0.445-0.129 1.201 0.498 1.201h4.154v6.797c0 0.387 0.316 0.703 0.703 0.703h3.75c0.387 0 0.703-0.316 0.703-0.703z" }));
 Title.svgTideFalling = React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M29.531 15c0 8.027-6.504 14.531-14.531 14.531s-14.531-6.504-14.531-14.531 6.504-14.531 14.531-14.531 14.531 6.504 14.531 14.531zM12.422 8.203v6.797h-4.154c-0.627 0-0.943 0.762-0.498 1.201l6.732 6.697c0.275 0.275 0.715 0.275 0.99 0l6.732-6.697c0.445-0.445 0.129-1.201-0.498-1.201h-4.148v-6.797c0-0.387-0.316-0.703-0.703-0.703h-3.75c-0.387 0-0.703 0.316-0.703 0.703z" }));
-function createPrettyTime(date) {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    var minutesString = minutes.toString().padStart(2, "0");
-    return {
-        time: hours + ":" + minutesString,
-        ampm: ampm
-    };
-}
-function prettyTimespan(time) {
-    var minutes = Math.ceil(time / 1000 / 60);
-    if (minutes <= 1) return "right about now";
-    if (minutes < 100) return "in " + minutes + " min";
-    var hours = Math.round(minutes / 60);
-    if (hours === 1) return "in an hour";
-    return "in " + hours + " hours";
-}
+
+var LastNext = exports.LastNext = function (_React$Component2) {
+    _inherits(LastNext, _React$Component2);
+
+    function LastNext() {
+        _classCallCheck(this, LastNext);
+
+        return _possibleConstructorReturn(this, (LastNext.__proto__ || Object.getPrototypeOf(LastNext)).apply(this, arguments));
+    }
+
+    _createClass(LastNext, [{
+        key: "render",
+        value: function render() {
+            return React.createElement("div", { className: "lastnext-item " + this.props.name }, React.createElement("span", { className: "lastnext-item-inner" }, React.createElement("div", { className: "lastnext-title" }, this.props.title), React.createElement("div", { className: "lastnext-time" }, React.createElement("span", { className: "lastnext-time-num" }, this.props.prettyTime.time), React.createElement("span", { className: "lastnext-time-ampm" }, this.props.prettyTime.ampm))));
+        }
+    }]);
+
+    return LastNext;
+}(React.Component);
 
 /***/ })
 
 },["./src/views/index.tsx"]);
-//# sourceMappingURL=index.029ffe741e.js.map
+//# sourceMappingURL=index.d9caee2f42.js.map

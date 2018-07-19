@@ -53,7 +53,9 @@ export class Tide extends React.Component<TideProps, TideState> {
 		}
 		else {
 			const data = waterLevel.data;
-			return <Title waterLevel={data} />
+			return (
+				<Title waterLevel={data} />
+			)
 		}
 	}
 }

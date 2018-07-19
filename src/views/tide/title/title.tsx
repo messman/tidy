@@ -2,6 +2,7 @@ import * as React from "react";
 
 import "./title.scss";
 import { WaterLevel } from "../../../services/noaa";
+import * as Time from "../../../services/time";
 
 interface TitleProps {
 	waterLevel: WaterLevel
@@ -31,6 +32,7 @@ export class Title extends React.Component<TitleProps, TitleState> {
 		let title = "Cannot load data";
 		let message = "Please try again."
 		let svg = null;
+		let lastNext = null;
 
 		if (data) {
 			if (data.errors) {
@@ -40,13 +42,21 @@ export class Title extends React.Component<TitleProps, TitleState> {
 			else {
 				title = `The tide is ${data.currentIsRising ? "rising" : "falling"}.`;
 				const timeUntilNext = Math.abs(data.next.time.getTime() - data.current.time.getTime());
-				const currentPrettyTime = createPrettyTime(data.current.time);
-				message = `As of ${currentPrettyTime.time} ${currentPrettyTime.ampm}, ${data.currentIsRising ? "high" : "low"} tide is ${prettyTimespan(timeUntilNext)}.`;
+				const currentPrettyTime = Time.createPrettyTime(data.current.time);
+				message = `As of ${currentPrettyTime.time} ${currentPrettyTime.ampm}, ${data.currentIsRising ? "high" : "low"} tide is ${Time.createPrettyTimespan(timeUntilNext)}.`;
 
 				if (data.currentIsRising)
 					svg = Title.svgTideRising;
 				else
 					svg = Title.svgTideFalling;
+
+				lastNext = (
+					<div className="lastnext">
+						<LastNext name="left" title={`Last ${data.previous.isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(data.previous.time)} />
+						<LastNext name="center" title={`Next ${data.next.isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(data.next.time)} />
+						<LastNext name="right" title={`Next ${data.predictionsAfterCurrent[1].isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(data.predictionsAfterCurrent[1].time)} />
+					</div >
+				)
 			}
 		}
 
@@ -66,39 +76,35 @@ export class Title extends React.Component<TitleProps, TitleState> {
 						<h2>{message}</h2>
 					</div>
 				</header>
-				<div>
-				</div>
+				{lastNext}
 			</>
 		);
 	}
 }
 
-interface PrettyTime {
-	time: string // like "1:34"
-	ampm: "AM" | "PM"
+interface LastNextProps {
+	name: string;
+	title: string;
+	prettyTime: Time.PrettyTime
 }
 
-function createPrettyTime(date: Date): PrettyTime {
-	let hours = date.getHours();
-	let minutes = date.getMinutes();
-	let ampm: "PM" | "AM" = hours >= 12 ? "PM" : "AM";
-	hours = hours % 12;
-	hours = hours ? hours : 12; // the hour '0' should be '12'
-	const minutesString = minutes.toString().padStart(2, "0");
-	return {
-		time: `${hours}:${minutesString}`,
-		ampm
+interface LastNextState {
+
+}
+
+export class LastNext extends React.Component<LastNextProps, LastNextState> {
+
+	render() {
+		return (
+			<div className={`lastnext-item ${this.props.name}`}>
+				<span className="lastnext-item-inner">
+					<div className="lastnext-title">{this.props.title}</div>
+					<div className="lastnext-time">
+						<span className="lastnext-time-num">{this.props.prettyTime.time}</span>
+						<span className="lastnext-time-ampm">{this.props.prettyTime.ampm}</span>
+					</div>
+				</span>
+			</div>
+		);
 	}
-}
-
-function prettyTimespan(time: number): string {
-	const minutes = Math.ceil(time / 1000 / 60);
-	if (minutes <= 1)
-		return "right about now";
-	if (minutes < 100)
-		return `in ${minutes} min`;
-	const hours = Math.round(minutes / 60);
-	if (hours === 1)
-		return "in an hour";
-	return `in ${hours} hours`;
 }

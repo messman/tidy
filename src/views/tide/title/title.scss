@@ -52,7 +52,33 @@ header {
 			font-size: 1.8rem;
 		}
 	}
-
-
-
 }
+
+.lastnext {
+	margin: 1.5rem;
+	display: flex;
+}
+
+.lastnext-item {
+	flex: 1;
+	text-align: center;
+
+	
+	&.center .lastnext-item-inner {
+		background-color: $c-main;
+		color: $c-back;
+	}
+	
+	.lastnext-item-inner {
+		border-radius: 4px;
+		display: inline-block;
+		padding: .3rem .5rem;
+	}
+
+	.lastnext-time-ampm {
+		font-size: .8em;
+		display: inline-block;
+		margin-left: .3rem;
+	}
+}
+
