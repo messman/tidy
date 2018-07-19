@@ -23,7 +23,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: #19576D;\n  background-color: #EAEAEA; }\n\n* {\n  box-sizing: border-box; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nmain {\n  background-color: #DFEEF4;\n  max-width: 700px;\n  margin: 0 auto;\n  padding: 0;\n  height: 100%;\n  outline: 1px solid #BEBEBE; }\n", ""]);
+exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: #19576D;\n  background-color: #EAEAEA; }\n\n* {\n  box-sizing: border-box;\n  font-weight: 300; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nmain {\n  background-color: #DFEEF4;\n  max-width: 700px;\n  margin: 0 auto;\n  padding: 0;\n  height: 100%;\n  outline: 1px solid #BEBEBE; }\n", ""]);
 
 // exports
 
@@ -903,7 +903,7 @@ Object.defineProperty(exports, "__esModule", {
 var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
-        TIME: "Thu Jul 19 2018 11:55:54 GMT-0400 (EDT)"
+        TIME: "Thu Jul 19 2018 14:15:14 GMT-0400 (EDT)"
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -1608,4 +1608,4 @@ function prettyTimespan(time) {
 /***/ })
 
 },["./src/views/index.tsx"]);
-//# sourceMappingURL=index.caa58fa62d.js.map
+//# sourceMappingURL=index.029ffe741e.js.map
