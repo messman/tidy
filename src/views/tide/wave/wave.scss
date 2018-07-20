@@ -6,11 +6,19 @@
 	display: flex;
 	flex-direction: column;
 
-	.animation {
+	.wave-container {
 		flex: 1;
 		flex-basis: auto;
 		min-height: 4rem;
 		position: relative;
+	}
+
+	.animation {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 		overflow: hidden;
 	}
 
@@ -40,7 +48,75 @@
 		bottom: -.5rem;
 		right: -.5rem;
 		width: calc(42 * .33rem);
-		height: calc(30 * .33rem);
+		height: 100%;
+	}
+}
+
+.wave .marker {
+	position: absolute;
+	height: 100%;
+	width: 50%;
+
+	.line-container {
+		width: 3rem;
+		margin-left: 2rem;
+		padding: 1rem 0;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+
+		.line {
+			width: 30%;
+			margin: 0 auto;
+			background-color: $c-main;
+			flex: 1;
+			border-radius: 2px;
+		}
+
+		.line-faint {
+			opacity: .4;
+		}
+
+		.line-arrow-holder {
+			position: relative;
+			width: 1rem;
+			height: .1rem;
+			margin: 0 auto;
+		}
+
+		.arrow {
+			fill: $c-main;
+			position: absolute;
+			width: 3rem;
+			height: 3rem;
+			left: -1rem;
+			top: -1rem;
+		}
+	}
+
+	.marker-header {
+		display: block;
+		position: absolute;
+		left: 5.5rem;
+
+		span {
+			white-space: pre;
+		}
+	}
+
+	.marker-title {
+		font-size: 1.2rem;
+		font-weight: bold;
+		display: inline-block;
+		margin-right: 1rem;
+	}
+
+	.marker-high {
+		top: 0;
+	}
+
+	.marker-low {
+		bottom: 0;
 	}
 }
 

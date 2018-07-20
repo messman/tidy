@@ -8,7 +8,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, ".react-tabs {\n  height: 100%;\n  display: flex;\n  flex-direction: column; }\n  .react-tabs .tab-view {\n    overflow: hidden;\n    flex: 1; }\n  .react-tabs .tab-buttons {\n    background-color: #EAEAEA;\n    border-top: 1px solid #BEBEBE;\n    color: #BEBEBE;\n    fill: #BEBEBE;\n    display: flex; }\n  .react-tabs .tab-button {\n    flex: 1;\n    padding: .1rem;\n    text-align: center;\n    font-size: .8rem; }\n    .react-tabs .tab-button svg {\n      display: block;\n      margin: 0 auto;\n      margin-top: .2rem;\n      height: 26px; }\n    .react-tabs .tab-button:not(.tab-active) {\n      cursor: pointer; }\n  .react-tabs .tab-active {\n    cursor: default;\n    color: #19576D;\n    fill: #19576D; }\n", ""]);
+exports.push([module.i, ".react-tabs {\n  height: 100%;\n  display: flex;\n  flex-direction: column; }\n  .react-tabs .tab-view {\n    overflow: hidden;\n    flex: 1; }\n  .react-tabs .tab-buttons {\n    background-color: #EAEAEA;\n    border-top: 1px solid #BEBEBE;\n    color: #BEBEBE;\n    fill: #BEBEBE;\n    display: flex; }\n  .react-tabs .tab-button {\n    flex: 1;\n    text-align: center;\n    font-size: .8rem; }\n    .react-tabs .tab-button svg {\n      display: block;\n      margin: 0 auto;\n      margin-top: .2rem;\n      height: 26px; }\n    .react-tabs .tab-button:not(.tab-active) {\n      cursor: pointer; }\n  .react-tabs .tab-active {\n    cursor: default;\n    color: #19576D;\n    fill: #19576D; }\n", ""]);
 
 // exports
 
@@ -83,7 +83,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, ".wave {\n  flex: 1;\n  display: flex;\n  flex-direction: column; }\n  .wave .animation {\n    flex: 1;\n    flex-basis: auto;\n    min-height: 4rem;\n    position: relative;\n    overflow: hidden; }\n  .wave .gradient-out {\n    background: -moz-linear-gradient(top, #8DC2D5 0%, #DFEEF4 100%);\n    background: -webkit-linear-gradient(top, #8DC2D5 0%, #DFEEF4 100%);\n    background: linear-gradient(to bottom, #8DC2D5 0%, #DFEEF4 100%);\n    flex: 1; }\n  .wave .wave {\n    position: absolute;\n    bottom: -5px;\n    width: 100%;\n    height: 100%; }\n  .wave .wave-lower {\n    fill: #8DC2D5; }\n  .wave .wave-higher {\n    fill: #B5DCE8; }\n  .wave .rocks {\n    position: absolute;\n    bottom: -.5rem;\n    right: -.5rem;\n    width: calc(42 * .33rem);\n    height: calc(30 * .33rem); }\n", ""]);
+exports.push([module.i, ".wave {\n  flex: 1;\n  display: flex;\n  flex-direction: column; }\n  .wave .wave-container {\n    flex: 1;\n    flex-basis: auto;\n    min-height: 4rem;\n    position: relative; }\n  .wave .animation {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    overflow: hidden; }\n  .wave .gradient-out {\n    background: -moz-linear-gradient(top, #8DC2D5 0%, #DFEEF4 100%);\n    background: -webkit-linear-gradient(top, #8DC2D5 0%, #DFEEF4 100%);\n    background: linear-gradient(to bottom, #8DC2D5 0%, #DFEEF4 100%);\n    flex: 1; }\n  .wave .wave {\n    position: absolute;\n    bottom: -5px;\n    width: 100%;\n    height: 100%; }\n  .wave .wave-lower {\n    fill: #8DC2D5; }\n  .wave .wave-higher {\n    fill: #B5DCE8; }\n  .wave .rocks {\n    position: absolute;\n    bottom: -.5rem;\n    right: -.5rem;\n    width: calc(42 * .33rem);\n    height: 100%; }\n\n.wave .marker {\n  position: absolute;\n  height: 100%;\n  width: 50%; }\n  .wave .marker .line-container {\n    width: 3rem;\n    margin-left: 2rem;\n    padding: 1rem 0;\n    height: 100%;\n    display: flex;\n    flex-direction: column; }\n    .wave .marker .line-container .line {\n      width: 30%;\n      margin: 0 auto;\n      background-color: #19576D;\n      flex: 1;\n      border-radius: 2px; }\n    .wave .marker .line-container .line-faint {\n      opacity: .4; }\n    .wave .marker .line-container .line-arrow-holder {\n      position: relative;\n      width: 1rem;\n      height: .1rem;\n      margin: 0 auto; }\n    .wave .marker .line-container .arrow {\n      fill: #19576D;\n      position: absolute;\n      width: 3rem;\n      height: 3rem;\n      left: -1rem;\n      top: -1rem; }\n  .wave .marker .marker-header {\n    display: block;\n    position: absolute;\n    left: 5.5rem; }\n    .wave .marker .marker-header span {\n      white-space: pre; }\n  .wave .marker .marker-title {\n    font-size: 1.2rem;\n    font-weight: bold;\n    display: inline-block;\n    margin-right: 1rem; }\n  .wave .marker .marker-high {\n    top: 0; }\n  .wave .marker .marker-low {\n    bottom: 0; }\n", ""]);
 
 // exports
 
@@ -918,7 +918,7 @@ Object.defineProperty(exports, "__esModule", {
 var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
-        TIME: "Thu Jul 19 2018 18:08:18 GMT-0400 (EDT)"
+        TIME: "Fri Jul 20 2018 11:40:37 GMT-0400 (EDT)"
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -1757,14 +1757,37 @@ var Wave = exports.Wave = function (_React$Component) {
             if (!data || data.errors) {
                 return React.createElement("div", null, "TODO");
             }
-            return React.createElement("div", { className: "wave" }, React.createElement("div", { className: "animation" }, React.createElement(SVGWave, { percentFallen: .65, percentMin: .2, percentRange: .6, colorClass: "wave-higher", duration: 7.5 }), Wave.rock_svg, React.createElement(SVGWave, { percentFallen: .7, percentMin: .3, percentRange: .6, colorClass: "wave-lower", duration: 6 })), React.createElement("div", { className: "gradient-out" }));
+            var isRising = data.currentIsRising;
+            var high = isRising ? data.next : data.previous;
+            var low = isRising ? data.previous : data.next;
+            var currentVal = data.current.val;
+            var highVal = high.val;
+            var lowVal = low.val;
+            var percentFallen = .7; //1 - ((currentVal - lowVal) / (highVal - lowVal));
+            console.log(percentFallen, currentVal, highVal, lowVal);
+            var upperWavePercent = percentFallen;
+            var lowerWavePercent = percentFallen;
+            var upperLine = Math.max(Math.round(percentFallen * 100), 10);
+            var upperLineStyle = {
+                flex: upperLine
+            };
+            var lowerLine = 100 - upperLine;
+            var lowerLineStyle = {
+                flex: lowerLine
+            };
+            return React.createElement("div", { className: "wave" }, React.createElement("div", { className: "wave-container" }, React.createElement("div", { className: "animation" }, React.createElement(SVGWave, { animationOpts: { percentFallen: upperWavePercent, percentMin: .1, percentRange: .7, colorClass: "wave-higher", duration: 7.5 } }), Wave.rock_svg, React.createElement(SVGWave, { animationOpts: { percentFallen: lowerWavePercent, percentMin: .2, percentRange: .7, colorClass: "wave-lower", duration: 6 } })), React.createElement("div", { className: "marker" }, React.createElement("div", { className: "line-container" }, React.createElement("div", { className: "line " + (isRising ? "line-faint" : ""), style: upperLineStyle }), React.createElement("div", { className: "line-arrow-holder" }, isRising ? Wave.arrow_up_svg : Wave.arrow_down_svg), React.createElement("div", { className: "line " + (isRising ? "" : "line-faint"), style: lowerLineStyle })), React.createElement("span", { className: "marker-header marker-high" }, React.createElement("span", { className: "marker-title" }, "High"), React.createElement("span", { className: "marker-value" }, "(", roundVal(highVal), " ft)")), React.createElement("span", { className: "marker-header marker-low" }, React.createElement("span", { className: "marker-title" }, "Low"), React.createElement("span", { className: "marker-value" }, "(", roundVal(lowVal), " ft)")))), React.createElement("div", { className: "gradient-out" }));
         }
     }]);
 
     return Wave;
 }(React.Component);
 
-Wave.rock_svg = React.createElement("svg", { className: "rocks", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "42", height: "30", viewBox: "0 0 42 30" }, React.createElement("path", { fill: "#a49081", d: "M23.1 10.253l3.75-6.646 5.85-3.608 6.45 2.848h6.15l-1.65 25.823-18.75 1.329z" }), React.createElement("path", { fill: "#7c6c60", d: "M10.242 15.967l8.349-6.689c0.117-0.094 0.255-0.157 0.403-0.183l5.632-1.016 12.023 6.4 8.146-6.72c0.383-0.316 0.951-0.262 1.267 0.121 0.187 0.226 0.251 0.529 0.174 0.811l-4.028 14.653c-0.092 0.335-0.369 0.587-0.712 0.648l-28.514 5.028c-0.489 0.086-0.956-0.241-1.043-0.73l-2.021-11.464c-0.057-0.324 0.067-0.653 0.324-0.859z" }), React.createElement("path", { fill: "#938071", d: "M13.806 14.886l5.682-0.699c0.161-0.020 0.314-0.083 0.442-0.182l5.987-4.647 9.202-0.722 4.326 5.15c0.064 0.076 0.114 0.162 0.15 0.254l3.38 8.739c0.179 0.464-0.051 0.985-0.515 1.164-0.070 0.027-0.144 0.045-0.219 0.054l-27.844 3.303c-0.494 0.059-0.941-0.294-1-0.788-0.003-0.025-0.005-0.049-0.006-0.074l-0.376-10.627c-0.017-0.466 0.326-0.868 0.79-0.925z" }), React.createElement("path", { fill: "#6b5b50", d: "M14.1 23.475l8.369-6.525 10.945 3.026 4.237 4.539-2.85 5.485h-34.8l5.25-7.376z" }), React.createElement("path", { fill: "#a49081", d: "M23.85 24.483l6.15-6.278 8.1-3.805 5.7 3.805-1.050 11.795h-21.15z" }));
+Wave.rock_svg = React.createElement("svg", { className: "rocks", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "42", height: "30", viewBox: "0 0 42 30", preserveAspectRatio: "none" }, React.createElement("path", { fill: "#a49081", d: "M23.1 10.253l3.75-6.646 5.85-3.608 6.45 2.848h6.15l-1.65 25.823-18.75 1.329z" }), React.createElement("path", { fill: "#7c6c60", d: "M10.242 15.967l8.349-6.689c0.117-0.094 0.255-0.157 0.403-0.183l5.632-1.016 12.023 6.4 8.146-6.72c0.383-0.316 0.951-0.262 1.267 0.121 0.187 0.226 0.251 0.529 0.174 0.811l-4.028 14.653c-0.092 0.335-0.369 0.587-0.712 0.648l-28.514 5.028c-0.489 0.086-0.956-0.241-1.043-0.73l-2.021-11.464c-0.057-0.324 0.067-0.653 0.324-0.859z" }), React.createElement("path", { fill: "#938071", d: "M13.806 14.886l5.682-0.699c0.161-0.020 0.314-0.083 0.442-0.182l5.987-4.647 9.202-0.722 4.326 5.15c0.064 0.076 0.114 0.162 0.15 0.254l3.38 8.739c0.179 0.464-0.051 0.985-0.515 1.164-0.070 0.027-0.144 0.045-0.219 0.054l-27.844 3.303c-0.494 0.059-0.941-0.294-1-0.788-0.003-0.025-0.005-0.049-0.006-0.074l-0.376-10.627c-0.017-0.466 0.326-0.868 0.79-0.925z" }), React.createElement("path", { fill: "#6b5b50", d: "M14.1 23.475l8.369-6.525 10.945 3.026 4.237 4.539-2.85 5.485h-34.8l5.25-7.376z" }), React.createElement("path", { fill: "#a49081", d: "M23.85 24.483l6.15-6.278 8.1-3.805 5.7 3.805-1.050 11.795h-21.15z" }));
+Wave.arrow_up_svg = React.createElement("svg", { className: "arrow arrow-up", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "44", height: "30", viewBox: "0 0 44 30" }, React.createElement("path", { d: "M42.050 29.917h-40.32c-0.933 0-1.69-0.757-1.69-1.69 0-0.373 0.123-0.735 0.351-1.031l20.13-26.151c0.569-0.74 1.631-0.878 2.37-0.308 0.115 0.089 0.218 0.192 0.307 0.306l20.19 26.151c0.57 0.739 0.434 1.8-0.305 2.371-0.296 0.228-0.659 0.352-1.033 0.352z" }));
+Wave.arrow_down_svg = React.createElement("svg", { className: "arrow arrow-down", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "45", height: "30", viewBox: "0 0 45 30" }, React.createElement("path", { d: "M1.298 0h42.038c0.7 0 1.268 0.568 1.268 1.268 0 0.28-0.093 0.552-0.263 0.773l-20.988 27.265c-0.427 0.555-1.223 0.658-1.778 0.231-0.086-0.066-0.164-0.144-0.23-0.23l-21.050-27.265c-0.428-0.554-0.325-1.35 0.229-1.778 0.222-0.171 0.494-0.264 0.775-0.264z" }));
+function roundVal(num) {
+    return Math.round(num * 100) / 100;
+}
 
 var SVGWave = exports.SVGWave = function (_React$Component2) {
     _inherits(SVGWave, _React$Component2);
@@ -1778,18 +1801,19 @@ var SVGWave = exports.SVGWave = function (_React$Component2) {
     _createClass(SVGWave, [{
         key: "render",
         value: function render() {
+            var opts = this.props.animationOpts;
             // Should be between 0 and 1 inclusive
-            var p = Math.min(Math.max(this.props.percentFallen, 0), 1);
+            var p = Math.min(Math.max(opts.percentFallen, 0), 1);
             // Transform to between .3 and .9, inclusive, steps by .1
-            var min = this.props.percentMin;
-            var range = this.props.percentRange;
+            var min = opts.percentMin;
+            var range = opts.percentRange;
             var transformedP = Math.floor((p * range + min) * 100) / 100;
             console.log(transformedP);
             // Get the path
             var path = SVGWave.getPath(transformedP, .05, 1.5, .3, 100, 100, 0);
             console.log(path);
-            var name = "wave_" + this.props.colorClass;
-            return React.createElement("svg", { className: "wave " + this.props.colorClass, version: "1.1", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 100 100", preserveAspectRatio: "none" }, React.createElement("defs", null, React.createElement("path", { id: name, d: path })), React.createElement("use", { xlinkHref: "#" + name, x: "0", y: "0" }, React.createElement("animate", { attributeName: "x", from: "-100", to: "0", dur: this.props.duration + "s", repeatCount: "indefinite" })));
+            var name = "wave_" + opts.colorClass;
+            return React.createElement("svg", { className: "wave " + opts.colorClass, version: "1.1", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 100 100", preserveAspectRatio: "none" }, React.createElement("defs", null, React.createElement("path", { id: name, d: path })), React.createElement("use", { xlinkHref: "#" + name, x: "0", y: "0" }, React.createElement("animate", { attributeName: "x", from: "-100", to: "0", dur: opts.duration + "s", repeatCount: "indefinite" })));
         }
     }], [{
         key: "getPath",
@@ -1823,4 +1847,4 @@ var SVGWave = exports.SVGWave = function (_React$Component2) {
 /***/ })
 
 },["./src/views/index.tsx"]);
-//# sourceMappingURL=index.a89c6d4bfa.js.map
+//# sourceMappingURL=index.bfcc646248.js.map
