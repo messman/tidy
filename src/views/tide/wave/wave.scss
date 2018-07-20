@@ -46,6 +46,7 @@
 		right: -1rem;
 		bottom: .1rem;
 		height: 100%;
+		width: auto;
 	}
 }
 
@@ -54,7 +55,7 @@
     bottom: 0;
     left: 0;
     height: calc(100% - 4rem);
-	width: 50%;
+	width: 60%;
 
 	.line-container {
 		width: 3rem;
