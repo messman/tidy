@@ -4,4 +4,36 @@
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	position: relative;
+
+	.low-button {
+		position: absolute;
+		bottom: 0;
+		display: flex;
+		padding: .3rem .4rem;
+		margin: .5rem;
+		border: 1px solid $c-main;
+		border-radius: 3px;
+		background-color: transparent;
+		color: $c-main;
+		align-items: center;
+
+		svg {
+			fill: $c-main;
+			height: 1.6rem;
+		}
+	}
+
+	.low-button-title {
+		display: inline-block;
+		margin: 0 .5rem;
+	}
+
+	.share {
+		left: 0;
+		
+	}
+	.refresh {
+		right: 0;
+	}
 }
