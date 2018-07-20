@@ -7,7 +7,7 @@
 	flex-direction: column;
 
 	.wave-container {
-		flex: 1;
+		flex: 2;
 		flex-basis: auto;
 		min-height: 4rem;
 		position: relative;
@@ -47,7 +47,7 @@
 		position: absolute;
 		bottom: -.5rem;
 		right: -.5rem;
-		width: calc(42 * .33rem);
+		width: 30vh;
 		height: 100%;
 	}
 }
