@@ -3,6 +3,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 const buildTime = (new Date()).toString();
+const version = "1.0.0.1";
 
 // Cleans a directory
 const CleanWebpackPlugin = require("clean-webpack-plugin");
@@ -26,6 +27,7 @@ const DEFINE = {
 	webpack: {
 		BUILD: {
 			IS_PRODUCTION: JSON.stringify(false),
+			VERSION: JSON.stringify(version),
 			TIME: JSON.stringify(buildTime)
 		},
 		DEBUG: {

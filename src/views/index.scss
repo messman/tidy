@@ -25,3 +25,16 @@ main {
 	height: 100%;
 	outline: 1px solid $m-dark;
 }
+
+.tab-view-bg {
+	padding: .5rem;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: -moz-linear-gradient(-45deg, $c-back 0%, $c-back 60%, $c-alt2 63%, $c-alt2 78%, $c-alt1 81%);
+	background: -webkit-linear-gradient(-45deg, $c-back 0%, $c-back 60%, $c-alt2 63%, $c-alt2 78%, $c-alt1 81%);
+	background: linear-gradient(135deg, $c-back 0%, $c-back 60%, $c-alt2 63%, $c-alt2 78%, $c-alt1 81%);
+}

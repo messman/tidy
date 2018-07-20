@@ -9,6 +9,7 @@ import { Settings } from "./settings/settings";
 
 import { DEFINE } from "../services/define";
 import { WaterLevel } from "../services/noaa";
+import { Info } from "./info/info";
 
 console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${DEFINE.BUILD.TIME}`);
 
@@ -107,7 +108,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Info</span>
 					</TabButton>
 					<TabView>
-						<span>Info</span>
+						<Info />
 					</TabView>
 				</Tab>
 			</Tabs>

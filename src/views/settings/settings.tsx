@@ -20,7 +20,7 @@ export class Settings extends React.Component<SettingsProps, SettingsState> {
 
 	render() {
 		return (
-			<div className="settings">
+			<div className="settings tab-view-bg">
 				<div>
 					<p>Build date: {DEFINE.BUILD.TIME}</p>
 					<p>Build is production: {`${DEFINE.BUILD.IS_PRODUCTION}`}</p>
