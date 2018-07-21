@@ -964,7 +964,7 @@ var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
         VERSION: "1.0.0.1",
-        TIME: 1532136377846
+        TIME: 1532136455797
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -2254,4 +2254,4 @@ var SVGWave = exports.SVGWave = function (_React$Component2) {
 /***/ })
 
 },["./src/views/index.tsx"]);
-//# sourceMappingURL=index.3c1ff79215.js.map
+//# sourceMappingURL=index.cb7e70ee1b.js.map
