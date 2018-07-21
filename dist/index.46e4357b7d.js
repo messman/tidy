@@ -38,7 +38,22 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, ".info header {\n  background-color: #19576D;\n  color: #DFEEF4;\n  text-align: center;\n  padding: .5rem;\n  border-radius: 6px; }\n  .info header h2, .info header h3 {\n    margin: 0; }\n", ""]);
+exports.push([module.i, ".info {\n  text-align: center; }\n  .info section {\n    margin: .5rem; }\n    .info section + section {\n      margin-top: 1.5rem; }\n\n.info-header span {\n  display: inline-block;\n  padding: 0 .2rem; }\n\n.info-header .value {\n  color: rgba(25, 87, 109, 0.7); }\n\n.info-gh a {\n  margin: auto;\n  background-color: #EAEAEA;\n  border: 1px solid #BEBEBE;\n  border-radius: 6px;\n  box-shadow: 0 1px 3px 0 #333;\n  padding: .6rem .7rem;\n  display: inline-flex;\n  align-items: center;\n  position: relative;\n  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 0 3px 0 rgba(0, 0, 0, 0.4), inset 0 0 3px 5px rgba(0, 0, 0, 0.05), 2px 2px 4px 0 rgba(0, 0, 0, 0.4);\n  color: #333; }\n  .info-gh a:before, .info-gh a:after {\n    content: '';\n    display: block;\n    position: absolute;\n    left: 2px;\n    right: 2px;\n    height: 2px; }\n  .info-gh a:before {\n    top: 0;\n    border-bottom-left-radius: 6px;\n    border-bottom-right-radius: 6px;\n    background: rgba(255, 255, 255, 0.6);\n    box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.6); }\n  .info-gh a:after {\n    bottom: 0;\n    border-top-left-radius: 6px;\n    border-top-right-radius: 6px;\n    background: rgba(0, 0, 0, 0.15);\n    box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.15); }\n  .info-gh a:link, .info-gh a:visited, .info-gh a:active, .info-gh a:hover {\n    color: #333;\n    text-decoration: none; }\n  .info-gh a p {\n    text-align: left;\n    margin: 0;\n    line-height: 1.4rem; }\n  .info-gh a svg {\n    fill: #333;\n    height: 2.5rem;\n    width: auto; }\n  .info-gh a .split-right {\n    padding-left: .7rem; }\n\n.info-thanks > div {\n  margin: 1.5rem 0;\n  line-height: 1rem; }\n\n.info-thanks a, .info-thanks a:link, .info-thanks a:hover, .info-thanks a:active, .info-thanks a:visited {\n  color: #06151a;\n  white-space: pre; }\n\n.info-thanks ul {\n  margin: .5rem 0;\n  padding: 0;\n  list-style-type: none; }\n  .info-thanks ul li {\n    color: rgba(25, 87, 109, 0.7); }\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/sass-loader/lib/loader.js!./src/views/more/more.scss":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".more {\n  text-align: center; }\n", ""]);
 
 // exports
 
@@ -53,7 +68,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, ".settings {\n  padding: 1rem; }\n", ""]);
+exports.push([module.i, ".settings {\n  text-align: center; }\n", ""]);
 
 // exports
 
@@ -934,7 +949,7 @@ var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
         VERSION: "1.0.0.1",
-        TIME: "Fri Jul 20 2018 16:03:41 GMT-0400 (EDT)"
+        TIME: 1532134080194
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -1243,6 +1258,8 @@ var _define = __webpack_require__("./src/services/define.ts");
 
 var _info = __webpack_require__("./src/views/info/info.tsx");
 
+var _more = __webpack_require__("./src/views/more/more.tsx");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1251,7 +1268,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-console.log((_define.DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug") + " | " + _define.DEFINE.BUILD.TIME);
+var date = new Date(_define.DEFINE.BUILD.TIME);
+console.log((_define.DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug") + " | " + date);
 
 var App = function (_React$Component) {
     _inherits(App, _React$Component);
@@ -1289,7 +1307,7 @@ var App = function (_React$Component) {
                     isRequesting: this.state.waterLevelIsRequesting,
                     onRequestBegin: this.beginWaterLevelRequest,
                     onRequestEnd: this.endWaterLevelRequest
-                } }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M27.188 1.875h-24.375c-1.553 0-2.813 1.259-2.813 2.813v20.625c0 1.553 1.259 2.813 2.813 2.813h24.375c1.553 0 2.813-1.259 2.813-2.813v-20.625c0-1.553-1.259-2.813-2.813-2.813zM13.125 24.375h-9.375v-15h9.375v15zM26.25 24.375h-9.375v-15h9.375v15z" })), React.createElement("span", null, "Charts")), React.createElement(_components.TabView, null, React.createElement("div", null, "Charts"))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "15", height: "30", viewBox: "0 0 15 30" }, React.createElement("path", { d: "M11.25 22.5c0 2.071-1.679 3.75-3.75 3.75s-3.75-1.679-3.75-3.75c0-1.388 0.754-2.599 1.875-3.247v-6.128c0-1.036 0.839-1.875 1.875-1.875s1.875 0.839 1.875 1.875v6.128c1.121 0.649 1.875 1.859 1.875 3.247zM13.125 17.54c1.167 1.322 1.875 3.058 1.875 4.96 0 4.142-3.358 7.5-7.5 7.5-0.018 0-0.036-0-0.053-0-4.119-0.029-7.468-3.42-7.447-7.539 0.010-1.887 0.716-3.608 1.875-4.921v-11.915c0-3.107 2.518-5.625 5.625-5.625s5.625 2.518 5.625 5.625v11.915zM12.188 22.5c0-2.012-1.135-3.058-1.875-3.897v-12.978c0-1.551-1.262-2.813-2.813-2.813s-2.813 1.262-2.813 2.813v12.978c-0.746 0.845-1.865 1.881-1.875 3.872-0.013 2.571 2.084 4.694 4.654 4.712l0.034 0c2.585 0 4.688-2.103 4.688-4.688z" })), React.createElement("span", null, "More")), React.createElement(_components.TabView, null, React.createElement("div", null, "More"))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "38", height: "30", viewBox: "0 0 38 30" }, React.createElement("path", { d: "M30.006 11.191l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 7.746c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.74-4.828 0.838-3.094 3.094zM22.635 16.764l1.975 0.984c0.592 0.34 0.85 1.061 0.615 1.705-0.521 1.418-1.547 2.719-2.496 3.855-0.434 0.521-1.184 0.65-1.775 0.311l-1.705-0.984c-0.938 0.803-2.027 1.441-3.217 1.857v1.969c0 0.68-0.486 1.266-1.154 1.383-1.441 0.246-2.953 0.258-4.447 0-0.674-0.117-1.172-0.697-1.172-1.383v-1.969c-1.189-0.422-2.279-1.055-3.217-1.857l-1.705 0.979c-0.586 0.34-1.342 0.211-1.775-0.311-0.949-1.137-1.951-2.438-2.473-3.85-0.234-0.639 0.023-1.359 0.615-1.705l1.951-0.984c-0.229-1.225-0.229-2.484 0-3.715l-1.951-0.99c-0.592-0.34-0.855-1.061-0.615-1.699 0.521-1.418 1.523-2.719 2.473-3.855 0.434-0.521 1.184-0.65 1.775-0.311l1.705 0.984c0.938-0.803 2.027-1.441 3.217-1.857v-1.975c0-0.674 0.48-1.26 1.148-1.377 1.441-0.246 2.959-0.258 4.453-0.006 0.674 0.117 1.172 0.697 1.172 1.383v1.969c1.189 0.422 2.279 1.055 3.217 1.857l1.705-0.984c0.586-0.34 1.342-0.211 1.775 0.311 0.949 1.137 1.945 2.438 2.467 3.855 0.234 0.639 0.006 1.359-0.586 1.705l-1.975 0.984c0.229 1.23 0.229 2.49 0 3.721zM15.744 18c3.469-4.512-1.682-9.662-6.193-6.193-3.469 4.512 1.682 9.662 6.193 6.193zM30.006 28.705l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 25.254c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.734-4.828 0.838-3.094 3.094z" })), React.createElement("span", null, "Settings")), React.createElement(_components.TabView, null, React.createElement(_settings.Settings, null))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.025 0-14.531 6.509-14.531 14.531 0 8.027 6.506 14.531 14.531 14.531s14.531-6.504 14.531-14.531c0-8.022-6.506-14.531-14.531-14.531zM15 6.914c1.359 0 2.461 1.102 2.461 2.461s-1.102 2.461-2.461 2.461-2.461-1.102-2.461-2.461 1.102-2.461 2.461-2.461zM18.281 21.797c0 0.388-0.315 0.703-0.703 0.703h-5.156c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h0.703v-3.75h-0.703c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h3.75c0.388 0 0.703 0.315 0.703 0.703v5.859h0.703c0.388 0 0.703 0.315 0.703 0.703v1.406z" })), React.createElement("span", null, "Info")), React.createElement(_components.TabView, null, React.createElement(_info.Info, null))));
+                } }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M27.188 1.875h-24.375c-1.553 0-2.813 1.259-2.813 2.813v20.625c0 1.553 1.259 2.813 2.813 2.813h24.375c1.553 0 2.813-1.259 2.813-2.813v-20.625c0-1.553-1.259-2.813-2.813-2.813zM13.125 24.375h-9.375v-15h9.375v15zM26.25 24.375h-9.375v-15h9.375v15z" })), React.createElement("span", null, "Charts")), React.createElement(_components.TabView, null, React.createElement("div", null, "Charts"))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "15", height: "30", viewBox: "0 0 15 30" }, React.createElement("path", { d: "M11.25 22.5c0 2.071-1.679 3.75-3.75 3.75s-3.75-1.679-3.75-3.75c0-1.388 0.754-2.599 1.875-3.247v-6.128c0-1.036 0.839-1.875 1.875-1.875s1.875 0.839 1.875 1.875v6.128c1.121 0.649 1.875 1.859 1.875 3.247zM13.125 17.54c1.167 1.322 1.875 3.058 1.875 4.96 0 4.142-3.358 7.5-7.5 7.5-0.018 0-0.036-0-0.053-0-4.119-0.029-7.468-3.42-7.447-7.539 0.010-1.887 0.716-3.608 1.875-4.921v-11.915c0-3.107 2.518-5.625 5.625-5.625s5.625 2.518 5.625 5.625v11.915zM12.188 22.5c0-2.012-1.135-3.058-1.875-3.897v-12.978c0-1.551-1.262-2.813-2.813-2.813s-2.813 1.262-2.813 2.813v12.978c-0.746 0.845-1.865 1.881-1.875 3.872-0.013 2.571 2.084 4.694 4.654 4.712l0.034 0c2.585 0 4.688-2.103 4.688-4.688z" })), React.createElement("span", null, "More")), React.createElement(_components.TabView, null, React.createElement(_more.More, null))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "38", height: "30", viewBox: "0 0 38 30" }, React.createElement("path", { d: "M30.006 11.191l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 7.746c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.74-4.828 0.838-3.094 3.094zM22.635 16.764l1.975 0.984c0.592 0.34 0.85 1.061 0.615 1.705-0.521 1.418-1.547 2.719-2.496 3.855-0.434 0.521-1.184 0.65-1.775 0.311l-1.705-0.984c-0.938 0.803-2.027 1.441-3.217 1.857v1.969c0 0.68-0.486 1.266-1.154 1.383-1.441 0.246-2.953 0.258-4.447 0-0.674-0.117-1.172-0.697-1.172-1.383v-1.969c-1.189-0.422-2.279-1.055-3.217-1.857l-1.705 0.979c-0.586 0.34-1.342 0.211-1.775-0.311-0.949-1.137-1.951-2.438-2.473-3.85-0.234-0.639 0.023-1.359 0.615-1.705l1.951-0.984c-0.229-1.225-0.229-2.484 0-3.715l-1.951-0.99c-0.592-0.34-0.855-1.061-0.615-1.699 0.521-1.418 1.523-2.719 2.473-3.855 0.434-0.521 1.184-0.65 1.775-0.311l1.705 0.984c0.938-0.803 2.027-1.441 3.217-1.857v-1.975c0-0.674 0.48-1.26 1.148-1.377 1.441-0.246 2.959-0.258 4.453-0.006 0.674 0.117 1.172 0.697 1.172 1.383v1.969c1.189 0.422 2.279 1.055 3.217 1.857l1.705-0.984c0.586-0.34 1.342-0.211 1.775 0.311 0.949 1.137 1.945 2.438 2.467 3.855 0.234 0.639 0.006 1.359-0.586 1.705l-1.975 0.984c0.229 1.23 0.229 2.49 0 3.721zM15.744 18c3.469-4.512-1.682-9.662-6.193-6.193-3.469 4.512 1.682 9.662 6.193 6.193zM30.006 28.705l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 25.254c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.734-4.828 0.838-3.094 3.094z" })), React.createElement("span", null, "Settings")), React.createElement(_components.TabView, null, React.createElement(_settings.Settings, null))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.025 0-14.531 6.509-14.531 14.531 0 8.027 6.506 14.531 14.531 14.531s14.531-6.504 14.531-14.531c0-8.022-6.506-14.531-14.531-14.531zM15 6.914c1.359 0 2.461 1.102 2.461 2.461s-1.102 2.461-2.461 2.461-2.461-1.102-2.461-2.461 1.102-2.461 2.461-2.461zM18.281 21.797c0 0.388-0.315 0.703-0.703 0.703h-5.156c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h0.703v-3.75h-0.703c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h3.75c0.388 0 0.703 0.315 0.703 0.703v5.859h0.703c0.388 0 0.703 0.315 0.703 0.703v1.406z" })), React.createElement("span", null, "Info")), React.createElement(_components.TabView, null, React.createElement(_info.Info, null))));
             return view;
         }
     }]);
@@ -1396,11 +1414,112 @@ var Info = exports.Info = function (_React$Component) {
     _createClass(Info, [{
         key: "render",
         value: function render() {
-            return React.createElement("div", { className: "info tab-view-bg" }, React.createElement("header", null, React.createElement("h2", null, "quick-tides"), React.createElement("h3", null, "by Andrew Messier")), React.createElement("div", null, "For Mark and Dawna Messier"), React.createElement("div", null, React.createElement("a", { href: "https://github.com/messman/quick-tides", rel: "noopener noreferrer" }, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "32", height: "30", viewBox: "0 0 32 30" }, React.createElement("path", { d: "M10.738 24.136c0 0.124-0.149 0.223-0.337 0.223-0.214 0.019-0.362-0.081-0.362-0.223 0-0.124 0.149-0.223 0.337-0.223 0.194-0.019 0.362 0.081 0.362 0.223zM8.725 23.857c-0.045 0.124 0.084 0.267 0.278 0.304 0.168 0.062 0.362 0 0.401-0.124s-0.084-0.267-0.278-0.322c-0.168-0.043-0.356 0.019-0.401 0.143zM11.586 23.752c-0.188 0.043-0.317 0.161-0.298 0.304 0.019 0.124 0.188 0.205 0.382 0.161 0.188-0.043 0.317-0.161 0.298-0.285-0.019-0.118-0.194-0.198-0.382-0.18zM15.845 0c-8.978 0-15.845 6.527-15.845 15.124 0 6.874 4.518 12.756 10.971 14.826 0.829 0.143 1.12-0.347 1.12-0.75 0-0.384-0.019-2.504-0.019-3.806 0 0-4.531 0.93-5.482-1.847 0 0-0.738-1.804-1.799-2.269 0 0-1.482-0.973 0.104-0.955 0 0 1.612 0.124 2.498 1.599 1.418 2.393 3.793 1.705 4.719 1.295 0.149-0.992 0.57-1.68 1.036-2.089-3.618-0.384-7.269-0.886-7.269-6.849 0-1.705 0.492-2.56 1.528-3.651-0.168-0.403-0.718-2.064 0.168-4.209 1.353-0.403 4.466 1.674 4.466 1.674 1.295-0.347 2.686-0.527 4.065-0.527s2.77 0.18 4.065 0.527c0 0 3.113-2.083 4.466-1.674 0.887 2.151 0.337 3.806 0.168 4.209 1.036 1.097 1.67 1.952 1.67 3.651 0 5.981-3.812 6.459-7.431 6.849 0.595 0.49 1.1 1.419 1.1 2.876 0 2.089-0.019 4.674-0.019 5.182 0 0.403 0.298 0.893 1.12 0.75 6.473-2.058 10.861-7.94 10.861-14.814 0-8.597-7.282-15.124-16.259-15.124zM6.291 21.378c-0.084 0.062-0.065 0.205 0.045 0.322 0.104 0.099 0.252 0.143 0.337 0.062 0.084-0.062 0.065-0.205-0.045-0.322-0.104-0.099-0.252-0.143-0.337-0.062zM5.592 20.876c-0.045 0.081 0.019 0.18 0.149 0.242 0.104 0.062 0.233 0.043 0.278-0.043 0.045-0.081-0.019-0.18-0.149-0.242-0.129-0.037-0.233-0.019-0.278 0.043zM7.69 23.083c-0.104 0.081-0.065 0.267 0.084 0.384 0.149 0.143 0.337 0.161 0.421 0.062 0.084-0.081 0.045-0.267-0.084-0.384-0.142-0.143-0.337-0.161-0.421-0.062zM6.952 22.171c-0.104 0.062-0.104 0.223 0 0.366s0.278 0.205 0.362 0.143c0.104-0.081 0.104-0.242 0-0.384-0.091-0.143-0.259-0.205-0.362-0.124z" })), React.createElement("p", null, "See the code / note issues"))), React.createElement("div", null, "Big thanks to the U.S. National Oceanic and Atmospheric Administration (NOAA) for their ", React.createElement("a", { href: "https://tidesandcurrents.noaa.gov/api/" }, "Data Retrieval API"), "."), React.createElement("div", null, "Other acknowledgments:", React.createElement("ul", null, React.createElement("li", null, "IcoMoon and FontAwesome for icons"), React.createElement("li", null, "Sketch & VSCode for being so wonderful"))), React.createElement("div", null, React.createElement("p", null, "Version ", _define.DEFINE.BUILD.VERSION, " (", _define.DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug", ")"), React.createElement("p", null, "Built ", _define.DEFINE.BUILD.TIME)));
+            var date = new Date(_define.DEFINE.BUILD.TIME);
+            var dateStr = date.toISOString();
+            return React.createElement("div", { className: "info tab-view-bg" }, React.createElement("section", { className: "info-header" }, React.createElement("div", null, React.createElement("span", { className: "key" }, "Authored by"), React.createElement("span", { className: "value" }, "Andrew Messier")), React.createElement("div", null, React.createElement("span", { className: "key" }, "Version"), React.createElement("span", { className: "value" }, _define.DEFINE.BUILD.VERSION, " (", _define.DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug", ")")), React.createElement("div", null, React.createElement("span", { className: "key" }, "Updated"), React.createElement("span", { className: "value" }, dateStr))), React.createElement("section", { className: "info-gh" }, React.createElement("a", { href: "https://github.com/messman/quick-tides", rel: "noopener noreferrer" }, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "32", height: "30", viewBox: "0 0 32 30" }, React.createElement("path", { d: "M10.738 24.136c0 0.124-0.149 0.223-0.337 0.223-0.214 0.019-0.362-0.081-0.362-0.223 0-0.124 0.149-0.223 0.337-0.223 0.194-0.019 0.362 0.081 0.362 0.223zM8.725 23.857c-0.045 0.124 0.084 0.267 0.278 0.304 0.168 0.062 0.362 0 0.401-0.124s-0.084-0.267-0.278-0.322c-0.168-0.043-0.356 0.019-0.401 0.143zM11.586 23.752c-0.188 0.043-0.317 0.161-0.298 0.304 0.019 0.124 0.188 0.205 0.382 0.161 0.188-0.043 0.317-0.161 0.298-0.285-0.019-0.118-0.194-0.198-0.382-0.18zM15.845 0c-8.978 0-15.845 6.527-15.845 15.124 0 6.874 4.518 12.756 10.971 14.826 0.829 0.143 1.12-0.347 1.12-0.75 0-0.384-0.019-2.504-0.019-3.806 0 0-4.531 0.93-5.482-1.847 0 0-0.738-1.804-1.799-2.269 0 0-1.482-0.973 0.104-0.955 0 0 1.612 0.124 2.498 1.599 1.418 2.393 3.793 1.705 4.719 1.295 0.149-0.992 0.57-1.68 1.036-2.089-3.618-0.384-7.269-0.886-7.269-6.849 0-1.705 0.492-2.56 1.528-3.651-0.168-0.403-0.718-2.064 0.168-4.209 1.353-0.403 4.466 1.674 4.466 1.674 1.295-0.347 2.686-0.527 4.065-0.527s2.77 0.18 4.065 0.527c0 0 3.113-2.083 4.466-1.674 0.887 2.151 0.337 3.806 0.168 4.209 1.036 1.097 1.67 1.952 1.67 3.651 0 5.981-3.812 6.459-7.431 6.849 0.595 0.49 1.1 1.419 1.1 2.876 0 2.089-0.019 4.674-0.019 5.182 0 0.403 0.298 0.893 1.12 0.75 6.473-2.058 10.861-7.94 10.861-14.814 0-8.597-7.282-15.124-16.259-15.124zM6.291 21.378c-0.084 0.062-0.065 0.205 0.045 0.322 0.104 0.099 0.252 0.143 0.337 0.062 0.084-0.062 0.065-0.205-0.045-0.322-0.104-0.099-0.252-0.143-0.337-0.062zM5.592 20.876c-0.045 0.081 0.019 0.18 0.149 0.242 0.104 0.062 0.233 0.043 0.278-0.043 0.045-0.081-0.019-0.18-0.149-0.242-0.129-0.037-0.233-0.019-0.278 0.043zM7.69 23.083c-0.104 0.081-0.065 0.267 0.084 0.384 0.149 0.143 0.337 0.161 0.421 0.062 0.084-0.081 0.045-0.267-0.084-0.384-0.142-0.143-0.337-0.161-0.421-0.062zM6.952 22.171c-0.104 0.062-0.104 0.223 0 0.366s0.278 0.205 0.362 0.143c0.104-0.081 0.104-0.242 0-0.384-0.091-0.143-0.259-0.205-0.362-0.124z" })), React.createElement("div", { className: "split-right" }, React.createElement("p", null, "open-source on GitHub"), React.createElement("p", null, "at messman/quick-tides")))), React.createElement("section", { className: "info-thanks" }, React.createElement("div", null, "Dedicated to Mark & Dawna Messier."), React.createElement("div", null, "Many thanks to the U.S. National Oceanic and Atmospheric Administration (NOAA) for their ", React.createElement("a", { href: "https://tidesandcurrents.noaa.gov/api/" }, "Data Retrieval API"), "."), React.createElement("div", null, "Technical acknowledgments:", React.createElement("ul", null, React.createElement("li", null, "IcoMoon and FontAwesome for icons"), React.createElement("li", null, "Sketch & VSCode for being so wonderful")))));
         }
     }]);
 
     return Info;
+}(React.Component);
+
+/***/ }),
+
+/***/ "./src/views/more/more.scss":
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/sass-loader/lib/loader.js!./src/views/more/more.scss");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__("./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {
+	module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./more.scss", function() {
+		var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./more.scss");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./src/views/more/more.tsx":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.More = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__("./node_modules/react/index.js");
+
+var React = _interopRequireWildcard(_react);
+
+__webpack_require__("./src/views/more/more.scss");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var More = exports.More = function (_React$Component) {
+    _inherits(More, _React$Component);
+
+    function More() {
+        _classCallCheck(this, More);
+
+        return _possibleConstructorReturn(this, (More.__proto__ || Object.getPrototypeOf(More)).apply(this, arguments));
+    }
+
+    _createClass(More, [{
+        key: "render",
+        value: function render() {
+            return React.createElement("div", { className: "more tab-view-bg" }, React.createElement("h3", null, "More data coming soon."));
+        }
+    }]);
+
+    return More;
 }(React.Component);
 
 /***/ }),
@@ -1475,8 +1594,6 @@ var React = _interopRequireWildcard(_react);
 
 __webpack_require__("./src/views/settings/settings.scss");
 
-var _define = __webpack_require__("./src/services/define.ts");
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1488,19 +1605,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Settings = exports.Settings = function (_React$Component) {
     _inherits(Settings, _React$Component);
 
-    function Settings(props) {
+    function Settings() {
         _classCallCheck(this, Settings);
 
-        var _this = _possibleConstructorReturn(this, (Settings.__proto__ || Object.getPrototypeOf(Settings)).call(this, props));
-
-        _this.state = {};
-        return _this;
+        return _possibleConstructorReturn(this, (Settings.__proto__ || Object.getPrototypeOf(Settings)).apply(this, arguments));
     }
 
     _createClass(Settings, [{
         key: "render",
         value: function render() {
-            return React.createElement("div", { className: "settings tab-view-bg" }, React.createElement("div", null, React.createElement("p", null, "Build date: ", _define.DEFINE.BUILD.TIME), React.createElement("p", null, "Build is production: ", "" + _define.DEFINE.BUILD.IS_PRODUCTION)));
+            return React.createElement("div", { className: "settings tab-view-bg" }, React.createElement("h3", null, "Settings coming soon."));
         }
     }]);
 
@@ -1637,7 +1751,7 @@ var Tide = exports.Tide = function (_React$Component) {
                 return React.createElement("p", null, "Requesting...");
             } else {
                 var data = waterLevel.data;
-                return React.createElement("div", { className: "tide" }, React.createElement(_title.Title, { waterLevel: data }), React.createElement(_wave.Wave, { waterLevel: data }), React.createElement("button", { className: "low-button share", onClick: this.clickShare }, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "23", height: "30", viewBox: "0 0 23 30" }, React.createElement("path", { d: "M19.688 3.75h-4.688c0-2.068-1.682-3.75-3.75-3.75s-3.75 1.682-3.75 3.75h-4.688c-1.553 0-2.813 1.259-2.813 2.813v20.625c0 1.553 1.259 2.813 2.813 2.813h16.875c1.553 0 2.813-1.259 2.813-2.813v-20.625c0-1.553-1.259-2.813-2.813-2.813zM19.336 27.188h-16.172c-0.194 0-0.352-0.157-0.352-0.352v0-19.922c0-0.194 0.157-0.352 0.352-0.352v0h2.461v2.109c0 0.388 0.315 0.703 0.703 0.703h9.844c0.388 0 0.703-0.315 0.703-0.703v-2.109h2.461c0.194 0 0.352 0.157 0.352 0.352v0 19.922c0 0.194-0.157 0.352-0.352 0.352v0zM11.25 2.344c0.777 0 1.406 0.63 1.406 1.406s-0.63 1.406-1.406 1.406-1.406-0.63-1.406-1.406 0.63-1.406 1.406-1.406z" })), React.createElement("span", { className: "low-button-title" }, "Share")), React.createElement("button", { className: "low-button refresh", onClick: this.clickRefresh }, React.createElement("span", { className: "low-button-title" }, "Refresh"), React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M21.722 7.809c-1.832-1.715-4.209-2.655-6.731-2.653-4.539 0.004-8.457 3.116-9.539 7.433-0.079 0.314-0.359 0.536-0.683 0.536h-3.358c-0.439 0-0.773-0.399-0.692-0.831 1.268-6.732 7.179-11.826 14.28-11.826 3.893 0 7.429 1.531 10.038 4.025l2.093-2.093c0.886-0.886 2.401-0.258 2.401 0.994v7.855c0 0.777-0.63 1.406-1.406 1.406h-7.855c-1.253 0-1.88-1.515-0.994-2.401l2.446-2.446zM1.875 17.344h7.855c1.253 0 1.88 1.515 0.994 2.401l-2.446 2.446c1.832 1.715 4.209 2.655 6.731 2.653 4.536-0.004 8.456-3.114 9.538-7.433 0.079-0.314 0.359-0.536 0.683-0.536h3.358c0.439 0 0.773 0.399 0.692 0.831-1.268 6.732-7.179 11.826-14.28 11.826-3.893 0-7.429-1.531-10.038-4.025l-2.093 2.093c-0.886 0.886-2.401 0.258-2.401-0.994v-7.855c0-0.777 0.63-1.406 1.406-1.406z" }))));
+                return React.createElement("div", { className: "tide" }, React.createElement(_title.Title, { waterLevel: data }), React.createElement(_wave.Wave, { waterLevel: data }));
             }
         }
     }]);
@@ -1971,4 +2085,4 @@ var SVGWave = exports.SVGWave = function (_React$Component2) {
 /***/ })
 
 },["./src/views/index.tsx"]);
-//# sourceMappingURL=index.0f47a8f809.js.map
+//# sourceMappingURL=index.46e4357b7d.js.map

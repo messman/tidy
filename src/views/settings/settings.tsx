@@ -2,29 +2,11 @@ import * as React from "react";
 
 import "./settings.scss";
 
-import { DEFINE } from "../../services/define";
-
-interface SettingsProps {
-}
-
-interface SettingsState {
-
-}
-
-export class Settings extends React.Component<SettingsProps, SettingsState> {
-
-	constructor(props: SettingsProps) {
-		super(props);
-		this.state = {};
-	}
-
+export class Settings extends React.Component {
 	render() {
 		return (
 			<div className="settings tab-view-bg">
-				<div>
-					<p>Build date: {DEFINE.BUILD.TIME}</p>
-					<p>Build is production: {`${DEFINE.BUILD.IS_PRODUCTION}`}</p>
-				</div>
+				<h3>Settings coming soon.</h3>
 			</div>
 		);
 	}

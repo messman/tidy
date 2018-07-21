@@ -7,7 +7,7 @@ export const DEFINE = {
 	BUILD: {
 		IS_PRODUCTION: webpack.BUILD.IS_PRODUCTION as boolean,
 		VERSION: webpack.BUILD.VERSION as string,
-		TIME: webpack.BUILD.TIME as string
+		TIME: webpack.BUILD.TIME as number
 	},
 	DEBUG: {
 		LOCAL_REQUEST_DATA: webpack.DEBUG.LOCAL_REQUEST_DATA as boolean

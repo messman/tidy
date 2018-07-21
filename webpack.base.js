@@ -2,7 +2,7 @@ const path = require("path");
 
 const webpack = require("webpack");
 
-const buildTime = (new Date()).toString();
+const buildTime = (new Date()).getTime();
 const version = "1.0.0.1";
 
 // Cleans a directory

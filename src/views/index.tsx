@@ -10,8 +10,10 @@ import { Settings } from "./settings/settings";
 import { DEFINE } from "../services/define";
 import { WaterLevel } from "../services/noaa";
 import { Info } from "./info/info";
+import { More } from "./more/more";
 
-console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${DEFINE.BUILD.TIME}`);
+const date = new Date(DEFINE.BUILD.TIME);
+console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${date}`);
 
 interface AppProps {
 }
@@ -86,7 +88,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>More</span>
 					</TabButton>
 					<TabView>
-						<div>More</div>
+						<More />
 					</TabView>
 				</Tab>
 				<Tab>
