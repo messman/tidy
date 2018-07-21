@@ -1,0 +1,50 @@
+@import "src/styles/common";
+
+.charts {
+	text-align: center;
+
+	header {
+		margin: 2rem 0;
+		font-size: 2rem;
+		line-height: 2rem;
+	}
+
+	table {
+		width: 100%;
+		font-size: 1.2rem;
+	}
+
+	td {
+		width: 25%;
+	}
+
+	.pretty-ampm {
+		display: inline-block;
+		margin-left: .2rem;
+		font-size: .8rem;
+	}
+
+	.predictions-previous {
+		color: transparentize($c-main, .3);
+	}
+
+	.current {
+		display: flex;
+		align-items: center;
+		margin: .5rem;
+
+		.line {
+			flex: 1;
+			height: 1px;
+			background-color: $c-main;
+		}
+	}
+
+	.current-text {
+		display: inline-block;
+		padding: .1rem .5rem;
+		border-radius: 5px;
+		background-color: $c-main;
+		color: $c-back;
+	}
+}

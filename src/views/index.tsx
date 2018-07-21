@@ -11,6 +11,7 @@ import { DEFINE } from "../services/define";
 import { WaterLevel } from "../services/noaa";
 import { Info } from "./info/info";
 import { More } from "./more/more";
+import { Charts } from "./charts/charts";
 
 const date = new Date(DEFINE.BUILD.TIME);
 console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${date}`);
@@ -49,7 +50,12 @@ class App extends React.Component<AppProps, AppState> {
 	}
 
 	render() {
-		const { selectedTab } = this.state;
+		const waterLevelData = {
+			data: this.state.waterLevel,
+			isRequesting: this.state.waterLevelIsRequesting,
+			onRequestBegin: this.beginWaterLevelRequest,
+			onRequestEnd: this.endWaterLevelRequest
+		}
 
 		const view =
 			<Tabs>
@@ -61,12 +67,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Tide</span>
 					</TabButton>
 					<TabView>
-						<Tide waterLevel={{
-							data: this.state.waterLevel,
-							isRequesting: this.state.waterLevelIsRequesting,
-							onRequestBegin: this.beginWaterLevelRequest,
-							onRequestEnd: this.endWaterLevelRequest
-						}} />
+						<Tide waterLevel={waterLevelData} />
 					</TabView>
 				</Tab>
 				<Tab>
@@ -77,7 +78,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Charts</span>
 					</TabButton>
 					<TabView>
-						<div>Charts</div>
+						<Charts waterLevel={waterLevelData} />
 					</TabView>
 				</Tab>
 				<Tab>
