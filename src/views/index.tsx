@@ -8,7 +8,7 @@ import { Tide } from "./tide/tide";
 import { Settings } from "./settings/settings";
 
 import { DEFINE } from "../services/define";
-import { WaterLevel } from "../services/noaa";
+import { WaterLevel, CurrentMoreData } from "../services/noaa";
 import { Info } from "./info/info";
 import { More } from "./more/more";
 import { Charts } from "./charts/charts";
@@ -22,7 +22,9 @@ interface AppProps {
 interface AppState {
 	selectedTab: number,
 	waterLevel: WaterLevel,
-	waterLevelIsRequesting: boolean
+	waterLevelIsRequesting: boolean,
+	currentMoreData: CurrentMoreData,
+	currentMoreDataIsRequesting: boolean,
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -34,7 +36,9 @@ class App extends React.Component<AppProps, AppState> {
 		this.state = {
 			selectedTab: 0,
 			waterLevel: null,
-			waterLevelIsRequesting: false
+			waterLevelIsRequesting: false,
+			currentMoreData: null,
+			currentMoreDataIsRequesting: false
 		}
 	}
 
@@ -49,12 +53,30 @@ class App extends React.Component<AppProps, AppState> {
 		});
 	}
 
+	beginMoreDataRequest = () => {
+		this.setState({ currentMoreDataIsRequesting: true });
+	}
+
+	endMoreDataRequest = (moreData: CurrentMoreData) => {
+		this.setState({
+			currentMoreData: moreData,
+			currentMoreDataIsRequesting: false
+		});
+	}
+
 	render() {
 		const waterLevelData = {
 			data: this.state.waterLevel,
 			isRequesting: this.state.waterLevelIsRequesting,
 			onRequestBegin: this.beginWaterLevelRequest,
 			onRequestEnd: this.endWaterLevelRequest
+		}
+
+		const currentMoreData = {
+			data: this.state.currentMoreData,
+			isRequesting: this.state.currentMoreDataIsRequesting,
+			onRequestBegin: this.beginMoreDataRequest,
+			onRequestEnd: this.endMoreDataRequest
 		}
 
 		const view =
@@ -89,7 +111,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>More</span>
 					</TabButton>
 					<TabView>
-						<More />
+						<More currentMore={currentMoreData} />
 					</TabView>
 				</Tab>
 				<Tab>

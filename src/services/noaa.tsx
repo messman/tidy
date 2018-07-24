@@ -23,12 +23,23 @@ function createRequest(opts): string {
 }
 
 // Additional parameters required for certain requests
-const products = {
+const water_level_products = {
 	water_level_prediction: { product: "predictions", datum: "mtl", interval: "hilo" /* hi/lo, not just 6 minute intervals */ },
 	water_level: { product: "water_level", datum: "mtl", date: "latest" },
+}
+
+interface CurrentProducts {
+	air_temp: any,
+	water_temp: any,
+	wind: any,
+	air_pressure: any,
+}
+
+const current_products: CurrentProducts = {
 	air_temp: { product: "air_temperature", date: "latest" },
 	water_temp: { product: "water_temperature", date: "latest" },
 	wind: { product: "wind", date: "latest" },
+	air_pressure: { product: "air_pressure", date: "latest" },
 }
 
 // Return a new date with modified hours
@@ -57,6 +68,11 @@ function formatDateForRequest(d: Date): string {
 export interface Response {
 	timeOfRequest: Date,
 	errors: Error[]
+}
+
+export interface APIResponse<T> {
+	data: T[],
+	metadata: {}
 }
 
 // Raw response from Water Level Prediction request
@@ -150,7 +166,7 @@ export function getWaterLevelData(date?: Date, predictionHoursRadius?: number): 
 	}
 
 	// Update the water_level_prediction to be X hours before and X hours after
-	const predictionsOpts = Object.assign({}, products["water_level_prediction"]);
+	const predictionsOpts = Object.assign({}, water_level_products["water_level_prediction"]);
 	const requestDate = date;
 	const beginDate = newDatePlusHours(-predictionHoursRadius, requestDate);
 	const beginDateAsString = formatDateForRequest(beginDate);
@@ -181,7 +197,7 @@ export function getWaterLevelData(date?: Date, predictionHoursRadius?: number): 
 			response.errors.push(new Error(e));
 		});
 
-	const currentLevelPromise = makeRequest(products.water_level)
+	const currentLevelPromise = makeRequest(water_level_products.water_level)
 		.then((json: RawCurrentWaterLevelResponse) => {
 			// Create the processed data
 			response.current = json.data.map((d) => {
@@ -270,4 +286,113 @@ function parseWaterLevel(response: WaterLevelResponse): WaterLevel {
 	}
 
 	return waterLevel;
+}
+
+interface RawCurrentMoreData extends Response, CurrentProducts {
+	air_pressure: APIResponse<RawCurrentDataValues>,
+	air_temp: APIResponse<RawCurrentDataValues>,
+	water_temp: APIResponse<RawCurrentDataValues>,
+	wind: APIResponse<RawCurrentWindValues>
+}
+
+interface RawCurrentDataValues {
+	//t: string,
+	v: string,
+	//f: string
+}
+
+interface RawCurrentWindValues {
+	d: string,
+	dr: string,
+	g: string,
+	s: string,
+	//t: string
+}
+
+export interface CurrentMoreData extends Response {
+	airPressure: number,
+	waterTemp: number,
+	airTemp: number,
+	wind: {
+		direction: number,
+		directionCardinal: string,
+		gust: number,
+		speed: number
+	}
+}
+
+export function getCurrentMoreData(date?: Date): Promise<CurrentMoreData> {
+	if (!date)
+		date = new Date();
+
+	if (!DEFINE.BUILD.IS_PRODUCTION && DEFINE.DEBUG.LOCAL_REQUEST_DATA) {
+		const fakeResponse: RawCurrentMoreData = {
+			timeOfRequest: parseTimeFromResponse("2018-07-19 10:14"),
+			errors: null,
+			air_pressure: {
+				data: [{ v: "1025.3" }],
+				metadata: {}
+			},
+			air_temp: {
+				data: [{ v: "70.2" }],
+				metadata: {}
+			},
+			water_temp: {
+				data: [{ v: "67.6" }],
+				metadata: {}
+			},
+			wind: {
+				data: [{ s: "4.08", d: "162.00", dr: "SSE", g: "6.22" }],
+				metadata: {}
+			}
+		}
+		const fakeMore = parseCurrentMore(fakeResponse);
+		console.log(fakeMore);
+		return Promise.resolve(fakeMore);
+	}
+
+	const response: RawCurrentMoreData = {
+		timeOfRequest: date,
+		errors: null,
+		water_temp: null,
+		wind: null,
+		air_pressure: null,
+		air_temp: null
+	}
+
+	const currentPromises = Object.keys(current_products).map((key) => {
+		var product = current_products[key];
+		return makeRequest(product)
+			.then((json: any) => { response[key] = json; })
+			.catch((e) => {
+				if (!response.errors || !response.errors.length)
+					response.errors = [];
+				response.errors.push(new Error(e));
+			});
+	});
+
+	return Promise.all(currentPromises).then(() => {
+		// response object should be ready
+		const currentMore = parseCurrentMore(response);
+		if (!DEFINE.BUILD.IS_PRODUCTION)
+			console.log(currentMore);
+		return currentMore;
+	});
+}
+
+function parseCurrentMore(raw: RawCurrentMoreData): CurrentMoreData {
+	console.log(raw);
+	return {
+		timeOfRequest: raw.timeOfRequest,
+		errors: raw.errors,
+		airPressure: parseFloat(raw.air_pressure.data[0].v),
+		airTemp: parseFloat(raw.air_temp.data[0].v),
+		waterTemp: parseFloat(raw.water_temp.data[0].v),
+		wind: {
+			direction: parseFloat(raw.wind.data[0].d),
+			directionCardinal: raw.wind.data[0].dr,
+			gust: parseFloat(raw.wind.data[0].g),
+			speed: parseFloat(raw.wind.data[0].s),
+		}
+	};
 }

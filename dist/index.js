@@ -482,41 +482,10 @@ function updateLink (link, options, obj) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-// These definitions are set in your webpack config.
-// Will fail if not set proerly in the webpack config.
-var DEFINE = exports.DEFINE = {
-    BUILD: {
-        IS_PRODUCTION: false,
-        VERSION: "1.0.2",
-        TIME: 1532396094372
-    },
-    DEBUG: {
-        LOCAL_REQUEST_DATA: true
-    }
-};
-// Make these public on the window for us to easily check
-window["DEFINE"] = DEFINE;
-
-/***/ }),
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 exports.getWaterLevelData = getWaterLevelData;
+exports.getCurrentMoreData = getCurrentMoreData;
 
-var _define = __webpack_require__(8);
+var _define = __webpack_require__(9);
 
 // API documentation: https://tidesandcurrents.noaa.gov/api/
 var api_noaa = "https://tidesandcurrents.noaa.gov/api/datagetter";
@@ -539,12 +508,15 @@ function createRequest(opts) {
     return api_noaa + "?" + optsString;
 }
 // Additional parameters required for certain requests
-var products = {
+var water_level_products = {
     water_level_prediction: { product: "predictions", datum: "mtl", interval: "hilo" /* hi/lo, not just 6 minute intervals */ },
-    water_level: { product: "water_level", datum: "mtl", date: "latest" },
+    water_level: { product: "water_level", datum: "mtl", date: "latest" }
+};
+var current_products = {
     air_temp: { product: "air_temperature", date: "latest" },
     water_temp: { product: "water_temperature", date: "latest" },
-    wind: { product: "wind", date: "latest" }
+    wind: { product: "wind", date: "latest" },
+    air_pressure: { product: "air_pressure", date: "latest" }
 };
 // Return a new date with modified hours
 function newDatePlusHours(addHours, date) {
@@ -587,7 +559,7 @@ function getWaterLevelData(date, predictionHoursRadius) {
         return Promise.resolve(fakeLevel);
     }
     // Update the water_level_prediction to be X hours before and X hours after
-    var predictionsOpts = Object.assign({}, products["water_level_prediction"]);
+    var predictionsOpts = Object.assign({}, water_level_products["water_level_prediction"]);
     var requestDate = date;
     var beginDate = newDatePlusHours(-predictionHoursRadius, requestDate);
     var beginDateAsString = formatDateForRequest(beginDate);
@@ -612,7 +584,7 @@ function getWaterLevelData(date, predictionHoursRadius) {
         if (!response.errors || !response.errors.length) response.errors = [];
         response.errors.push(new Error(e));
     });
-    var currentLevelPromise = makeRequest(products.water_level).then(function (json) {
+    var currentLevelPromise = makeRequest(water_level_products.water_level).then(function (json) {
         // Create the processed data
         response.current = json.data.map(function (d) {
             return {
@@ -687,9 +659,101 @@ function parseWaterLevel(response) {
     }
     return waterLevel;
 }
+function getCurrentMoreData(date) {
+    if (!date) date = new Date();
+    if (!_define.DEFINE.BUILD.IS_PRODUCTION && _define.DEFINE.DEBUG.LOCAL_REQUEST_DATA) {
+        var fakeResponse = {
+            timeOfRequest: parseTimeFromResponse("2018-07-19 10:14"),
+            errors: null,
+            air_pressure: {
+                data: [{ v: "1025.3" }],
+                metadata: {}
+            },
+            air_temp: {
+                data: [{ v: "70.2" }],
+                metadata: {}
+            },
+            water_temp: {
+                data: [{ v: "67.6" }],
+                metadata: {}
+            },
+            wind: {
+                data: [{ s: "4.08", d: "162.00", dr: "SSE", g: "6.22" }],
+                metadata: {}
+            }
+        };
+        var fakeMore = parseCurrentMore(fakeResponse);
+        console.log(fakeMore);
+        return Promise.resolve(fakeMore);
+    }
+    var response = {
+        timeOfRequest: date,
+        errors: null,
+        water_temp: null,
+        wind: null,
+        air_pressure: null,
+        air_temp: null
+    };
+    var currentPromises = Object.keys(current_products).map(function (key) {
+        var product = current_products[key];
+        return makeRequest(product).then(function (json) {
+            response[key] = json;
+        }).catch(function (e) {
+            if (!response.errors || !response.errors.length) response.errors = [];
+            response.errors.push(new Error(e));
+        });
+    });
+    return Promise.all(currentPromises).then(function () {
+        // response object should be ready
+        var currentMore = parseCurrentMore(response);
+        if (!_define.DEFINE.BUILD.IS_PRODUCTION) console.log(currentMore);
+        return currentMore;
+    });
+}
+function parseCurrentMore(raw) {
+    console.log(raw);
+    return {
+        timeOfRequest: raw.timeOfRequest,
+        errors: raw.errors,
+        airPressure: parseFloat(raw.air_pressure.data[0].v),
+        airTemp: parseFloat(raw.air_temp.data[0].v),
+        waterTemp: parseFloat(raw.water_temp.data[0].v),
+        wind: {
+            direction: parseFloat(raw.wind.data[0].d),
+            directionCardinal: raw.wind.data[0].dr,
+            gust: parseFloat(raw.wind.data[0].g),
+            speed: parseFloat(raw.wind.data[0].s)
+        }
+    };
+}
 
 /***/ }),
-/* 17 */
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+// These definitions are set in your webpack config.
+// Will fail if not set proerly in the webpack config.
+var DEFINE = exports.DEFINE = {
+    BUILD: {
+        IS_PRODUCTION: false,
+        VERSION: "1.0.2",
+        TIME: 1532454281344
+    },
+    DEBUG: {
+        LOCAL_REQUEST_DATA: true
+    }
+};
+// Make these public on the window for us to easily check
+window["DEFINE"] = DEFINE;
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -722,6 +786,13 @@ function createPrettyTimespan(time) {
 }
 
 /***/ }),
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -736,7 +807,7 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-var _reactDom = __webpack_require__(11);
+var _reactDom = __webpack_require__(13);
 
 var ReactDOM = _interopRequireWildcard(_reactDom);
 
@@ -746,7 +817,7 @@ var _tide = __webpack_require__(37);
 
 var _settings = __webpack_require__(46);
 
-var _define = __webpack_require__(8);
+var _define = __webpack_require__(9);
 
 var _info = __webpack_require__(49);
 
@@ -782,11 +853,22 @@ var App = function (_React$Component) {
                 waterLevelIsRequesting: false
             });
         };
+        _this.beginMoreDataRequest = function () {
+            _this.setState({ currentMoreDataIsRequesting: true });
+        };
+        _this.endMoreDataRequest = function (moreData) {
+            _this.setState({
+                currentMoreData: moreData,
+                currentMoreDataIsRequesting: false
+            });
+        };
         // Set initial tab to 0 (TODO: add routing)
         _this.state = {
             selectedTab: 0,
             waterLevel: null,
-            waterLevelIsRequesting: false
+            waterLevelIsRequesting: false,
+            currentMoreData: null,
+            currentMoreDataIsRequesting: false
         };
         return _this;
     }
@@ -800,7 +882,13 @@ var App = function (_React$Component) {
                 onRequestBegin: this.beginWaterLevelRequest,
                 onRequestEnd: this.endWaterLevelRequest
             };
-            var view = React.createElement(_components.Tabs, null, React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.027 0-14.531 6.504-14.531 14.531s6.504 14.531 14.531 14.531 14.531-6.504 14.531-14.531-6.504-14.531-14.531-14.531zM15 26.719c-6.475 0-11.719-5.244-11.719-11.719s5.244-11.719 11.719-11.719 11.719 5.244 11.719 11.719-5.244 11.719-11.719 11.719zM18.621 20.602l-4.975-3.615c-0.182-0.135-0.287-0.346-0.287-0.568v-9.621c0-0.387 0.316-0.703 0.703-0.703h1.875c0.387 0 0.703 0.316 0.703 0.703v8.303l3.914 2.848c0.316 0.229 0.381 0.668 0.152 0.984l-1.102 1.518c-0.229 0.311-0.668 0.381-0.984 0.152z" })), React.createElement("span", null, "Tide")), React.createElement(_components.TabView, null, React.createElement(_tide.Tide, { waterLevel: waterLevelData }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M27.188 1.875h-24.375c-1.553 0-2.813 1.259-2.813 2.813v20.625c0 1.553 1.259 2.813 2.813 2.813h24.375c1.553 0 2.813-1.259 2.813-2.813v-20.625c0-1.553-1.259-2.813-2.813-2.813zM13.125 24.375h-9.375v-15h9.375v15zM26.25 24.375h-9.375v-15h9.375v15z" })), React.createElement("span", null, "Charts")), React.createElement(_components.TabView, null, React.createElement(_charts.Charts, { waterLevel: waterLevelData }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "15", height: "30", viewBox: "0 0 15 30" }, React.createElement("path", { d: "M11.25 22.5c0 2.071-1.679 3.75-3.75 3.75s-3.75-1.679-3.75-3.75c0-1.388 0.754-2.599 1.875-3.247v-6.128c0-1.036 0.839-1.875 1.875-1.875s1.875 0.839 1.875 1.875v6.128c1.121 0.649 1.875 1.859 1.875 3.247zM13.125 17.54c1.167 1.322 1.875 3.058 1.875 4.96 0 4.142-3.358 7.5-7.5 7.5-0.018 0-0.036-0-0.053-0-4.119-0.029-7.468-3.42-7.447-7.539 0.010-1.887 0.716-3.608 1.875-4.921v-11.915c0-3.107 2.518-5.625 5.625-5.625s5.625 2.518 5.625 5.625v11.915zM12.188 22.5c0-2.012-1.135-3.058-1.875-3.897v-12.978c0-1.551-1.262-2.813-2.813-2.813s-2.813 1.262-2.813 2.813v12.978c-0.746 0.845-1.865 1.881-1.875 3.872-0.013 2.571 2.084 4.694 4.654 4.712l0.034 0c2.585 0 4.688-2.103 4.688-4.688z" })), React.createElement("span", null, "More")), React.createElement(_components.TabView, null, React.createElement(_more.More, null))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "38", height: "30", viewBox: "0 0 38 30" }, React.createElement("path", { d: "M30.006 11.191l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 7.746c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.74-4.828 0.838-3.094 3.094zM22.635 16.764l1.975 0.984c0.592 0.34 0.85 1.061 0.615 1.705-0.521 1.418-1.547 2.719-2.496 3.855-0.434 0.521-1.184 0.65-1.775 0.311l-1.705-0.984c-0.938 0.803-2.027 1.441-3.217 1.857v1.969c0 0.68-0.486 1.266-1.154 1.383-1.441 0.246-2.953 0.258-4.447 0-0.674-0.117-1.172-0.697-1.172-1.383v-1.969c-1.189-0.422-2.279-1.055-3.217-1.857l-1.705 0.979c-0.586 0.34-1.342 0.211-1.775-0.311-0.949-1.137-1.951-2.438-2.473-3.85-0.234-0.639 0.023-1.359 0.615-1.705l1.951-0.984c-0.229-1.225-0.229-2.484 0-3.715l-1.951-0.99c-0.592-0.34-0.855-1.061-0.615-1.699 0.521-1.418 1.523-2.719 2.473-3.855 0.434-0.521 1.184-0.65 1.775-0.311l1.705 0.984c0.938-0.803 2.027-1.441 3.217-1.857v-1.975c0-0.674 0.48-1.26 1.148-1.377 1.441-0.246 2.959-0.258 4.453-0.006 0.674 0.117 1.172 0.697 1.172 1.383v1.969c1.189 0.422 2.279 1.055 3.217 1.857l1.705-0.984c0.586-0.34 1.342-0.211 1.775 0.311 0.949 1.137 1.945 2.438 2.467 3.855 0.234 0.639 0.006 1.359-0.586 1.705l-1.975 0.984c0.229 1.23 0.229 2.49 0 3.721zM15.744 18c3.469-4.512-1.682-9.662-6.193-6.193-3.469 4.512 1.682 9.662 6.193 6.193zM30.006 28.705l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 25.254c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.734-4.828 0.838-3.094 3.094z" })), React.createElement("span", null, "Settings")), React.createElement(_components.TabView, null, React.createElement(_settings.Settings, null))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.025 0-14.531 6.509-14.531 14.531 0 8.027 6.506 14.531 14.531 14.531s14.531-6.504 14.531-14.531c0-8.022-6.506-14.531-14.531-14.531zM15 6.914c1.359 0 2.461 1.102 2.461 2.461s-1.102 2.461-2.461 2.461-2.461-1.102-2.461-2.461 1.102-2.461 2.461-2.461zM18.281 21.797c0 0.388-0.315 0.703-0.703 0.703h-5.156c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h0.703v-3.75h-0.703c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h3.75c0.388 0 0.703 0.315 0.703 0.703v5.859h0.703c0.388 0 0.703 0.315 0.703 0.703v1.406z" })), React.createElement("span", null, "Info")), React.createElement(_components.TabView, null, React.createElement(_info.Info, null))));
+            var currentMoreData = {
+                data: this.state.currentMoreData,
+                isRequesting: this.state.currentMoreDataIsRequesting,
+                onRequestBegin: this.beginMoreDataRequest,
+                onRequestEnd: this.endMoreDataRequest
+            };
+            var view = React.createElement(_components.Tabs, null, React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.027 0-14.531 6.504-14.531 14.531s6.504 14.531 14.531 14.531 14.531-6.504 14.531-14.531-6.504-14.531-14.531-14.531zM15 26.719c-6.475 0-11.719-5.244-11.719-11.719s5.244-11.719 11.719-11.719 11.719 5.244 11.719 11.719-5.244 11.719-11.719 11.719zM18.621 20.602l-4.975-3.615c-0.182-0.135-0.287-0.346-0.287-0.568v-9.621c0-0.387 0.316-0.703 0.703-0.703h1.875c0.387 0 0.703 0.316 0.703 0.703v8.303l3.914 2.848c0.316 0.229 0.381 0.668 0.152 0.984l-1.102 1.518c-0.229 0.311-0.668 0.381-0.984 0.152z" })), React.createElement("span", null, "Tide")), React.createElement(_components.TabView, null, React.createElement(_tide.Tide, { waterLevel: waterLevelData }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M27.188 1.875h-24.375c-1.553 0-2.813 1.259-2.813 2.813v20.625c0 1.553 1.259 2.813 2.813 2.813h24.375c1.553 0 2.813-1.259 2.813-2.813v-20.625c0-1.553-1.259-2.813-2.813-2.813zM13.125 24.375h-9.375v-15h9.375v15zM26.25 24.375h-9.375v-15h9.375v15z" })), React.createElement("span", null, "Charts")), React.createElement(_components.TabView, null, React.createElement(_charts.Charts, { waterLevel: waterLevelData }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "15", height: "30", viewBox: "0 0 15 30" }, React.createElement("path", { d: "M11.25 22.5c0 2.071-1.679 3.75-3.75 3.75s-3.75-1.679-3.75-3.75c0-1.388 0.754-2.599 1.875-3.247v-6.128c0-1.036 0.839-1.875 1.875-1.875s1.875 0.839 1.875 1.875v6.128c1.121 0.649 1.875 1.859 1.875 3.247zM13.125 17.54c1.167 1.322 1.875 3.058 1.875 4.96 0 4.142-3.358 7.5-7.5 7.5-0.018 0-0.036-0-0.053-0-4.119-0.029-7.468-3.42-7.447-7.539 0.010-1.887 0.716-3.608 1.875-4.921v-11.915c0-3.107 2.518-5.625 5.625-5.625s5.625 2.518 5.625 5.625v11.915zM12.188 22.5c0-2.012-1.135-3.058-1.875-3.897v-12.978c0-1.551-1.262-2.813-2.813-2.813s-2.813 1.262-2.813 2.813v12.978c-0.746 0.845-1.865 1.881-1.875 3.872-0.013 2.571 2.084 4.694 4.654 4.712l0.034 0c2.585 0 4.688-2.103 4.688-4.688z" })), React.createElement("span", null, "More")), React.createElement(_components.TabView, null, React.createElement(_more.More, { currentMore: currentMoreData }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "38", height: "30", viewBox: "0 0 38 30" }, React.createElement("path", { d: "M30.006 11.191l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 7.746c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.74-4.828 0.838-3.094 3.094zM22.635 16.764l1.975 0.984c0.592 0.34 0.85 1.061 0.615 1.705-0.521 1.418-1.547 2.719-2.496 3.855-0.434 0.521-1.184 0.65-1.775 0.311l-1.705-0.984c-0.938 0.803-2.027 1.441-3.217 1.857v1.969c0 0.68-0.486 1.266-1.154 1.383-1.441 0.246-2.953 0.258-4.447 0-0.674-0.117-1.172-0.697-1.172-1.383v-1.969c-1.189-0.422-2.279-1.055-3.217-1.857l-1.705 0.979c-0.586 0.34-1.342 0.211-1.775-0.311-0.949-1.137-1.951-2.438-2.473-3.85-0.234-0.639 0.023-1.359 0.615-1.705l1.951-0.984c-0.229-1.225-0.229-2.484 0-3.715l-1.951-0.99c-0.592-0.34-0.855-1.061-0.615-1.699 0.521-1.418 1.523-2.719 2.473-3.855 0.434-0.521 1.184-0.65 1.775-0.311l1.705 0.984c0.938-0.803 2.027-1.441 3.217-1.857v-1.975c0-0.674 0.48-1.26 1.148-1.377 1.441-0.246 2.959-0.258 4.453-0.006 0.674 0.117 1.172 0.697 1.172 1.383v1.969c1.189 0.422 2.279 1.055 3.217 1.857l1.705-0.984c0.586-0.34 1.342-0.211 1.775 0.311 0.949 1.137 1.945 2.438 2.467 3.855 0.234 0.639 0.006 1.359-0.586 1.705l-1.975 0.984c0.229 1.23 0.229 2.49 0 3.721zM15.744 18c3.469-4.512-1.682-9.662-6.193-6.193-3.469 4.512 1.682 9.662 6.193 6.193zM30.006 28.705l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 25.254c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.734-4.828 0.838-3.094 3.094z" })), React.createElement("span", null, "Settings")), React.createElement(_components.TabView, null, React.createElement(_settings.Settings, null))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.025 0-14.531 6.509-14.531 14.531 0 8.027 6.506 14.531 14.531 14.531s14.531-6.504 14.531-14.531c0-8.022-6.506-14.531-14.531-14.531zM15 6.914c1.359 0 2.461 1.102 2.461 2.461s-1.102 2.461-2.461 2.461-2.461-1.102-2.461-2.461 1.102-2.461 2.461-2.461zM18.281 21.797c0 0.388-0.315 0.703-0.703 0.703h-5.156c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h0.703v-3.75h-0.703c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h3.75c0.388 0 0.703 0.315 0.703 0.703v5.859h0.703c0.388 0 0.703 0.315 0.703 0.703v1.406z" })), React.createElement("span", null, "Info")), React.createElement(_components.TabView, null, React.createElement(_info.Info, null))));
             return view;
         }
     }]);
@@ -1257,7 +1345,7 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-var _noaa = __webpack_require__(16);
+var _noaa = __webpack_require__(8);
 
 var _title = __webpack_require__(38);
 
@@ -1345,7 +1433,7 @@ var React = _interopRequireWildcard(_react);
 
 __webpack_require__(39);
 
-var _time = __webpack_require__(17);
+var _time = __webpack_require__(10);
 
 var Time = _interopRequireWildcard(_time);
 
@@ -1472,7 +1560,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "header {\n  margin: .5rem; }\n  header .top .right {\n    float: right; }\n  header .top::after {\n    content: \"\";\n    clear: both; }\n  header .title {\n    background-color: #19576D;\n    color: #DFEEF4;\n    fill: #DFEEF4;\n    border-radius: 6px;\n    padding: 0 1rem;\n    overflow: hidden;\n    text-align: center; }\n    header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.lastnext {\n  margin: 1.5rem;\n  margin-bottom: .5rem;\n  display: flex; }\n\n.lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #DFEEF4; }\n  .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
+exports.push([module.i, ".tide header {\n  margin: .5rem; }\n  .tide header .top .right {\n    float: right; }\n  .tide header .top::after {\n    content: \"\";\n    clear: both; }\n  .tide header .title {\n    background-color: #19576D;\n    color: #DFEEF4;\n    fill: #DFEEF4;\n    border-radius: 6px;\n    padding: 0 1rem;\n    overflow: hidden;\n    text-align: center; }\n    .tide header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  .tide header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  .tide header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.tide .lastnext {\n  margin: 1.5rem;\n  margin-bottom: .5rem;\n  display: flex; }\n\n.tide .lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .tide .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #DFEEF4; }\n  .tide .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .tide .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
 
 // exports
 
@@ -1867,7 +1955,7 @@ var React = _interopRequireWildcard(_react);
 
 __webpack_require__(50);
 
-var _define = __webpack_require__(8);
+var _define = __webpack_require__(9);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1960,7 +2048,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".info {\n  text-align: center; }\n  .info section {\n    margin: .5rem; }\n    .info section + section {\n      margin-top: 1.5rem; }\n\n.info-header span {\n  display: inline-block;\n  padding: 0 .2rem; }\n\n.info-header .value {\n  color: rgba(25, 87, 109, 0.7); }\n\n.info-gh a {\n  margin: auto;\n  background-color: #EAEAEA;\n  border: 1px solid #BEBEBE;\n  border-radius: 6px;\n  box-shadow: 0 1px 3px 0 #333;\n  padding: .6rem .7rem;\n  display: inline-flex;\n  align-items: center;\n  position: relative;\n  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 0 3px 0 rgba(0, 0, 0, 0.4), inset 0 0 3px 5px rgba(0, 0, 0, 0.05), 2px 2px 4px 0 rgba(0, 0, 0, 0.4);\n  color: #333; }\n  .info-gh a:before, .info-gh a:after {\n    content: '';\n    display: block;\n    position: absolute;\n    left: 2px;\n    right: 2px;\n    height: 2px; }\n  .info-gh a:before {\n    top: 0;\n    border-bottom-left-radius: 6px;\n    border-bottom-right-radius: 6px;\n    background: rgba(255, 255, 255, 0.6);\n    box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.6); }\n  .info-gh a:after {\n    bottom: 0;\n    border-top-left-radius: 6px;\n    border-top-right-radius: 6px;\n    background: rgba(0, 0, 0, 0.15);\n    box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.15); }\n  .info-gh a:link, .info-gh a:visited, .info-gh a:active, .info-gh a:hover {\n    color: #333;\n    text-decoration: none; }\n  .info-gh a p {\n    text-align: left;\n    margin: 0;\n    line-height: 1.4rem; }\n  .info-gh a svg {\n    fill: #333;\n    height: 2.5rem;\n    width: auto; }\n  .info-gh a .split-right {\n    padding-left: .7rem; }\n\n.info-thanks > div {\n  margin: 1.5rem 0;\n  line-height: 1rem; }\n\n.info-thanks a, .info-thanks a:link, .info-thanks a:hover, .info-thanks a:active, .info-thanks a:visited {\n  color: #06151a;\n  white-space: pre; }\n\n.info-thanks ul {\n  margin: .5rem 0;\n  padding: 0;\n  list-style-type: none; }\n  .info-thanks ul li {\n    color: rgba(25, 87, 109, 0.7); }\n", ""]);
+exports.push([module.i, ".info {\n  text-align: center; }\n  .info section {\n    margin: .5rem; }\n    .info section + section {\n      margin-top: 1.5rem; }\n\n.info-header span {\n  display: inline-block;\n  padding: 0 .2rem; }\n\n.info-header .value {\n  color: rgba(25, 87, 109, 0.7); }\n\n.info-gh a {\n  margin: auto;\n  background-color: #EAEAEA;\n  border: 1px solid #BEBEBE;\n  border-radius: 6px;\n  box-shadow: 0 1px 3px 0 #333;\n  padding: .6rem .7rem;\n  display: inline-flex;\n  align-items: center;\n  position: relative;\n  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 0 3px 0 rgba(0, 0, 0, 0.4), inset 0 0 3px 5px rgba(0, 0, 0, 0.05), 2px 2px 4px 0 rgba(0, 0, 0, 0.4);\n  color: #333; }\n  .info-gh a:before, .info-gh a:after {\n    content: '';\n    display: block;\n    position: absolute;\n    left: 2px;\n    right: 2px;\n    height: 2px; }\n  .info-gh a:before {\n    top: 0;\n    border-bottom-left-radius: 6px;\n    border-bottom-right-radius: 6px;\n    background: rgba(255, 255, 255, 0.6);\n    box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.6); }\n  .info-gh a:after {\n    bottom: 0;\n    border-top-left-radius: 6px;\n    border-top-right-radius: 6px;\n    background: rgba(0, 0, 0, 0.15);\n    box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.15); }\n  .info-gh a:link, .info-gh a:visited, .info-gh a:active, .info-gh a:hover {\n    color: #333;\n    text-decoration: none; }\n  .info-gh a p {\n    text-align: left;\n    margin: 0;\n    line-height: 1.4rem;\n    font-weight: bold; }\n  .info-gh a svg {\n    fill: #333;\n    height: 2.5rem;\n    width: auto; }\n  .info-gh a .split-right {\n    padding-left: .7rem;\n    font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif; }\n\n.info-thanks > div {\n  margin: 1.5rem 0;\n  line-height: 1rem; }\n\n.info-thanks a, .info-thanks a:link, .info-thanks a:hover, .info-thanks a:active, .info-thanks a:visited {\n  color: #06151a;\n  white-space: pre; }\n\n.info-thanks ul {\n  margin: .5rem 0;\n  padding: 0;\n  list-style-type: none; }\n  .info-thanks ul li {\n    color: rgba(25, 87, 109, 0.7); }\n", ""]);
 
 // exports
 
@@ -1985,6 +2073,12 @@ var React = _interopRequireWildcard(_react);
 
 __webpack_require__(53);
 
+var _noaa = __webpack_require__(8);
+
+var _time = __webpack_require__(10);
+
+var Time = _interopRequireWildcard(_time);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2003,13 +2097,62 @@ var More = exports.More = function (_React$Component) {
     }
 
     _createClass(More, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var currentMore = this.props.currentMore;
+
+            if (!currentMore.data && !currentMore.isRequesting) {
+                (0, _noaa.getCurrentMoreData)().then(function (data) {
+                    currentMore.onRequestEnd(data);
+                });
+                currentMore.onRequestBegin();
+            }
+        }
+    }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            var currentMore = this.props.currentMore;
+
+            if (!currentMore.data && currentMore.isRequesting) this.props.currentMore.onRequestEnd(null);
+        }
+    }, {
         key: "render",
         value: function render() {
-            return React.createElement("div", { className: "more tab-view-bg" }, React.createElement("h3", null, "More data coming soon."));
+            var currentMore = this.props.currentMore;
+
+            if (!currentMore.data && !currentMore.isRequesting || currentMore.data && currentMore.data.errors) {
+                return React.createElement("p", null, "Error....");
+            } else if (!currentMore.data && currentMore.isRequesting) {
+                return React.createElement("p", null, "Requesting...");
+            } else {
+                var data = currentMore.data;
+                var prettyTimeOfRequest = Time.createPrettyTime(data.timeOfRequest);
+                return React.createElement("div", { className: "more tab-view-bg" }, React.createElement("header", null, React.createElement("div", { className: "title" }, "Current Conditions"), React.createElement("div", { className: "timing" }, "as of ", React.createElement("span", { className: "pretty-time" }, prettyTimeOfRequest.time), React.createElement("span", { className: "pretty-ampm" }, prettyTimeOfRequest.ampm))), React.createElement(DataSection, { title: "Water Temperature", value: data.waterTemp, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Temperature", value: data.airTemp, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Pressure", value: data.airPressure, unit: "Millibars (mb)" }), React.createElement("section", null, React.createElement("div", { className: "data-title" }, "Wind"), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, data.wind.speed), React.createElement("span", { className: "unit" }, "knots ", data.wind.directionCardinal)), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, data.wind.gust), React.createElement("span", { className: "unit" }, "knot gusts"))));
+            }
         }
     }]);
 
     return More;
+}(React.Component);
+
+var DataSection = function (_React$Component2) {
+    _inherits(DataSection, _React$Component2);
+
+    function DataSection() {
+        _classCallCheck(this, DataSection);
+
+        return _possibleConstructorReturn(this, (DataSection.__proto__ || Object.getPrototypeOf(DataSection)).apply(this, arguments));
+    }
+
+    _createClass(DataSection, [{
+        key: "render",
+        value: function render() {
+            var props = this.props;
+            return React.createElement("section", null, React.createElement("div", { className: "data-title" }, props.title), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, props.value), React.createElement("span", { className: "unit" }, props.unit)));
+        }
+    }]);
+
+    return DataSection;
 }(React.Component);
 
 /***/ }),
@@ -2071,7 +2214,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".more {\n  text-align: center; }\n", ""]);
+exports.push([module.i, ".more {\n  text-align: center; }\n  .more header {\n    margin: 2rem; }\n    .more header .title {\n      font-size: 1.5rem; }\n    .more header .timing {\n      font-size: 1.2rem; }\n    .more header .pretty-ampm {\n      display: inline-block;\n      margin-left: .3rem;\n      font-size: 80%; }\n  .more section {\n    margin: 1rem 2rem; }\n    .more section .data-title {\n      font-size: 1.2rem; }\n    .more section .unit {\n      display: inline-block;\n      margin-left: .4rem;\n      color: rgba(25, 87, 109, 0.7); }\n", ""]);
 
 // exports
 
@@ -2094,9 +2237,9 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-var _noaa = __webpack_require__(16);
+var _noaa = __webpack_require__(8);
 
-var _time = __webpack_require__(17);
+var _time = __webpack_require__(10);
 
 var Time = _interopRequireWildcard(_time);
 
