@@ -963,8 +963,8 @@ Object.defineProperty(exports, "__esModule", {
 var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
-        VERSION: "1.0.0.1",
-        TIME: 1532136455797
+        VERSION: "1.0.2",
+        TIME: 1532392065786
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -2170,7 +2170,7 @@ var Wave = exports.Wave = function (_React$Component) {
             var currentVal = data.current.val;
             var highVal = high.val;
             var lowVal = low.val;
-            var percentFallen = .8; //1 - ((currentVal - lowVal) / (highVal - lowVal));
+            var percentFallen = 1 - (currentVal - lowVal) / (highVal - lowVal);
             console.log(percentFallen, currentVal, highVal, lowVal);
             var upperWavePercent = percentFallen;
             var lowerWavePercent = percentFallen;
@@ -2254,4 +2254,4 @@ var SVGWave = exports.SVGWave = function (_React$Component2) {
 /***/ })
 
 },["./src/views/index.tsx"]);
-//# sourceMappingURL=index.cb7e70ee1b.js.map
+//# sourceMappingURL=index.c1b161093f.js.map

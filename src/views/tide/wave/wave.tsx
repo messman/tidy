@@ -155,7 +155,7 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 		const currentVal = data.current.val;
 		const highVal = high.val;
 		const lowVal = low.val;
-		let percentFallen = .8; //1 - ((currentVal - lowVal) / (highVal - lowVal));
+		let percentFallen = 1 - ((currentVal - lowVal) / (highVal - lowVal));
 		console.log(percentFallen, currentVal, highVal, lowVal);
 
 		const upperWavePercent = percentFallen;
