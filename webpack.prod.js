@@ -27,6 +27,10 @@ module.exports = merge(base.base, {
 	// Enable sourcemaps for debugging webpack's output. Increases build time - faster options are available.
 	devtool: "source-map",
 
+	output: {
+		filename: "[name].[chunkhash].js",
+	},
+
 	module: {
 		rules: [
 			{

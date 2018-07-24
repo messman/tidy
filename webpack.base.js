@@ -45,7 +45,7 @@ const baseWebpackOptions = {
 		]
 	},
 	output: {
-		filename: "[name].[chunkhash].js",
+		filename: "[name].js",
 		hashDigestLength: 10,
 		path: path.resolve(__dirname, "./dist"),
 		publicPath: "./dist/"
