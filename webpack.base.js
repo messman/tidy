@@ -15,7 +15,8 @@ const htmlPluginOptions = {
 	minify: false,
 	xhtml: true, // Use XHTML-compliance
 	user: {
-		buildTime: buildTime
+		buildTime: buildTime,
+		version: version
 	}
 };
 

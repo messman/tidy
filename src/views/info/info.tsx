@@ -56,6 +56,9 @@ export class Info extends React.Component<InfoProps, InfoState> {
 						for their <a href="https://tidesandcurrents.noaa.gov/api/">Data Retrieval API</a>.
 					</div>
 					<div>
+						Think the data on this app is incorrect? Check it against the NOAA station page for <a href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317">Wells, ME - Station ID: 8419317</a>.
+					</div>
+					<div>
 						Technical acknowledgments:
 						<ul>
 							<li>IcoMoon and FontAwesome for icons</li>
