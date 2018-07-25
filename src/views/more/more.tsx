@@ -47,18 +47,18 @@ export class More extends React.Component<MoreProps, MoreState> {
 		}
 		else {
 			const data = currentMore.data;
-			const prettyTimeOfRequest = Time.createPrettyTime(data.timeOfRequest);
+			const prettyTime = Time.createPrettyTime(data.airTemp.date);
 			return (
 				<div className="more tab-view-bg">
 					<header>
 						<div className="title">Current Conditions</div>
 						<div className="timing">
-							as of <span className="pretty-time">{prettyTimeOfRequest.time}</span><span className="pretty-ampm">{prettyTimeOfRequest.ampm}</span>
+							as of <span className="pretty-time">{prettyTime.time}</span><span className="pretty-ampm">{prettyTime.ampm}</span>
 						</div>
 					</header>
-					<DataSection title="Water Temperature" value={data.waterTemp} unit="Degrees (F)" />
-					<DataSection title="Air Temperature" value={data.airTemp} unit="Degrees (F)" />
-					<DataSection title="Air Pressure" value={data.airPressure} unit="Millibars (mb)" />
+					<DataSection title="Water Temperature" value={data.waterTemp.value} unit="Degrees (F)" />
+					<DataSection title="Air Temperature" value={data.airTemp.value} unit="Degrees (F)" />
+					<DataSection title="Air Pressure" value={data.airPressure.value} unit="Millibars (mb)" />
 					<section>
 						<div className="data-title">Wind</div>
 						<div className="data-value">

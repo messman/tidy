@@ -666,19 +666,19 @@ function getCurrentMoreData(date) {
             timeOfRequest: parseTimeFromResponse("2018-07-19 10:14"),
             errors: null,
             air_pressure: {
-                data: [{ v: "1025.3" }],
+                data: [{ t: "2018-07-19 10:14", v: "1025.3" }],
                 metadata: {}
             },
             air_temp: {
-                data: [{ v: "70.2" }],
+                data: [{ t: "2018-07-19 10:14", v: "70.2" }],
                 metadata: {}
             },
             water_temp: {
-                data: [{ v: "67.6" }],
+                data: [{ t: "2018-07-19 10:14", v: "67.6" }],
                 metadata: {}
             },
             wind: {
-                data: [{ s: "4.08", d: "162.00", dr: "SSE", g: "6.22" }],
+                data: [{ t: "2018-07-19 10:14", s: "4.08", d: "162.00", dr: "SSE", g: "6.22" }],
                 metadata: {}
             }
         };
@@ -715,9 +715,18 @@ function parseCurrentMore(raw) {
     return {
         timeOfRequest: raw.timeOfRequest,
         errors: raw.errors,
-        airPressure: parseFloat(raw.air_pressure.data[0].v),
-        airTemp: parseFloat(raw.air_temp.data[0].v),
-        waterTemp: parseFloat(raw.water_temp.data[0].v),
+        airPressure: {
+            date: parseTimeFromResponse(raw.air_pressure.data[0].t),
+            value: parseFloat(raw.air_pressure.data[0].v)
+        },
+        airTemp: {
+            date: parseTimeFromResponse(raw.air_temp.data[0].t),
+            value: parseFloat(raw.air_temp.data[0].v)
+        },
+        waterTemp: {
+            date: parseTimeFromResponse(raw.water_temp.data[0].t),
+            value: parseFloat(raw.water_temp.data[0].v)
+        },
         wind: {
             direction: parseFloat(raw.wind.data[0].d),
             directionCardinal: raw.wind.data[0].dr,
@@ -743,10 +752,10 @@ var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
         VERSION: "1.0.2",
-        TIME: 1532454281344
+        TIME: 1532469058878
     },
     DEBUG: {
-        LOCAL_REQUEST_DATA: true
+        LOCAL_REQUEST_DATA: false
     }
 };
 // Make these public on the window for us to easily check
@@ -2126,8 +2135,8 @@ var More = exports.More = function (_React$Component) {
                 return React.createElement("p", null, "Requesting...");
             } else {
                 var data = currentMore.data;
-                var prettyTimeOfRequest = Time.createPrettyTime(data.timeOfRequest);
-                return React.createElement("div", { className: "more tab-view-bg" }, React.createElement("header", null, React.createElement("div", { className: "title" }, "Current Conditions"), React.createElement("div", { className: "timing" }, "as of ", React.createElement("span", { className: "pretty-time" }, prettyTimeOfRequest.time), React.createElement("span", { className: "pretty-ampm" }, prettyTimeOfRequest.ampm))), React.createElement(DataSection, { title: "Water Temperature", value: data.waterTemp, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Temperature", value: data.airTemp, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Pressure", value: data.airPressure, unit: "Millibars (mb)" }), React.createElement("section", null, React.createElement("div", { className: "data-title" }, "Wind"), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, data.wind.speed), React.createElement("span", { className: "unit" }, "knots ", data.wind.directionCardinal)), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, data.wind.gust), React.createElement("span", { className: "unit" }, "knot gusts"))));
+                var prettyTime = Time.createPrettyTime(data.airTemp.date);
+                return React.createElement("div", { className: "more tab-view-bg" }, React.createElement("header", null, React.createElement("div", { className: "title" }, "Current Conditions"), React.createElement("div", { className: "timing" }, "as of ", React.createElement("span", { className: "pretty-time" }, prettyTime.time), React.createElement("span", { className: "pretty-ampm" }, prettyTime.ampm))), React.createElement(DataSection, { title: "Water Temperature", value: data.waterTemp.value, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Temperature", value: data.airTemp.value, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Pressure", value: data.airPressure.value, unit: "Millibars (mb)" }), React.createElement("section", null, React.createElement("div", { className: "data-title" }, "Wind"), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, data.wind.speed), React.createElement("span", { className: "unit" }, "knots ", data.wind.directionCardinal)), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, data.wind.gust), React.createElement("span", { className: "unit" }, "knot gusts"))));
             }
         }
     }]);

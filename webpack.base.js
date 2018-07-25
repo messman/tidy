@@ -32,7 +32,7 @@ const DEFINE = {
 			TIME: JSON.stringify(buildTime)
 		},
 		DEBUG: {
-			LOCAL_REQUEST_DATA: JSON.stringify(true)
+			LOCAL_REQUEST_DATA: JSON.stringify(false)
 		}
 	}
 }

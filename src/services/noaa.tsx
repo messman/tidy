@@ -296,7 +296,7 @@ interface RawCurrentMoreData extends Response, CurrentProducts {
 }
 
 interface RawCurrentDataValues {
-	//t: string,
+	t: string,
 	v: string,
 	//f: string
 }
@@ -306,13 +306,22 @@ interface RawCurrentWindValues {
 	dr: string,
 	g: string,
 	s: string,
-	//t: string
+	t: string
 }
 
 export interface CurrentMoreData extends Response {
-	airPressure: number,
-	waterTemp: number,
-	airTemp: number,
+	airPressure: {
+		date: Date,
+		value: number,
+	},
+	waterTemp: {
+		date: Date,
+		value: number,
+	},
+	airTemp: {
+		date: Date,
+		value: number,
+	},
 	wind: {
 		direction: number,
 		directionCardinal: string,
@@ -330,19 +339,19 @@ export function getCurrentMoreData(date?: Date): Promise<CurrentMoreData> {
 			timeOfRequest: parseTimeFromResponse("2018-07-19 10:14"),
 			errors: null,
 			air_pressure: {
-				data: [{ v: "1025.3" }],
+				data: [{ t: "2018-07-19 10:14", v: "1025.3" }],
 				metadata: {}
 			},
 			air_temp: {
-				data: [{ v: "70.2" }],
+				data: [{ t: "2018-07-19 10:14", v: "70.2" }],
 				metadata: {}
 			},
 			water_temp: {
-				data: [{ v: "67.6" }],
+				data: [{ t: "2018-07-19 10:14", v: "67.6" }],
 				metadata: {}
 			},
 			wind: {
-				data: [{ s: "4.08", d: "162.00", dr: "SSE", g: "6.22" }],
+				data: [{ t: "2018-07-19 10:14", s: "4.08", d: "162.00", dr: "SSE", g: "6.22" }],
 				metadata: {}
 			}
 		}
@@ -385,9 +394,18 @@ function parseCurrentMore(raw: RawCurrentMoreData): CurrentMoreData {
 	return {
 		timeOfRequest: raw.timeOfRequest,
 		errors: raw.errors,
-		airPressure: parseFloat(raw.air_pressure.data[0].v),
-		airTemp: parseFloat(raw.air_temp.data[0].v),
-		waterTemp: parseFloat(raw.water_temp.data[0].v),
+		airPressure: {
+			date: parseTimeFromResponse(raw.air_pressure.data[0].t),
+			value: parseFloat(raw.air_pressure.data[0].v),
+		},
+		airTemp: {
+			date: parseTimeFromResponse(raw.air_temp.data[0].t),
+			value: parseFloat(raw.air_temp.data[0].v),
+		},
+		waterTemp: {
+			date: parseTimeFromResponse(raw.water_temp.data[0].t),
+			value: parseFloat(raw.water_temp.data[0].v),
+		},
 		wind: {
 			direction: parseFloat(raw.wind.data[0].d),
 			directionCardinal: raw.wind.data[0].dr,
