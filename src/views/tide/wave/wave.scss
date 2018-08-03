@@ -7,7 +7,7 @@
 	flex-direction: column;
 
 	.main {
-		flex: 2;
+		flex: 4;
 		flex-basis: auto;
 		min-height: 6rem;
 		position: relative;
@@ -21,9 +21,9 @@
 	}
 
 	.gradient-out {
-		background: -moz-linear-gradient(top, $c-alt1 0%, $c-back 100%);
-		background: -webkit-linear-gradient(top, $c-alt1 0%,$c-back 100%);
-		background: linear-gradient(to bottom, $c-alt1 0%,$c-back 100%);
+		background: -moz-linear-gradient(top, $c-alt1 0%, $c-alt2 100%);
+		background: -webkit-linear-gradient(top, $c-alt1 0%,$c-alt2 100%);
+		background: linear-gradient(to bottom, $c-alt1 0%,$c-alt2 100%);
 		flex: 1;
 	}
 
