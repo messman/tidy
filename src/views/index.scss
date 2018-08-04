@@ -17,9 +17,18 @@ html, body {
 	height: 100%;
 }
 
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: stretch;
+}
+
 main {
 	background-color: $c-back;
+	width: 100%;
 	max-width: 700px;
+	max-height: 1200px;
 	margin: 0 auto;
 	padding: 0;
 	height: 100%;
@@ -34,7 +43,7 @@ main {
 	left: 0;
 	height: 100%;
 	width: 100%;
-	background: -moz-linear-gradient(-45deg, $c-back 0%, $c-back 60%, $c-alt2 63%, $c-alt2 78%, $c-alt1 81%);
-	background: -webkit-linear-gradient(-45deg, $c-back 0%, $c-back 60%, $c-alt2 63%, $c-alt2 78%, $c-alt1 81%);
-	background: linear-gradient(135deg, $c-back 0%, $c-back 60%, $c-alt2 63%, $c-alt2 78%, $c-alt1 81%);
+	background: -moz-linear-gradient(-45deg, $c-back 0%, $c-back 86%, $c-alt2 86%, $c-alt2 92%, $c-alt1 92%);
+	background: -webkit-linear-gradient(-45deg, $c-back 0%, $c-back 86%, $c-alt2 86%, $c-alt2 92%, $c-alt1 92%);
+	background: linear-gradient(135deg, $c-back 0%, $c-back 86%, $c-alt2 86%, $c-alt2 92%, $c-alt1 92%);
 }

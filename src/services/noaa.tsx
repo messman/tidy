@@ -1,5 +1,4 @@
 import { DEFINE } from "./define";
-import { TimeHTMLAttributes } from "react";
 
 // API documentation: https://tidesandcurrents.noaa.gov/api/
 const api_noaa = "https://tidesandcurrents.noaa.gov/api/datagetter";

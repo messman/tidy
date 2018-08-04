@@ -1,37 +1,46 @@
 @import "src/styles/common";
 
-.waves {
+.graphic {
 	
+	// Take up all remaining space
 	flex: 1;
+
+	// Allow the wave area within (non-crab area) to take up all space
 	display: flex;
 	flex-direction: column;
+	flex-basis: auto;
+	position: relative;
+}
 
-	.main {
-		flex: 4;
-		flex-basis: auto;
-		min-height: 6rem;
-		position: relative;
-	}
+.graphic .crab-container {
+	// Constant size - do not change with device width
+	height: 4rem;
+	// Move crab to the right
+	position: relative;
 
-	.wave-container {
+	.crab {
+		// Show above what is beneath it
 		position: absolute;
+		top: 0;
+		right: -.5rem;
+		z-index: 5;
+		// overhang slightly to lower area
+		height: 5rem;
+	}
+}
+
+.graphic .waves {
+
+	// Waves take up rest of space
+	flex: 1;
+	position: relative;
+
+	.wave, .wave-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
 		height: 100%;
-		width: 100%;
-		overflow: hidden;
-	}
-
-	.gradient-out {
-		background: -moz-linear-gradient(top, $c-alt1 0%, $c-alt2 100%);
-		background: -webkit-linear-gradient(top, $c-alt1 0%,$c-alt2 100%);
-		background: linear-gradient(to bottom, $c-alt1 0%,$c-alt2 100%);
-		flex: 1;
-	}
-
-	.wave {
-		position: absolute;
-		bottom: -5px;
-		width: 100%;
-		height: calc(100% - 4rem);
 	}
 
 	.wave-lower {
@@ -41,32 +50,53 @@
 		fill: $c-alt2;
 	}
 
+	.wave-svg-offset {
+		// SVG doesn't always line up correctly. Prevent a white gap below the waves.
+		position: absolute;
+		bottom: 0;
+		height: 5px;
+		width: 100%;
+		background-color: $c-alt1;
+	}
+
 	.rocks {
 		position: absolute;
-		right: -1rem;
-		bottom: .1rem;
-		height: 100%;
-		width: auto;
+		right: 0rem;
+		
+		width: 14rem;
+		min-width: 40%;
+		max-width: 60%;
+
+		height: 30rem;
+		max-height: 250%;
+		min-height: 100%;
 	}
 }
 
-.waves .marker {
+.graphic .marker {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: calc(100% - 4rem);
+	height: 100%;
+	// Force the text to wrap on smaller screens
 	width: 60%;
 
 	.line-container {
 		width: 3rem;
-		margin-left: 2rem;
-		padding: 1rem 0;
+
+		// Margin on the left
+		margin-left: 1rem;
+
+		// Padding only at the bottom
+		padding: 0;
+		padding-bottom: 1rem;
+
 		height: 100%;
 		display: flex;
 		flex-direction: column;
 
 		.line {
-			width: 30%;
+			width: 1rem;
 			margin: 0 auto;
 			background-color: $c-main;
 			flex: 1;
@@ -97,7 +127,7 @@
 	.marker-header {
 		display: block;
 		position: absolute;
-		left: 5.5rem;
+		left: 4.6rem;
 
 		span {
 			white-space: pre;
@@ -112,11 +142,11 @@
 	}
 
 	.marker-high {
-		top: 0;
+		top: 0rem;
 	}
 
 	.marker-low {
-		bottom: 0;
+		bottom: 1rem;
 	}
 }
 

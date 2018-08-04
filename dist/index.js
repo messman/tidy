@@ -751,11 +751,11 @@ Object.defineProperty(exports, "__esModule", {
 var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
-        VERSION: "1.0.2",
-        TIME: 1533320627714
+        VERSION: "1.0.3",
+        TIME: 1533406962472
     },
     DEBUG: {
-        LOCAL_REQUEST_DATA: false
+        LOCAL_REQUEST_DATA: true
     }
 };
 // Make these public on the window for us to easily check
@@ -824,15 +824,15 @@ var _components = __webpack_require__(33);
 
 var _tide = __webpack_require__(37);
 
-var _settings = __webpack_require__(46);
+var _settings = __webpack_require__(47);
 
 var _define = __webpack_require__(9);
 
-var _info = __webpack_require__(49);
+var _info = __webpack_require__(50);
 
-var _more = __webpack_require__(52);
+var _more = __webpack_require__(53);
 
-var _charts = __webpack_require__(55);
+var _charts = __webpack_require__(56);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -966,7 +966,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: #19576D;\n  background-color: #EAEAEA; }\n\n* {\n  box-sizing: border-box;\n  font-weight: 300; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nmain {\n  background-color: #DFEEF4;\n  max-width: 700px;\n  margin: 0 auto;\n  padding: 0;\n  height: 100%;\n  outline: 1px solid #BEBEBE; }\n\n.tab-view-bg {\n  padding: .5rem;\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  background: -moz-linear-gradient(-45deg, #DFEEF4 0%, #DFEEF4 60%, #B5DCE8 63%, #B5DCE8 78%, #8DC2D5 81%);\n  background: -webkit-linear-gradient(-45deg, #DFEEF4 0%, #DFEEF4 60%, #B5DCE8 63%, #B5DCE8 78%, #8DC2D5 81%);\n  background: linear-gradient(135deg, #DFEEF4 0%, #DFEEF4 60%, #B5DCE8 63%, #B5DCE8 78%, #8DC2D5 81%); }\n", ""]);
+exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: #19576D;\n  background-color: #EAEAEA; }\n\n* {\n  box-sizing: border-box;\n  font-weight: 300; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nbody {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: stretch; }\n\nmain {\n  background-color: #f6fbfd;\n  width: 100%;\n  max-width: 700px;\n  max-height: 1200px;\n  margin: 0 auto;\n  padding: 0;\n  height: 100%;\n  outline: 1px solid #BEBEBE; }\n\n.tab-view-bg {\n  padding: .5rem;\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  background: -moz-linear-gradient(-45deg, #f6fbfd 0%, #f6fbfd 86%, #B5DCE8 86%, #B5DCE8 92%, #8DC2D5 92%);\n  background: -webkit-linear-gradient(-45deg, #f6fbfd 0%, #f6fbfd 86%, #B5DCE8 86%, #B5DCE8 92%, #8DC2D5 92%);\n  background: linear-gradient(135deg, #f6fbfd 0%, #f6fbfd 86%, #B5DCE8 86%, #B5DCE8 92%, #8DC2D5 92%); }\n", ""]);
 
 // exports
 
@@ -1360,7 +1360,7 @@ var _title = __webpack_require__(38);
 
 var _wave = __webpack_require__(41);
 
-__webpack_require__(44);
+__webpack_require__(45);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1569,7 +1569,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".tide header {\n  margin: .5rem; }\n  .tide header .top .right {\n    float: right; }\n  .tide header .top::after {\n    content: \"\";\n    clear: both; }\n  .tide header .title {\n    background-color: #19576D;\n    color: #DFEEF4;\n    fill: #DFEEF4;\n    border-radius: 6px;\n    padding: 0 1rem;\n    overflow: hidden;\n    text-align: center; }\n    .tide header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  .tide header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  .tide header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.tide .lastnext {\n  margin: 1.5rem;\n  margin-bottom: .5rem;\n  display: flex; }\n\n.tide .lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .tide .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #DFEEF4; }\n  .tide .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .tide .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
+exports.push([module.i, ".tide header {\n  margin: .5rem; }\n  .tide header .top .right {\n    float: right; }\n  .tide header .top::after {\n    content: \"\";\n    clear: both; }\n  .tide header .title {\n    background-color: #19576D;\n    color: #f6fbfd;\n    fill: #f6fbfd;\n    border-radius: 6px;\n    padding: 0 1rem;\n    overflow: hidden;\n    text-align: center; }\n    .tide header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  .tide header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  .tide header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.tide .lastnext {\n  margin: 1.5rem;\n  margin-bottom: .5rem;\n  display: flex; }\n\n.tide .lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .tide .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #f6fbfd; }\n  .tide .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .tide .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
 
 // exports
 
@@ -1594,6 +1594,8 @@ var React = _interopRequireWildcard(_react);
 
 __webpack_require__(42);
 
+var _styleScript = __webpack_require__(44);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1605,18 +1607,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Wave = exports.Wave = function (_React$Component) {
     _inherits(Wave, _React$Component);
 
-    function Wave() {
+    function Wave(props) {
         _classCallCheck(this, Wave);
 
-        return _possibleConstructorReturn(this, (Wave.__proto__ || Object.getPrototypeOf(Wave)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (Wave.__proto__ || Object.getPrototypeOf(Wave)).call(this, props));
+
+        _this.setEmAsPixels = function (value) {
+            console.log({ emAsPixels: value });
+            if (Wave.emAsPixel !== -1) value = Wave.emAsPixel;
+            if (isNaN(value) || value < 1) {
+                value = 16; // 1em === 16px default
+            }
+            Wave.emAsPixel = value;
+            _this.setState({ emAsPixel: value });
+        };
+        _this.state = {
+            emAsPixel: Wave.emAsPixel
+        };
+        return _this;
     }
 
     _createClass(Wave, [{
         key: "render",
         value: function render() {
             var data = this.props.waterLevel;
-            if (!data || data.errors) {
-                return React.createElement("div", null, "TODO");
+            if (!data || data.errors || this.state.emAsPixel === -1) {
+                return React.createElement(_styleScript.StyleScript, { input: "1em", outputPixels: this.setEmAsPixels });
             }
             var isRising = data.currentIsRising;
             var high = isRising ? data.next : data.previous;
@@ -1636,16 +1652,35 @@ var Wave = exports.Wave = function (_React$Component) {
             var lowerLineStyle = {
                 flex: lowerLine
             };
-            return React.createElement("div", { className: "waves" }, React.createElement("div", { className: "main" }, React.createElement("div", { className: "wave-container" }, React.createElement(SVGWave, { animationOpts: { percentFallen: upperWavePercent, percentMin: .1, percentRange: .7, colorClass: "wave-higher", duration: 7.5 } })), Wave.rock_svg, React.createElement("div", { className: "wave-container" }, React.createElement(SVGWave, { animationOpts: { percentFallen: lowerWavePercent, percentMin: .2, percentRange: .7, colorClass: "wave-lower", duration: 6 } })), React.createElement("div", { className: "marker" }, React.createElement("div", { className: "line-container" }, React.createElement("div", { className: "line " + (isRising ? "line-faint" : ""), style: upperLineStyle }), React.createElement("div", { className: "line-arrow-holder" }, isRising ? Wave.arrow_up_svg : Wave.arrow_down_svg), React.createElement("div", { className: "line " + (isRising ? "" : "line-faint"), style: lowerLineStyle })), React.createElement("span", { className: "marker-header marker-high" }, React.createElement("span", { className: "marker-title" }, "High"), React.createElement("span", { className: "marker-value" }, "(", roundVal(highVal), " ft)")), React.createElement("span", { className: "marker-header marker-low" }, React.createElement("span", { className: "marker-title" }, "Low"), React.createElement("span", { className: "marker-value" }, "(", roundVal(lowVal), " ft)")))), React.createElement("div", { className: "gradient-out" }));
+            var emAsPixels = this.state.emAsPixel;
+            var upperBackWaveOpts = {
+                percentFallen: upperWavePercent,
+                amplitudePixels: emAsPixels * .5,
+                offsetAboveFallen: emAsPixels * .5,
+                upperPaddingPixels: emAsPixels,
+                lowerPaddingPixels: emAsPixels * 2,
+                wavePeriod: emAsPixels * 18,
+                colorClass: "wave-higher",
+                periodDurationSeconds: 7
+            };
+            var lowerFrontWaveOpts = {
+                percentFallen: upperWavePercent,
+                amplitudePixels: emAsPixels * .5,
+                offsetAboveFallen: -emAsPixels * .5,
+                upperPaddingPixels: emAsPixels,
+                lowerPaddingPixels: emAsPixels * 2,
+                colorClass: "wave-lower",
+                wavePeriod: emAsPixels * 17,
+                periodDurationSeconds: 4
+            };
+            return React.createElement("div", { className: "graphic" }, React.createElement("div", { className: "crab-container" }, crab_svg), React.createElement("div", { className: "waves" }, React.createElement(SVGWave, { animationOpts: upperBackWaveOpts }), rock_svg, React.createElement(SVGWave, { animationOpts: lowerFrontWaveOpts }), React.createElement("div", { className: "wave-svg-offset" }), React.createElement("div", { className: "marker" }, React.createElement("div", { className: "line-container" }, React.createElement("div", { className: "line " + (isRising ? "line-faint" : ""), style: upperLineStyle }), React.createElement("div", { className: "line-arrow-holder" }, isRising ? arrow_up_svg : arrow_down_svg), React.createElement("div", { className: "line " + (isRising ? "" : "line-faint"), style: lowerLineStyle })), React.createElement("span", { className: "marker-header marker-high" }, React.createElement("span", { className: "marker-title" }, "High"), React.createElement("span", { className: "marker-value" }, "(", roundVal(highVal), " ft)")), React.createElement("span", { className: "marker-header marker-low" }, React.createElement("span", { className: "marker-title" }, "Low"), React.createElement("span", { className: "marker-value" }, "(", roundVal(lowVal), " ft)")))));
         }
     }]);
 
     return Wave;
 }(React.Component);
 
-Wave.rock_svg = React.createElement("svg", { className: "rocks", width: "319px", height: "378px", viewBox: "0 0 319 378", version: "1.1", xmlns: "http://www.w3.org/2000/svg", xmlnsXlink: "http://www.w3.org/1999/xlink", preserveAspectRatio: "xMaxYMin meet" }, React.createElement("defs", null, React.createElement("rect", { id: "path-1", x: "0", y: "0", width: "355", height: "378" }), React.createElement("path", { d: "M25.5920085,40.9675901 C36.2708429,40.9675901 44.9277486,33.3920891 44.9277486,24.0472351 C44.9277486,14.702381 36.2708429,7.12688003 25.5920085,7.12688003 C26.4706716,14.235094 27.0627795,21.4776038 27.3683322,28.8544096 C21.1489474,24.5694684 15.3305532,19.6656617 9.91314964,14.1429896 C7.61234935,16.9272569 6.25626837,20.3486638 6.25626837,24.0472351 C6.25626837,33.3920891 14.9131741,40.9675901 25.5920085,40.9675901 Z", id: "path-3" }), React.createElement("path", { d: "M25.5920085,40.9675901 C36.2708429,40.9675901 44.9277486,33.3920891 44.9277486,24.0472351 C44.9277486,14.702381 36.2708429,7.12688003 25.5920085,7.12688003 C26.4706716,14.235094 27.0627795,21.4776038 27.3683322,28.8544096 C21.1489474,24.5694684 15.3305532,19.6656617 9.91314964,14.1429896 C7.61234935,16.9272569 6.25626837,20.3486638 6.25626837,24.0472351 C6.25626837,33.3920891 14.9131741,40.9675901 25.5920085,40.9675901 Z", id: "path-5" }), React.createElement("ellipse", { id: "path-7", cx: "10.3919598", cy: "10.350051", rx: "10.3919598", ry: "10.350051" }), React.createElement("ellipse", { id: "path-9", cx: "10.3919598", cy: "10.350051", rx: "10.3919598", ry: "10.350051" })), React.createElement("g", { id: "Redesign", stroke: "none", strokeWidth: "1", fill: "none", fillRule: "evenodd" }, React.createElement("g", { id: "Scene", transform: "translate(-36.000000, 0.000000)" }, React.createElement("mask", { id: "mask-2", fill: "white" }, React.createElement("use", { xlinkHref: "#path-1" })), React.createElement("g", { id: "Rectangle-8" }), React.createElement("g", { id: "Beach", mask: "url(#mask-2)" }, React.createElement("g", { transform: "translate(19.000000, 87.000000)" }, React.createElement("path", { d: "M258.182733,294.237288 C395.719329,294.325655 422.744064,300 378.346285,266 C333.948507,232 369.856325,232 258.182733,232 C183.232787,232 0,292.390545 0,300 C80.4307579,296.099281 166.491669,294.178377 258.182733,294.237288 Z", id: "Oval", fill: "#E2D390" }), React.createElement("polygon", { id: "Path-3-Copy", fill: "#6B5B50", points: "198 3 292.336 0 366.504 0 398 13.7931034 349.232 194.790042 167.368 211.494253 158 90 177 50" }), React.createElement("path", { d: "M129.000554,179.883473 L121.057223,236.804036 C120.904558,237.898005 121.667636,238.908601 122.761604,239.061265 C122.853191,239.074046 122.945554,239.08046 123.038028,239.08046 L241,239.08046 C242.104569,239.08046 243,238.185029 243,237.08046 L243,138.664934 C243,138.33529 242.91852,138.010757 242.762808,137.720207 L218.841138,93.0836967 C218.31938,92.1101248 217.107175,91.7438574 216.133603,92.2656156 C215.952049,92.3629147 215.786615,92.4876767 215.643154,92.635488 L202.828041,105.839219 C202.419706,106.259937 201.84733,106.480295 201.262287,106.442016 L161.419155,103.835129 C161.331824,103.829415 161.244211,103.829439 161.156883,103.835202 L122.831408,106.364308 C121.729235,106.437041 120.89471,107.389489 120.967442,108.491662 C120.969508,108.52297 120.972311,108.554226 120.975848,108.585403 L129.007002,179.381615 C129.025935,179.548508 129.023768,179.717122 129.000554,179.883473 Z", id: "Path-3-Copy", fill: "#938071" }), React.createElement("path", { d: "M216.873066,27.3962707 L213,70 L183.941121,92.2784738 C183.360873,92.7233303 183.069621,93.4493648 183.181564,94.1718973 L188.826816,130.608842 C188.934274,131.302426 189.397434,131.888926 190.047216,132.154235 L237.591728,151.566909 C238.104787,151.776394 238.681766,151.763609 239.185042,151.531604 L281.577731,131.989006 C281.948258,131.818197 282.362162,131.764796 282.763908,131.835969 L312.766204,137.151093 C313.049268,137.201239 313.339815,137.189775 313.618047,137.117482 L354.56009,126.479486 C355.173487,126.320107 355.675043,125.879431 355.912034,125.291645 L370.977433,87.9264228 C371.032139,87.7907399 371.101568,87.661469 371.184472,87.5409307 L385.741694,66.3755623 C385.911718,66.1283569 386.023945,65.8460656 386.070062,65.5495998 L392.672821,23.103294 C392.842601,22.0118507 392.095445,20.9894271 391.004002,20.8196471 C390.962977,20.8132654 390.921764,20.8081628 390.880422,20.8043466 L328.018032,15.0016645 C328.006011,15.0005548 327.99398,14.9995541 327.981941,14.9986623 L274.333412,11.0246972 C274.112669,11.0083458 273.890742,11.028752 273.676682,11.0850836 L218.355866,25.6431931 C217.541986,25.8573722 216.94926,26.5581369 216.873066,27.3962707 Z", id: "Path-4", fill: "#A49081" }), React.createElement("path", { d: "M128.410548,258.37199 L108.344291,202.950899 C108.120938,202.33402 108.105962,201.660931 108.301656,201.034728 L123.096007,153.694121 C123.327334,152.953895 123.83633,152.332013 124.516221,151.958927 L169.001174,127.548099 C169.644638,127.195003 170.395221,127.09005 171.110856,127.253107 L248.377715,144.858214 C248.787981,144.951692 249.213323,144.957819 249.626111,144.876197 L261.002097,142.626789 C262.369178,142.356472 263.742402,143.063135 264.317069,144.332677 L283.733041,187.22604 C283.908989,187.614741 284,188.036501 284,188.46317 L284,229.878887 C284,230.830128 283.548867,231.725001 282.784124,232.290712 L237.108937,266.078492 C236.592533,266.460497 235.967153,266.666667 235.324812,266.666667 L166.639576,266.666667 C166.462941,266.666667 166.286652,266.651067 166.112762,266.620049 L130.704531,260.304049 C129.649713,260.115894 128.775319,259.379454 128.410548,258.37199 Z", id: "Path-2", fill: "#7C6C60" }), React.createElement("path", { d: "M266.745969,78.3370539 L224.916148,111.278523 C224.349987,111.724381 224.067467,112.440347 224.176605,113.152678 L236.04487,190.615147 C236.212152,191.706976 237.232864,192.456469 238.324693,192.289187 C238.455124,192.269203 238.583258,192.23636 238.707221,192.191138 L336.863108,156.383682 C337.082746,156.303557 337.314732,156.262564 337.548528,156.262564 L379.142645,156.262564 C380.176822,156.262564 381.040439,155.474133 381.134377,154.444232 L387.983627,79.3517907 C388.051666,78.6058313 387.69717,77.8843851 387.065087,77.4824446 L358.49115,59.3123215 C358.170371,59.1083384 357.798101,59 357.417958,59 L320.350017,59 C320.118432,59 319.888607,59.0402213 319.670787,59.1188708 L267.304128,78.0271885 C267.102684,78.099925 266.914231,78.204546 266.745969,78.3370539 Z", id: "Path-5", fill: "#938071" }), React.createElement("path", { d: "M220.83962,176.016885 L206.000186,270.105622 C205.828103,271.196705 206.5731,272.220703 207.664183,272.392785 C207.814637,272.416514 207.967309,272.422979 208.119231,272.412053 L272.027236,267.815942 C272.045214,267.814649 272.063174,267.813113 272.08111,267.811335 L396.272088,255.497387 C397.371267,255.3884 398.173977,254.408987 398.064989,253.309808 C398.05775,253.236802 398.0465,253.164249 398.031289,253.092479 L376.905933,153.415845 C376.902216,153.398306 376.898735,153.380717 376.89549,153.363085 L371.592683,124.542058 C371.392808,123.455723 370.350128,122.737106 369.263793,122.936982 C369.044408,122.977347 368.83332,123.054129 368.639272,123.164149 L346,136 L296.753086,130.09037 C296.267889,130.032147 295.778164,130.153579 295.376376,130.43174 L257.116863,156.919095 C257.039052,156.972964 256.957517,157.021242 256.87287,157.063565 L221.920772,174.539614 C221.34295,174.828525 220.940265,175.378749 220.83962,176.016885 Z", id: "Path-3", fill: "#6B5B50" }))), React.createElement("g", { id: "Crab", mask: "url(#mask-2)" }, React.createElement("g", { transform: "translate(274.093150, 47.218117) rotate(-1.000000) translate(-274.093150, -47.218117) translate(175.093150, -16.281883)" }, React.createElement("g", { id: "Right-Legs", transform: "translate(128.000000, 79.479963)" }, React.createElement("g", { id: "RIght-Leg-Copy", transform: "translate(0.000000, 20.295131)" }, React.createElement("path", { d: "M19.3381435,11.3627984 C20.4090755,11.7339009 22.1047314,21.4469247 21.4800075,24.7224885 C21.4114989,25.0816942 20.7660528,25.0935911 20.0520982,24.351386 C19.3381435,23.609181 13.7680624,15.7935691 13.626506,13.2183109 C14.697438,11.7339009 18.2672114,10.9916959 19.3381435,11.3627984 Z", id: "Path-6", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(17.620482, 18.114704) rotate(-13.000000) translate(-17.620482, -18.114704) " }), React.createElement("path", { d: "M10.5722892,14.9303751 C16.1984781,15.6908863 19.7349398,12.5469278 19.7349398,9.60679661 C19.7349398,6.66666542 15.8769816,4.02971443 10.5722892,4.79022564 C5.2675967,5.55073684 1.40963855,6.66666542 1.40963855,9.60679661 C1.40963855,12.5469278 4.94610019,14.1698638 10.5722892,14.9303751 Z", id: "Oval-5-Copy", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(10.572289, 9.851717) rotate(36.000000) translate(-10.572289, -9.851717) " }), React.createElement("path", { d: "M15.9759036,14.7844224 C13.654146,13.609013 8.43019135,11.8458988 6.10843373,8.90737523 C7.26931254,13.0213083 13.0737066,15.9598318 15.9759036,14.7844224 Z", id: "Gloss-Copy-2", fill: "#F26E69" })), React.createElement("g", { id: "RIght-Leg-Copy-2", transform: "translate(18.124151, 26.660397) rotate(-6.000000) translate(-18.124151, -26.660397) translate(6.124151, 13.660397)" }, React.createElement("path", { d: "M19.3381435,11.3627984 C20.4090755,11.7339009 22.1047314,21.4469247 21.4800075,24.7224885 C21.4114989,25.0816942 20.7660528,25.0935911 20.0520982,24.351386 C19.3381435,23.609181 13.7680624,15.7935691 13.626506,13.2183109 C14.697438,11.7339009 18.2672114,10.9916959 19.3381435,11.3627984 Z", id: "Path-6", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(17.620482, 18.114704) rotate(-13.000000) translate(-17.620482, -18.114704) " }), React.createElement("path", { d: "M10.5722892,14.9303751 C16.1984781,15.6908863 19.7349398,12.5469278 19.7349398,9.60679661 C19.7349398,6.66666542 15.8769816,4.02971443 10.5722892,4.79022564 C5.2675967,5.55073684 1.40963855,6.66666542 1.40963855,9.60679661 C1.40963855,12.5469278 4.94610019,14.1698638 10.5722892,14.9303751 Z", id: "Oval-5-Copy", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(10.572289, 9.851717) rotate(36.000000) translate(-10.572289, -9.851717) " }), React.createElement("path", { d: "M15.9759036,14.7844224 C13.654146,13.609013 8.43019135,11.8458988 6.10843373,8.90737523 C7.26931254,13.0213083 13.0737066,15.9598318 15.9759036,14.7844224 Z", id: "Gloss-Copy-2", fill: "#F26E69" })), React.createElement("g", { id: "RIght-Leg-Copy-3", transform: "translate(23.787690, 17.158315) rotate(-20.000000) translate(-23.787690, -17.158315) translate(11.787690, 4.158315)" }, React.createElement("path", { d: "M19.3381435,11.3627984 C20.4090755,11.7339009 22.1047314,21.4469247 21.4800075,24.7224885 C21.4114989,25.0816942 20.7660528,25.0935911 20.0520982,24.351386 C19.3381435,23.609181 13.7680624,15.7935691 13.626506,13.2183109 C14.697438,11.7339009 18.2672114,10.9916959 19.3381435,11.3627984 Z", id: "Path-6", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(17.620482, 18.114704) rotate(-13.000000) translate(-17.620482, -18.114704) " }), React.createElement("path", { d: "M10.5722892,14.9303751 C16.1984781,15.6908863 19.7349398,12.5469278 19.7349398,9.60679661 C19.7349398,6.66666542 15.8769816,4.02971443 10.5722892,4.79022564 C5.2675967,5.55073684 1.40963855,6.66666542 1.40963855,9.60679661 C1.40963855,12.5469278 4.94610019,14.1698638 10.5722892,14.9303751 Z", id: "Oval-5-Copy", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(10.572289, 9.851717) rotate(36.000000) translate(-10.572289, -9.851717) " }), React.createElement("path", { d: "M15.9759036,14.7844224 C13.654146,13.609013 8.43019135,11.8458988 6.10843373,8.90737523 C7.26931254,13.0213083 13.0737066,15.9598318 15.9759036,14.7844224 Z", id: "Gloss-Copy-2", fill: "#F26E69" }))), React.createElement("g", { id: "Right-Legs-Copy", transform: "translate(51.000000, 102.979963) scale(-1, 1) translate(-51.000000, -102.979963) translate(31.000000, 79.479963)" }, React.createElement("g", { id: "RIght-Leg-Copy", transform: "translate(-0.000000, 20.295131)" }, React.createElement("path", { d: "M19.3381435,11.3627984 C20.4090755,11.7339009 22.1047314,21.4469247 21.4800075,24.7224885 C21.4114989,25.0816942 20.7660528,25.0935911 20.0520982,24.351386 C19.3381435,23.609181 13.7680624,15.7935691 13.626506,13.2183109 C14.697438,11.7339009 18.2672114,10.9916959 19.3381435,11.3627984 Z", id: "Path-6", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(17.620482, 18.114704) rotate(-13.000000) translate(-17.620482, -18.114704) " }), React.createElement("path", { d: "M10.5722892,14.9303751 C16.1984781,15.6908863 19.7349398,12.5469278 19.7349398,9.60679661 C19.7349398,6.66666542 15.8769816,4.02971443 10.5722892,4.79022564 C5.2675967,5.55073684 1.40963855,6.66666542 1.40963855,9.60679661 C1.40963855,12.5469278 4.94610019,14.1698638 10.5722892,14.9303751 Z", id: "Oval-5-Copy", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(10.572289, 9.851717) rotate(36.000000) translate(-10.572289, -9.851717) " }), React.createElement("path", { d: "M15.9759036,14.7844224 C13.654146,13.609013 8.43019135,11.8458988 6.10843373,8.90737523 C7.26931254,13.0213083 13.0737066,15.9598318 15.9759036,14.7844224 Z", id: "Gloss-Copy-2", fill: "#F26E69" })), React.createElement("g", { id: "RIght-Leg-Copy-2", transform: "translate(18.124151, 26.660397) rotate(-6.000000) translate(-18.124151, -26.660397) translate(6.124151, 13.660397)" }, React.createElement("path", { d: "M19.3381435,11.3627984 C20.4090755,11.7339009 22.1047314,21.4469247 21.4800075,24.7224885 C21.4114989,25.0816942 20.7660528,25.0935911 20.0520982,24.351386 C19.3381435,23.609181 13.7680624,15.7935691 13.626506,13.2183109 C14.697438,11.7339009 18.2672114,10.9916959 19.3381435,11.3627984 Z", id: "Path-6", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(17.620482, 18.114704) rotate(-13.000000) translate(-17.620482, -18.114704) " }), React.createElement("path", { d: "M10.5722892,14.9303751 C16.1984781,15.6908863 19.7349398,12.5469278 19.7349398,9.60679661 C19.7349398,6.66666542 15.8769816,4.02971443 10.5722892,4.79022564 C5.2675967,5.55073684 1.40963855,6.66666542 1.40963855,9.60679661 C1.40963855,12.5469278 4.94610019,14.1698638 10.5722892,14.9303751 Z", id: "Oval-5-Copy", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(10.572289, 9.851717) rotate(36.000000) translate(-10.572289, -9.851717) " }), React.createElement("path", { d: "M15.9759036,14.7844224 C13.654146,13.609013 8.43019135,11.8458988 6.10843373,8.90737523 C7.26931254,13.0213083 13.0737066,15.9598318 15.9759036,14.7844224 Z", id: "Gloss-Copy-2", fill: "#F26E69" })), React.createElement("g", { id: "RIght-Leg-Copy-3", transform: "translate(23.787690, 17.158315) rotate(-20.000000) translate(-23.787690, -17.158315) translate(11.787690, 4.158315)" }, React.createElement("path", { d: "M19.3381435,11.3627984 C20.4090755,11.7339009 22.1047314,21.4469247 21.4800075,24.7224885 C21.4114989,25.0816942 20.7660528,25.0935911 20.0520982,24.351386 C19.3381435,23.609181 13.7680624,15.7935691 13.626506,13.2183109 C14.697438,11.7339009 18.2672114,10.9916959 19.3381435,11.3627984 Z", id: "Path-6", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(17.620482, 18.114704) rotate(-13.000000) translate(-17.620482, -18.114704) " }), React.createElement("path", { d: "M10.5722892,14.9303751 C16.1984781,15.6908863 19.7349398,12.5469278 19.7349398,9.60679661 C19.7349398,6.66666542 15.8769816,4.02971443 10.5722892,4.79022564 C5.2675967,5.55073684 1.40963855,6.66666542 1.40963855,9.60679661 C1.40963855,12.5469278 4.94610019,14.1698638 10.5722892,14.9303751 Z", id: "Oval-5-Copy", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(10.572289, 9.851717) rotate(36.000000) translate(-10.572289, -9.851717) " }), React.createElement("path", { d: "M15.9759036,14.7844224 C13.654146,13.609013 8.43019135,11.8458988 6.10843373,8.90737523 C7.26931254,13.0213083 13.0737066,15.9598318 15.9759036,14.7844224 Z", id: "Gloss-Copy-2", fill: "#F26E69" }))), React.createElement("g", { id: "Right-Arm", transform: "translate(153.246695, 45.324732) rotate(-38.000000) translate(-153.246695, -45.324732) translate(120.246695, 15.324732)" }, React.createElement("path", { d: "M30.1974023,50.5323529 C37.1150963,51.6251421 41.4633612,47.107544 41.4633612,42.8828281 C41.4633612,38.6581122 36.7197995,34.8690403 30.1974023,35.9618295 C23.6750051,37.0546188 18.9314435,38.6581122 18.9314435,42.8828281 C18.9314435,47.107544 23.2797083,49.4395636 30.1974023,50.5323529 Z", id: "Oval-5", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(30.197402, 43.234757) rotate(316.000000) translate(-30.197402, -43.234757) " }), React.createElement("path", { d: "M19.0462783,56.6304176 C25.0836052,57.5690245 28.8784963,53.6888173 28.8784963,50.0601693 C28.8784963,46.4315214 24.7386151,43.1770521 19.0462783,44.115659 C13.3539416,45.0542659 9.21406034,46.4315214 9.21406034,50.0601693 C9.21406034,53.6888173 13.0089515,55.6918107 19.0462783,56.6304176 Z", id: "Oval-5", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(19.046278, 50.362445) rotate(-18.000000) translate(-19.046278, -50.362445) " }), React.createElement("path", { d: "M8.47826087,56.3804129 C13.6842105,57.1808824 16.9565217,53.8717361 16.9565217,50.7771266 C16.9565217,47.682517 13.3867277,44.9070171 8.47826087,45.7074866 C3.56979405,46.507956 9.09494702e-13,47.682517 9.09494702e-13,50.7771266 C9.09494702e-13,53.8717361 3.27231121,55.5799434 8.47826087,56.3804129 Z", id: "Oval-5", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("g", { id: "Group-9", transform: "translate(14.225515, 0.000000)" }, React.createElement("mask", { id: "mask-4", fill: "white" }, React.createElement("use", { xlinkHref: "#path-3" })), React.createElement("use", { id: "Oval-6", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(25.592008, 24.047235) rotate(26.000000) translate(-25.592008, -24.047235) ", xlinkHref: "#path-3" })), React.createElement("path", { d: "M41.9267334,38.7889373 C28.553094,33.6726851 27.0454234,24.038298 27.2776657,12.1563243 C21.4779561,19.64828 26.8943601,36.5875375 41.9267334,38.7889373 Z", id: "Gloss-Copy", fill: "#F26E69" })), React.createElement("g", { id: "Left-Arm", transform: "translate(44.753305, 44.241255) scale(-1, 1) rotate(-38.000000) translate(-44.753305, -44.241255) translate(11.753305, 14.241255)" }, React.createElement("path", { d: "M30.1974023,50.5323529 C37.1150963,51.6251421 41.4633612,47.107544 41.4633612,42.8828281 C41.4633612,38.6581122 36.7197995,34.8690403 30.1974023,35.9618295 C23.6750051,37.0546188 18.9314435,38.6581122 18.9314435,42.8828281 C18.9314435,47.107544 23.2797083,49.4395636 30.1974023,50.5323529 Z", id: "Oval-5", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(30.197402, 43.234757) rotate(316.000000) translate(-30.197402, -43.234757) " }), React.createElement("path", { d: "M19.0462783,56.6304176 C25.0836052,57.5690245 28.8784963,53.6888173 28.8784963,50.0601693 C28.8784963,46.4315214 24.7386151,43.1770521 19.0462783,44.115659 C13.3539416,45.0542659 9.21406034,46.4315214 9.21406034,50.0601693 C9.21406034,53.6888173 13.0089515,55.6918107 19.0462783,56.6304176 Z", id: "Oval-5", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(19.046278, 50.362445) rotate(-18.000000) translate(-19.046278, -50.362445) " }), React.createElement("path", { d: "M8.47826087,56.3804129 C13.6842105,57.1808824 16.9565217,53.8717361 16.9565217,50.7771266 C16.9565217,47.682517 13.3867277,44.9070171 8.47826087,45.7074866 C3.56979405,46.507956 -9.09494702e-13,47.682517 -9.09494702e-13,50.7771266 C-9.09494702e-13,53.8717361 3.27231121,55.5799434 8.47826087,56.3804129 Z", id: "Oval-5", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("g", { id: "Group-9", transform: "translate(14.225515, -0.000000)" }, React.createElement("mask", { id: "mask-6", fill: "white" }, React.createElement("use", { xlinkHref: "#path-5" })), React.createElement("use", { id: "Oval-6", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "translate(25.592008, 24.047235) rotate(26.000000) translate(-25.592008, -24.047235) ", xlinkHref: "#path-5" })), React.createElement("path", { d: "M40.9267334,38.7889373 C28.3431838,34.2971081 26.9245836,25.8385686 27.1431054,15.4067535 C21.6860319,21.9843389 26.7824449,36.8562116 40.9267334,38.7889373 Z", id: "Gloss-Copy", fill: "#F26E69" })), React.createElement("g", { id: "Face", transform: "translate(52.000000, 44.117932)" }, React.createElement("path", { d: "M42.4444854,14.2467801 C43.9435304,14.1587452 45.463151,14.1137058 47,14.1137058 C47.0971065,14.1137058 47.1941443,14.1138857 47.2911124,14.1142448 C47.2547548,13.7266931 47.2361809,13.3342129 47.2361809,12.9375637 C47.2361809,5.79234456 53.2634631,0 60.6984925,0 C68.1335218,0 74.160804,5.79234456 74.160804,12.9375637 C74.160804,15.0416276 73.6381573,17.0283789 72.710822,18.7844574 C85.5309705,23.9094691 94,32.7566307 94,42.8115744 C94,58.6609695 72.9573832,71.5094429 47,71.5094429 C21.0426168,71.5094429 0,58.6609695 0,42.8115744 C0,33.6592037 7.01683986,25.5075159 17.9449647,20.252741 C16.4580821,18.1720043 15.5879397,15.6524394 15.5879397,12.9375637 C15.5879397,5.79234456 21.6152219,0 29.0502513,0 C36.4852806,0 42.5125628,5.79234456 42.5125628,12.9375637 C42.5125628,13.3794946 42.489506,13.8162502 42.4444854,14.2467801 Z", stroke: "#E03232", strokeWidth: "4", fill: "#F0504F" }), React.createElement("path", { d: "M25.0351759,64.9230469 C20.3115578,60.2184783 9.44723618,51.7502548 2.83417085,44.222945 C4.25125628,52.6911685 18.8944724,62.5707626 25.0351759,64.9230469 Z", id: "Gloss", fill: "#F26E69" }), React.createElement("path", { d: "M68.4924623,38.1070058 C57.6281407,43.7524881 32.120603,50.809341 20.7839196,38.1070058 C25.5144335,59.2808545 64.77563,60.4571794 68.4924623,38.1070058 Z", id: "Mouth", fill: "#565757" }), React.createElement("g", { id: "Left-Eye", transform: "translate(18.422111, 2.352284)" }, React.createElement("g", { id: "Group-7" }, React.createElement("mask", { id: "mask-8", fill: "white" }, React.createElement("use", { xlinkHref: "#path-7" })), React.createElement("use", { id: "Oval-3", fill: "#D8EEEE", xlinkHref: "#path-7" }), React.createElement("ellipse", { id: "Oval-3-Copy-2", fill: "#FFFFFF", mask: "url(#mask-8)", cx: "13.6984925", cy: "10.350051", rx: "10.3919598", ry: "10.350051" })), React.createElement("path", { d: "M13.2376315,2.92930794 C12.9313647,3.44158715 12.7537688,4.05083271 12.7537688,4.70456861 C12.7537688,6.52335166 14.1284122,7.99776664 15.8241206,7.99776664 C16.7835354,7.99776664 17.6401714,7.52577948 18.2032048,6.78647891 C18.6459777,7.72047929 18.8944724,8.77013757 18.8944724,9.87959409 C18.8944724,13.7769863 15.8279604,16.936447 12.0452261,16.936447 C8.26249189,16.936447 5.1959799,13.7769863 5.1959799,9.87959409 C5.1959799,5.98220184 8.26249189,2.82274117 12.0452261,2.82274117 C12.4519484,2.82274117 12.8503907,2.85926676 13.2376315,2.92930794 Z M9.44723618,8.46822351 C10.2298709,8.46822351 10.8643216,7.73101602 10.8643216,6.82162449 C10.8643216,5.91223297 10.2298709,5.17502548 9.44723618,5.17502548 C8.66460151,5.17502548 8.03015075,5.91223297 8.03015075,6.82162449 C8.03015075,7.73101602 8.66460151,8.46822351 9.44723618,8.46822351 Z", id: "Oval-4", fill: "#565757" })), React.createElement("g", { id: "Right-Eye", transform: "translate(50.542714, 2.352284)" }, React.createElement("g", { id: "Group-8" }, React.createElement("mask", { id: "mask-10", fill: "white" }, React.createElement("use", { xlinkHref: "#path-9" })), React.createElement("use", { id: "Oval-3-Copy", fill: "#D8EEEE", xlinkHref: "#path-9" }), React.createElement("ellipse", { id: "Oval-3-Copy-3", fill: "#FFFFFF", mask: "url(#mask-10)", cx: "13.6984925", cy: "10.350051", rx: "10.3919598", ry: "10.350051" })), React.createElement("path", { d: "M13.7099933,3.39976481 C13.4037265,3.91204401 13.2261307,4.52128957 13.2261307,5.17502548 C13.2261307,6.99380853 14.600774,8.46822351 16.2964824,8.46822351 C17.2558972,8.46822351 18.1125332,7.99623634 18.6755666,7.25693577 C19.1183395,8.19093615 19.3668342,9.24059443 19.3668342,10.350051 C19.3668342,14.2474432 16.3003222,17.4069039 12.5175879,17.4069039 C8.7348537,17.4069039 5.66834171,14.2474432 5.66834171,10.350051 C5.66834171,6.4526587 8.7348537,3.29319803 12.5175879,3.29319803 C12.9243102,3.29319803 13.3227525,3.32972362 13.7099933,3.39976481 Z M9.91959799,8.93868037 C10.7022327,8.93868037 11.3366834,8.20147288 11.3366834,7.29208135 C11.3366834,6.38268983 10.7022327,5.64548234 9.91959799,5.64548234 C9.13696332,5.64548234 8.50251256,6.38268983 8.50251256,7.29208135 C8.50251256,8.20147288 9.13696332,8.93868037 9.91959799,8.93868037 Z", id: "Oval-4-Copy", fill: "#565757" }))))))));
-Wave.arrow_up_svg = React.createElement("svg", { className: "arrow arrow-up", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "44", height: "30", viewBox: "0 0 44 30" }, React.createElement("path", { d: "M42.050 29.917h-40.32c-0.933 0-1.69-0.757-1.69-1.69 0-0.373 0.123-0.735 0.351-1.031l20.13-26.151c0.569-0.74 1.631-0.878 2.37-0.308 0.115 0.089 0.218 0.192 0.307 0.306l20.19 26.151c0.57 0.739 0.434 1.8-0.305 2.371-0.296 0.228-0.659 0.352-1.033 0.352z" }));
-Wave.arrow_down_svg = React.createElement("svg", { className: "arrow arrow-down", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "45", height: "30", viewBox: "0 0 45 30" }, React.createElement("path", { d: "M1.298 0h42.038c0.7 0 1.268 0.568 1.268 1.268 0 0.28-0.093 0.552-0.263 0.773l-20.988 27.265c-0.427 0.555-1.223 0.658-1.778 0.231-0.086-0.066-0.164-0.144-0.23-0.23l-21.050-27.265c-0.428-0.554-0.325-1.35 0.229-1.778 0.222-0.171 0.494-0.264 0.775-0.264z" }));
+Wave.emAsPixel = -1;
 function roundVal(num) {
     return Math.round(num * 100) / 100;
 }
@@ -1653,57 +1688,134 @@ function roundVal(num) {
 var SVGWave = exports.SVGWave = function (_React$Component2) {
     _inherits(SVGWave, _React$Component2);
 
-    function SVGWave() {
+    function SVGWave(props) {
         _classCallCheck(this, SVGWave);
 
-        return _possibleConstructorReturn(this, (SVGWave.__proto__ || Object.getPrototypeOf(SVGWave)).apply(this, arguments));
+        var _this2 = _possibleConstructorReturn(this, (SVGWave.__proto__ || Object.getPrototypeOf(SVGWave)).call(this, props));
+
+        _this2.ref = React.createRef();
+        _this2.state = {
+            width: -1,
+            height: -1
+        };
+        SVGWave.addListener(_this2);
+        return _this2;
     }
 
     _createClass(SVGWave, [{
+        key: "resize",
+        value: function resize() {
+            if (this.ref && this.ref.current) {
+                var container = this.ref.current;
+                this.setState({ width: container.offsetWidth, height: container.offsetHeight });
+            }
+        }
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            this.resize();
+        }
+    }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            SVGWave.removeListener(this);
+        }
+    }, {
         key: "render",
         value: function render() {
-            var opts = this.props.animationOpts;
-            // Should be between 0 and 1 inclusive
-            var p = Math.min(Math.max(opts.percentFallen, 0), 1);
-            // Transform to between .3 and .9, inclusive, steps by .1
-            var min = opts.percentMin;
-            var range = opts.percentRange;
-            var transformedP = Math.floor((p * range + min) * 100) / 100;
-            console.log(transformedP);
-            // Get the path
-            var path = SVGWave.getPath(transformedP, .05, 1.5, .3, 100, 100, 0);
-            console.log(path);
-            var name = "wave_" + opts.colorClass;
-            return React.createElement("svg", { className: "wave " + opts.colorClass, version: "1.1", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 100 100", preserveAspectRatio: "none" }, React.createElement("defs", null, React.createElement("path", { id: name, d: path })), React.createElement("use", { xlinkHref: "#" + name, x: "0", y: "0" }, React.createElement("animate", { attributeName: "x", from: "-100", to: "0", dur: opts.duration + "s", repeatCount: "indefinite" })));
+            var waveContainer = React.createElement("div", { ref: this.ref, className: "wave-container" });
+            var wave = null;
+            if (this.state.height !== -1) {
+                var opts = this.props.animationOpts;
+                var _state = this.state,
+                    width = _state.width,
+                    height = _state.height;
+                // Have to do some rounding so the wave animation will be fluid (pun)
+
+                var freq = Math.round(width / opts.wavePeriod);
+                // Get the path
+                var path = SVGWave.getPath(width, height, opts.upperPaddingPixels, opts.lowerPaddingPixels, opts.percentFallen, opts.offsetAboveFallen, opts.amplitudePixels, freq);
+                var name = "wave_" + opts.colorClass;
+                var totalDurationSeconds = opts.periodDurationSeconds * freq;
+                wave = React.createElement("svg", { className: "wave " + opts.colorClass, version: "1.1", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 " + width + " " + height, preserveAspectRatio: "none" }, React.createElement("defs", null, React.createElement("path", { id: name, d: path })), React.createElement("use", { xlinkHref: "#" + name, x: "0", y: "0" }, React.createElement("animate", { attributeName: "x", from: -width, to: "0", dur: totalDurationSeconds + "s", repeatCount: "indefinite" })));
+            }
+            return React.createElement(React.Fragment, null, waveContainer, wave);
         }
     }], [{
+        key: "addListener",
+        value: function addListener(svgWave) {
+            var indexOf = SVGWave.listeners.indexOf(svgWave);
+            if (indexOf === -1) SVGWave.listeners.push(svgWave);
+        }
+    }, {
+        key: "removeListener",
+        value: function removeListener(svgWave) {
+            var indexOf = SVGWave.listeners.indexOf(svgWave);
+            if (indexOf !== -1) SVGWave.listeners.splice(indexOf, 1);
+        }
+    }, {
         key: "getPath",
-        value: function getPath(topDistanceOutOf1, ampOutOf1, periodOutOf1, controlPointOutOf1, viewBoxX, viewBoxY, timePassed) {
-            var y = topDistanceOutOf1 * viewBoxY;
-            var r = ampOutOf1 * viewBoxY;
-            var p = viewBoxX / 2; // half of the period; one bezier distance
-            // Control Point of 1 means the distance between the two points of the bezier curve
-            var cp1 = p * controlPointOutOf1;
-            var cp2 = p - p * controlPointOutOf1;
-            console.log({ y: y, r: r, p: p, cp1: cp1, cp2: cp2 });
-            var singleWaveBezier = "c " + cp1 + " -" + r + ", " + cp2 + " -" + r + ", " + p + " 0, c" + cp1 + " " + r + ", " + cp2 + " " + r + ", " + p + " 0";
-            /*
-                One wave:
-                     ____
-                    /    \
-                (A)/      \       /
-                           \     /
-                            -----
-                Where (A) is the top distance
-            */
+        value: function getPath(totalWidth, totalHeight, topPadding, bottomPadding, percentFallen, offset, amplitude, freq) {
+            // Coordinate system is from top left
+            var y = (totalHeight - topPadding - bottomPadding) * percentFallen;
+            y = y + topPadding - offset;
+            y = roundVal(y);
+            var period = totalWidth / freq;
+            var bezierLength = period / 2;
+            var cp1Length = roundVal(bezierLength / 3);
+            var cp2Length = roundVal(bezierLength - cp1Length);
+            console.log({ y: y, period: period, bezierLength: bezierLength, cp1Length: cp1Length, cp2Length: cp2Length, totalWidth: totalWidth, totalHeight: totalHeight, percentFallen: percentFallen });
+            // Bezier is relative to start point of the bezier, not absolute
+            // c (first control point) (second control point) (how far to actually go)
+            var singleWaveBezier = "c " + cp1Length + " -" + amplitude + ", " + cp2Length + " -" + amplitude + ", " + bezierLength + " 0, c" + cp1Length + " " + amplitude + ", " + cp2Length + " " + amplitude + ", " + bezierLength + " 0";
+            var waveBezier = "";
+            for (var i = 0; i < freq; i++) {
+                waveBezier += singleWaveBezier + " ";
+            } /*
+                  One wave:
+                       ____
+                      /    \
+                  (A)/      \       /
+                             \     /
+                              -----
+                  Where (A) is the top distance
+              */
             // Make 2 waves (first of which covers the whole viewbox - second of which is completely offscreen) so we are 2X the viewbox width
-            return "M0 " + y + ", " + singleWaveBezier + " " + singleWaveBezier + " v" + (viewBoxY - y) + " h-" + viewBoxX * 2 + " v-" + (viewBoxY - y) + " z";
+            // Coordinate system is from top left
+            // "m0 (Y amount for percent) (bezier) (bezier) v(total - Y amount for percent) h-(2 * total width) v-(total - y amount for percent) z"
+            return "M0 " + y + ", " + waveBezier + " " + waveBezier + " v" + (totalHeight - y) + " h-" + totalWidth * 2 + " v-" + (totalHeight - y) + " z";
             // M0,${p} c13,0 20.3,-${r} 33.3,-${r} c13,0 20.3,${r} 33.3,${r} c13,0 20.3,-${r} 33.3,-${r} v100 h-100 v-${100 - p} z
         }
     }]);
 
     return SVGWave;
 }(React.Component);
+
+SVGWave.throttlerTimeoutId = -1;
+SVGWave.throttlerTimeout = 250;
+SVGWave.throttleResize = function () {
+    if (SVGWave.throttlerTimeoutId === -1) {
+        SVGWave.throttlerTimeoutId = window.setTimeout(function () {
+            SVGWave.throttlerTimeoutId = -1;
+            SVGWave.onResize();
+        }, SVGWave.throttlerTimeout);
+    }
+};
+SVGWave.onResize = function () {
+    SVGWave.listeners.forEach(function (l) {
+        l.resize();
+    });
+};
+SVGWave.listeners = [];
+SVGWave._init = function () {
+    window.addEventListener("resize", SVGWave.throttleResize, { capture: true });
+    window.addEventListener("orientationchange", SVGWave.throttleResize, { capture: true });
+    window.addEventListener("visibilitychange", SVGWave.throttleResize, { capture: true });
+}();
+var crab_svg = React.createElement("svg", { className: "crab", viewBox: "0,0,155,110", xmlns: "http://www.w3.org/2000/svg", xmlnsXlink: "http://www.w3.org/1999/xlink" }, React.createElement("defs", null, React.createElement("path", { d: "M25.592 40.968c10.679 0 19.336-7.576 19.336-16.92 0-9.346-8.657-16.921-19.336-16.921.879 7.108 1.47 14.35 1.776 21.727-6.22-4.285-12.037-9.188-17.455-14.711-2.3 2.784-3.657 6.206-3.657 9.904 0 9.345 8.657 16.92 19.336 16.92z", id: "a" }), React.createElement("path", { d: "M25.592 40.968c10.679 0 19.336-7.576 19.336-16.92 0-9.346-8.657-16.921-19.336-16.921.879 7.108 1.47 14.35 1.776 21.727-6.22-4.285-12.037-9.188-17.455-14.711-2.3 2.784-3.657 6.206-3.657 9.904 0 9.345 8.657 16.92 19.336 16.92z", id: "b" }), React.createElement("ellipse", { id: "c", cx: "10.392", cy: "10.35", rx: "10.392", ry: "10.35" }), React.createElement("ellipse", { id: "e", cx: "10.392", cy: "10.35", rx: "10.392", ry: "10.35" })), React.createElement("g", { fill: "none", fillRule: "evenodd" }, React.createElement("path", { d: "M125.689 93.82c1.129.1 5.124 9.114 5.31 12.444.02.365-.603.533-1.475-.015-.872-.547-8.168-6.783-8.928-9.248.68-1.7 3.964-3.283 5.093-3.182z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M115.551 96.807c4.173 3.85 8.873 3.304 10.56.895 1.686-2.408.038-6.781-4.743-9.2-4.782-2.42-8.582-3.72-10.269-1.31-1.686 2.408.28 5.765 4.452 9.615z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M123.953 97.485c-2.342-1.135-7.596-2.806-9.968-5.704 1.232 4.093 7.087 6.93 9.968 5.704z", fill: "#F26E69" }), React.createElement("path", { d: "M131.461 86.489c1.133-.018 6.049 8.53 6.582 11.821.058.361-.544.593-1.469.14-.924-.453-8.832-5.892-9.846-8.264.5-1.761 3.6-3.68 4.733-3.697z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M121.691 90.52c4.552 3.393 9.17 2.358 10.595-.213 1.426-2.572-.67-6.749-5.679-8.655-5.008-1.907-8.923-2.801-10.349-.23-1.425 2.572.881 5.706 5.433 9.099z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M130.118 90.316c-2.448-.884-7.848-1.997-10.51-4.63 1.653 3.941 7.773 6.15 10.51 4.63z", fill: "#F26E69" }), React.createElement("g", null, React.createElement("path", { d: "M136.18 75.633c1.095-.291 7.932 6.813 9.246 9.878.144.336-.384.707-1.391.49-1.007-.216-9.996-3.58-11.553-5.636.058-1.83 2.602-4.441 3.698-4.732z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M127.676 81.908c5.237 2.19 9.467.07 10.228-2.77.76-2.84-2.283-6.386-7.604-7.024-5.32-.639-9.336-.56-10.097 2.28-.761 2.84 2.235 5.323 7.473 7.514z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M135.802 79.671c-2.588-.265-8.097-.04-11.318-1.95 2.558 3.424 9.03 4.088 11.318 1.95z", fill: "#F26E69" })), React.createElement("g", null, React.createElement("path", { d: "M33.153 95.434c-1.125.14-4.803 9.289-4.873 12.623-.008.365.621.511 1.474-.066.852-.578 7.926-7.065 8.6-9.554-.74-1.675-4.077-3.143-5.201-3.003z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M43.388 98.067c-4.035 3.993-8.752 3.61-10.521 1.263-1.77-2.348-.276-6.776 4.419-9.361 4.694-2.585 8.447-4.016 10.216-1.668 1.77 2.348-.078 5.773-4.114 9.766z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M35.015 99.037c2.3-1.215 7.493-3.07 9.763-6.048-1.088 4.134-6.84 7.173-9.763 6.048z", fill: "#F26E69" }), React.createElement("g", null, React.createElement("path", { d: "M27.128 88.31c-1.133.022-5.747 8.736-6.165 12.044-.046.363.564.574 1.472.088.909-.485 8.621-6.197 9.552-8.602-.56-1.743-3.726-3.552-4.859-3.53z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M37.033 91.998c-4.431 3.55-9.082 2.676-10.596.156-1.514-2.52.434-6.767 5.373-8.847 4.939-2.08 8.82-3.111 10.335-.591 1.514 2.52-.682 5.733-5.112 9.282z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M28.604 92.088c2.415-.969 7.773-2.27 10.342-4.995-1.515 3.997-7.553 6.419-10.342 4.995z", fill: "#F26E69" })), React.createElement("g", null, React.createElement("path", { d: "M22.034 77.625c-1.105-.253-7.69 7.086-8.896 10.195-.133.34.408.693 1.407.442.999-.251 9.864-3.928 11.349-6.037-.122-1.826-2.756-4.347-3.86-4.6z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M30.751 83.6c-5.158 2.372-9.459.4-10.318-2.412-.86-2.812 2.059-6.461 7.354-7.285 5.295-.824 9.31-.885 10.17 1.927.86 2.812-2.048 5.398-7.206 7.77z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M22.551 81.648c2.578-.356 8.092-.322 11.244-2.344-2.437 3.511-8.882 4.4-11.244 2.344z", fill: "#F26E69" }))), React.createElement("g", null, React.createElement("path", { d: "M145.408 41.037c1.928-6.733-2.026-11.6-6.22-12.114-4.192-.515-8.531 3.732-8.241 10.339.29 6.607 1.303 11.51 5.496 12.025 4.193.515 7.038-3.517 8.965-10.25z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M139.242 56.119c4.075-4.553 2.888-9.848-.156-11.825-3.043-1.976-8.027-.277-10.34 5.009-2.313 5.285-3.413 9.507-.37 11.483 3.044 1.976 6.79-.115 10.866-4.667z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M129.56 64.032c4.549-2.654 5.01-7.285 3.062-9.69-1.948-2.405-6.469-2.315-9.78 1.396-3.31 3.711-5.345 6.87-3.398 9.275 1.948 2.405 5.566 1.673 10.115-.98z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("use", { stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "rotate(-13 58.23 -452.225)", xlinkHref: "#a" }), React.createElement("path", { d: "M144.483 29.311c-13.613 4.44-20.848-2.098-28.145-11.478.208 9.472 15.077 19.228 28.145 11.478z", fill: "#F26E69" })), React.createElement("g", null, React.createElement("path", { d: "M10.584 42.307c-2.161-6.662 1.62-11.663 5.793-12.324 4.173-.66 8.657 3.432 8.598 10.045-.059 6.613-.9 11.549-5.073 12.21-4.173.66-7.156-3.27-9.318-9.931z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M17.274 57.164c-4.232-4.407-3.23-9.741-.258-11.823 2.973-2.081 8.013-.556 10.51 4.645 2.495 5.201 3.742 9.382.77 11.463-2.973 2.082-6.79.122-11.022-4.285z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("path", { d: "M27.226 64.735c-4.639-2.494-5.26-7.106-3.398-9.577 1.862-2.472 6.383-2.54 9.822 1.053 3.438 3.593 5.582 6.68 3.72 9.151-1.863 2.472-5.504 1.867-10.144-.627z", stroke: "#E03232", strokeWidth: "3", fill: "#F0504F" }), React.createElement("use", { stroke: "#E03232", strokeWidth: "3", fill: "#F0504F", transform: "scale(-1 1) rotate(-11 -18.778 267.396)", xlinkHref: "#b" }), React.createElement("path", { d: "M11.899 31.158c12.753 3.985 18.976-1.916 25.08-10.379.4 8.537-12.621 17.347-25.08 10.379z", fill: "#F26E69" })), React.createElement("g", null, React.createElement("path", { d: "M73.449 42.163a77.718 77.718 0 0 1 4.843-.217 12.595 12.595 0 0 1-.075-1.176c-.125-7.144 5.8-13.04 13.234-13.17 7.434-.13 13.562 5.556 13.686 12.7.037 2.104-.45 4.1-1.347 5.872 12.907 4.9 21.53 13.598 21.705 23.652.277 15.847-20.539 29.06-46.492 29.514-25.954.453-47.217-12.027-47.494-27.874-.16-9.15 6.714-17.424 17.549-22.868a12.53 12.53 0 0 1-2.485-7.273c-.124-7.144 5.801-13.041 13.235-13.17 7.434-.13 13.561 5.556 13.686 12.7.008.442-.008.879-.045 1.31z", stroke: "#E03232", strokeWidth: "4", fill: "#F0504F" }), React.createElement("path", { d: "M56.926 93.135c-4.805-4.62-15.815-12.898-22.558-20.309 1.564 8.442 16.378 18.065 22.558 20.31z", fill: "#F26E69" }), React.createElement("path", { d: "M99.91 65.565C89.144 71.4 63.764 78.9 52.207 66.398c5.1 21.088 44.375 21.579 47.701-.833z", fill: "#565757" }), React.createElement("g", { transform: "rotate(-1 1782.956 -2804.82)" }, React.createElement("mask", { id: "d", fill: "#fff" }, React.createElement("use", { xlinkHref: "#c" })), React.createElement("use", { fill: "#D8EEEE", xlinkHref: "#c" }), React.createElement("ellipse", { fill: "#FFF", mask: "url(#d)", cx: "13.698", cy: "10.35", rx: "10.392", ry: "10.35" })), React.createElement("path", { d: "M62.51 33.388a3.453 3.453 0 0 0-.454 1.783c.032 1.818 1.432 3.269 3.128 3.24.959-.018 1.807-.505 2.357-1.254.46.927.726 1.972.745 3.081.068 3.897-2.942 7.11-6.725 7.175-3.782.066-6.903-3.04-6.971-6.936-.068-3.897 2.943-7.11 6.725-7.175.407-.007.806.022 1.194.086zm-3.694 5.604c.783-.014 1.404-.762 1.388-1.671-.016-.91-.663-1.636-1.445-1.622-.783.014-1.404.762-1.389 1.671.016.91.663 1.635 1.446 1.622z", fill: "#565757" }), React.createElement("g", null, React.createElement("g", { transform: "rotate(-1 1766.895 -4645.148)" }, React.createElement("mask", { id: "f", fill: "#fff" }, React.createElement("use", { xlinkHref: "#e" })), React.createElement("use", { fill: "#D8EEEE", xlinkHref: "#e" }), React.createElement("ellipse", { fill: "#FFF", mask: "url(#f)", cx: "13.698", cy: "10.35", rx: "10.392", ry: "10.35" })), React.createElement("path", { d: "M95.105 33.29a3.453 3.453 0 0 0-.452 1.783c.031 1.818 1.431 3.268 3.127 3.239.96-.017 1.807-.504 2.357-1.253.46.926.726 1.971.746 3.08.068 3.897-2.943 7.11-6.725 7.176-3.783.066-6.904-3.04-6.972-6.936-.068-3.897 2.943-7.11 6.725-7.176.407-.007.806.023 1.194.086zm-3.693 5.603c.783-.013 1.404-.762 1.388-1.67-.016-.91-.663-1.636-1.445-1.622-.783.013-1.404.761-1.388 1.67.015.91.663 1.636 1.445 1.622z", fill: "#565757" })))));
+var rock_svg = React.createElement("svg", { className: "rocks", viewBox: "0 0 268 500", version: "1.1", xmlns: "http://www.w3.org/2000/svg", xmlnsXlink: "http://www.w3.org/1999/xlink", preserveAspectRatio: "none" }, React.createElement("defs", null, React.createElement("rect", { id: "path-1", x: "0", y: "0", width: "355", height: "500" })), React.createElement("g", { stroke: "none", strokeWidth: "1", fill: "none", fillRule: "evenodd" }, React.createElement("g", { transform: "translate(-87.000000, 0.000000)" }, React.createElement("mask", { id: "mask-2", fill: "white" }, React.createElement("use", { xlinkHref: "#path-1" })), React.createElement("g", { id: "Beach", mask: "url(#mask-2)" }, React.createElement("g", { transform: "translate(87.000000, 0.000000)" }, React.createElement("polygon", { id: "Path-3-Copy", fill: "#807065", points: "130 3.02898551 224.336 0 298.504 0 330 13.9263701 281.232 196.672072 99.368 213.537676 90 90.8695652 109 50.4830918" }), React.createElement("path", { d: "M61.0012132,181.616706 L53.053824,239.116588 C52.9025928,240.210755 53.6669939,241.220351 54.7611615,241.371582 C54.8518986,241.384123 54.9433901,241.390416 55.0349898,241.390416 L173,241.390416 C174.104569,241.390416 175,240.494985 175,239.390416 L175,139.995598 C175,139.668656 174.919849,139.346699 174.766566,139.057917 L150.843415,93.9873454 C150.325548,93.0116981 149.114815,92.6405938 148.139168,93.1584607 C147.952014,93.2578007 147.781835,93.3862497 147.634996,93.5390028 L134.829423,106.860382 C134.420482,107.285796 133.844547,107.508906 133.255736,107.470009 L93.4204169,104.83845 C93.332247,104.832625 93.2437881,104.83265 93.1556215,104.838525 L54.8277489,107.392227 C53.725623,107.465659 52.891702,108.418637 52.9651342,109.520763 C52.9671445,109.550935 52.9698388,109.581057 52.973215,109.611107 L61.007542,181.119573 C61.0261175,181.284902 61.0239915,181.451903 61.0012132,181.616706 Z", id: "Path-3-Copy", fill: "#938071" }), React.createElement("path", { d: "M150.719036,45.5194591 L146.844562,88.5504472 L117.775815,111.051811 C117.201096,111.496686 116.912947,112.218322 117.023182,112.936698 L122.673383,149.757947 C122.779628,150.450327 123.240365,151.036661 123.887977,151.303639 L171.429651,170.902705 C171.94653,171.115789 172.529003,171.102798 173.035868,170.866881 L215.417952,151.140402 C215.791145,150.966701 216.208845,150.912384 216.614051,150.984863 L246.606757,156.349625 C246.892399,156.400718 247.185737,156.389042 247.466415,156.315409 L288.404071,145.575781 C289.017754,145.414787 289.51865,144.972167 289.753941,144.38296 L304.823109,106.647283 C304.877077,106.512139 304.945633,106.383288 305.02756,106.26302 L319.589735,84.8858843 C319.757498,84.6396088 319.86811,84.3589576 319.913485,84.0644454 L326.5212,41.1758627 C326.689393,40.0841737 325.940752,39.0628374 324.849063,38.8946441 C324.80957,38.8885596 324.769903,38.8836599 324.730117,38.8799518 L261.862764,33.0207426 C261.85063,33.0196117 261.838485,33.0185917 261.826332,33.0176828 L208.181123,29.0055702 C207.958324,28.9889071 207.734308,29.0096935 207.518379,29.067066 L152.197396,43.7658778 C151.385099,43.9817055 150.794407,44.6823648 150.719036,45.5194591 Z", id: "Path-4", fill: "#A08D7F" }), React.createElement("path", { d: "M59.2525739,275.471154 L39.1760839,219.486058 C38.9566316,218.874096 38.9419109,218.207406 39.1341379,217.586353 L53.9378182,169.758208 C54.1667151,169.018681 54.6726269,168.396266 55.349781,168.021092 L99.8321299,143.375854 C100.479721,143.017059 101.237112,142.910392 101.95861,143.076372 L179.20998,160.848014 C179.623922,160.943241 180.053367,160.949482 180.469901,160.866323 L191.827863,158.59878 C193.200428,158.324756 194.580093,159.036271 195.152681,160.313443 L214.575452,203.636402 C214.748509,204.02241 214.837974,204.440655 214.837974,204.863682 L214.837974,246.714719 C214.837974,247.661097 214.391416,248.55199 213.633183,249.118305 L167.950333,283.238259 C167.431909,283.625464 166.802188,283.834673 166.155125,283.834673 L97.4800744,283.834673 C97.3017666,283.834673 97.1238138,283.818777 96.9483293,283.787172 L61.544745,277.410984 C60.4887695,277.220803 59.6147596,276.481141 59.2525739,275.471154 Z", id: "Path-2", fill: "#817064" }), React.createElement("path", { d: "M197.594575,89.5241583 L155.755313,122.791409 C155.194665,123.237192 154.915214,123.948758 155.022677,124.656925 L166.895576,202.898369 C167.061294,203.990436 168.08093,204.741391 169.172998,204.575673 C169.306458,204.555421 169.437525,204.521709 169.564194,204.475054 L267.709428,168.325555 C267.930775,168.244027 268.164799,168.202299 268.400682,168.202299 L309.990006,168.202299 C311.024847,168.202299 311.888789,167.412886 311.981895,166.382242 L318.834272,90.5296518 C318.901328,89.7873778 318.550088,89.0693913 317.922929,88.6667281 L289.342717,70.3170196 C289.020333,70.1100354 288.645283,70 288.262172,70 L251.202144,70 C250.968489,70 250.736641,70.0409437 250.517118,70.1209737 L198.154276,89.2105889 C197.952051,89.2843129 197.763053,89.390198 197.594575,89.5241583 Z", id: "Path-5", fill: "#938071" }), React.createElement("path", { d: "M55.1492163,225.152059 L44.7404564,251.179988 C44.670305,251.355408 44.6253628,251.539882 44.6069697,251.72791 L37.0096451,329.394039 C36.902109,330.493361 37.7061107,331.471713 38.8054332,331.579249 C39.2152736,331.61934 39.6274988,331.531944 39.9858126,331.328997 L77.2111363,310.244735 C77.4894486,310.0871 77.8015092,309.998515 78.121134,309.986413 L157.126411,306.99509 C157.45996,306.982461 157.785045,306.886552 158.072033,306.716104 L191.634698,286.782609 L176.763801,225.10237 C176.643038,224.601481 176.333626,224.166522 175.900056,223.888152 L146.974971,205.31702 C146.652587,205.110035 146.277537,205 145.894426,205 L108.834398,205 C108.600742,205 108.368894,205.040944 108.149372,205.120974 L56.3212034,224.015666 C55.7866925,224.21053 55.3604669,224.623811 55.1492163,225.152059 Z", id: "Path-5-Copy", fill: "#938071" }), React.createElement("path", { d: "M123.130042,214.751338 L140.349737,260.148296 C140.572709,260.736126 141.05911,261.184898 141.662955,261.35992 L202.427569,278.972257 C202.646305,279.035656 202.874262,279.061231 203.101609,279.047878 L300.933116,273.301881 C301.943549,273.242535 302.750357,272.437657 302.812124,271.42737 L307.666309,192.029781 C307.690789,191.629378 307.594295,191.230865 307.389362,190.88601 L295.759648,171.315878 C295.722496,171.253361 295.681963,171.192917 295.638228,171.134815 L276.703879,145.980487 L227.463285,140.014525 C226.974288,139.955278 226.480626,140.078569 226.076905,140.360769 L187.836857,167.090434 C187.748351,167.1523 187.654979,167.206896 187.557658,167.253687 L145.703879,187.376622 L123.495739,212.724035 C123.008427,213.280232 122.867781,214.059929 123.130042,214.751338 Z", id: "Path-3", fill: "#88776C" }), React.createElement("path", { d: "M82.452093,249.931238 L58.8770781,290 L52.9594522,316.424439 C52.9050153,316.66752 52.8964681,316.918632 52.9342505,317.164852 L58.6431952,354.368923 C58.7810137,355.267059 59.5069561,355.95942 60.4106083,356.054578 L99.6919922,360.191026 C99.9190002,360.214931 100.148425,360.199798 100.370327,360.146283 L140.566131,350.45248 C140.874305,350.378159 141.195731,350.378159 141.503904,350.45248 L181.578999,360.117172 C181.878941,360.189508 182.191553,360.191466 182.492378,360.122894 L225.388727,350.344784 C225.404471,350.341196 225.420171,350.337416 225.435824,350.333447 L269.147494,339.249302 C269.711051,339.106399 270.184532,338.725338 270.444619,338.205364 L286.729591,305.648053 C286.927599,305.252191 286.988695,304.801827 286.903307,304.36752 L278.221554,260.209738 C278.103721,259.610407 277.718474,259.097776 277.175567,258.817892 L229.602333,234.292468 C229.233291,234.102216 228.814187,234.031534 228.403161,234.090228 L145.092618,245.986774 C145.030906,245.995587 144.968817,246.001509 144.906552,246.004522 L84.0792034,248.94778 C83.4057314,248.980368 82.7940119,249.350103 82.452093,249.931238 Z", id: "Path-4-Copy", fill: "#A08D7F" }), React.createElement("path", { d: "M159.236358,384.860732 L121.89618,348.126471 C121.109287,347.352346 120.811076,346.208628 121.119796,345.148835 L135.331565,296.361963 C135.517593,295.723356 135.910577,295.164681 136.448735,294.773769 L189.039041,256.572771 C189.551538,256.2005 190.168718,256 190.802152,256 L222.618542,256 L229.204724,265.537811 L271.809568,275.857421 C272.233716,275.960156 272.675171,275.969116 273.103137,275.883675 L284.443343,273.619677 C285.815908,273.345653 287.195572,274.057169 287.768161,275.33434 L307.190931,318.657299 C307.363989,319.043307 307.453454,319.461552 307.453454,319.884579 L307.453454,361.735616 C307.453454,362.681994 307.006896,363.572887 306.248662,364.139202 L260.565813,398.259156 C260.047389,398.646361 259.417668,398.85557 258.770604,398.85557 L190.472535,398.85557 C190.047409,398.85557 189.627137,398.765216 189.239574,398.590494 L160.107295,385.457055 C159.784021,385.311316 159.489145,385.109417 159.236358,384.860732 Z", id: "Path-2-Copy", fill: "#817064" }), React.createElement("path", { d: "M21.003395,336.51875 L24.866694,402.829385 C24.9110246,403.590287 25.3839851,404.259845 26.0863053,404.555957 L69.5640708,422.887079 C69.8464508,423.006136 70.1524136,423.05871 70.4583389,423.040742 L168.168343,417.301881 C169.178776,417.242535 169.985584,416.437657 170.04735,415.42737 L174.901536,336.029781 C174.926015,335.629378 174.829522,335.230865 174.624589,334.88601 L162.994874,315.315878 C162.957723,315.253361 162.917189,315.192917 162.873454,315.134815 L143.939106,289.980487 L94.6985112,284.014525 C94.2095145,283.955278 93.7158526,284.078569 93.312131,284.360769 L54.9466035,311.178144 C54.9416049,311.181638 54.9366222,311.185155 54.9316558,311.188695 L21.839241,334.773741 C21.2790799,335.172969 20.9633872,335.832046 21.003395,336.51875 Z", id: "Path-3-Copy-2", fill: "#88776C" }), React.createElement("path", { d: "M127.666609,397.959917 L151.586866,432.405087 C151.853806,432.789481 152.247092,433.068092 152.698265,433.192423 L198.874615,445.9174 C199.073248,445.972138 199.279147,445.995854 199.485023,445.987709 L272.992116,443.079441 C274.095822,443.035773 274.955153,442.105643 274.911485,441.001937 C274.911361,440.998796 274.911229,440.995654 274.91109,440.992513 L271.041325,353.617297 C271.040019,353.587818 271.039366,353.558313 271.039366,353.528805 L271.039366,321.041835 C271.039366,319.937266 270.143936,319.041835 269.039366,319.041835 C268.995299,319.041835 268.951243,319.043292 268.907272,319.046202 L230.378839,321.596468 C230.275631,321.6033 230.173108,321.618127 230.072193,321.640817 L184.456214,331.897422 C184.156118,331.964897 183.875629,332.100681 183.636557,332.294216 L142.347299,365.718853 C142.118586,365.904002 141.933546,366.137339 141.805377,366.402221 L127.509031,395.948004 C127.194554,396.597922 127.254781,397.366884 127.666609,397.959917 Z", id: "Path-3-Copy-3", fill: "#938071" }), React.createElement("path", { d: "M16.734227,382.151683 L11,407 L25.7756007,419.03055 C26.4934908,419.615069 26.7164099,420.615873 26.3144695,421.449822 L14.4453388,446.076007 C14.1657583,446.656083 14.1825782,447.335291 14.4905284,447.900817 L26.3452267,469.671051 C26.739928,470.395889 27.539341,470.803832 28.3578783,470.698114 L69.9254902,465.329423 C69.9751459,465.32301 70.0245432,465.314734 70.0735778,465.304614 L119.799973,455.041285 C119.932978,455.013833 120.068434,455 120.204244,455 L183.241655,455 C183.634855,455 184.019331,454.884098 184.34702,454.666784 L226.577505,426.660684 C226.793315,426.517565 226.979278,426.333897 227.125067,426.11988 L241.589735,404.885884 C241.757498,404.639609 241.86811,404.358958 241.913485,404.064445 L248.5212,361.175863 C248.689393,360.084174 247.940752,359.062837 246.849063,358.894644 C246.80957,358.88856 246.769903,358.88366 246.730117,358.879952 L183.862764,353.020743 C183.85063,353.019612 183.838485,353.018592 183.826332,353.017683 L130.19836,349.006859 C129.964322,348.989356 129.729029,349.013181 129.503251,349.077246 L18.1370628,380.677359 C17.435683,380.876375 16.898165,381.441285 16.734227,382.151683 Z", id: "Path-4-Copy-2", fill: "#A08D7F" }), React.createElement("path", { d: "M38.2363575,520.860732 L0.896179881,484.126471 C0.109286633,483.352346 -0.188924475,482.208628 0.119796497,481.148835 L14.3315647,432.361963 C14.5175929,431.723356 14.9105773,431.164681 15.4487348,430.773769 L68.0390409,392.572771 C68.5515376,392.2005 69.1687176,392 69.8021521,392 L101.618542,392 L164.410515,408.782739 C165.282947,409.015918 166.003924,409.629692 166.373358,410.453724 L186.190931,454.657299 C186.363989,455.043307 186.453454,455.461552 186.453454,455.884579 L186.453454,497.735616 C186.453454,498.681994 186.006896,499.572887 185.248662,500.139202 L139.565813,534.259156 C139.047389,534.646361 138.417668,534.85557 137.770604,534.85557 L69.472535,534.85557 C69.0474087,534.85557 68.627137,534.765216 68.2395743,534.590494 L39.1072948,521.457055 C38.7840206,521.311316 38.489145,521.109417 38.2363575,520.860732 Z", id: "Path-2-Copy-2", fill: "#817064" }), React.createElement("path", { d: "M145.115588,432.014953 L156,469 L149.310593,498.437499 C149.095691,499.383202 149.590237,500.346805 150.48387,500.723579 L193.564071,518.887079 C193.846451,519.006136 194.152414,519.05871 194.458339,519.040742 L292.168343,513.301881 C293.178776,513.242535 293.985584,512.437657 294.04735,511.42737 L298.901536,432.029781 C298.926015,431.629378 298.829522,431.230865 298.624589,430.88601 L286.994874,411.315878 C286.957723,411.253361 286.917189,411.192917 286.873454,411.134815 L267.939106,385.980487 L246,389 L218.495818,380.102613 C218.131854,379.984873 217.741758,379.973983 217.371792,380.071233 C205.094257,383.298531 195.970326,386.274787 190,389 C184.078433,391.702956 173.126735,394.628226 157.144906,397.775809 L157.144907,397.775815 C156.437196,397.915197 155.859366,398.42486 155.632699,399.109626 L145.135544,430.821823 C145.007636,431.208236 145.000674,431.624478 145.115588,432.014953 Z", id: "Path-3-Copy-4", fill: "#88776C" }))))));
+var arrow_up_svg = React.createElement("svg", { className: "arrow arrow-up", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "44", height: "30", viewBox: "0 0 44 30" }, React.createElement("path", { d: "M42.050 29.917h-40.32c-0.933 0-1.69-0.757-1.69-1.69 0-0.373 0.123-0.735 0.351-1.031l20.13-26.151c0.569-0.74 1.631-0.878 2.37-0.308 0.115 0.089 0.218 0.192 0.307 0.306l20.19 26.151c0.57 0.739 0.434 1.8-0.305 2.371-0.296 0.228-0.659 0.352-1.033 0.352z" }));
+var arrow_down_svg = React.createElement("svg", { className: "arrow arrow-down", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "45", height: "30", viewBox: "0 0 45 30" }, React.createElement("path", { d: "M1.298 0h42.038c0.7 0 1.268 0.568 1.268 1.268 0 0.28-0.093 0.552-0.263 0.773l-20.988 27.265c-0.427 0.555-1.223 0.658-1.778 0.231-0.086-0.066-0.164-0.144-0.23-0.23l-21.050-27.265c-0.428-0.554-0.325-1.35 0.229-1.778 0.222-0.171 0.494-0.264 0.775-0.264z" }));
 
 /***/ }),
 /* 42 */
@@ -1764,7 +1876,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".waves {\n  flex: 1;\n  display: flex;\n  flex-direction: column; }\n  .waves .main {\n    flex: 4;\n    flex-basis: auto;\n    min-height: 6rem;\n    position: relative; }\n  .waves .wave-container {\n    position: absolute;\n    height: 100%;\n    width: 100%;\n    overflow: hidden; }\n  .waves .gradient-out {\n    background: -moz-linear-gradient(top, #8DC2D5 0%, #B5DCE8 100%);\n    background: -webkit-linear-gradient(top, #8DC2D5 0%, #B5DCE8 100%);\n    background: linear-gradient(to bottom, #8DC2D5 0%, #B5DCE8 100%);\n    flex: 1; }\n  .waves .wave {\n    position: absolute;\n    bottom: -5px;\n    width: 100%;\n    height: calc(100% - 4rem); }\n  .waves .wave-lower {\n    fill: #8DC2D5; }\n  .waves .wave-higher {\n    fill: #B5DCE8; }\n  .waves .rocks {\n    position: absolute;\n    right: -1rem;\n    bottom: .1rem;\n    height: 100%;\n    width: auto; }\n\n.waves .marker {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  height: calc(100% - 4rem);\n  width: 60%; }\n  .waves .marker .line-container {\n    width: 3rem;\n    margin-left: 2rem;\n    padding: 1rem 0;\n    height: 100%;\n    display: flex;\n    flex-direction: column; }\n    .waves .marker .line-container .line {\n      width: 30%;\n      margin: 0 auto;\n      background-color: #19576D;\n      flex: 1;\n      border-radius: 2px; }\n    .waves .marker .line-container .line-faint {\n      opacity: .4; }\n    .waves .marker .line-container .line-arrow-holder {\n      position: relative;\n      width: 1rem;\n      height: .1rem;\n      margin: 0 auto; }\n    .waves .marker .line-container .arrow {\n      fill: #19576D;\n      position: absolute;\n      width: 3rem;\n      height: 3rem;\n      left: -1rem;\n      top: -1rem; }\n  .waves .marker .marker-header {\n    display: block;\n    position: absolute;\n    left: 5.5rem; }\n    .waves .marker .marker-header span {\n      white-space: pre; }\n  .waves .marker .marker-title {\n    font-size: 1.2rem;\n    font-weight: bold;\n    display: inline-block;\n    margin-right: 1rem; }\n  .waves .marker .marker-high {\n    top: 0; }\n  .waves .marker .marker-low {\n    bottom: 0; }\n", ""]);
+exports.push([module.i, ".graphic {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  flex-basis: auto;\n  position: relative; }\n\n.graphic .crab-container {\n  height: 4rem;\n  position: relative; }\n  .graphic .crab-container .crab {\n    position: absolute;\n    top: 0;\n    right: -.5rem;\n    z-index: 5;\n    height: 5rem; }\n\n.graphic .waves {\n  flex: 1;\n  position: relative; }\n  .graphic .waves .wave, .graphic .waves .wave-container {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n  .graphic .waves .wave-lower {\n    fill: #8DC2D5; }\n  .graphic .waves .wave-higher {\n    fill: #B5DCE8; }\n  .graphic .waves .wave-svg-offset {\n    position: absolute;\n    bottom: 0;\n    height: 5px;\n    width: 100%;\n    background-color: #8DC2D5; }\n  .graphic .waves .rocks {\n    position: absolute;\n    right: 0rem;\n    width: 14rem;\n    min-width: 40%;\n    max-width: 60%;\n    height: 30rem;\n    max-height: 250%;\n    min-height: 100%; }\n\n.graphic .marker {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  height: 100%;\n  width: 60%; }\n  .graphic .marker .line-container {\n    width: 3rem;\n    margin-left: 1rem;\n    padding: 0;\n    padding-bottom: 1rem;\n    height: 100%;\n    display: flex;\n    flex-direction: column; }\n    .graphic .marker .line-container .line {\n      width: 1rem;\n      margin: 0 auto;\n      background-color: #19576D;\n      flex: 1;\n      border-radius: 2px; }\n    .graphic .marker .line-container .line-faint {\n      opacity: .4; }\n    .graphic .marker .line-container .line-arrow-holder {\n      position: relative;\n      width: 1rem;\n      height: .1rem;\n      margin: 0 auto; }\n    .graphic .marker .line-container .arrow {\n      fill: #19576D;\n      position: absolute;\n      width: 3rem;\n      height: 3rem;\n      left: -1rem;\n      top: -1rem; }\n  .graphic .marker .marker-header {\n    display: block;\n    position: absolute;\n    left: 4.6rem; }\n    .graphic .marker .marker-header span {\n      white-space: pre; }\n  .graphic .marker .marker-title {\n    font-size: 1.2rem;\n    font-weight: bold;\n    display: inline-block;\n    margin-right: 1rem; }\n  .graphic .marker .marker-high {\n    top: 0rem; }\n  .graphic .marker .marker-low {\n    bottom: 1rem; }\n", ""]);
 
 // exports
 
@@ -1773,8 +1885,64 @@ exports.push([module.i, ".waves {\n  flex: 1;\n  display: flex;\n  flex-directio
 /* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
 
-var content = __webpack_require__(45);
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.StyleScript = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var React = _interopRequireWildcard(_react);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var StyleScript = exports.StyleScript = function (_React$Component) {
+    _inherits(StyleScript, _React$Component);
+
+    function StyleScript(props) {
+        _classCallCheck(this, StyleScript);
+
+        var _this = _possibleConstructorReturn(this, (StyleScript.__proto__ || Object.getPrototypeOf(StyleScript)).call(this, props));
+
+        _this.ref = null;
+        _this.ref = React.createRef();
+        return _this;
+    }
+
+    _createClass(StyleScript, [{
+        key: "render",
+        value: function render() {
+            return React.createElement("div", { ref: this.ref, style: { position: "absolute", width: "100%", height: this.props.input } });
+        }
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var outputPixels = -1;
+            if (this.ref && this.ref.current) outputPixels = this.ref.current.offsetHeight;
+            this.props.outputPixels(outputPixels);
+        }
+    }]);
+
+    return StyleScript;
+}(React.Component);
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(46);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1820,7 +1988,7 @@ if(false) {
 }
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -1834,7 +2002,7 @@ exports.push([module.i, ".tide {\n  height: 100%;\n  display: flex;\n  flex-dire
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1851,7 +2019,7 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(47);
+__webpack_require__(48);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1881,11 +2049,11 @@ var Settings = exports.Settings = function (_React$Component) {
 }(React.Component);
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(48);
+var content = __webpack_require__(49);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1931,7 +2099,7 @@ if(false) {
 }
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -1945,7 +2113,7 @@ exports.push([module.i, ".settings {\n  text-align: center; }\n", ""]);
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1962,7 +2130,7 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(50);
+__webpack_require__(51);
 
 var _define = __webpack_require__(9);
 
@@ -1999,11 +2167,11 @@ var Info = exports.Info = function (_React$Component) {
 }(React.Component);
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(51);
+var content = __webpack_require__(52);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -2049,7 +2217,7 @@ if(false) {
 }
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -2063,7 +2231,7 @@ exports.push([module.i, ".info {\n  text-align: center; }\n  .info section {\n  
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2080,7 +2248,7 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(53);
+__webpack_require__(54);
 
 var _noaa = __webpack_require__(8);
 
@@ -2165,11 +2333,11 @@ var DataSection = function (_React$Component2) {
 }(React.Component);
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(54);
+var content = __webpack_require__(55);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -2215,7 +2383,7 @@ if(false) {
 }
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -2229,7 +2397,7 @@ exports.push([module.i, ".more {\n  text-align: center; }\n  .more header {\n   
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2252,7 +2420,7 @@ var _time = __webpack_require__(10);
 
 var Time = _interopRequireWildcard(_time);
 
-__webpack_require__(56);
+__webpack_require__(57);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -2330,11 +2498,11 @@ function createTable(predictions) {
 }
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(57);
+var content = __webpack_require__(58);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -2380,7 +2548,7 @@ if(false) {
 }
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -2388,7 +2556,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".charts {\n  text-align: center; }\n  .charts header {\n    margin: 2rem 0;\n    font-size: 2rem;\n    line-height: 2rem; }\n  .charts table {\n    width: 100%;\n    font-size: 1.2rem; }\n  .charts td {\n    width: 25%; }\n  .charts .pretty-ampm {\n    display: inline-block;\n    margin-left: .2rem;\n    font-size: .8rem; }\n  .charts .predictions-previous {\n    color: rgba(25, 87, 109, 0.7); }\n  .charts .current {\n    display: flex;\n    align-items: center;\n    margin: .5rem; }\n    .charts .current .line {\n      flex: 1;\n      height: 1px;\n      background-color: #19576D; }\n  .charts .current-text {\n    display: inline-block;\n    padding: .1rem .5rem;\n    border-radius: 5px;\n    background-color: #19576D;\n    color: #DFEEF4; }\n", ""]);
+exports.push([module.i, ".charts {\n  text-align: center; }\n  .charts header {\n    margin: 2rem 0;\n    font-size: 2rem;\n    line-height: 2rem; }\n  .charts table {\n    width: 100%;\n    font-size: 1.2rem; }\n  .charts td {\n    width: 25%; }\n  .charts .pretty-ampm {\n    display: inline-block;\n    margin-left: .2rem;\n    font-size: .8rem; }\n  .charts .predictions-previous {\n    color: rgba(25, 87, 109, 0.7); }\n  .charts .current {\n    display: flex;\n    align-items: center;\n    margin: .5rem; }\n    .charts .current .line {\n      flex: 1;\n      height: 1px;\n      background-color: #19576D; }\n  .charts .current-text {\n    display: inline-block;\n    padding: .1rem .5rem;\n    border-radius: 5px;\n    background-color: #19576D;\n    color: #f6fbfd; }\n", ""]);
 
 // exports
 
