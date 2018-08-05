@@ -389,7 +389,6 @@ export function getCurrentMoreData(date?: Date): Promise<CurrentMoreData> {
 }
 
 function parseCurrentMore(raw: RawCurrentMoreData): CurrentMoreData {
-	console.log(raw);
 	return {
 		timeOfRequest: raw.timeOfRequest,
 		errors: raw.errors,

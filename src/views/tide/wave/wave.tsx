@@ -24,8 +24,6 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 	private static emAsPixel: number = -1;
 
 	private setEmAsPixels = (value: number) => {
-
-		console.log({ emAsPixels: value });
 		if (Wave.emAsPixel !== -1)
 			value = Wave.emAsPixel;
 		if (isNaN(value) || value < 1) {
@@ -130,7 +128,7 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 }
 
 function roundPercent(outOf1: number): string {
-	return Math.round(outOf1 * 100).toString().padEnd(2, "0");
+	return Math.round(outOf1 * 100).toString();
 }
 
 function roundVal(num: number): number {
@@ -237,8 +235,6 @@ export class SVGWave extends React.Component<SVGWaveProps, SVGWaveState> {
 		const bezierLength = period / 2;
 		const cp1Length = roundVal(bezierLength / 3);
 		const cp2Length = roundVal(bezierLength - cp1Length);
-
-		console.log({ y, period, bezierLength, cp1Length, cp2Length, totalWidth, totalHeight, percentFallen });
 
 		// Firefox: path cannot use commas
 		// Bezier is relative to start point of the bezier, not absolute

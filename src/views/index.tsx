@@ -14,7 +14,8 @@ import { More } from "./more/more";
 import { Charts } from "./charts/charts";
 
 const date = new Date(DEFINE.BUILD.TIME);
-console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${date}`);
+if (console && console.log)
+	console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${date}`);
 
 interface AppProps {
 }

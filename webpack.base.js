@@ -27,7 +27,7 @@ const htmlPluginOptions = {
 const DEFINE = {
 	webpack: {
 		BUILD: {
-			IS_PRODUCTION: JSON.stringify(false),
+			IS_PRODUCTION: JSON.stringify(true),
 			VERSION: JSON.stringify(version),
 			TIME: JSON.stringify(buildTime)
 		},
