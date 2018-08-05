@@ -12,6 +12,21 @@
 	position: relative;
 }
 
+.graphic .percent {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+
+	.value {
+		font-size: 2rem;
+	}
+
+	.direction {
+		display: inline-block;
+		margin-left: .5rem;
+	}
+}
+
 .graphic .crab-container {
 	// Constant size - do not change with device width
 	height: 4rem;

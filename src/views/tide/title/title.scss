@@ -21,10 +21,8 @@
 			color: $c-back;
 			fill: $c-back;
 			border-radius: 6px;
-			padding: 0 1rem;
+			padding: 0 .5rem;
 			overflow: hidden;
-
-
 
 			text-align: center;
 
@@ -56,8 +54,7 @@
 	}
 
 	.lastnext {
-		margin: 1.5rem;
-		margin-bottom: .5rem;
+		margin: .5rem 1rem;
 		display: flex;
 	}
 

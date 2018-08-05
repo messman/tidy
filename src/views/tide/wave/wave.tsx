@@ -50,8 +50,11 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 		const currentVal = data.current.val;
 		const highVal = high.val;
 		const lowVal = low.val;
-		let percentFallen = .8; 1 - ((currentVal - lowVal) / (highVal - lowVal));
-		console.log(percentFallen, currentVal, highVal, lowVal);
+		let percentFallen = 1 - ((currentVal - lowVal) / (highVal - lowVal));
+
+		const percentToDirection = isRising ? 1 - percentFallen : percentFallen;
+		const percent_text = `${roundPercent(percentToDirection)}%`;
+		const percent_text_direction = isRising ? "risen" : "fallen";
 
 		const upperLine = Math.max(Math.round(percentFallen * 100), 0);
 		const upperLineStyle: React.CSSProperties = {
@@ -90,6 +93,10 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 				<div className="crab-container">
 					{crab_svg}
 				</div>
+				<div className="percent">
+					<span className="value">{percent_text}</span>
+					<span className="direction">{percent_text_direction}</span>
+				</div>
 				<div className="waves">
 					<SVGWave animationOpts={upperBackWaveOpts} />
 					{rock_svg}
@@ -120,6 +127,10 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 			</div>
 		);
 	}
+}
+
+function roundPercent(outOf1: number): string {
+	return Math.round(outOf1 * 100).toString().padEnd(2, "0");
 }
 
 function roundVal(num: number): number {
@@ -229,9 +240,10 @@ export class SVGWave extends React.Component<SVGWaveProps, SVGWaveState> {
 
 		console.log({ y, period, bezierLength, cp1Length, cp2Length, totalWidth, totalHeight, percentFallen });
 
+		// Firefox: path cannot use commas
 		// Bezier is relative to start point of the bezier, not absolute
 		// c (first control point) (second control point) (how far to actually go)
-		const singleWaveBezier = `c ${cp1Length} -${amplitude}, ${cp2Length} -${amplitude}, ${bezierLength} 0, c${cp1Length} ${amplitude}, ${cp2Length} ${amplitude}, ${bezierLength} 0`;
+		const singleWaveBezier = `c ${cp1Length} -${amplitude} ${cp2Length} -${amplitude} ${bezierLength} 0 c${cp1Length} ${amplitude} ${cp2Length} ${amplitude} ${bezierLength} 0`;
 		let waveBezier = "";
 		for (let i = 0; i < freq; i++)
 			waveBezier += singleWaveBezier + " ";
@@ -248,7 +260,7 @@ export class SVGWave extends React.Component<SVGWaveProps, SVGWaveState> {
 		// Make 2 waves (first of which covers the whole viewbox - second of which is completely offscreen) so we are 2X the viewbox width
 		// Coordinate system is from top left
 		// "m0 (Y amount for percent) (bezier) (bezier) v(total - Y amount for percent) h-(2 * total width) v-(total - y amount for percent) z"
-		return `M0 ${y}, ${waveBezier} ${waveBezier} v${totalHeight - y} h-${totalWidth * 2} v-${totalHeight - y} z`
+		return `M0 ${y} ${waveBezier} ${waveBezier} v${totalHeight - y} h-${totalWidth * 2} v-${totalHeight - y} z`
 		// M0,${p} c13,0 20.3,-${r} 33.3,-${r} c13,0 20.3,${r} 33.3,${r} c13,0 20.3,-${r} 33.3,-${r} v100 h-100 v-${100 - p} z
 	}
 

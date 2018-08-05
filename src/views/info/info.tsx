@@ -62,7 +62,7 @@ export class Info extends React.Component<InfoProps, InfoState> {
 						Technical acknowledgments:
 						<ul>
 							<li>IcoMoon and FontAwesome for icons</li>
-							<li>Sketch &amp; VSCode for being so wonderful</li>
+							<li>Sketch, VSCode, &amp; Chrome for development</li>
 						</ul>
 					</div>
 				</section>
