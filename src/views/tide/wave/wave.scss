@@ -99,12 +99,32 @@
 			width: 1rem;
 			margin: 0 auto;
 			background-color: $c-main;
-			flex: 1;
-			border-radius: 2px;
+		}
+
+		.line-cap {
+			height: 1rem;
+		}
+
+		.line-begin {
+			border-radius: 2px 2px 0 0;
+		}
+		.line-end {
+			border-radius: 0 0 2px 2px;
 		}
 
 		.line-faint {
 			opacity: .4;
+		}
+
+	}
+	
+	.line-flex {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+
+		.line {
+			flex: 0;
 		}
 
 		.line-arrow-holder {
@@ -113,13 +133,20 @@
 			height: .1rem;
 			margin: 0 auto;
 		}
-
+	
 		.arrow {
 			fill: $c-main;
 			position: absolute;
 			width: 3rem;
 			height: 3rem;
 			left: -1rem;
+		}
+		
+		.arrow-up {
+			top: -2rem;
+		}
+
+		.arrow-down {
 			top: -1rem;
 		}
 	}

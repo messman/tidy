@@ -50,13 +50,10 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 		const currentVal = data.current.val;
 		const highVal = high.val;
 		const lowVal = low.val;
-		let percentFallen = 1 - ((currentVal - lowVal) / (highVal - lowVal));
+		let percentFallen = .8; 1 - ((currentVal - lowVal) / (highVal - lowVal));
 		console.log(percentFallen, currentVal, highVal, lowVal);
 
-		const upperWavePercent = percentFallen;
-		const lowerWavePercent = percentFallen;
-
-		const upperLine = Math.max(Math.round(percentFallen * 100), 10);
+		const upperLine = Math.max(Math.round(percentFallen * 100), 0);
 		const upperLineStyle: React.CSSProperties = {
 			flex: upperLine
 		};
@@ -67,7 +64,7 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 
 		const emAsPixels = this.state.emAsPixel;
 		const upperBackWaveOpts: SVGWaveAnimationOpts = {
-			percentFallen: upperWavePercent,
+			percentFallen: percentFallen,
 			amplitudePixels: emAsPixels * .5,
 			offsetAboveFallen: emAsPixels * .5,
 			upperPaddingPixels: emAsPixels, // 1em for marker range
@@ -78,7 +75,7 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 		};
 
 		const lowerFrontWaveOpts: SVGWaveAnimationOpts = {
-			percentFallen: upperWavePercent,
+			percentFallen: percentFallen,
 			amplitudePixels: emAsPixels * .5,
 			offsetAboveFallen: -emAsPixels * .5,
 			upperPaddingPixels: emAsPixels, // 1em for marker range
@@ -100,11 +97,15 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 					<div className="wave-svg-offset"></div>
 					<div className="marker">
 						<div className="line-container">
-							<div className={`line ${isRising ? "line-faint" : ""}`} style={upperLineStyle} ></div>
-							<div className="line-arrow-holder">
-								{isRising ? arrow_up_svg : arrow_down_svg}
+							<div className={`line line-cap line-begin ${isRising ? "line-faint" : ""}`} ></div>
+							<div className="line-flex">
+								<div className={`line ${isRising ? "line-faint" : ""}`} style={upperLineStyle} ></div>
+								<div className="line-arrow-holder">
+									{isRising ? arrow_up_svg : arrow_down_svg}
+								</div>
+								<div className={`line ${isRising ? "" : "line-faint"}`} style={lowerLineStyle} ></div>
 							</div>
-							<div className={`line ${isRising ? "" : "line-faint"}`} style={lowerLineStyle} ></div>
+							<div className={`line line-cap line-end ${isRising ? "" : "line-faint"}`} ></div>
 						</div>
 						<span className="marker-header marker-high">
 							<span className="marker-title">High</span>

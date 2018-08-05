@@ -752,7 +752,7 @@ var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: false,
         VERSION: "1.0.3",
-        TIME: 1533406962472
+        TIME: 1533506042578
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -1640,11 +1640,10 @@ var Wave = exports.Wave = function (_React$Component) {
             var currentVal = data.current.val;
             var highVal = high.val;
             var lowVal = low.val;
-            var percentFallen = 1 - (currentVal - lowVal) / (highVal - lowVal);
+            var percentFallen = .8;
+            1 - (currentVal - lowVal) / (highVal - lowVal);
             console.log(percentFallen, currentVal, highVal, lowVal);
-            var upperWavePercent = percentFallen;
-            var lowerWavePercent = percentFallen;
-            var upperLine = Math.max(Math.round(percentFallen * 100), 10);
+            var upperLine = Math.max(Math.round(percentFallen * 100), 0);
             var upperLineStyle = {
                 flex: upperLine
             };
@@ -1654,7 +1653,7 @@ var Wave = exports.Wave = function (_React$Component) {
             };
             var emAsPixels = this.state.emAsPixel;
             var upperBackWaveOpts = {
-                percentFallen: upperWavePercent,
+                percentFallen: percentFallen,
                 amplitudePixels: emAsPixels * .5,
                 offsetAboveFallen: emAsPixels * .5,
                 upperPaddingPixels: emAsPixels,
@@ -1664,7 +1663,7 @@ var Wave = exports.Wave = function (_React$Component) {
                 periodDurationSeconds: 7
             };
             var lowerFrontWaveOpts = {
-                percentFallen: upperWavePercent,
+                percentFallen: percentFallen,
                 amplitudePixels: emAsPixels * .5,
                 offsetAboveFallen: -emAsPixels * .5,
                 upperPaddingPixels: emAsPixels,
@@ -1673,7 +1672,7 @@ var Wave = exports.Wave = function (_React$Component) {
                 wavePeriod: emAsPixels * 17,
                 periodDurationSeconds: 4
             };
-            return React.createElement("div", { className: "graphic" }, React.createElement("div", { className: "crab-container" }, crab_svg), React.createElement("div", { className: "waves" }, React.createElement(SVGWave, { animationOpts: upperBackWaveOpts }), rock_svg, React.createElement(SVGWave, { animationOpts: lowerFrontWaveOpts }), React.createElement("div", { className: "wave-svg-offset" }), React.createElement("div", { className: "marker" }, React.createElement("div", { className: "line-container" }, React.createElement("div", { className: "line " + (isRising ? "line-faint" : ""), style: upperLineStyle }), React.createElement("div", { className: "line-arrow-holder" }, isRising ? arrow_up_svg : arrow_down_svg), React.createElement("div", { className: "line " + (isRising ? "" : "line-faint"), style: lowerLineStyle })), React.createElement("span", { className: "marker-header marker-high" }, React.createElement("span", { className: "marker-title" }, "High"), React.createElement("span", { className: "marker-value" }, "(", roundVal(highVal), " ft)")), React.createElement("span", { className: "marker-header marker-low" }, React.createElement("span", { className: "marker-title" }, "Low"), React.createElement("span", { className: "marker-value" }, "(", roundVal(lowVal), " ft)")))));
+            return React.createElement("div", { className: "graphic" }, React.createElement("div", { className: "crab-container" }, crab_svg), React.createElement("div", { className: "waves" }, React.createElement(SVGWave, { animationOpts: upperBackWaveOpts }), rock_svg, React.createElement(SVGWave, { animationOpts: lowerFrontWaveOpts }), React.createElement("div", { className: "wave-svg-offset" }), React.createElement("div", { className: "marker" }, React.createElement("div", { className: "line-container" }, React.createElement("div", { className: "line line-cap line-begin " + (isRising ? "line-faint" : "") }), React.createElement("div", { className: "line-flex" }, React.createElement("div", { className: "line " + (isRising ? "line-faint" : ""), style: upperLineStyle }), React.createElement("div", { className: "line-arrow-holder" }, isRising ? arrow_up_svg : arrow_down_svg), React.createElement("div", { className: "line " + (isRising ? "" : "line-faint"), style: lowerLineStyle })), React.createElement("div", { className: "line line-cap line-end " + (isRising ? "" : "line-faint") })), React.createElement("span", { className: "marker-header marker-high" }, React.createElement("span", { className: "marker-title" }, "High"), React.createElement("span", { className: "marker-value" }, "(", roundVal(highVal), " ft)")), React.createElement("span", { className: "marker-header marker-low" }, React.createElement("span", { className: "marker-title" }, "Low"), React.createElement("span", { className: "marker-value" }, "(", roundVal(lowVal), " ft)")))));
         }
     }]);
 
@@ -1876,7 +1875,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".graphic {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  flex-basis: auto;\n  position: relative; }\n\n.graphic .crab-container {\n  height: 4rem;\n  position: relative; }\n  .graphic .crab-container .crab {\n    position: absolute;\n    top: 0;\n    right: -.5rem;\n    z-index: 5;\n    height: 5rem; }\n\n.graphic .waves {\n  flex: 1;\n  position: relative; }\n  .graphic .waves .wave, .graphic .waves .wave-container {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n  .graphic .waves .wave-lower {\n    fill: #8DC2D5; }\n  .graphic .waves .wave-higher {\n    fill: #B5DCE8; }\n  .graphic .waves .wave-svg-offset {\n    position: absolute;\n    bottom: 0;\n    height: 5px;\n    width: 100%;\n    background-color: #8DC2D5; }\n  .graphic .waves .rocks {\n    position: absolute;\n    right: 0rem;\n    width: 14rem;\n    min-width: 40%;\n    max-width: 60%;\n    height: 30rem;\n    max-height: 250%;\n    min-height: 100%; }\n\n.graphic .marker {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  height: 100%;\n  width: 60%; }\n  .graphic .marker .line-container {\n    width: 3rem;\n    margin-left: 1rem;\n    padding: 0;\n    padding-bottom: 1rem;\n    height: 100%;\n    display: flex;\n    flex-direction: column; }\n    .graphic .marker .line-container .line {\n      width: 1rem;\n      margin: 0 auto;\n      background-color: #19576D;\n      flex: 1;\n      border-radius: 2px; }\n    .graphic .marker .line-container .line-faint {\n      opacity: .4; }\n    .graphic .marker .line-container .line-arrow-holder {\n      position: relative;\n      width: 1rem;\n      height: .1rem;\n      margin: 0 auto; }\n    .graphic .marker .line-container .arrow {\n      fill: #19576D;\n      position: absolute;\n      width: 3rem;\n      height: 3rem;\n      left: -1rem;\n      top: -1rem; }\n  .graphic .marker .marker-header {\n    display: block;\n    position: absolute;\n    left: 4.6rem; }\n    .graphic .marker .marker-header span {\n      white-space: pre; }\n  .graphic .marker .marker-title {\n    font-size: 1.2rem;\n    font-weight: bold;\n    display: inline-block;\n    margin-right: 1rem; }\n  .graphic .marker .marker-high {\n    top: 0rem; }\n  .graphic .marker .marker-low {\n    bottom: 1rem; }\n", ""]);
+exports.push([module.i, ".graphic {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  flex-basis: auto;\n  position: relative; }\n\n.graphic .crab-container {\n  height: 4rem;\n  position: relative; }\n  .graphic .crab-container .crab {\n    position: absolute;\n    top: 0;\n    right: -.5rem;\n    z-index: 5;\n    height: 5rem; }\n\n.graphic .waves {\n  flex: 1;\n  position: relative; }\n  .graphic .waves .wave, .graphic .waves .wave-container {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n  .graphic .waves .wave-lower {\n    fill: #8DC2D5; }\n  .graphic .waves .wave-higher {\n    fill: #B5DCE8; }\n  .graphic .waves .wave-svg-offset {\n    position: absolute;\n    bottom: 0;\n    height: 5px;\n    width: 100%;\n    background-color: #8DC2D5; }\n  .graphic .waves .rocks {\n    position: absolute;\n    right: 0rem;\n    width: 14rem;\n    min-width: 40%;\n    max-width: 60%;\n    height: 30rem;\n    max-height: 250%;\n    min-height: 100%; }\n\n.graphic .marker {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  height: 100%;\n  width: 60%; }\n  .graphic .marker .line-container {\n    width: 3rem;\n    margin-left: 1rem;\n    padding: 0;\n    padding-bottom: 1rem;\n    height: 100%;\n    display: flex;\n    flex-direction: column; }\n    .graphic .marker .line-container .line {\n      width: 1rem;\n      margin: 0 auto;\n      background-color: #19576D; }\n    .graphic .marker .line-container .line-cap {\n      height: 1rem; }\n    .graphic .marker .line-container .line-begin {\n      border-radius: 2px 2px 0 0; }\n    .graphic .marker .line-container .line-end {\n      border-radius: 0 0 2px 2px; }\n    .graphic .marker .line-container .line-faint {\n      opacity: .4; }\n  .graphic .marker .line-flex {\n    flex: 1;\n    display: flex;\n    flex-direction: column; }\n    .graphic .marker .line-flex .line {\n      flex: 0; }\n    .graphic .marker .line-flex .line-arrow-holder {\n      position: relative;\n      width: 1rem;\n      height: .1rem;\n      margin: 0 auto; }\n    .graphic .marker .line-flex .arrow {\n      fill: #19576D;\n      position: absolute;\n      width: 3rem;\n      height: 3rem;\n      left: -1rem; }\n    .graphic .marker .line-flex .arrow-up {\n      top: -2rem; }\n    .graphic .marker .line-flex .arrow-down {\n      top: -1rem; }\n  .graphic .marker .marker-header {\n    display: block;\n    position: absolute;\n    left: 4.6rem; }\n    .graphic .marker .marker-header span {\n      white-space: pre; }\n  .graphic .marker .marker-title {\n    font-size: 1.2rem;\n    font-weight: bold;\n    display: inline-block;\n    margin-right: 1rem; }\n  .graphic .marker .marker-high {\n    top: 0rem; }\n  .graphic .marker .marker-low {\n    bottom: 1rem; }\n", ""]);
 
 // exports
 
