@@ -40,7 +40,17 @@ export class Title extends React.Component<TitleProps, TitleState> {
 
 			}
 			else {
-				title = `The tide is ${data.currentIsRising ? "rising" : "falling"}.`;
+
+				const percentFallen = data.currentPercentFallen;
+				if (percentFallen > .90) {
+					title = "It's low tide."
+				}
+				else if (percentFallen < .10) {
+					title = "It's high tide."
+				} else {
+					title = `The tide is ${data.currentIsRising ? "rising" : "falling"}.`;
+				}
+
 				const timeUntilNext = Math.abs(data.next.time.getTime() - data.current.time.getTime());
 				const currentPrettyTime = Time.createPrettyTime(data.current.time);
 				message = `As of ${currentPrettyTime.time} ${currentPrettyTime.ampm}, ${data.currentIsRising ? "high" : "low"} tide is ${Time.createPrettyTimespan(timeUntilNext)}.`;

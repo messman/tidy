@@ -119,7 +119,10 @@ export interface WaterLevel extends Response {
 	previous: WaterLevelPrediction,
 	current: CurrentWaterLevel,
 	currentIsRising: boolean,
+	currentPercentFallen: number // [0,1]. Adjusted to be between low and high
 	next: WaterLevelPrediction,
+	high: WaterLevelPrediction, // May be next or previous
+	low: WaterLevelPrediction, // May be next or previous
 	predictionsAfterCurrent: WaterLevelPrediction[],
 }
 
@@ -255,7 +258,10 @@ function parseWaterLevel(response: WaterLevelResponse): WaterLevel {
 		previous: null,
 		current: response.current,
 		currentIsRising: false,
+		currentPercentFallen: 0,
 		next: null,
+		high: null,
+		low: null,
 		predictionsAfterCurrent: null,
 		errors: response.errors,
 		timeOfRequest: response.timeOfRequest
@@ -282,6 +288,17 @@ function parseWaterLevel(response: WaterLevelResponse): WaterLevel {
 		waterLevel.currentIsRising = !waterLevel.previous.isHigh;
 		waterLevel.next = response.predictions[indexOfClosestBefore + 1];
 		waterLevel.predictionsAfterCurrent = response.predictions.slice(indexOfClosestBefore + 1);
+
+		const isRising = waterLevel.currentIsRising;
+		waterLevel.high = isRising ? waterLevel.next : waterLevel.previous;
+		waterLevel.low = isRising ? waterLevel.previous : waterLevel.next;
+		let currentVal = waterLevel.current.val;
+		const highVal = waterLevel.high.val;
+		const lowVal = waterLevel.low.val;
+		// Make sure the current is between the high and low for the purpose of this calculation
+		// So we dont get negative percents or percents over 1
+		currentVal = Math.min(Math.max(currentVal, lowVal), highVal);
+		waterLevel.currentPercentFallen = 1 - ((currentVal - lowVal) / (highVal - lowVal));
 	}
 
 	return waterLevel;

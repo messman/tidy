@@ -42,13 +42,9 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 		}
 
 		const isRising = data.currentIsRising;
-		const high = isRising ? data.next : data.previous;
-		const low = isRising ? data.previous : data.next;
-
-		const currentVal = data.current.val;
-		const highVal = high.val;
-		const lowVal = low.val;
-		let percentFallen = 1 - ((currentVal - lowVal) / (highVal - lowVal));
+		const percentFallen = data.currentPercentFallen;
+		const highVal = data.high.val;
+		const lowVal = data.low.val;
 
 		const percentToDirection = isRising ? 1 - percentFallen : percentFallen;
 		const percent_text = `${roundPercent(percentToDirection)}%`;
