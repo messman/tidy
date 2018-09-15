@@ -1,0 +1,16 @@
+# Build: docker build -f docker/dockerfile -t agm-quick-tides:[VERSION] .
+# Run:   docker run --name agm-quick-tides -d --rm -p 8080:80 agm-quick-tides:[VERSION]
+# IP:    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' agm-quick-tides
+# +:     docker exec -it agm-quick-tides /bin/bash
+
+# nginx Alpine for small size https://hub.docker.com/_/nginx/
+FROM nginx:1.14.0-alpine
+
+# Add bash, just for debug (probably don't need this in production)
+RUN apk add --no-cache bash
+
+# Set the working directory, including for when we exec in
+WORKDIR /usr/share/nginx/html/ 
+
+# Copy all into the static directory
+COPY / .

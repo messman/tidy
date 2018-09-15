@@ -3,7 +3,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 const buildTime = (new Date()).getTime();
-const version = "1.0.3";
+const version = "1.1.0";
 
 // Cleans a directory
 const CleanWebpackPlugin = require("clean-webpack-plugin");
@@ -75,7 +75,7 @@ const baseWebpackOptions = {
 
 	plugins: [
 		// Clean the "dist" folder each time
-		new CleanWebpackPlugin(["./dist"], /*{ watch: true }*/),
+		new CleanWebpackPlugin(["./dist"]),
 		// Filter out all the vendor libraries and put that in its own chunk
 		new webpack.optimize.CommonsChunkPlugin({
 			name: "vendor"

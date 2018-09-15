@@ -2,17 +2,22 @@
 const noaaUri = "http://localhost:8000/proxy/noaa/latest";
 
 export function getNoaaData(): Promise<Response> {
-	return fetch(noaaUri).then((res) => {
-		if (res.ok) {
-			return res.json().then((json) => {
-				console.log(json.isUpdated);
-				return parseJsonToResponse(json.response);
-			});
-		}
-		else {
+	return fetch(noaaUri)
+		.then((res) => {
+			if (res.ok) {
+				return res.json().then((json) => {
+					console.log(json.isUpdated);
+					return parseJsonToResponse(json.response);
+				});
+			}
+			else {
+				return null;
+			}
+		})
+		.catch((err) => {
+			console.error(noaaUri, err);
 			return null;
-		}
-	});
+		});
 }
 
 function parseJsonToResponse(json: any): Response {

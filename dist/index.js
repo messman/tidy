@@ -494,6 +494,9 @@ function getNoaaData() {
         } else {
             return null;
         }
+    }).catch(function (err) {
+        console.error(noaaUri, err);
+        return null;
     });
 }
 function parseJsonToResponse(json) {
@@ -612,8 +615,8 @@ Object.defineProperty(exports, "__esModule", {
 var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: true,
-        VERSION: "1.0.3",
-        TIME: 1537029345419
+        VERSION: "1.1.0",
+        TIME: 1537042132492
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
