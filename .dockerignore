@@ -1,5 +1,12 @@
-src
-node_modules
-.vscode
-.git
-**/dockerfile
+*
+
+!dist
+!index.html
+
+!.nojekyll
+!*.png
+!browserconfig.xml
+!*.ico
+!manifest.json
+!*.svg
+!site.webmanifest
