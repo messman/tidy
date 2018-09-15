@@ -1,16 +1,16 @@
 import * as React from "react";
 
-import { getWaterLevelData, WaterLevel, WaterLevelPrediction } from "../../services/noaa";
+import * as Noaa from "../../services/noaa";
 import * as Time from "../../services/time";
 
 import "./charts.scss";
 
 interface ChartsProps {
-	waterLevel: {
-		data: WaterLevel,
+	noaa: {
+		data: Noaa.Response,
 		isRequesting: boolean,
 		onRequestBegin: () => void,
-		onRequestEnd: (response: WaterLevel) => void
+		onRequestEnd: (response: Noaa.Response) => void
 	}
 }
 
@@ -26,42 +26,43 @@ export class Charts extends React.Component<ChartsProps, ChartsState> {
 	}
 
 	componentDidMount() {
-		const { waterLevel } = this.props;
-		if (!waterLevel.data && !waterLevel.isRequesting) {
-			getWaterLevelData()
+		const { noaa } = this.props;
+		if (!noaa.data && !noaa.isRequesting) {
+			Noaa.getNoaaData()
 				.then((data) => {
-					waterLevel.onRequestEnd(data);
+					noaa.onRequestEnd(data);
 				})
-			waterLevel.onRequestBegin();
+			noaa.onRequestBegin();
 		}
 	}
 
 	componentWillUnmount() {
-		const { waterLevel } = this.props;
-		if (!waterLevel.data && waterLevel.isRequesting)
-			this.props.waterLevel.onRequestEnd(null);
+		const { noaa } = this.props;
+		if (!noaa.data && noaa.isRequesting)
+			this.props.noaa.onRequestEnd(null);
 	}
 
 	render() {
 
-		const { waterLevel } = this.props;
-		if ((!waterLevel.data && !waterLevel.isRequesting) || (waterLevel.data && waterLevel.data.errors)) {
+		const { noaa } = this.props;
+		if ((!noaa.data && !noaa.isRequesting) || (noaa.data && noaa.data.errors) || (noaa.data && noaa.data.data && !noaa.data.data.waterLevel)) {
 			return <p>Error....</p>
 		}
-		else if (!waterLevel.data && waterLevel.isRequesting) {
+		else if (!noaa.data && noaa.isRequesting) {
 			return <p>Requesting...</p>
 		}
 		else {
-			const data = waterLevel.data;
+			const waterLevel = noaa.data.data.waterLevel;
+
 
 			const previousPredictions =
 				<div className="predictions predictions-previous">
-					{createTable(data.predictionsBeforeCurrent)}
+					{createTable(waterLevel.predictionsBeforeCurrent)}
 				</div>
 
 			const nextPredictions =
 				<div className="predictions predictions-next">
-					{createTable(data.predictionsAfterCurrent)}
+					{createTable(waterLevel.predictionsAfterCurrent)}
 				</div>
 
 			return (
@@ -70,7 +71,7 @@ export class Charts extends React.Component<ChartsProps, ChartsState> {
 					{previousPredictions}
 					<div className="current">
 						<div className="line"></div>
-						<div className="current-text">Current: {createPrettyTimeElement(data.current.time)}</div>
+						<div className="current-text">Current: {createPrettyTimeElement(waterLevel.current.time)}</div>
 						<div className="line"></div>
 					</div>
 					{nextPredictions}
@@ -96,7 +97,7 @@ function createPrettyMonthDay(date: Date): string {
 	return `${month} ${day}`;
 }
 
-function createTable(predictions: WaterLevelPrediction[]): JSX.Element {
+function createTable(predictions: Noaa.WaterLevelPrediction[]): JSX.Element {
 	return (
 		<table>
 			<tbody>

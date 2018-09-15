@@ -1,17 +1,17 @@
 import * as React from "react";
 
-import { getWaterLevelData, WaterLevel } from "../../services/noaa";
+import * as Noaa from "../../services/noaa";
 import { Title } from "./title/title";
 import { Wave } from "./wave/wave";
 
 import "./tide.scss";
 
 interface TideProps {
-	waterLevel: {
-		data: WaterLevel,
+	noaa: {
+		data: Noaa.Response,
 		isRequesting: boolean,
 		onRequestBegin: () => void,
-		onRequestEnd: (response: WaterLevel) => void
+		onRequestEnd: (response: Noaa.Response) => void
 	}
 }
 
@@ -27,20 +27,20 @@ export class Tide extends React.Component<TideProps, TideState> {
 	}
 
 	componentDidMount() {
-		const { waterLevel } = this.props;
-		if (!waterLevel.data && !waterLevel.isRequesting) {
-			getWaterLevelData()
+		const { noaa } = this.props;
+		if (!noaa.data && !noaa.isRequesting) {
+			Noaa.getNoaaData()
 				.then((data) => {
-					waterLevel.onRequestEnd(data);
+					noaa.onRequestEnd(data);
 				})
-			waterLevel.onRequestBegin();
+			noaa.onRequestBegin();
 		}
 	}
 
 	componentWillUnmount() {
-		const { waterLevel } = this.props;
-		if (!waterLevel.data && waterLevel.isRequesting)
-			this.props.waterLevel.onRequestEnd(null);
+		const { noaa } = this.props;
+		if (!noaa.data && noaa.isRequesting)
+			this.props.noaa.onRequestEnd(null);
 	}
 
 	clickShare = () => {
@@ -53,19 +53,19 @@ export class Tide extends React.Component<TideProps, TideState> {
 
 	render() {
 
-		const { waterLevel } = this.props;
-		if ((!waterLevel.data && !waterLevel.isRequesting) || (waterLevel.data && waterLevel.data.errors)) {
+		const { noaa } = this.props;
+		if ((!noaa.data && !noaa.isRequesting) || (noaa.data && noaa.data.errors)) {
 			return <p>Error....</p>
 		}
-		else if (!waterLevel.data && waterLevel.isRequesting) {
+		else if (!noaa.data && noaa.isRequesting) {
 			return <p>Requesting...</p>
 		}
 		else {
-			const data = waterLevel.data;
+			const data = noaa.data;
 			return (
 				<div className="tide">
-					<Title waterLevel={data} />
-					<Wave waterLevel={data} />
+					<Title noaaResponse={data} />
+					<Wave noaaResponse={data} />
 					{/* <button className="low-button share" onClick={this.clickShare}>
 						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="23" height="30" viewBox="0 0 23 30">
 							<path d="M19.688 3.75h-4.688c0-2.068-1.682-3.75-3.75-3.75s-3.75 1.682-3.75 3.75h-4.688c-1.553 0-2.813 1.259-2.813 2.813v20.625c0 1.553 1.259 2.813 2.813 2.813h16.875c1.553 0 2.813-1.259 2.813-2.813v-20.625c0-1.553-1.259-2.813-2.813-2.813zM19.336 27.188h-16.172c-0.194 0-0.352-0.157-0.352-0.352v0-19.922c0-0.194 0.157-0.352 0.352-0.352v0h2.461v2.109c0 0.388 0.315 0.703 0.703 0.703h9.844c0.388 0 0.703-0.315 0.703-0.703v-2.109h2.461c0.194 0 0.352 0.157 0.352 0.352v0 19.922c0 0.194-0.157 0.352-0.352 0.352v0zM11.25 2.344c0.777 0 1.406 0.63 1.406 1.406s-0.63 1.406-1.406 1.406-1.406-0.63-1.406-1.406 0.63-1.406 1.406-1.406z"></path>

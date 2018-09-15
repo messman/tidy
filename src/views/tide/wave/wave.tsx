@@ -1,11 +1,11 @@
 import * as React from "react";
 
 import "./wave.scss";
-import { WaterLevel } from "../../../services/noaa";
+import * as Noaa from "../../../services/noaa";
 import { StyleScript } from "./styleScript/styleScript";
 
 interface WaveProps {
-	waterLevel: WaterLevel
+	noaaResponse: Noaa.Response
 }
 
 interface WaveState {
@@ -36,15 +36,16 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 
 	render() {
 
-		const data = this.props.waterLevel;
+		const data = this.props.noaaResponse;
 		if (!data || data.errors || (this.state.emAsPixel === -1)) {
 			return <StyleScript input="1em" outputPixels={this.setEmAsPixels} />
 		}
+		const waterLevel = data.data.waterLevel;
 
-		const isRising = data.currentIsRising;
-		const percentFallen = data.currentPercentFallen;
-		const highVal = data.high.val;
-		const lowVal = data.low.val;
+		const isRising = waterLevel.currentIsRising;
+		const percentFallen = waterLevel.currentPercentFallen;
+		const highVal = waterLevel.high.val;
+		const lowVal = waterLevel.low.val;
 
 		const percentToDirection = isRising ? 1 - percentFallen : percentFallen;
 		const percent_text = `${roundPercent(percentToDirection)}%`;

@@ -8,7 +8,7 @@ import { Tide } from "./tide/tide";
 import { Settings } from "./settings/settings";
 
 import { DEFINE } from "../services/define";
-import { WaterLevel, CurrentMoreData } from "../services/noaa";
+import * as Noaa from "../services/noaa";
 import { Info } from "./info/info";
 import { More } from "./more/more";
 import { Charts } from "./charts/charts";
@@ -22,10 +22,8 @@ interface AppProps {
 
 interface AppState {
 	selectedTab: number,
-	waterLevel: WaterLevel,
-	waterLevelIsRequesting: boolean,
-	currentMoreData: CurrentMoreData,
-	currentMoreDataIsRequesting: boolean,
+	noaa: Noaa.Response
+	noaaIsRequesting: boolean,
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -36,48 +34,28 @@ class App extends React.Component<AppProps, AppState> {
 		// Set initial tab to 0 (TODO: add routing)
 		this.state = {
 			selectedTab: 0,
-			waterLevel: null,
-			waterLevelIsRequesting: false,
-			currentMoreData: null,
-			currentMoreDataIsRequesting: false
+			noaa: null,
+			noaaIsRequesting: false,
 		}
 	}
 
-	beginWaterLevelRequest = () => {
-		this.setState({ waterLevelIsRequesting: true });
+	beginNoaaRequest = () => {
+		this.setState({ noaaIsRequesting: true });
 	}
 
-	endWaterLevelRequest = (waterLevel: WaterLevel) => {
+	endNoaaRequest = (noaa: Noaa.Response) => {
 		this.setState({
-			waterLevel,
-			waterLevelIsRequesting: false
-		});
-	}
-
-	beginMoreDataRequest = () => {
-		this.setState({ currentMoreDataIsRequesting: true });
-	}
-
-	endMoreDataRequest = (moreData: CurrentMoreData) => {
-		this.setState({
-			currentMoreData: moreData,
-			currentMoreDataIsRequesting: false
+			noaa,
+			noaaIsRequesting: false
 		});
 	}
 
 	render() {
-		const waterLevelData = {
-			data: this.state.waterLevel,
-			isRequesting: this.state.waterLevelIsRequesting,
-			onRequestBegin: this.beginWaterLevelRequest,
-			onRequestEnd: this.endWaterLevelRequest
-		}
-
-		const currentMoreData = {
-			data: this.state.currentMoreData,
-			isRequesting: this.state.currentMoreDataIsRequesting,
-			onRequestBegin: this.beginMoreDataRequest,
-			onRequestEnd: this.endMoreDataRequest
+		const noaaData = {
+			data: this.state.noaa,
+			isRequesting: this.state.noaaIsRequesting,
+			onRequestBegin: this.beginNoaaRequest,
+			onRequestEnd: this.endNoaaRequest
 		}
 
 		const view =
@@ -90,7 +68,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Tide</span>
 					</TabButton>
 					<TabView>
-						<Tide waterLevel={waterLevelData} />
+						<Tide noaa={noaaData} />
 					</TabView>
 				</Tab>
 				<Tab>
@@ -101,7 +79,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Charts</span>
 					</TabButton>
 					<TabView>
-						<Charts waterLevel={waterLevelData} />
+						<Charts noaa={noaaData} />
 					</TabView>
 				</Tab>
 				<Tab>
@@ -112,7 +90,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>More</span>
 					</TabButton>
 					<TabView>
-						<More currentMore={currentMoreData} />
+						<More noaa={noaaData} />
 					</TabView>
 				</Tab>
 				<Tab>

@@ -1,15 +1,15 @@
 import * as React from "react";
 
 import "./more.scss";
-import { CurrentMoreData, getCurrentMoreData } from "../../services/noaa";
+import * as Noaa from "../../services/noaa";
 import * as Time from "../../services/time";
 
 interface MoreProps {
-	currentMore: {
-		data: CurrentMoreData,
+	noaa: {
+		data: Noaa.Response,
 		isRequesting: boolean,
 		onRequestBegin: () => void,
-		onRequestEnd: (response: CurrentMoreData) => void
+		onRequestEnd: (response: Noaa.Response) => void
 	}
 }
 
@@ -20,34 +20,34 @@ interface MoreState {
 export class More extends React.Component<MoreProps, MoreState> {
 
 	componentDidMount() {
-		const { currentMore } = this.props;
-		if (!currentMore.data && !currentMore.isRequesting) {
-			getCurrentMoreData()
+		const { noaa } = this.props;
+		if (!noaa.data && !noaa.isRequesting) {
+			Noaa.getNoaaData()
 				.then((data) => {
-					currentMore.onRequestEnd(data);
+					noaa.onRequestEnd(data);
 				})
-			currentMore.onRequestBegin();
+			noaa.onRequestBegin();
 		}
 	}
 
 	componentWillUnmount() {
-		const { currentMore } = this.props;
-		if (!currentMore.data && currentMore.isRequesting)
-			this.props.currentMore.onRequestEnd(null);
+		const { noaa } = this.props;
+		if (!noaa.data && noaa.isRequesting)
+			this.props.noaa.onRequestEnd(null);
 	}
 
 	render() {
 
-		const { currentMore } = this.props;
-		if ((!currentMore.data && !currentMore.isRequesting) || (currentMore.data && currentMore.data.errors)) {
+		const { noaa } = this.props;
+		if ((!noaa.data && !noaa.isRequesting) || (noaa.data && noaa.data.errors) || (noaa.data && noaa.data.data && !noaa.data.data.current)) {
 			return <p>Error....</p>
 		}
-		else if (!currentMore.data && currentMore.isRequesting) {
+		else if (!noaa.data && noaa.isRequesting) {
 			return <p>Requesting...</p>
 		}
 		else {
-			const data = currentMore.data;
-			const prettyTime = Time.createPrettyTime(data.airTemp.date);
+			const current = noaa.data.data.current;
+			const prettyTime = Time.createPrettyTime(current.airTemp.time);
 			return (
 				<div className="more tab-view-bg">
 					<header>
@@ -56,17 +56,17 @@ export class More extends React.Component<MoreProps, MoreState> {
 							as of <span className="pretty-time">{prettyTime.time}</span><span className="pretty-ampm">{prettyTime.ampm}</span>
 						</div>
 					</header>
-					<DataSection title="Water Temperature" value={data.waterTemp.value} unit="Degrees (F)" />
-					<DataSection title="Air Temperature" value={data.airTemp.value} unit="Degrees (F)" />
-					<DataSection title="Air Pressure" value={data.airPressure.value} unit="Millibars (mb)" />
+					<DataSection title="Water Temperature" value={current.waterTemp.val} unit="Degrees (F)" />
+					<DataSection title="Air Temperature" value={current.airTemp.val} unit="Degrees (F)" />
+					<DataSection title="Air Pressure" value={current.airPressure.val} unit="Millibars (mb)" />
 					<section>
 						<div className="data-title">Wind</div>
 						<div className="data-value">
-							<span className="value">{data.wind.speed}</span>
-							<span className="unit">knots {data.wind.directionCardinal}</span>
+							<span className="value">{current.wind.speed}</span>
+							<span className="unit">knots {current.wind.directionCardinal}</span>
 						</div>
 						<div className="data-value">
-							<span className="value">{data.wind.gust}</span>
+							<span className="value">{current.wind.gust}</span>
 							<span className="unit">knot gusts</span>
 						</div>
 					</section>

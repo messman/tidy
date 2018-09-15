@@ -1,11 +1,11 @@
 import * as React from "react";
 
 import "./title.scss";
-import { WaterLevel } from "../../../services/noaa";
+import * as Noaa from "../../../services/noaa";
 import * as Time from "../../../services/time";
 
 interface TitleProps {
-	waterLevel: WaterLevel
+	noaaResponse: Noaa.Response
 
 }
 
@@ -27,7 +27,7 @@ export class Title extends React.Component<TitleProps, TitleState> {
 
 	render() {
 
-		const data = this.props.waterLevel;
+		const data = this.props.noaaResponse;
 
 		let title = "Cannot load data";
 		let message = "Please try again."
@@ -40,31 +40,31 @@ export class Title extends React.Component<TitleProps, TitleState> {
 
 			}
 			else {
-
-				const percentFallen = data.currentPercentFallen;
+				const waterLevel = data.data.waterLevel;
+				const percentFallen = waterLevel.currentPercentFallen;
 				if (percentFallen > .90) {
 					title = "It's low tide."
 				}
 				else if (percentFallen < .10) {
 					title = "It's high tide."
 				} else {
-					title = `The tide is ${data.currentIsRising ? "rising" : "falling"}.`;
+					title = `The tide is ${waterLevel.currentIsRising ? "rising" : "falling"}.`;
 				}
 
-				const timeUntilNext = Math.abs(data.next.time.getTime() - data.current.time.getTime());
-				const currentPrettyTime = Time.createPrettyTime(data.current.time);
-				message = `As of ${currentPrettyTime.time} ${currentPrettyTime.ampm}, ${data.currentIsRising ? "high" : "low"} tide is ${Time.createPrettyTimespan(timeUntilNext)}.`;
+				const timeUntilNext = Math.abs(waterLevel.next.time.getTime() - waterLevel.current.time.getTime());
+				const currentPrettyTime = Time.createPrettyTime(waterLevel.current.time);
+				message = `As of ${currentPrettyTime.time} ${currentPrettyTime.ampm}, ${waterLevel.currentIsRising ? "high" : "low"} tide is ${Time.createPrettyTimespan(timeUntilNext)}.`;
 
-				if (data.currentIsRising)
+				if (waterLevel.currentIsRising)
 					svg = Title.svgTideRising;
 				else
 					svg = Title.svgTideFalling;
 
 				lastNext = (
 					<div className="lastnext">
-						<LastNext name="left" title={`Last ${data.previous.isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(data.previous.time)} />
-						<LastNext name="center" title={`Next ${data.next.isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(data.next.time)} />
-						<LastNext name="right" title={`Next ${data.predictionsAfterCurrent[1].isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(data.predictionsAfterCurrent[1].time)} />
+						<LastNext name="left" title={`Last ${waterLevel.previous.isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(waterLevel.previous.time)} />
+						<LastNext name="center" title={`Next ${waterLevel.next.isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(waterLevel.next.time)} />
+						<LastNext name="right" title={`Next ${waterLevel.predictionsAfterCurrent[1].isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(waterLevel.predictionsAfterCurrent[1].time)} />
 					</div >
 				)
 			}
