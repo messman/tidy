@@ -483,7 +483,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.getNoaaData = getNoaaData;
-var noaaUri = "http://localhost:8000/proxy/noaa/latest";
+var noaaUri = "api/proxy/noaa/latest";
 function getNoaaData() {
     return fetch(noaaUri).then(function (res) {
         if (res.ok) {
@@ -616,7 +616,7 @@ var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: true,
         VERSION: "1.1.0",
-        TIME: 1537042132492
+        TIME: 1537051496024
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true

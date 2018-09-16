@@ -1,5 +1,5 @@
 
-const noaaUri = "proxy/noaa/latest";
+const noaaUri = "api/proxy/noaa/latest";
 
 export function getNoaaData(): Promise<Response> {
 	return fetch(noaaUri)
