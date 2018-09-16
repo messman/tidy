@@ -726,7 +726,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: #19576D;\n  background-color: #EAEAEA; }\n\n* {\n  box-sizing: border-box;\n  font-weight: 300; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nbody {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: stretch; }\n\nmain {\n  background-color: #e1f8ff;\n  width: 100%;\n  max-width: 700px;\n  max-height: 1200px;\n  margin: 0 auto;\n  padding: 0;\n  height: 100%;\n  outline: 1px solid #BEBEBE; }\n\n.tab-view-bg {\n  padding: .5rem;\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%; }\n", ""]);
+exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: #19576D;\n  background-color: #EAEAEA; }\n\n* {\n  box-sizing: border-box;\n  font-weight: 300; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nbody {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: stretch; }\n\nmain {\n  background-color: #f9fdff;\n  width: 100%;\n  max-width: 700px;\n  max-height: 1200px;\n  margin: 0 auto;\n  padding: 0;\n  height: 100%;\n  outline: 1px solid #BEBEBE; }\n\n.tab-view-bg {\n  padding: .5rem;\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%; }\n", ""]);
 
 // exports
 
@@ -1567,7 +1567,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".tide header {\n  margin: .5rem; }\n  .tide header .top .right {\n    float: right; }\n  .tide header .top::after {\n    content: \"\";\n    clear: both; }\n  .tide header .title {\n    background-color: #19576D;\n    color: #e1f8ff;\n    fill: #e1f8ff;\n    border-radius: 6px;\n    padding: 0 .5rem;\n    overflow: hidden;\n    text-align: center; }\n    .tide header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  .tide header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  .tide header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.tide .lastnext {\n  margin: .5rem 1rem;\n  display: flex; }\n\n.tide .lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .tide .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #e1f8ff; }\n  .tide .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .tide .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
+exports.push([module.i, ".tide header {\n  margin: .5rem; }\n  .tide header .top .right {\n    float: right; }\n  .tide header .top::after {\n    content: \"\";\n    clear: both; }\n  .tide header .title {\n    background-color: #19576D;\n    color: #f9fdff;\n    fill: #f9fdff;\n    border-radius: 6px;\n    padding: 0 .5rem;\n    overflow: hidden;\n    text-align: center; }\n    .tide header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  .tide header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  .tide header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.tide .lastnext {\n  margin: .5rem 1rem;\n  display: flex; }\n\n.tide .lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .tide .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #f9fdff; }\n  .tide .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .tide .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
 
 // exports
 
@@ -2213,9 +2213,31 @@ function parseJsonToPrediction(json) {
 }
 function parseJsonToCurrentData(json) {
     return {
-        time: new Date(json.time),
+        time: parseTimeFromResponse(json.time),
         val: json.val
     };
+}
+function parseTimeFromResponse(timeString) {
+    // Parse for Safari
+    // year-month-date HH:mm
+    timeString = timeString.trim();
+    var parts = timeString.split(" ");
+    var date = parts[0];
+    var dateParts = date.split("-");
+    var year = parseInt(dateParts[0], 10);
+    var month = parseInt(dateParts[1], 10);
+    var dateDay = parseInt(dateParts[2], 10);
+    var time = parts[1];
+    var timeParts = time.split(":");
+    var hours = parseInt(timeParts[0], 10);
+    var minutes = parseInt(timeParts[1], 10);
+    var newDate = new Date();
+    newDate.setFullYear(year, month - 1, dateDay);
+    newDate.setHours(hours);
+    newDate.setMinutes(minutes);
+    newDate.setSeconds(0);
+    newDate.setMilliseconds(0);
+    return newDate;
 }
 //
 //
@@ -2336,7 +2358,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".info {\n  text-align: center;\n  font-family: 'Courier New', Courier, monospace; }\n  .info section {\n    margin: .5rem; }\n    .info section + section {\n      margin-top: 1.5rem; }\n\n.info-header span {\n  display: inline-block;\n  padding: 0 .2rem; }\n\n.info-header .value {\n  color: rgba(25, 87, 109, 0.7); }\n\n.info-gh a {\n  margin: auto;\n  background-color: #EAEAEA;\n  border: 1px solid #BEBEBE;\n  border-radius: 6px;\n  box-shadow: 0 1px 3px 0 #333;\n  padding: .6rem .7rem;\n  display: inline-flex;\n  align-items: center;\n  position: relative;\n  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 0 3px 0 rgba(0, 0, 0, 0.4), inset 0 0 3px 5px rgba(0, 0, 0, 0.05), 2px 2px 4px 0 rgba(0, 0, 0, 0.4);\n  color: #333; }\n  .info-gh a:before, .info-gh a:after {\n    content: '';\n    display: block;\n    position: absolute;\n    left: 2px;\n    right: 2px;\n    height: 2px; }\n  .info-gh a:before {\n    top: 0;\n    border-bottom-left-radius: 6px;\n    border-bottom-right-radius: 6px;\n    background: rgba(255, 255, 255, 0.6);\n    box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.6); }\n  .info-gh a:after {\n    bottom: 0;\n    border-top-left-radius: 6px;\n    border-top-right-radius: 6px;\n    background: rgba(0, 0, 0, 0.15);\n    box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.15); }\n  .info-gh a:link, .info-gh a:visited, .info-gh a:active, .info-gh a:hover {\n    color: #333;\n    text-decoration: none; }\n  .info-gh a p {\n    text-align: left;\n    margin: 0;\n    line-height: 1.4rem;\n    font-weight: bold; }\n  .info-gh a svg {\n    fill: #333;\n    height: 2.5rem;\n    width: auto; }\n  .info-gh a .split-right {\n    padding-left: .7rem;\n    font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif; }\n\n.info-thanks > div {\n  margin: 1.5rem 0;\n  line-height: 1rem; }\n\n.info-thanks a, .info-thanks a:link, .info-thanks a:hover, .info-thanks a:active, .info-thanks a:visited {\n  color: #06151a;\n  white-space: pre; }\n\n.info-thanks ul {\n  margin: .5rem 0;\n  padding: 0;\n  list-style-type: none; }\n  .info-thanks ul li {\n    color: rgba(25, 87, 109, 0.7); }\n", ""]);
+exports.push([module.i, ".info {\n  text-align: center; }\n  .info section {\n    margin: .5rem; }\n    .info section + section {\n      margin-top: 1.5rem; }\n\n.info-header span {\n  display: inline-block;\n  padding: 0 .2rem; }\n\n.info-header .value {\n  color: rgba(25, 87, 109, 0.7); }\n\n.info-gh a {\n  margin: auto;\n  background-color: #EAEAEA;\n  border: 1px solid #BEBEBE;\n  border-radius: 6px;\n  box-shadow: 0 1px 3px 0 #333;\n  padding: .6rem .7rem;\n  display: inline-flex;\n  align-items: center;\n  position: relative;\n  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 0 3px 0 rgba(0, 0, 0, 0.4), inset 0 0 3px 5px rgba(0, 0, 0, 0.05), 2px 2px 4px 0 rgba(0, 0, 0, 0.4);\n  color: #333; }\n  .info-gh a:before, .info-gh a:after {\n    content: '';\n    display: block;\n    position: absolute;\n    left: 2px;\n    right: 2px;\n    height: 2px; }\n  .info-gh a:before {\n    top: 0;\n    border-bottom-left-radius: 6px;\n    border-bottom-right-radius: 6px;\n    background: rgba(255, 255, 255, 0.6);\n    box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.6); }\n  .info-gh a:after {\n    bottom: 0;\n    border-top-left-radius: 6px;\n    border-top-right-radius: 6px;\n    background: rgba(0, 0, 0, 0.15);\n    box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.15); }\n  .info-gh a:link, .info-gh a:visited, .info-gh a:active, .info-gh a:hover {\n    color: #333;\n    text-decoration: none; }\n  .info-gh a p {\n    text-align: left;\n    margin: 0;\n    line-height: 1.4rem;\n    font-weight: bold; }\n  .info-gh a svg {\n    fill: #333;\n    height: 2.5rem;\n    width: auto; }\n  .info-gh a .split-right {\n    padding-left: .7rem;\n    font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif; }\n\n.info-thanks > div {\n  margin: 1.5rem 0;\n  line-height: 1rem; }\n\n.info-thanks a, .info-thanks a:link, .info-thanks a:hover, .info-thanks a:active, .info-thanks a:visited {\n  color: #06151a;\n  white-space: pre; }\n\n.info-thanks ul {\n  margin: .5rem 0;\n  padding: 0;\n  list-style-type: none; }\n", ""]);
 
 // exports
 
@@ -2610,7 +2632,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".charts {\n  text-align: center; }\n  .charts header {\n    margin: 2rem 0;\n    font-size: 2rem;\n    line-height: 2rem; }\n  .charts table {\n    width: 100%;\n    font-size: 1.2rem; }\n  .charts td {\n    width: 25%; }\n  .charts .pretty-ampm {\n    display: inline-block;\n    margin-left: .2rem;\n    font-size: .8rem; }\n  .charts .predictions-previous {\n    color: rgba(25, 87, 109, 0.7); }\n  .charts .current {\n    display: flex;\n    align-items: center;\n    margin: .5rem; }\n    .charts .current .line {\n      flex: 1;\n      height: 1px;\n      background-color: #19576D; }\n  .charts .current-text {\n    display: inline-block;\n    padding: .1rem .5rem;\n    border-radius: 5px;\n    background-color: #19576D;\n    color: #e1f8ff; }\n", ""]);
+exports.push([module.i, ".charts {\n  text-align: center;\n  overflow: auto;\n  -webkit-overflow-scrolling: touch; }\n  .charts header {\n    margin: 2rem 0;\n    font-size: 2rem;\n    line-height: 2rem; }\n  .charts table {\n    width: 100%;\n    font-size: 1.2rem; }\n  .charts td {\n    width: 25%; }\n  .charts .pretty-ampm {\n    display: inline-block;\n    margin-left: .2rem;\n    font-size: .8rem; }\n  .charts .predictions-previous {\n    color: rgba(25, 87, 109, 0.7); }\n  .charts .current {\n    display: flex;\n    align-items: center;\n    margin: .5rem; }\n    .charts .current .line {\n      flex: 1;\n      height: 1px;\n      background-color: #19576D; }\n  .charts .current-text {\n    display: inline-block;\n    padding: .1rem .5rem;\n    border-radius: 5px;\n    background-color: #19576D;\n    color: #f9fdff; }\n", ""]);
 
 // exports
 

@@ -2,6 +2,8 @@
 
 .charts {
 	text-align: center;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
 
 	header {
 		margin: 2rem 0;

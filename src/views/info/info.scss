@@ -2,7 +2,6 @@
 
 .info {
 	text-align: center;
-	font-family: 'Courier New', Courier, monospace;
 
 	section {
 		margin: .5rem;
@@ -103,9 +102,5 @@
 		margin: .5rem 0;
 		padding: 0;
 		list-style-type: none;
-
-		li {
-			color: transparentize($c-main, .3);
-		}
 	}
 }

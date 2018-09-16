@@ -123,9 +123,35 @@ function parseJsonToPrediction(json: any): WaterLevelPrediction {
 
 function parseJsonToCurrentData(json: any): CurrentData {
 	return {
-		time: new Date(json.time),
+		time: parseTimeFromResponse(json.time),
 		val: json.val
 	}
+}
+
+function parseTimeFromResponse(timeString: string): Date {
+	// Parse for Safari
+	// year-month-date HH:mm
+	timeString = timeString.trim();
+	const parts = timeString.split(" ");
+	const date = parts[0];
+	const dateParts = date.split("-");
+	const year = parseInt(dateParts[0], 10);
+	const month = parseInt(dateParts[1], 10);
+	const dateDay = parseInt(dateParts[2], 10);
+
+	const time = parts[1];
+	const timeParts = time.split(":");
+	const hours = parseInt(timeParts[0], 10);
+	const minutes = parseInt(timeParts[1], 10);
+
+	const newDate = new Date();
+	newDate.setFullYear(year, month - 1, dateDay);
+	newDate.setHours(hours);
+	newDate.setMinutes(minutes);
+	newDate.setSeconds(0);
+	newDate.setMilliseconds(0);
+
+	return newDate;
 }
 
 //
