@@ -45,7 +45,7 @@ class App extends React.Component<AppProps, AppState> {
 	}
 
 	componentDidMount() {
-		Noaa.getNoaaData()
+		Noaa.getNoaaData(650)
 			.then((noaa: Noaa.Response) => {
 				// noaa object must exist
 				this.setState({
@@ -84,16 +84,14 @@ class App extends React.Component<AppProps, AppState> {
 			moreComponent = loading;
 		}
 		else if (isRequestError) {
-			const error = <AppError error={state.noaaRequestError} />
+			const error = <AppError error={state.noaaRequestError} jsonErrs={null} />
 			tideComponent = error;
 			chartsComponent = error;
 			moreComponent = error;
 		}
 		else if (isNoaaResponseError) {
 			const errs = noaa.errors;
-			console.error(errs);
-			const err = new Error(`${errs.length} ${errs.length > 1 ? "errors were" : "error was"} returned from the API.`);
-			const error = <AppError error={err} />
+			const error = <AppError error={null} jsonErrs={errs} />
 			tideComponent = error;
 			chartsComponent = error;
 			moreComponent = error;

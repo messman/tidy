@@ -528,7 +528,7 @@ var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: true,
         VERSION: "1.1.0",
-        TIME: 1537119574157
+        TIME: 1537122766545
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -609,7 +609,7 @@ var App = function (_React$Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
-            Noaa.getNoaaData().then(function (noaa) {
+            Noaa.getNoaaData(650).then(function (noaa) {
                 // noaa object must exist
                 _this2.setState({
                     noaa: noaa,
@@ -643,15 +643,13 @@ var App = function (_React$Component) {
                 chartsComponent = loading;
                 moreComponent = loading;
             } else if (isRequestError) {
-                var error = React.createElement(_components.AppError, { error: state.noaaRequestError });
+                var error = React.createElement(_components.AppError, { error: state.noaaRequestError, jsonErrs: null });
                 tideComponent = error;
                 chartsComponent = error;
                 moreComponent = error;
             } else if (isNoaaResponseError) {
                 var errs = noaa.errors;
-                console.error(errs);
-                var err = new Error(errs.length + " " + (errs.length > 1 ? "errors were" : "error was") + " returned from the API.");
-                var _error = React.createElement(_components.AppError, { error: err });
+                var _error = React.createElement(_components.AppError, { error: null, jsonErrs: errs });
                 tideComponent = _error;
                 chartsComponent = _error;
                 moreComponent = _error;
@@ -926,8 +924,18 @@ var AppError = exports.AppError = function (_React$Component) {
     _createClass(AppError, [{
         key: "render",
         value: function render() {
-            var errText = this.props.error.message;
-            return React.createElement("div", { className: "react-error tab-view-bg" }, React.createElement("header", null, React.createElement("h1", null, "Uh-oh!"), React.createElement("h3", null, "Something's gone wrong.")), React.createElement("hr", null), React.createElement("p", null, "It looks like the application isn't working correctly. If the problem persists, please reach out to the developer on GitHub by going to the ", React.createElement("strong", null, "Info"), " tab."), React.createElement("hr", null), React.createElement("div", { className: "detailed" }, React.createElement("div", { className: "detailed-header" }, "Detailed error information:"), React.createElement("div", { className: "detailed-content" }, errText)));
+            var errContent = null;
+            if (this.props.error) {
+                errContent = React.createElement("span", null, "this.props.error.message");
+            } else if (this.props.jsonErrs) {
+                var errs = this.props.jsonErrs;
+                errContent = React.createElement(React.Fragment, null, React.createElement("div", null, errs.length + " " + (errs.length > 1 ? "errors were" : "error was") + " returned from the API in the following contexts:"), React.createElement("ul", null, errs.map(function (err) {
+                    return React.createElement("li", null, err.errContext);
+                })));
+            } else {
+                errContent = React.createElement("span", null, "Error Unknown");
+            }
+            return React.createElement("div", { className: "react-error tab-view-bg" }, React.createElement("header", null, React.createElement("h1", null, "Uh-oh!"), React.createElement("h3", null, "Something's gone wrong.")), React.createElement("hr", null), React.createElement("p", null, "It looks like the application isn't working correctly. If the problem persists, please reach out to the developer on GitHub by going to the ", React.createElement("strong", null, "Info"), " tab."), React.createElement("hr", null), React.createElement("div", { className: "detailed" }, React.createElement("div", { className: "detailed-header" }, "Detailed error information:"), React.createElement("div", { className: "detailed-content" }, errContent)));
         }
     }]);
 
@@ -1038,7 +1046,7 @@ var Loading = exports.Loading = function (_React$Component) {
     _createClass(Loading, [{
         key: "render",
         value: function render() {
-            return React.createElement("div", { className: "react-loading" }, React.createElement("h2", null, "Loading..."));
+            return React.createElement("div", { className: "react-loading" }, React.createElement("h1", null, "Loading"));
         }
     }]);
 
@@ -1104,7 +1112,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".react-loading h2 {\n  color: red; }\n", ""]);
+exports.push([module.i, ".react-loading {\n  text-align: center; }\n  .react-loading h1 {\n    font-weight: bold;\n    display: inline-block;\n    margin: 4rem auto;\n    padding: .25rem 1rem;\n    border: 5px solid #19576D;\n    border-radius: 2px;\n    animation: colors 2s linear infinite alternate; }\n\n@keyframes colors {\n  0% {\n    color: #19576D;\n    border-color: #8DC2D5; }\n  50% {\n    color: #8DC2D5;\n    border-color: #19576D; }\n  100% {\n    color: #19576D;\n    border-color: #8DC2D5; } }\n", ""]);
 
 // exports
 
@@ -2112,9 +2120,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.getNoaaData = getNoaaData;
-var noaaUri = "api/proxy/noaa/latest";
-function getNoaaData() {
-    return fetch(noaaUri).then(function (res) {
+//const noaaUri = "api/proxy/noaa/latest";
+var noaaUri = "http://localhost:8000/proxy/noaa/latest";
+function getNoaaData(minTimeMs) {
+    return wrapPromise(fetch(noaaUri).then(function (res) {
         if (res.ok) {
             return res.json().then(function (json) {
                 console.log(json.isUpdated);
@@ -2134,6 +2143,24 @@ function getNoaaData() {
         }
         console.error(noaaUri, err);
         throw err;
+    }), minTimeMs);
+}
+function timeoutPromise(val, pass, timeout) {
+    return new Promise(function (res, rej) {
+        setTimeout(function () {
+            if (pass) res(val);else rej(val);
+        }, timeout);
+    });
+}
+// Delays a promise, including its error.
+function wrapPromise(promise, time) {
+    var now = Date.now();
+    return promise.then(function (val) {
+        var diff = Date.now() - now;
+        if (diff < time) return timeoutPromise(val, true, time - diff);else return val;
+    }).catch(function (err) {
+        var diff = Date.now() - now;
+        if (diff < time) return timeoutPromise(err, false, time - diff);else return err;
     });
 }
 function parseJsonToResponse(json) {

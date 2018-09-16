@@ -16,7 +16,7 @@ export class Loading extends React.Component<LoadingProps> {
 	render() {
 		return (
 			<div className="react-loading">
-				<h2>Loading...</h2>
+				<h1>Loading</h1>
 			</div>
 		);
 	}

@@ -1,7 +1,30 @@
 @import "src/styles/common";
 
 .react-loading {
-	h2 {
-		color: red;
+	text-align: center;
+
+	h1 {
+		font-weight: bold;
+		display: inline-block;
+		margin: 4rem auto;
+		padding: .25rem 1rem;
+		border: 5px solid $c-main;
+		border-radius: 2px;
+		animation: colors 2s linear infinite alternate;
+	}
+}
+
+@keyframes colors {
+	0% {
+		color: $c-main;
+		border-color: $c-alt1;
+	}
+	50% {
+		color: $c-alt1;
+		border-color: $c-main;
+	}
+	100% {
+		color: $c-main;
+		border-color: $c-alt1;
 	}
 }

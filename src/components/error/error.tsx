@@ -1,9 +1,12 @@
 import * as React from "react";
 
+import * as Noaa from "../../services/noaa";
+
 import "./error.scss";
 
 interface AppErrorProps {
-	error: Error
+	error: Error,
+	jsonErrs: Noaa.JSONError[]
 }
 
 export class AppError extends React.Component<AppErrorProps> {
@@ -14,7 +17,28 @@ export class AppError extends React.Component<AppErrorProps> {
 
 	render() {
 
-		const errText = this.props.error.message;
+		let errContent: JSX.Element = null;
+		if (this.props.error) {
+			errContent = <span>this.props.error.message</span>
+		}
+		else if (this.props.jsonErrs) {
+			const errs = this.props.jsonErrs;
+			errContent = (
+				<>
+					<div>{`${errs.length} ${errs.length > 1 ? "errors were" : "error was"} returned from the API in the following contexts:`}</div>
+					<ul>
+						{
+							errs.map((err) => {
+								return <li>{err.errContext}</li>
+							})
+						}
+					</ul>
+				</>
+			);
+		}
+		else {
+			errContent = <span>Error Unknown</span>
+		}
 
 		return (
 			<div className="react-error tab-view-bg">
@@ -34,7 +58,7 @@ export class AppError extends React.Component<AppErrorProps> {
 						Detailed error information:
 					</div>
 					<div className="detailed-content">
-						{errText}
+						{errContent}
 					</div>
 				</div>
 			</div>

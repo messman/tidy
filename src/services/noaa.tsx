@@ -1,8 +1,10 @@
+import { rejects } from "assert";
 
-const noaaUri = "api/proxy/noaa/latest";
+//const noaaUri = "api/proxy/noaa/latest";
+const noaaUri = "http://localhost:8000/proxy/noaa/latest";
 
-export function getNoaaData(): Promise<Response> {
-	return fetch(noaaUri)
+export function getNoaaData(minTimeMs: number): Promise<Response> {
+	return wrapPromise(fetch(noaaUri)
 		.then((res) => {
 			if (res.ok) {
 				return res.json()
@@ -27,6 +29,37 @@ export function getNoaaData(): Promise<Response> {
 			}
 			console.error(noaaUri, err);
 			throw err;
+		}), minTimeMs);
+}
+
+function timeoutPromise<S>(val: S, pass: boolean, timeout: number): Promise<S> {
+	return new Promise((res, rej) => {
+		setTimeout(() => {
+			if (pass)
+				res(val);
+			else
+				rej(val);
+		}, timeout);
+	});
+}
+
+// Delays a promise, including its error.
+function wrapPromise<T>(promise: Promise<T>, time: number): Promise<T> {
+	const now = Date.now();
+	return promise
+		.then((val) => {
+			const diff = Date.now() - now;
+			if (diff < time)
+				return timeoutPromise(val, true, time - diff);
+			else
+				return val;
+		})
+		.catch((err) => {
+			const diff = Date.now() - now;
+			if (diff < time)
+				return timeoutPromise(err, false, time - diff);
+			else
+				return err;
 		});
 }
 
