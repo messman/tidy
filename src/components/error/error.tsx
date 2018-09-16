@@ -19,17 +19,18 @@ export class AppError extends React.Component<AppErrorProps> {
 
 		let errContent: JSX.Element = null;
 		if (this.props.error) {
-			errContent = <span>this.props.error.message</span>
+			errContent = <span>{this.props.error.message}</span>
 		}
 		else if (this.props.jsonErrs) {
 			const errs = this.props.jsonErrs;
+			console.error(errs);
 			errContent = (
 				<>
 					<div>{`${errs.length} ${errs.length > 1 ? "errors were" : "error was"} returned from the API in the following contexts:`}</div>
 					<ul>
 						{
-							errs.map((err) => {
-								return <li>{err.errContext}</li>
+							errs.map((err, i) => {
+								return <li key={i}>{err.errContext}</li>
 							})
 						}
 					</ul>

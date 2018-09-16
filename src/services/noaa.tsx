@@ -9,7 +9,6 @@ export function getNoaaData(minTimeMs: number): Promise<Response> {
 			if (res.ok) {
 				return res.json()
 					.then((json) => {
-						console.log(json.isUpdated);
 						return parseJsonToResponse(json.response);
 					})
 					.catch((err) => {
@@ -113,6 +112,7 @@ function parseJsonToResponse(json: any): Response {
 		};
 	}
 
+	console.log(parsed);
 	return parsed;
 }
 

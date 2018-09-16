@@ -926,11 +926,12 @@ var AppError = exports.AppError = function (_React$Component) {
         value: function render() {
             var errContent = null;
             if (this.props.error) {
-                errContent = React.createElement("span", null, "this.props.error.message");
+                errContent = React.createElement("span", null, this.props.error.message);
             } else if (this.props.jsonErrs) {
                 var errs = this.props.jsonErrs;
-                errContent = React.createElement(React.Fragment, null, React.createElement("div", null, errs.length + " " + (errs.length > 1 ? "errors were" : "error was") + " returned from the API in the following contexts:"), React.createElement("ul", null, errs.map(function (err) {
-                    return React.createElement("li", null, err.errContext);
+                console.error(errs);
+                errContent = React.createElement(React.Fragment, null, React.createElement("div", null, errs.length + " " + (errs.length > 1 ? "errors were" : "error was") + " returned from the API in the following contexts:"), React.createElement("ul", null, errs.map(function (err, i) {
+                    return React.createElement("li", { key: i }, err.errContext);
                 })));
             } else {
                 errContent = React.createElement("span", null, "Error Unknown");
@@ -2126,7 +2127,6 @@ function getNoaaData(minTimeMs) {
     return wrapPromise(fetch(noaaUri).then(function (res) {
         if (res.ok) {
             return res.json().then(function (json) {
-                console.log(json.isUpdated);
                 return parseJsonToResponse(json.response);
             }).catch(function (err) {
                 throw new Error("There was a problem deserializing the API response");
@@ -2204,6 +2204,7 @@ function parseJsonToResponse(json) {
             speed: windJson.speed
         };
     }
+    console.log(parsed);
     return parsed;
 }
 function parseJsonToPrediction(json) {
