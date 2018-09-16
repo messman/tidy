@@ -1,7 +1,6 @@
 import { rejects } from "assert";
 
-//const noaaUri = "api/proxy/noaa/latest";
-const noaaUri = "http://localhost:8000/proxy/noaa/latest";
+const noaaUri = "api/proxy/noaa/latest";
 
 export function getNoaaData(minTimeMs: number): Promise<Response> {
 	return wrapPromise(fetch(noaaUri)

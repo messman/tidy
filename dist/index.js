@@ -726,7 +726,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: #19576D;\n  background-color: #EAEAEA; }\n\n* {\n  box-sizing: border-box;\n  font-weight: 300; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nbody {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: stretch; }\n\nmain {\n  background-color: #fcfeff;\n  width: 100%;\n  max-width: 700px;\n  max-height: 1200px;\n  margin: 0 auto;\n  padding: 0;\n  height: 100%;\n  outline: 1px solid #BEBEBE; }\n\n.tab-view-bg {\n  padding: .5rem;\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%; }\n", ""]);
+exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: #19576D;\n  background-color: #EAEAEA; }\n\n* {\n  box-sizing: border-box;\n  font-weight: 300; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nbody {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: stretch; }\n\nmain {\n  background-color: #e1f8ff;\n  width: 100%;\n  max-width: 700px;\n  max-height: 1200px;\n  margin: 0 auto;\n  padding: 0;\n  height: 100%;\n  outline: 1px solid #BEBEBE; }\n\n.tab-view-bg {\n  padding: .5rem;\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100%;\n  width: 100%; }\n", ""]);
 
 // exports
 
@@ -1113,7 +1113,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".react-loading {\n  text-align: center; }\n  .react-loading h1 {\n    font-weight: bold;\n    display: inline-block;\n    margin: 4rem auto;\n    padding: .25rem 1rem;\n    border: 5px solid #19576D;\n    border-radius: 2px;\n    animation: colors 2s linear infinite alternate; }\n\n@keyframes colors {\n  0% {\n    color: #19576D;\n    border-color: #8DC2D5; }\n  50% {\n    color: #8DC2D5;\n    border-color: #19576D; }\n  100% {\n    color: #19576D;\n    border-color: #8DC2D5; } }\n", ""]);
+exports.push([module.i, ".react-loading {\n  text-align: center; }\n  .react-loading h1 {\n    font-weight: bold;\n    display: inline-block;\n    margin: 2rem auto;\n    animation: colors 1s linear infinite alternate; }\n\n@keyframes colors {\n  0% {\n    color: #19576D; }\n  50% {\n    color: #8DC2D5; }\n  100% {\n    color: #19576D; } }\n", ""]);
 
 // exports
 
@@ -1567,7 +1567,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".tide header {\n  margin: .5rem; }\n  .tide header .top .right {\n    float: right; }\n  .tide header .top::after {\n    content: \"\";\n    clear: both; }\n  .tide header .title {\n    background-color: #19576D;\n    color: #fcfeff;\n    fill: #fcfeff;\n    border-radius: 6px;\n    padding: 0 .5rem;\n    overflow: hidden;\n    text-align: center; }\n    .tide header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  .tide header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  .tide header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.tide .lastnext {\n  margin: .5rem 1rem;\n  display: flex; }\n\n.tide .lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .tide .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #fcfeff; }\n  .tide .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .tide .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
+exports.push([module.i, ".tide header {\n  margin: .5rem; }\n  .tide header .top .right {\n    float: right; }\n  .tide header .top::after {\n    content: \"\";\n    clear: both; }\n  .tide header .title {\n    background-color: #19576D;\n    color: #e1f8ff;\n    fill: #e1f8ff;\n    border-radius: 6px;\n    padding: 0 .5rem;\n    overflow: hidden;\n    text-align: center; }\n    .tide header .title h2 {\n      font-size: 1rem;\n      margin: 0;\n      margin-bottom: .5rem; }\n  .tide header .head svg {\n    height: 30px;\n    display: inline-block;\n    margin-right: .5rem;\n    margin-top: .8rem; }\n  .tide header .head h2 {\n    vertical-align: top;\n    display: inline-block;\n    margin: 0;\n    margin-top: .25rem;\n    font-size: 1.8rem; }\n\n.tide .lastnext {\n  margin: .5rem 1rem;\n  display: flex; }\n\n.tide .lastnext-item {\n  flex: 1;\n  text-align: center; }\n  .tide .lastnext-item.center .lastnext-item-inner {\n    background-color: #19576D;\n    color: #e1f8ff; }\n  .tide .lastnext-item .lastnext-item-inner {\n    border-radius: 4px;\n    display: inline-block;\n    padding: .3rem .5rem; }\n  .tide .lastnext-item .lastnext-time-ampm {\n    font-size: .8em;\n    display: inline-block;\n    margin-left: .3rem; }\n", ""]);
 
 // exports
 
@@ -2121,8 +2121,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.getNoaaData = getNoaaData;
-//const noaaUri = "api/proxy/noaa/latest";
-var noaaUri = "http://localhost:8000/proxy/noaa/latest";
+var noaaUri = "api/proxy/noaa/latest";
 function getNoaaData(minTimeMs) {
     return wrapPromise(fetch(noaaUri).then(function (res) {
         if (res.ok) {
@@ -2611,7 +2610,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".charts {\n  text-align: center; }\n  .charts header {\n    margin: 2rem 0;\n    font-size: 2rem;\n    line-height: 2rem; }\n  .charts table {\n    width: 100%;\n    font-size: 1.2rem; }\n  .charts td {\n    width: 25%; }\n  .charts .pretty-ampm {\n    display: inline-block;\n    margin-left: .2rem;\n    font-size: .8rem; }\n  .charts .predictions-previous {\n    color: rgba(25, 87, 109, 0.7); }\n  .charts .current {\n    display: flex;\n    align-items: center;\n    margin: .5rem; }\n    .charts .current .line {\n      flex: 1;\n      height: 1px;\n      background-color: #19576D; }\n  .charts .current-text {\n    display: inline-block;\n    padding: .1rem .5rem;\n    border-radius: 5px;\n    background-color: #19576D;\n    color: #fcfeff; }\n", ""]);
+exports.push([module.i, ".charts {\n  text-align: center; }\n  .charts header {\n    margin: 2rem 0;\n    font-size: 2rem;\n    line-height: 2rem; }\n  .charts table {\n    width: 100%;\n    font-size: 1.2rem; }\n  .charts td {\n    width: 25%; }\n  .charts .pretty-ampm {\n    display: inline-block;\n    margin-left: .2rem;\n    font-size: .8rem; }\n  .charts .predictions-previous {\n    color: rgba(25, 87, 109, 0.7); }\n  .charts .current {\n    display: flex;\n    align-items: center;\n    margin: .5rem; }\n    .charts .current .line {\n      flex: 1;\n      height: 1px;\n      background-color: #19576D; }\n  .charts .current-text {\n    display: inline-block;\n    padding: .1rem .5rem;\n    border-radius: 5px;\n    background-color: #19576D;\n    color: #e1f8ff; }\n", ""]);
 
 // exports
 
