@@ -22,8 +22,7 @@ export function getNoaaData(): Promise<Response> {
 
 function parseJsonToResponse(json: any): Response {
 	const parsed: Response = {
-		timeOfAppRequest: new Date(json.timeOfAppRequest),
-		timeOfProxyRequest: new Date(json.timeOfProxyRequest),
+		tzo: json.tzo,
 		errors: json.errors,
 		data: {
 			waterLevel: null,
@@ -108,9 +107,8 @@ export interface JSONError {
 }
 
 export interface Response {
-	timeOfAppRequest: Date,
-	timeOfProxyRequest: Date,
-	errors: JSONError[]
+	tzo: number, // time zone offset, for debugging
+	errors: JSONError[],
 	data: {
 		waterLevel: {
 			predictionsBeforeCurrent: WaterLevelPrediction[],

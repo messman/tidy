@@ -107,7 +107,7 @@ function createTable(predictions: Noaa.WaterLevelPrediction[]): JSX.Element {
 							<td>{p.isHigh ? "High" : "Low"}</td>
 							<td>{createPrettyMonthDay(p.time)}</td>
 							<td>{createPrettyTimeElement(p.time)}</td>
-							<td>{(Math.round(p.val * 100) / 100).toString().padEnd(4, "0")} ft</td>
+							<td>{p.val.toFixed(2)} ft</td>
 						</tr>
 					)
 				})}

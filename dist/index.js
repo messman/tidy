@@ -501,8 +501,7 @@ function getNoaaData() {
 }
 function parseJsonToResponse(json) {
     var parsed = {
-        timeOfAppRequest: new Date(json.timeOfAppRequest),
-        timeOfProxyRequest: new Date(json.timeOfProxyRequest),
+        tzo: json.tzo,
         errors: json.errors,
         data: {
             waterLevel: null,
@@ -616,7 +615,7 @@ var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: true,
         VERSION: "1.1.0",
-        TIME: 1537051496024
+        TIME: 1537068213266
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -2314,7 +2313,7 @@ function createPrettyMonthDay(date) {
 }
 function createTable(predictions) {
     return React.createElement("table", null, React.createElement("tbody", null, predictions.map(function (p, i) {
-        return React.createElement("tr", { key: i }, React.createElement("td", null, p.isHigh ? "High" : "Low"), React.createElement("td", null, createPrettyMonthDay(p.time)), React.createElement("td", null, createPrettyTimeElement(p.time)), React.createElement("td", null, (Math.round(p.val * 100) / 100).toString().padEnd(4, "0"), " ft"));
+        return React.createElement("tr", { key: i }, React.createElement("td", null, p.isHigh ? "High" : "Low"), React.createElement("td", null, createPrettyMonthDay(p.time)), React.createElement("td", null, createPrettyTimeElement(p.time)), React.createElement("td", null, p.val.toFixed(2), " ft"));
     })));
 }
 
