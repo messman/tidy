@@ -5,15 +5,11 @@ import * as Noaa from "../../../services/noaa";
 import * as Time from "../../../services/time";
 
 interface TitleProps {
-	noaaResponse: Noaa.Response
+	noaa: Noaa.Response
 
 }
 
-interface TitleState {
-
-}
-
-export class Title extends React.Component<TitleProps, TitleState> {
+export class Title extends React.Component<TitleProps> {
 
 	private static svgTideRising =
 		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
@@ -27,7 +23,7 @@ export class Title extends React.Component<TitleProps, TitleState> {
 
 	render() {
 
-		const data = this.props.noaaResponse;
+		const data = this.props.noaa;
 
 		let title = "Cannot load data";
 		let message = "Please try again."

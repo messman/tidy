@@ -12,6 +12,7 @@ import * as Noaa from "../services/noaa";
 import { Info } from "./info/info";
 import { More } from "./more/more";
 import { Charts } from "./charts/charts";
+import { AppError, Loading } from "../components";
 
 const date = new Date(DEFINE.BUILD.TIME);
 if (console && console.log)
@@ -21,9 +22,11 @@ interface AppProps {
 }
 
 interface AppState {
+	isStarting: boolean,
 	selectedTab: number,
-	noaa: Noaa.Response
+	noaa: Noaa.Response,
 	noaaIsRequesting: boolean,
+	noaaRequestError: Error,
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -33,32 +36,75 @@ class App extends React.Component<AppProps, AppState> {
 
 		// Set initial tab to 0 (TODO: add routing)
 		this.state = {
+			isStarting: true,
 			selectedTab: 0,
 			noaa: null,
 			noaaIsRequesting: false,
+			noaaRequestError: null,
 		}
 	}
 
-	beginNoaaRequest = () => {
-		this.setState({ noaaIsRequesting: true });
-	}
-
-	endNoaaRequest = (noaa: Noaa.Response) => {
+	componentDidMount() {
+		Noaa.getNoaaData()
+			.then((noaa: Noaa.Response) => {
+				// noaa object must exist
+				this.setState({
+					noaa,
+					noaaIsRequesting: false
+				});
+			})
+			.catch((err: Error) => {
+				this.setState({
+					noaaIsRequesting: false,
+					noaaRequestError: err
+				});
+			});
 		this.setState({
-			noaa,
-			noaaIsRequesting: false
+			isStarting: false,
+			noaaIsRequesting: true,
 		});
 	}
 
 	render() {
-		const noaaData = {
-			data: this.state.noaa,
-			isRequesting: this.state.noaaIsRequesting,
-			onRequestBegin: this.beginNoaaRequest,
-			onRequestEnd: this.endNoaaRequest
+
+		const state = this.state;
+		const isLoading = state.isStarting || state.noaaIsRequesting;
+		const isRequestError = !!state.noaaRequestError;
+		const noaa = state.noaa;
+		const isNoaaResponseError = !isLoading && !isRequestError && !!noaa && !!noaa.errors && !!noaa.errors.length;
+
+		let tideComponent: JSX.Element = null;
+		let chartsComponent: JSX.Element = null;
+		let moreComponent: JSX.Element = null;
+
+		if (isLoading) {
+			const loading = <Loading />
+			tideComponent = loading;
+			chartsComponent = loading;
+			moreComponent = loading;
+		}
+		else if (isRequestError) {
+			const error = <AppError error={state.noaaRequestError} />
+			tideComponent = error;
+			chartsComponent = error;
+			moreComponent = error;
+		}
+		else if (isNoaaResponseError) {
+			const errs = noaa.errors;
+			console.error(errs);
+			const err = new Error(`${errs.length} ${errs.length > 1 ? "errors were" : "error was"} returned from the API.`);
+			const error = <AppError error={err} />
+			tideComponent = error;
+			chartsComponent = error;
+			moreComponent = error;
+		}
+		else {
+			tideComponent = <Tide noaa={noaa} />
+			chartsComponent = <Charts noaa={noaa} />
+			moreComponent = <More noaa={noaa} />
 		}
 
-		const view =
+		return (
 			<Tabs>
 				<Tab>
 					<TabButton>
@@ -68,7 +114,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Tide</span>
 					</TabButton>
 					<TabView>
-						<Tide noaa={noaaData} />
+						{tideComponent}
 					</TabView>
 				</Tab>
 				<Tab>
@@ -79,7 +125,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>Charts</span>
 					</TabButton>
 					<TabView>
-						<Charts noaa={noaaData} />
+						{chartsComponent}
 					</TabView>
 				</Tab>
 				<Tab>
@@ -90,7 +136,7 @@ class App extends React.Component<AppProps, AppState> {
 						<span>More</span>
 					</TabButton>
 					<TabView>
-						<More noaa={noaaData} />
+						{moreComponent}
 					</TabView>
 				</Tab>
 				<Tab>
@@ -116,9 +162,6 @@ class App extends React.Component<AppProps, AppState> {
 					</TabView>
 				</Tab>
 			</Tabs>
-
-		return (
-			view
 		)
 	}
 }

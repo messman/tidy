@@ -5,7 +5,7 @@ import * as Noaa from "../../../services/noaa";
 import { StyleScript } from "./styleScript/styleScript";
 
 interface WaveProps {
-	noaaResponse: Noaa.Response
+	noaa: Noaa.Response
 }
 
 interface WaveState {
@@ -36,7 +36,7 @@ export class Wave extends React.Component<WaveProps, WaveState> {
 
 	render() {
 
-		const data = this.props.noaaResponse;
+		const data = this.props.noaa;
 		if (!data || data.errors || (this.state.emAsPixel === -1)) {
 			return <StyleScript input="1em" outputPixels={this.setEmAsPixels} />
 		}

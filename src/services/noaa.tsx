@@ -5,18 +5,28 @@ export function getNoaaData(): Promise<Response> {
 	return fetch(noaaUri)
 		.then((res) => {
 			if (res.ok) {
-				return res.json().then((json) => {
-					console.log(json.isUpdated);
-					return parseJsonToResponse(json.response);
-				});
+				return res.json()
+					.then((json) => {
+						console.log(json.isUpdated);
+						return parseJsonToResponse(json.response);
+					})
+					.catch((err) => {
+						throw new Error("There was a problem deserializing the API response");
+					});
 			}
 			else {
-				return null;
+				if (res.status === 404) {
+					throw new Error("The application could not connect to the API (404)");
+				}
+				throw new Error(`The API experienced an error (${res.status})`);
 			}
 		})
 		.catch((err) => {
+			if (!(err instanceof Error)) {
+				err = new Error(err);
+			}
 			console.error(noaaUri, err);
-			return null;
+			throw err;
 		});
 }
 

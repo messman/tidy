@@ -1,0 +1,37 @@
+@import "src/styles/common";
+
+
+.react-error {
+	
+	color: rgb(255, 202, 202);
+	padding: 1rem;
+
+	&.tab-view-bg {
+		background-color: rgb(218, 81, 81);
+	}
+
+	header {
+		text-align: left;
+		h1 {
+			margin: 0;
+		}
+		h3 {
+			margin: 0;
+		}
+	}
+
+	hr {
+		border: none;
+		border-bottom: 2px solid rgb(177, 33, 33);
+		margin: 1rem 0;
+	}
+
+	.detailed {
+		font-size: .8rem;
+	}
+
+	.detailed-content {
+		font-family: 'Courier New', Courier, monospace;
+	}
+
+}

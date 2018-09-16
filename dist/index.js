@@ -148,7 +148,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(21);
+var	fixUrls = __webpack_require__(20);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -482,93 +482,6 @@ function updateLink (link, options, obj) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.getNoaaData = getNoaaData;
-var noaaUri = "api/proxy/noaa/latest";
-function getNoaaData() {
-    return fetch(noaaUri).then(function (res) {
-        if (res.ok) {
-            return res.json().then(function (json) {
-                console.log(json.isUpdated);
-                return parseJsonToResponse(json.response);
-            });
-        } else {
-            return null;
-        }
-    }).catch(function (err) {
-        console.error(noaaUri, err);
-        return null;
-    });
-}
-function parseJsonToResponse(json) {
-    var parsed = {
-        tzo: json.tzo,
-        errors: json.errors,
-        data: {
-            waterLevel: null,
-            current: {
-                airPressure: null,
-                airTemp: null,
-                waterTemp: null,
-                wind: null
-            }
-        }
-    };
-    if (!!json.data.waterLevel) {
-        var waterLevelJson = json.data.waterLevel;
-        parsed.data.waterLevel = {
-            predictionsBeforeCurrent: waterLevelJson.predictionsBeforeCurrent.map(parseJsonToPrediction),
-            previous: parseJsonToPrediction(waterLevelJson.previous),
-            current: parseJsonToCurrentData(waterLevelJson.current),
-            currentIsRising: waterLevelJson.currentIsRising,
-            currentPercentFallen: waterLevelJson.currentPercentFallen,
-            next: parseJsonToPrediction(waterLevelJson.next),
-            high: parseJsonToPrediction(waterLevelJson.high),
-            low: parseJsonToPrediction(waterLevelJson.low),
-            predictionsAfterCurrent: waterLevelJson.predictionsAfterCurrent.map(parseJsonToPrediction)
-        };
-    }
-    if (!!json.data.current.airPressure) parsed.data.current.airPressure = parseJsonToCurrentData(json.data.current.airPressure);
-    if (!!json.data.current.airTemp) parsed.data.current.airTemp = parseJsonToCurrentData(json.data.current.airTemp);
-    if (!!json.data.current.waterTemp) parsed.data.current.waterTemp = parseJsonToCurrentData(json.data.current.waterTemp);
-    if (!!json.data.current.wind) {
-        var windJson = json.data.current.wind;
-        parsed.data.current.wind = {
-            time: new Date(windJson.time),
-            direction: windJson.direction,
-            directionCardinal: windJson.directionCardinal,
-            gust: windJson.gust,
-            speed: windJson.speed
-        };
-    }
-    return parsed;
-}
-function parseJsonToPrediction(json) {
-    var currentData = parseJsonToCurrentData(json);
-    currentData.isHigh = json.isHigh;
-    return currentData;
-}
-function parseJsonToCurrentData(json) {
-    return {
-        time: new Date(json.time),
-        val: json.val
-    };
-}
-//
-//
-/// ABOVE copied from api project (proxy/noaa/models)
-//
-//
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 exports.createPrettyTime = createPrettyTime;
 exports.createPrettyTimespan = createPrettyTimespan;
 function createPrettyTime(date) {
@@ -593,14 +506,14 @@ function createPrettyTimespan(time) {
 }
 
 /***/ }),
+/* 9 */,
 /* 10 */,
 /* 11 */,
 /* 12 */,
 /* 13 */,
 /* 14 */,
 /* 15 */,
-/* 16 */,
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -615,7 +528,7 @@ var DEFINE = exports.DEFINE = {
     BUILD: {
         IS_PRODUCTION: true,
         VERSION: "1.1.0",
-        TIME: 1537068213266
+        TIME: 1537119574157
     },
     DEBUG: {
         LOCAL_REQUEST_DATA: true
@@ -625,7 +538,7 @@ var DEFINE = exports.DEFINE = {
 window["DEFINE"] = DEFINE;
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -633,29 +546,33 @@ window["DEFINE"] = DEFINE;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-__webpack_require__(19);
+__webpack_require__(18);
 
 var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-var _reactDom = __webpack_require__(12);
+var _reactDom = __webpack_require__(11);
 
 var ReactDOM = _interopRequireWildcard(_reactDom);
 
-var _components = __webpack_require__(33);
+var _components = __webpack_require__(32);
 
-var _tide = __webpack_require__(37);
+var _tide = __webpack_require__(42);
 
-var _settings = __webpack_require__(47);
+var _settings = __webpack_require__(52);
 
-var _define = __webpack_require__(17);
+var _define = __webpack_require__(16);
 
-var _info = __webpack_require__(50);
+var _noaa = __webpack_require__(55);
 
-var _more = __webpack_require__(53);
+var Noaa = _interopRequireWildcard(_noaa);
 
-var _charts = __webpack_require__(56);
+var _info = __webpack_require__(56);
+
+var _more = __webpack_require__(59);
+
+var _charts = __webpack_require__(62);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -674,37 +591,76 @@ var App = function (_React$Component) {
     function App(props) {
         _classCallCheck(this, App);
 
+        // Set initial tab to 0 (TODO: add routing)
         var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-        _this.beginNoaaRequest = function () {
-            _this.setState({ noaaIsRequesting: true });
-        };
-        _this.endNoaaRequest = function (noaa) {
-            _this.setState({
-                noaa: noaa,
-                noaaIsRequesting: false
-            });
-        };
-        // Set initial tab to 0 (TODO: add routing)
         _this.state = {
+            isStarting: true,
             selectedTab: 0,
             noaa: null,
-            noaaIsRequesting: false
+            noaaIsRequesting: false,
+            noaaRequestError: null
         };
         return _this;
     }
 
     _createClass(App, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            Noaa.getNoaaData().then(function (noaa) {
+                // noaa object must exist
+                _this2.setState({
+                    noaa: noaa,
+                    noaaIsRequesting: false
+                });
+            }).catch(function (err) {
+                _this2.setState({
+                    noaaIsRequesting: false,
+                    noaaRequestError: err
+                });
+            });
+            this.setState({
+                isStarting: false,
+                noaaIsRequesting: true
+            });
+        }
+    }, {
         key: "render",
         value: function render() {
-            var noaaData = {
-                data: this.state.noaa,
-                isRequesting: this.state.noaaIsRequesting,
-                onRequestBegin: this.beginNoaaRequest,
-                onRequestEnd: this.endNoaaRequest
-            };
-            var view = React.createElement(_components.Tabs, null, React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.027 0-14.531 6.504-14.531 14.531s6.504 14.531 14.531 14.531 14.531-6.504 14.531-14.531-6.504-14.531-14.531-14.531zM15 26.719c-6.475 0-11.719-5.244-11.719-11.719s5.244-11.719 11.719-11.719 11.719 5.244 11.719 11.719-5.244 11.719-11.719 11.719zM18.621 20.602l-4.975-3.615c-0.182-0.135-0.287-0.346-0.287-0.568v-9.621c0-0.387 0.316-0.703 0.703-0.703h1.875c0.387 0 0.703 0.316 0.703 0.703v8.303l3.914 2.848c0.316 0.229 0.381 0.668 0.152 0.984l-1.102 1.518c-0.229 0.311-0.668 0.381-0.984 0.152z" })), React.createElement("span", null, "Tide")), React.createElement(_components.TabView, null, React.createElement(_tide.Tide, { noaa: noaaData }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M27.188 1.875h-24.375c-1.553 0-2.813 1.259-2.813 2.813v20.625c0 1.553 1.259 2.813 2.813 2.813h24.375c1.553 0 2.813-1.259 2.813-2.813v-20.625c0-1.553-1.259-2.813-2.813-2.813zM13.125 24.375h-9.375v-15h9.375v15zM26.25 24.375h-9.375v-15h9.375v15z" })), React.createElement("span", null, "Charts")), React.createElement(_components.TabView, null, React.createElement(_charts.Charts, { noaa: noaaData }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "15", height: "30", viewBox: "0 0 15 30" }, React.createElement("path", { d: "M11.25 22.5c0 2.071-1.679 3.75-3.75 3.75s-3.75-1.679-3.75-3.75c0-1.388 0.754-2.599 1.875-3.247v-6.128c0-1.036 0.839-1.875 1.875-1.875s1.875 0.839 1.875 1.875v6.128c1.121 0.649 1.875 1.859 1.875 3.247zM13.125 17.54c1.167 1.322 1.875 3.058 1.875 4.96 0 4.142-3.358 7.5-7.5 7.5-0.018 0-0.036-0-0.053-0-4.119-0.029-7.468-3.42-7.447-7.539 0.010-1.887 0.716-3.608 1.875-4.921v-11.915c0-3.107 2.518-5.625 5.625-5.625s5.625 2.518 5.625 5.625v11.915zM12.188 22.5c0-2.012-1.135-3.058-1.875-3.897v-12.978c0-1.551-1.262-2.813-2.813-2.813s-2.813 1.262-2.813 2.813v12.978c-0.746 0.845-1.865 1.881-1.875 3.872-0.013 2.571 2.084 4.694 4.654 4.712l0.034 0c2.585 0 4.688-2.103 4.688-4.688z" })), React.createElement("span", null, "More")), React.createElement(_components.TabView, null, React.createElement(_more.More, { noaa: noaaData }))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "38", height: "30", viewBox: "0 0 38 30" }, React.createElement("path", { d: "M30.006 11.191l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 7.746c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.74-4.828 0.838-3.094 3.094zM22.635 16.764l1.975 0.984c0.592 0.34 0.85 1.061 0.615 1.705-0.521 1.418-1.547 2.719-2.496 3.855-0.434 0.521-1.184 0.65-1.775 0.311l-1.705-0.984c-0.938 0.803-2.027 1.441-3.217 1.857v1.969c0 0.68-0.486 1.266-1.154 1.383-1.441 0.246-2.953 0.258-4.447 0-0.674-0.117-1.172-0.697-1.172-1.383v-1.969c-1.189-0.422-2.279-1.055-3.217-1.857l-1.705 0.979c-0.586 0.34-1.342 0.211-1.775-0.311-0.949-1.137-1.951-2.438-2.473-3.85-0.234-0.639 0.023-1.359 0.615-1.705l1.951-0.984c-0.229-1.225-0.229-2.484 0-3.715l-1.951-0.99c-0.592-0.34-0.855-1.061-0.615-1.699 0.521-1.418 1.523-2.719 2.473-3.855 0.434-0.521 1.184-0.65 1.775-0.311l1.705 0.984c0.938-0.803 2.027-1.441 3.217-1.857v-1.975c0-0.674 0.48-1.26 1.148-1.377 1.441-0.246 2.959-0.258 4.453-0.006 0.674 0.117 1.172 0.697 1.172 1.383v1.969c1.189 0.422 2.279 1.055 3.217 1.857l1.705-0.984c0.586-0.34 1.342-0.211 1.775 0.311 0.949 1.137 1.945 2.438 2.467 3.855 0.234 0.639 0.006 1.359-0.586 1.705l-1.975 0.984c0.229 1.23 0.229 2.49 0 3.721zM15.744 18c3.469-4.512-1.682-9.662-6.193-6.193-3.469 4.512 1.682 9.662 6.193 6.193zM30.006 28.705l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 25.254c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.734-4.828 0.838-3.094 3.094z" })), React.createElement("span", null, "Settings")), React.createElement(_components.TabView, null, React.createElement(_settings.Settings, null))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.025 0-14.531 6.509-14.531 14.531 0 8.027 6.506 14.531 14.531 14.531s14.531-6.504 14.531-14.531c0-8.022-6.506-14.531-14.531-14.531zM15 6.914c1.359 0 2.461 1.102 2.461 2.461s-1.102 2.461-2.461 2.461-2.461-1.102-2.461-2.461 1.102-2.461 2.461-2.461zM18.281 21.797c0 0.388-0.315 0.703-0.703 0.703h-5.156c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h0.703v-3.75h-0.703c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h3.75c0.388 0 0.703 0.315 0.703 0.703v5.859h0.703c0.388 0 0.703 0.315 0.703 0.703v1.406z" })), React.createElement("span", null, "Info")), React.createElement(_components.TabView, null, React.createElement(_info.Info, null))));
-            return view;
+            var state = this.state;
+            var isLoading = state.isStarting || state.noaaIsRequesting;
+            var isRequestError = !!state.noaaRequestError;
+            var noaa = state.noaa;
+            var isNoaaResponseError = !isLoading && !isRequestError && !!noaa && !!noaa.errors && !!noaa.errors.length;
+            var tideComponent = null;
+            var chartsComponent = null;
+            var moreComponent = null;
+            if (isLoading) {
+                var loading = React.createElement(_components.Loading, null);
+                tideComponent = loading;
+                chartsComponent = loading;
+                moreComponent = loading;
+            } else if (isRequestError) {
+                var error = React.createElement(_components.AppError, { error: state.noaaRequestError });
+                tideComponent = error;
+                chartsComponent = error;
+                moreComponent = error;
+            } else if (isNoaaResponseError) {
+                var errs = noaa.errors;
+                console.error(errs);
+                var err = new Error(errs.length + " " + (errs.length > 1 ? "errors were" : "error was") + " returned from the API.");
+                var _error = React.createElement(_components.AppError, { error: err });
+                tideComponent = _error;
+                chartsComponent = _error;
+                moreComponent = _error;
+            } else {
+                tideComponent = React.createElement(_tide.Tide, { noaa: noaa });
+                chartsComponent = React.createElement(_charts.Charts, { noaa: noaa });
+                moreComponent = React.createElement(_more.More, { noaa: noaa });
+            }
+            return React.createElement(_components.Tabs, null, React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.027 0-14.531 6.504-14.531 14.531s6.504 14.531 14.531 14.531 14.531-6.504 14.531-14.531-6.504-14.531-14.531-14.531zM15 26.719c-6.475 0-11.719-5.244-11.719-11.719s5.244-11.719 11.719-11.719 11.719 5.244 11.719 11.719-5.244 11.719-11.719 11.719zM18.621 20.602l-4.975-3.615c-0.182-0.135-0.287-0.346-0.287-0.568v-9.621c0-0.387 0.316-0.703 0.703-0.703h1.875c0.387 0 0.703 0.316 0.703 0.703v8.303l3.914 2.848c0.316 0.229 0.381 0.668 0.152 0.984l-1.102 1.518c-0.229 0.311-0.668 0.381-0.984 0.152z" })), React.createElement("span", null, "Tide")), React.createElement(_components.TabView, null, tideComponent)), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M27.188 1.875h-24.375c-1.553 0-2.813 1.259-2.813 2.813v20.625c0 1.553 1.259 2.813 2.813 2.813h24.375c1.553 0 2.813-1.259 2.813-2.813v-20.625c0-1.553-1.259-2.813-2.813-2.813zM13.125 24.375h-9.375v-15h9.375v15zM26.25 24.375h-9.375v-15h9.375v15z" })), React.createElement("span", null, "Charts")), React.createElement(_components.TabView, null, chartsComponent)), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "15", height: "30", viewBox: "0 0 15 30" }, React.createElement("path", { d: "M11.25 22.5c0 2.071-1.679 3.75-3.75 3.75s-3.75-1.679-3.75-3.75c0-1.388 0.754-2.599 1.875-3.247v-6.128c0-1.036 0.839-1.875 1.875-1.875s1.875 0.839 1.875 1.875v6.128c1.121 0.649 1.875 1.859 1.875 3.247zM13.125 17.54c1.167 1.322 1.875 3.058 1.875 4.96 0 4.142-3.358 7.5-7.5 7.5-0.018 0-0.036-0-0.053-0-4.119-0.029-7.468-3.42-7.447-7.539 0.010-1.887 0.716-3.608 1.875-4.921v-11.915c0-3.107 2.518-5.625 5.625-5.625s5.625 2.518 5.625 5.625v11.915zM12.188 22.5c0-2.012-1.135-3.058-1.875-3.897v-12.978c0-1.551-1.262-2.813-2.813-2.813s-2.813 1.262-2.813 2.813v12.978c-0.746 0.845-1.865 1.881-1.875 3.872-0.013 2.571 2.084 4.694 4.654 4.712l0.034 0c2.585 0 4.688-2.103 4.688-4.688z" })), React.createElement("span", null, "More")), React.createElement(_components.TabView, null, moreComponent)), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "38", height: "30", viewBox: "0 0 38 30" }, React.createElement("path", { d: "M30.006 11.191l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 7.746c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.74-4.828 0.838-3.094 3.094zM22.635 16.764l1.975 0.984c0.592 0.34 0.85 1.061 0.615 1.705-0.521 1.418-1.547 2.719-2.496 3.855-0.434 0.521-1.184 0.65-1.775 0.311l-1.705-0.984c-0.938 0.803-2.027 1.441-3.217 1.857v1.969c0 0.68-0.486 1.266-1.154 1.383-1.441 0.246-2.953 0.258-4.447 0-0.674-0.117-1.172-0.697-1.172-1.383v-1.969c-1.189-0.422-2.279-1.055-3.217-1.857l-1.705 0.979c-0.586 0.34-1.342 0.211-1.775-0.311-0.949-1.137-1.951-2.438-2.473-3.85-0.234-0.639 0.023-1.359 0.615-1.705l1.951-0.984c-0.229-1.225-0.229-2.484 0-3.715l-1.951-0.99c-0.592-0.34-0.855-1.061-0.615-1.699 0.521-1.418 1.523-2.719 2.473-3.855 0.434-0.521 1.184-0.65 1.775-0.311l1.705 0.984c0.938-0.803 2.027-1.441 3.217-1.857v-1.975c0-0.674 0.48-1.26 1.148-1.377 1.441-0.246 2.959-0.258 4.453-0.006 0.674 0.117 1.172 0.697 1.172 1.383v1.969c1.189 0.422 2.279 1.055 3.217 1.857l1.705-0.984c0.586-0.34 1.342-0.211 1.775 0.311 0.949 1.137 1.945 2.438 2.467 3.855 0.234 0.639 0.006 1.359-0.586 1.705l-1.975 0.984c0.229 1.23 0.229 2.49 0 3.721zM15.744 18c3.469-4.512-1.682-9.662-6.193-6.193-3.469 4.512 1.682 9.662 6.193 6.193zM30.006 28.705l-0.48 0.838c-0.176 0.311-0.551 0.439-0.885 0.316-0.691-0.258-1.324-0.627-1.881-1.090-0.27-0.223-0.34-0.615-0.164-0.92l0.48-0.838c-0.404-0.469-0.721-1.014-0.932-1.605h-0.967c-0.352 0-0.656-0.252-0.715-0.604-0.117-0.703-0.123-1.441 0-2.174 0.059-0.352 0.363-0.609 0.715-0.609h0.967c0.211-0.592 0.527-1.137 0.932-1.605l-0.48-0.838c-0.176-0.305-0.111-0.697 0.164-0.92 0.557-0.463 1.195-0.832 1.881-1.090 0.334-0.123 0.709 0.006 0.885 0.316l0.48 0.838c0.615-0.111 1.242-0.111 1.857 0l0.48-0.838c0.176-0.311 0.551-0.439 0.885-0.316 0.691 0.258 1.324 0.627 1.881 1.090 0.27 0.223 0.34 0.615 0.164 0.92l-0.48 0.838c0.404 0.469 0.721 1.014 0.932 1.605h0.967c0.352 0 0.656 0.252 0.715 0.604 0.117 0.703 0.123 1.441 0 2.174-0.059 0.352-0.363 0.609-0.715 0.609h-0.967c-0.211 0.592-0.527 1.137-0.932 1.605l0.48 0.838c0.176 0.305 0.111 0.697-0.164 0.92-0.557 0.463-1.195 0.832-1.881 1.090-0.334 0.123-0.709-0.006-0.885-0.316l-0.48-0.838c-0.609 0.111-1.242 0.111-1.857 0zM29.391 25.254c2.256 1.734 4.828-0.838 3.094-3.094-2.256-1.734-4.828 0.838-3.094 3.094z" })), React.createElement("span", null, "Settings")), React.createElement(_components.TabView, null, React.createElement(_settings.Settings, null))), React.createElement(_components.Tab, null, React.createElement(_components.TabButton, null, React.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "30", height: "30", viewBox: "0 0 30 30" }, React.createElement("path", { d: "M15 0.469c-8.025 0-14.531 6.509-14.531 14.531 0 8.027 6.506 14.531 14.531 14.531s14.531-6.504 14.531-14.531c0-8.022-6.506-14.531-14.531-14.531zM15 6.914c1.359 0 2.461 1.102 2.461 2.461s-1.102 2.461-2.461 2.461-2.461-1.102-2.461-2.461 1.102-2.461 2.461-2.461zM18.281 21.797c0 0.388-0.315 0.703-0.703 0.703h-5.156c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h0.703v-3.75h-0.703c-0.388 0-0.703-0.315-0.703-0.703v-1.406c0-0.388 0.315-0.703 0.703-0.703h3.75c0.388 0 0.703 0.315 0.703 0.703v5.859h0.703c0.388 0 0.703 0.315 0.703 0.703v1.406z" })), React.createElement("span", null, "Info")), React.createElement(_components.TabView, null, React.createElement(_info.Info, null))));
         }
     }]);
 
@@ -714,11 +670,11 @@ var App = function (_React$Component) {
 ReactDOM.render(React.createElement(App, null), document.getElementById("react-root"));
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(20);
+var content = __webpack_require__(19);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -764,7 +720,7 @@ if(false) {
 }
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -778,7 +734,7 @@ exports.push([module.i, "html {\n  font-family: \"Mitr\", sans-serif;\n  color: 
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports) {
 
 
@@ -873,6 +829,7 @@ module.exports = function (css) {
 
 
 /***/ }),
+/* 21 */,
 /* 22 */,
 /* 23 */,
 /* 24 */,
@@ -883,8 +840,7 @@ module.exports = function (css) {
 /* 29 */,
 /* 30 */,
 /* 31 */,
-/* 32 */,
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -894,7 +850,31 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _tabs = __webpack_require__(34);
+var _error = __webpack_require__(33);
+
+Object.keys(_error).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _error[key];
+    }
+  });
+});
+
+var _loading = __webpack_require__(36);
+
+Object.keys(_loading).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _loading[key];
+    }
+  });
+});
+
+var _tabs = __webpack_require__(39);
 
 Object.keys(_tabs).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -907,7 +887,230 @@ Object.keys(_tabs).forEach(function (key) {
 });
 
 /***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.AppError = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var React = _interopRequireWildcard(_react);
+
+__webpack_require__(34);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AppError = exports.AppError = function (_React$Component) {
+    _inherits(AppError, _React$Component);
+
+    function AppError(props) {
+        _classCallCheck(this, AppError);
+
+        return _possibleConstructorReturn(this, (AppError.__proto__ || Object.getPrototypeOf(AppError)).call(this, props));
+    }
+
+    _createClass(AppError, [{
+        key: "render",
+        value: function render() {
+            var errText = this.props.error.message;
+            return React.createElement("div", { className: "react-error tab-view-bg" }, React.createElement("header", null, React.createElement("h1", null, "Uh-oh!"), React.createElement("h3", null, "Something's gone wrong.")), React.createElement("hr", null), React.createElement("p", null, "It looks like the application isn't working correctly. If the problem persists, please reach out to the developer on GitHub by going to the ", React.createElement("strong", null, "Info"), " tab."), React.createElement("hr", null), React.createElement("div", { className: "detailed" }, React.createElement("div", { className: "detailed-header" }, "Detailed error information:"), React.createElement("div", { className: "detailed-content" }, errText)));
+        }
+    }]);
+
+    return AppError;
+}(React.Component);
+
+/***/ }),
 /* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(35);
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(2)(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {
+	module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./error.scss", function() {
+		var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./error.scss");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".react-error {\n  color: #ffcaca;\n  padding: 1rem; }\n  .react-error.tab-view-bg {\n    background-color: #da5151; }\n  .react-error header {\n    text-align: left; }\n    .react-error header h1 {\n      margin: 0; }\n    .react-error header h3 {\n      margin: 0; }\n  .react-error hr {\n    border: none;\n    border-bottom: 2px solid #b12121;\n    margin: 1rem 0; }\n  .react-error .detailed {\n    font-size: .8rem; }\n  .react-error .detailed-content {\n    font-family: 'Courier New', Courier, monospace; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Loading = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var React = _interopRequireWildcard(_react);
+
+__webpack_require__(37);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Loading = exports.Loading = function (_React$Component) {
+    _inherits(Loading, _React$Component);
+
+    function Loading(props) {
+        _classCallCheck(this, Loading);
+
+        return _possibleConstructorReturn(this, (Loading.__proto__ || Object.getPrototypeOf(Loading)).call(this, props));
+    }
+
+    _createClass(Loading, [{
+        key: "render",
+        value: function render() {
+            return React.createElement("div", { className: "react-loading" }, React.createElement("h2", null, "Loading..."));
+        }
+    }]);
+
+    return Loading;
+}(React.Component);
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(38);
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(2)(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {
+	module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./loading.scss", function() {
+		var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./loading.scss");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".react-loading h2 {\n  color: red; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -924,7 +1127,7 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(35);
+__webpack_require__(40);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1079,11 +1282,11 @@ var TabView = exports.TabView = function (_React$PureComponent2) {
 }(React.PureComponent);
 
 /***/ }),
-/* 35 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(36);
+var content = __webpack_require__(41);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1129,7 +1332,7 @@ if(false) {
 }
 
 /***/ }),
-/* 36 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -1143,7 +1346,7 @@ exports.push([module.i, ".react-tabs {\n  height: 100%;\n  display: flex;\n  fle
 
 
 /***/ }),
-/* 37 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1160,15 +1363,11 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-var _noaa = __webpack_require__(8);
+var _title = __webpack_require__(43);
 
-var Noaa = _interopRequireWildcard(_noaa);
+var _wave = __webpack_require__(46);
 
-var _title = __webpack_require__(38);
-
-var _wave = __webpack_require__(41);
-
-__webpack_require__(45);
+__webpack_require__(50);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1184,46 +1383,20 @@ var Tide = exports.Tide = function (_React$Component) {
     function Tide(props) {
         _classCallCheck(this, Tide);
 
-        var _this = _possibleConstructorReturn(this, (Tide.__proto__ || Object.getPrototypeOf(Tide)).call(this, props));
-
-        _this.clickShare = function () {};
-        _this.clickRefresh = function () {};
-        _this.state = {};
-        return _this;
+        return _possibleConstructorReturn(this, (Tide.__proto__ || Object.getPrototypeOf(Tide)).call(this, props));
     }
+    // clickShare = () => {
+    // }
+    // clickRefresh = () => {
+    // }
+
 
     _createClass(Tide, [{
-        key: "componentDidMount",
-        value: function componentDidMount() {
-            var noaa = this.props.noaa;
-
-            if (!noaa.data && !noaa.isRequesting) {
-                Noaa.getNoaaData().then(function (data) {
-                    noaa.onRequestEnd(data);
-                });
-                noaa.onRequestBegin();
-            }
-        }
-    }, {
-        key: "componentWillUnmount",
-        value: function componentWillUnmount() {
-            var noaa = this.props.noaa;
-
-            if (!noaa.data && noaa.isRequesting) this.props.noaa.onRequestEnd(null);
-        }
-    }, {
         key: "render",
         value: function render() {
             var noaa = this.props.noaa;
 
-            if (!noaa.data && !noaa.isRequesting || noaa.data && noaa.data.errors) {
-                return React.createElement("p", null, "Error....");
-            } else if (!noaa.data && noaa.isRequesting) {
-                return React.createElement("p", null, "Requesting...");
-            } else {
-                var data = noaa.data;
-                return React.createElement("div", { className: "tide" }, React.createElement(_title.Title, { noaaResponse: data }), React.createElement(_wave.Wave, { noaaResponse: data }));
-            }
+            return React.createElement("div", { className: "tide" }, React.createElement(_title.Title, { noaa: noaa }), React.createElement(_wave.Wave, { noaa: noaa }));
         }
     }]);
 
@@ -1231,7 +1404,7 @@ var Tide = exports.Tide = function (_React$Component) {
 }(React.Component);
 
 /***/ }),
-/* 38 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1248,9 +1421,9 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(39);
+__webpack_require__(44);
 
-var _time = __webpack_require__(9);
+var _time = __webpack_require__(8);
 
 var Time = _interopRequireWildcard(_time);
 
@@ -1274,7 +1447,7 @@ var Title = exports.Title = function (_React$Component) {
     _createClass(Title, [{
         key: "render",
         value: function render() {
-            var data = this.props.noaaResponse;
+            var data = this.props.noaa;
             var title = "Cannot load data";
             var message = "Please try again.";
             var svg = null;
@@ -1327,11 +1500,11 @@ var LastNext = exports.LastNext = function (_React$Component2) {
 }(React.Component);
 
 /***/ }),
-/* 39 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(40);
+var content = __webpack_require__(45);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1377,7 +1550,7 @@ if(false) {
 }
 
 /***/ }),
-/* 40 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -1391,7 +1564,7 @@ exports.push([module.i, ".tide header {\n  margin: .5rem; }\n  .tide header .top
 
 
 /***/ }),
-/* 41 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1408,9 +1581,9 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(42);
+__webpack_require__(47);
 
-var _styleScript = __webpack_require__(44);
+var _styleScript = __webpack_require__(49);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1445,7 +1618,7 @@ var Wave = exports.Wave = function (_React$Component) {
     _createClass(Wave, [{
         key: "render",
         value: function render() {
-            var data = this.props.noaaResponse;
+            var data = this.props.noaa;
             if (!data || data.errors || this.state.emAsPixel === -1) {
                 return React.createElement(_styleScript.StyleScript, { input: "1em", outputPixels: this.setEmAsPixels });
             }
@@ -1634,11 +1807,11 @@ var arrow_up_svg = React.createElement("svg", { className: "arrow arrow-up", ver
 var arrow_down_svg = React.createElement("svg", { className: "arrow arrow-down", version: "1.1", xmlns: "http://www.w3.org/2000/svg", width: "45", height: "30", viewBox: "0 0 45 30" }, React.createElement("path", { d: "M1.298 0h42.038c0.7 0 1.268 0.568 1.268 1.268 0 0.28-0.093 0.552-0.263 0.773l-20.988 27.265c-0.427 0.555-1.223 0.658-1.778 0.231-0.086-0.066-0.164-0.144-0.23-0.23l-21.050-27.265c-0.428-0.554-0.325-1.35 0.229-1.778 0.222-0.171 0.494-0.264 0.775-0.264z" }));
 
 /***/ }),
-/* 42 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(43);
+var content = __webpack_require__(48);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1684,7 +1857,7 @@ if(false) {
 }
 
 /***/ }),
-/* 43 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -1698,7 +1871,7 @@ exports.push([module.i, ".graphic {\n  flex: 1;\n  display: flex;\n  flex-direct
 
 
 /***/ }),
-/* 44 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1754,11 +1927,11 @@ var StyleScript = exports.StyleScript = function (_React$Component) {
 }(React.Component);
 
 /***/ }),
-/* 45 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(46);
+var content = __webpack_require__(51);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1804,7 +1977,7 @@ if(false) {
 }
 
 /***/ }),
-/* 46 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -1818,7 +1991,7 @@ exports.push([module.i, ".tide {\n  height: 100%;\n  display: flex;\n  flex-dire
 
 
 /***/ }),
-/* 47 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1835,7 +2008,7 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(48);
+__webpack_require__(53);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1865,11 +2038,11 @@ var Settings = exports.Settings = function (_React$Component) {
 }(React.Component);
 
 /***/ }),
-/* 48 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(49);
+var content = __webpack_require__(54);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1915,7 +2088,7 @@ if(false) {
 }
 
 /***/ }),
-/* 49 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -1929,7 +2102,102 @@ exports.push([module.i, ".settings {\n  text-align: center; }\n", ""]);
 
 
 /***/ }),
-/* 50 */
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.getNoaaData = getNoaaData;
+var noaaUri = "api/proxy/noaa/latest";
+function getNoaaData() {
+    return fetch(noaaUri).then(function (res) {
+        if (res.ok) {
+            return res.json().then(function (json) {
+                console.log(json.isUpdated);
+                return parseJsonToResponse(json.response);
+            }).catch(function (err) {
+                throw new Error("There was a problem deserializing the API response");
+            });
+        } else {
+            if (res.status === 404) {
+                throw new Error("The application could not connect to the API (404)");
+            }
+            throw new Error("The API experienced an error (" + res.status + ")");
+        }
+    }).catch(function (err) {
+        if (!(err instanceof Error)) {
+            err = new Error(err);
+        }
+        console.error(noaaUri, err);
+        throw err;
+    });
+}
+function parseJsonToResponse(json) {
+    var parsed = {
+        tzo: json.tzo,
+        errors: json.errors,
+        data: {
+            waterLevel: null,
+            current: {
+                airPressure: null,
+                airTemp: null,
+                waterTemp: null,
+                wind: null
+            }
+        }
+    };
+    if (!!json.data.waterLevel) {
+        var waterLevelJson = json.data.waterLevel;
+        parsed.data.waterLevel = {
+            predictionsBeforeCurrent: waterLevelJson.predictionsBeforeCurrent.map(parseJsonToPrediction),
+            previous: parseJsonToPrediction(waterLevelJson.previous),
+            current: parseJsonToCurrentData(waterLevelJson.current),
+            currentIsRising: waterLevelJson.currentIsRising,
+            currentPercentFallen: waterLevelJson.currentPercentFallen,
+            next: parseJsonToPrediction(waterLevelJson.next),
+            high: parseJsonToPrediction(waterLevelJson.high),
+            low: parseJsonToPrediction(waterLevelJson.low),
+            predictionsAfterCurrent: waterLevelJson.predictionsAfterCurrent.map(parseJsonToPrediction)
+        };
+    }
+    if (!!json.data.current.airPressure) parsed.data.current.airPressure = parseJsonToCurrentData(json.data.current.airPressure);
+    if (!!json.data.current.airTemp) parsed.data.current.airTemp = parseJsonToCurrentData(json.data.current.airTemp);
+    if (!!json.data.current.waterTemp) parsed.data.current.waterTemp = parseJsonToCurrentData(json.data.current.waterTemp);
+    if (!!json.data.current.wind) {
+        var windJson = json.data.current.wind;
+        parsed.data.current.wind = {
+            time: new Date(windJson.time),
+            direction: windJson.direction,
+            directionCardinal: windJson.directionCardinal,
+            gust: windJson.gust,
+            speed: windJson.speed
+        };
+    }
+    return parsed;
+}
+function parseJsonToPrediction(json) {
+    var currentData = parseJsonToCurrentData(json);
+    currentData.isHigh = json.isHigh;
+    return currentData;
+}
+function parseJsonToCurrentData(json) {
+    return {
+        time: new Date(json.time),
+        val: json.val
+    };
+}
+//
+//
+/// ABOVE copied from api project (proxy/noaa/models)
+//
+//
+
+/***/ }),
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1946,9 +2214,9 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(51);
+__webpack_require__(57);
 
-var _define = __webpack_require__(17);
+var _define = __webpack_require__(16);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1983,11 +2251,11 @@ var Info = exports.Info = function (_React$Component) {
 }(React.Component);
 
 /***/ }),
-/* 51 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(52);
+var content = __webpack_require__(58);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -2033,7 +2301,7 @@ if(false) {
 }
 
 /***/ }),
-/* 52 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -2047,7 +2315,7 @@ exports.push([module.i, ".info {\n  text-align: center;\n  font-family: 'Courier
 
 
 /***/ }),
-/* 53 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2064,13 +2332,9 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-__webpack_require__(54);
+__webpack_require__(60);
 
-var _noaa = __webpack_require__(8);
-
-var Noaa = _interopRequireWildcard(_noaa);
-
-var _time = __webpack_require__(9);
+var _time = __webpack_require__(8);
 
 var Time = _interopRequireWildcard(_time);
 
@@ -2092,38 +2356,13 @@ var More = exports.More = function (_React$Component) {
     }
 
     _createClass(More, [{
-        key: "componentDidMount",
-        value: function componentDidMount() {
-            var noaa = this.props.noaa;
-
-            if (!noaa.data && !noaa.isRequesting) {
-                Noaa.getNoaaData().then(function (data) {
-                    noaa.onRequestEnd(data);
-                });
-                noaa.onRequestBegin();
-            }
-        }
-    }, {
-        key: "componentWillUnmount",
-        value: function componentWillUnmount() {
-            var noaa = this.props.noaa;
-
-            if (!noaa.data && noaa.isRequesting) this.props.noaa.onRequestEnd(null);
-        }
-    }, {
         key: "render",
         value: function render() {
             var noaa = this.props.noaa;
 
-            if (!noaa.data && !noaa.isRequesting || noaa.data && noaa.data.errors || noaa.data && noaa.data.data && !noaa.data.data.current) {
-                return React.createElement("p", null, "Error....");
-            } else if (!noaa.data && noaa.isRequesting) {
-                return React.createElement("p", null, "Requesting...");
-            } else {
-                var current = noaa.data.data.current;
-                var prettyTime = Time.createPrettyTime(current.airTemp.time);
-                return React.createElement("div", { className: "more tab-view-bg" }, React.createElement("header", null, React.createElement("div", { className: "title" }, "Current Conditions"), React.createElement("div", { className: "timing" }, "as of ", React.createElement("span", { className: "pretty-time" }, prettyTime.time), React.createElement("span", { className: "pretty-ampm" }, prettyTime.ampm))), React.createElement(DataSection, { title: "Water Temperature", value: current.waterTemp.val, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Temperature", value: current.airTemp.val, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Pressure", value: current.airPressure.val, unit: "Millibars (mb)" }), React.createElement("section", null, React.createElement("div", { className: "data-title" }, "Wind"), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, current.wind.speed), React.createElement("span", { className: "unit" }, "knots ", current.wind.directionCardinal)), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, current.wind.gust), React.createElement("span", { className: "unit" }, "knot gusts"))));
-            }
+            var current = noaa.data.current;
+            var prettyTime = Time.createPrettyTime(current.airTemp.time);
+            return React.createElement("div", { className: "more tab-view-bg" }, React.createElement("header", null, React.createElement("div", { className: "title" }, "Current Conditions"), React.createElement("div", { className: "timing" }, "as of ", React.createElement("span", { className: "pretty-time" }, prettyTime.time), React.createElement("span", { className: "pretty-ampm" }, prettyTime.ampm))), React.createElement(DataSection, { title: "Water Temperature", value: current.waterTemp.val, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Temperature", value: current.airTemp.val, unit: "Degrees (F)" }), React.createElement(DataSection, { title: "Air Pressure", value: current.airPressure.val, unit: "Millibars (mb)" }), React.createElement("section", null, React.createElement("div", { className: "data-title" }, "Wind"), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, current.wind.speed), React.createElement("span", { className: "unit" }, "knots ", current.wind.directionCardinal)), React.createElement("div", { className: "data-value" }, React.createElement("span", { className: "value" }, current.wind.gust), React.createElement("span", { className: "unit" }, "knot gusts"))));
         }
     }]);
 
@@ -2151,11 +2390,11 @@ var DataSection = function (_React$Component2) {
 }(React.Component);
 
 /***/ }),
-/* 54 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(55);
+var content = __webpack_require__(61);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -2201,7 +2440,7 @@ if(false) {
 }
 
 /***/ }),
-/* 55 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -2215,7 +2454,7 @@ exports.push([module.i, ".more {\n  text-align: center; }\n  .more header {\n   
 
 
 /***/ }),
-/* 56 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2232,15 +2471,11 @@ var _react = __webpack_require__(0);
 
 var React = _interopRequireWildcard(_react);
 
-var _noaa = __webpack_require__(8);
-
-var Noaa = _interopRequireWildcard(_noaa);
-
-var _time = __webpack_require__(9);
+var _time = __webpack_require__(8);
 
 var Time = _interopRequireWildcard(_time);
 
-__webpack_require__(57);
+__webpack_require__(63);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -2256,46 +2491,18 @@ var Charts = exports.Charts = function (_React$Component) {
     function Charts(props) {
         _classCallCheck(this, Charts);
 
-        var _this = _possibleConstructorReturn(this, (Charts.__proto__ || Object.getPrototypeOf(Charts)).call(this, props));
-
-        _this.state = {};
-        return _this;
+        return _possibleConstructorReturn(this, (Charts.__proto__ || Object.getPrototypeOf(Charts)).call(this, props));
     }
 
     _createClass(Charts, [{
-        key: "componentDidMount",
-        value: function componentDidMount() {
-            var noaa = this.props.noaa;
-
-            if (!noaa.data && !noaa.isRequesting) {
-                Noaa.getNoaaData().then(function (data) {
-                    noaa.onRequestEnd(data);
-                });
-                noaa.onRequestBegin();
-            }
-        }
-    }, {
-        key: "componentWillUnmount",
-        value: function componentWillUnmount() {
-            var noaa = this.props.noaa;
-
-            if (!noaa.data && noaa.isRequesting) this.props.noaa.onRequestEnd(null);
-        }
-    }, {
         key: "render",
         value: function render() {
             var noaa = this.props.noaa;
 
-            if (!noaa.data && !noaa.isRequesting || noaa.data && noaa.data.errors || noaa.data && noaa.data.data && !noaa.data.data.waterLevel) {
-                return React.createElement("p", null, "Error....");
-            } else if (!noaa.data && noaa.isRequesting) {
-                return React.createElement("p", null, "Requesting...");
-            } else {
-                var waterLevel = noaa.data.data.waterLevel;
-                var previousPredictions = React.createElement("div", { className: "predictions predictions-previous" }, createTable(waterLevel.predictionsBeforeCurrent));
-                var nextPredictions = React.createElement("div", { className: "predictions predictions-next" }, createTable(waterLevel.predictionsAfterCurrent));
-                return React.createElement("div", { className: "charts tab-view-bg" }, React.createElement("header", null, "Wells, Maine"), previousPredictions, React.createElement("div", { className: "current" }, React.createElement("div", { className: "line" }), React.createElement("div", { className: "current-text" }, "Current: ", createPrettyTimeElement(waterLevel.current.time)), React.createElement("div", { className: "line" })), nextPredictions);
-            }
+            var waterLevel = noaa.data.waterLevel;
+            var previousPredictions = React.createElement("div", { className: "predictions predictions-previous" }, createTable(waterLevel.predictionsBeforeCurrent));
+            var nextPredictions = React.createElement("div", { className: "predictions predictions-next" }, createTable(waterLevel.predictionsAfterCurrent));
+            return React.createElement("div", { className: "charts tab-view-bg" }, React.createElement("header", null, "Wells, Maine"), previousPredictions, React.createElement("div", { className: "current" }, React.createElement("div", { className: "line" }), React.createElement("div", { className: "current-text" }, "Current: ", createPrettyTimeElement(waterLevel.current.time)), React.createElement("div", { className: "line" })), nextPredictions);
         }
     }]);
 
@@ -2318,11 +2525,11 @@ function createTable(predictions) {
 }
 
 /***/ }),
-/* 57 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(58);
+var content = __webpack_require__(64);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -2368,7 +2575,7 @@ if(false) {
 }
 
 /***/ }),
-/* 58 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -2382,5 +2589,5 @@ exports.push([module.i, ".charts {\n  text-align: center; }\n  .charts header {\
 
 
 /***/ })
-],[18]);
+],[17]);
 //# sourceMappingURL=index.js.map

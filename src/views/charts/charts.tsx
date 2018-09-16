@@ -6,78 +6,40 @@ import * as Time from "../../services/time";
 import "./charts.scss";
 
 interface ChartsProps {
-	noaa: {
-		data: Noaa.Response,
-		isRequesting: boolean,
-		onRequestBegin: () => void,
-		onRequestEnd: (response: Noaa.Response) => void
-	}
+	noaa: Noaa.Response
 }
 
-interface ChartsState {
-
-}
-
-export class Charts extends React.Component<ChartsProps, ChartsState> {
+export class Charts extends React.Component<ChartsProps> {
 
 	constructor(props: ChartsProps) {
 		super(props);
-		this.state = {};
-	}
-
-	componentDidMount() {
-		const { noaa } = this.props;
-		if (!noaa.data && !noaa.isRequesting) {
-			Noaa.getNoaaData()
-				.then((data) => {
-					noaa.onRequestEnd(data);
-				})
-			noaa.onRequestBegin();
-		}
-	}
-
-	componentWillUnmount() {
-		const { noaa } = this.props;
-		if (!noaa.data && noaa.isRequesting)
-			this.props.noaa.onRequestEnd(null);
 	}
 
 	render() {
-
 		const { noaa } = this.props;
-		if ((!noaa.data && !noaa.isRequesting) || (noaa.data && noaa.data.errors) || (noaa.data && noaa.data.data && !noaa.data.data.waterLevel)) {
-			return <p>Error....</p>
-		}
-		else if (!noaa.data && noaa.isRequesting) {
-			return <p>Requesting...</p>
-		}
-		else {
-			const waterLevel = noaa.data.data.waterLevel;
+		const waterLevel = noaa.data.waterLevel;
+		const previousPredictions =
+			<div className="predictions predictions-previous">
+				{createTable(waterLevel.predictionsBeforeCurrent)}
+			</div>
 
+		const nextPredictions =
+			<div className="predictions predictions-next">
+				{createTable(waterLevel.predictionsAfterCurrent)}
+			</div>
 
-			const previousPredictions =
-				<div className="predictions predictions-previous">
-					{createTable(waterLevel.predictionsBeforeCurrent)}
+		return (
+			<div className="charts tab-view-bg">
+				<header>Wells, Maine</header>
+				{previousPredictions}
+				<div className="current">
+					<div className="line"></div>
+					<div className="current-text">Current: {createPrettyTimeElement(waterLevel.current.time)}</div>
+					<div className="line"></div>
 				</div>
-
-			const nextPredictions =
-				<div className="predictions predictions-next">
-					{createTable(waterLevel.predictionsAfterCurrent)}
-				</div>
-
-			return (
-				<div className="charts tab-view-bg">
-					<header>Wells, Maine</header>
-					{previousPredictions}
-					<div className="current">
-						<div className="line"></div>
-						<div className="current-text">Current: {createPrettyTimeElement(waterLevel.current.time)}</div>
-						<div className="line"></div>
-					</div>
-					{nextPredictions}
-				</div>
-			)
-		}
+				{nextPredictions}
+			</div>
+		)
 	}
 }
 
