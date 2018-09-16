@@ -3,7 +3,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 const buildTime = (new Date()).getTime();
-const version = "1.1.0";
+const version = "1.1.0"; // AGM_QT_V
 
 // Cleans a directory
 const CleanWebpackPlugin = require("clean-webpack-plugin");

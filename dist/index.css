@@ -1,0 +1,424 @@
+html {
+  font-family: "Mitr", sans-serif;
+  color: #19576D;
+  background-color: #EAEAEA; }
+
+* {
+  box-sizing: border-box;
+  font-weight: 300; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch; }
+
+main {
+  background-color: #f9fdff;
+  width: 100%;
+  max-width: 700px;
+  max-height: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  height: 100%;
+  outline: 1px solid #BEBEBE; }
+
+.tab-view-bg {
+  padding: .5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%; }
+.react-error {
+  color: #ffcaca;
+  padding: 1rem; }
+  .react-error.tab-view-bg {
+    background-color: #da5151; }
+  .react-error header {
+    text-align: left; }
+    .react-error header h1 {
+      margin: 0; }
+    .react-error header h3 {
+      margin: 0; }
+  .react-error hr {
+    border: none;
+    border-bottom: 2px solid #b12121;
+    margin: 1rem 0; }
+  .react-error .detailed {
+    font-size: .8rem; }
+  .react-error .detailed-content {
+    font-family: 'Courier New', Courier, monospace; }
+.react-loading {
+  text-align: center; }
+  .react-loading h1 {
+    font-weight: bold;
+    display: inline-block;
+    margin: 2rem auto;
+    animation: colors 1s linear infinite alternate; }
+
+@keyframes colors {
+  0% {
+    color: #19576D; }
+  50% {
+    color: #8DC2D5; }
+  100% {
+    color: #19576D; } }
+.react-tabs {
+  height: 100%;
+  display: flex;
+  flex-direction: column; }
+  .react-tabs .tab-view {
+    overflow: hidden;
+    flex: 1;
+    position: relative; }
+  .react-tabs .tab-buttons {
+    background-color: #EAEAEA;
+    border-top: 1px solid #BEBEBE;
+    color: #BEBEBE;
+    fill: #BEBEBE;
+    display: flex; }
+  .react-tabs .tab-button {
+    flex: 1;
+    text-align: center;
+    font-size: .8rem; }
+    .react-tabs .tab-button svg {
+      display: block;
+      margin: 0 auto;
+      margin-top: .3rem;
+      height: 24px; }
+    .react-tabs .tab-button:not(.tab-active) {
+      cursor: pointer; }
+  .react-tabs .tab-active {
+    cursor: default;
+    color: #19576D;
+    fill: #19576D; }
+.tide header {
+  margin: .5rem; }
+  .tide header .top .right {
+    float: right; }
+  .tide header .top::after {
+    content: "";
+    clear: both; }
+  .tide header .title {
+    background-color: #19576D;
+    color: #f9fdff;
+    fill: #f9fdff;
+    border-radius: 6px;
+    padding: 0 .5rem;
+    overflow: hidden;
+    text-align: center; }
+    .tide header .title h2 {
+      font-size: 1rem;
+      margin: 0;
+      margin-bottom: .5rem; }
+  .tide header .head svg {
+    height: 30px;
+    display: inline-block;
+    margin-right: .5rem;
+    margin-top: .8rem; }
+  .tide header .head h2 {
+    vertical-align: top;
+    display: inline-block;
+    margin: 0;
+    margin-top: .25rem;
+    font-size: 1.8rem; }
+
+.tide .lastnext {
+  margin: .5rem 1rem;
+  display: flex; }
+
+.tide .lastnext-item {
+  flex: 1;
+  text-align: center; }
+  .tide .lastnext-item.center .lastnext-item-inner {
+    background-color: #19576D;
+    color: #f9fdff; }
+  .tide .lastnext-item .lastnext-item-inner {
+    border-radius: 4px;
+    display: inline-block;
+    padding: .3rem .5rem; }
+  .tide .lastnext-item .lastnext-time-ampm {
+    font-size: .8em;
+    display: inline-block;
+    margin-left: .3rem; }
+.graphic {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex-basis: auto;
+  position: relative; }
+
+.graphic .percent {
+  position: absolute;
+  top: 1rem;
+  left: 1rem; }
+  .graphic .percent .value {
+    font-size: 2rem; }
+  .graphic .percent .direction {
+    display: inline-block;
+    margin-left: .5rem; }
+
+.graphic .crab-container {
+  height: 4rem;
+  position: relative; }
+  .graphic .crab-container .crab {
+    position: absolute;
+    top: 0;
+    right: -.5rem;
+    z-index: 5;
+    height: 5rem; }
+
+.graphic .waves {
+  flex: 1;
+  position: relative; }
+  .graphic .waves .wave, .graphic .waves .wave-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
+  .graphic .waves .wave-lower {
+    fill: #8DC2D5; }
+  .graphic .waves .wave-higher {
+    fill: #B5DCE8; }
+  .graphic .waves .wave-svg-offset {
+    position: absolute;
+    bottom: 0;
+    height: 5px;
+    width: 100%;
+    background-color: #8DC2D5; }
+  .graphic .waves .rocks {
+    position: absolute;
+    right: 0rem;
+    width: 14rem;
+    min-width: 40%;
+    max-width: 60%;
+    height: 30rem;
+    max-height: 250%;
+    min-height: 100%; }
+
+.graphic .marker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 60%; }
+  .graphic .marker .line-container {
+    width: 3rem;
+    margin-left: 1rem;
+    padding: 0;
+    padding-bottom: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column; }
+    .graphic .marker .line-container .line {
+      width: 1rem;
+      margin: 0 auto;
+      background-color: #19576D; }
+    .graphic .marker .line-container .line-cap {
+      height: 1rem; }
+    .graphic .marker .line-container .line-begin {
+      border-radius: 2px 2px 0 0; }
+    .graphic .marker .line-container .line-end {
+      border-radius: 0 0 2px 2px; }
+    .graphic .marker .line-container .line-faint {
+      opacity: .4; }
+  .graphic .marker .line-flex {
+    flex: 1;
+    display: flex;
+    flex-direction: column; }
+    .graphic .marker .line-flex .line {
+      flex: 0; }
+    .graphic .marker .line-flex .line-arrow-holder {
+      position: relative;
+      width: 1rem;
+      height: .1rem;
+      margin: 0 auto; }
+    .graphic .marker .line-flex .arrow {
+      fill: #19576D;
+      position: absolute;
+      width: 3rem;
+      height: 3rem;
+      left: -1rem; }
+    .graphic .marker .line-flex .arrow-up {
+      top: -2rem; }
+    .graphic .marker .line-flex .arrow-down {
+      top: -1rem; }
+  .graphic .marker .marker-header {
+    display: block;
+    position: absolute;
+    left: 4.6rem; }
+    .graphic .marker .marker-header span {
+      white-space: pre; }
+  .graphic .marker .marker-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-right: 1rem; }
+  .graphic .marker .marker-high {
+    top: 0rem; }
+  .graphic .marker .marker-low {
+    bottom: 1rem; }
+.tide {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative; }
+  .tide .low-button {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    padding: .3rem .4rem;
+    margin: .5rem;
+    border: 1px solid #19576D;
+    border-radius: 3px;
+    background-color: transparent;
+    color: #19576D;
+    align-items: center; }
+    .tide .low-button svg {
+      fill: #19576D;
+      height: 1.6rem; }
+  .tide .low-button-title {
+    display: inline-block;
+    margin: 0 .5rem;
+    font-weight: bold; }
+  .tide .share {
+    left: 0; }
+  .tide .refresh {
+    right: 0; }
+.settings {
+  text-align: center; }
+.info {
+  text-align: center; }
+  .info section {
+    margin: .5rem; }
+    .info section + section {
+      margin-top: 1.5rem; }
+
+.info-header span {
+  display: inline-block;
+  padding: 0 .2rem; }
+
+.info-header .value {
+  color: rgba(25, 87, 109, 0.7); }
+
+.info-gh a {
+  margin: auto;
+  background-color: #EAEAEA;
+  border: 1px solid #BEBEBE;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px 0 #333;
+  padding: .6rem .7rem;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 0 3px 0 rgba(0, 0, 0, 0.4), inset 0 0 3px 5px rgba(0, 0, 0, 0.05), 2px 2px 4px 0 rgba(0, 0, 0, 0.4);
+  color: #333; }
+  .info-gh a:before, .info-gh a:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    height: 2px; }
+  .info-gh a:before {
+    top: 0;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.6); }
+  .info-gh a:after {
+    bottom: 0;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    background: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.15); }
+  .info-gh a:link, .info-gh a:visited, .info-gh a:active, .info-gh a:hover {
+    color: #333;
+    text-decoration: none; }
+  .info-gh a p {
+    text-align: left;
+    margin: 0;
+    line-height: 1.4rem;
+    font-weight: bold; }
+  .info-gh a svg {
+    fill: #333;
+    height: 2.5rem;
+    width: auto; }
+  .info-gh a .split-right {
+    padding-left: .7rem;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+.info-thanks > div {
+  margin: 1.5rem 0;
+  line-height: 1rem; }
+
+.info-thanks a, .info-thanks a:link, .info-thanks a:hover, .info-thanks a:active, .info-thanks a:visited {
+  color: #06151a;
+  white-space: pre; }
+
+.info-thanks ul {
+  margin: .5rem 0;
+  padding: 0;
+  list-style-type: none; }
+.more {
+  text-align: center; }
+  .more header {
+    margin: 2rem; }
+    .more header .title {
+      font-size: 1.5rem; }
+    .more header .timing {
+      font-size: 1.2rem; }
+    .more header .pretty-ampm {
+      display: inline-block;
+      margin-left: .3rem;
+      font-size: 80%; }
+  .more section {
+    margin: 1rem 2rem; }
+    .more section .data-title {
+      font-size: 1.2rem; }
+    .more section .unit {
+      display: inline-block;
+      margin-left: .4rem;
+      color: rgba(25, 87, 109, 0.7); }
+.charts {
+  text-align: center;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch; }
+  .charts header {
+    margin: 2rem 0;
+    font-size: 2rem;
+    line-height: 2rem; }
+  .charts table {
+    width: 100%;
+    font-size: 1.2rem; }
+  .charts td {
+    width: 25%; }
+  .charts .pretty-ampm {
+    display: inline-block;
+    margin-left: .2rem;
+    font-size: .8rem; }
+  .charts .predictions-previous {
+    color: rgba(25, 87, 109, 0.7); }
+  .charts .current {
+    display: flex;
+    align-items: center;
+    margin: .5rem; }
+    .charts .current .line {
+      flex: 1;
+      height: 1px;
+      background-color: #19576D; }
+  .charts .current-text {
+    display: inline-block;
+    padding: .1rem .5rem;
+    border-radius: 5px;
+    background-color: #19576D;
+    color: #f9fdff; }
+
+/*# sourceMappingURL=index.css.map*/
