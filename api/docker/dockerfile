@@ -1,0 +1,28 @@
+# Build: docker build -f docker/dockerfile -t agm-quick-tides-api:[VERSION] .
+# Run:   docker run --name agm-quick-tides-api -d --rm -p 8081:8000 agm-quick-tides-api:[VERSION]
+# IP:    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' agm-quick-tides-api
+# +:     docker exec -it agm-quick-tides-api /bin/bash
+
+# node Alpine for small size https://hub.docker.com/_/node/
+FROM node:8.12.0-alpine
+
+# Add bash, just for debug (probably don't need this in production)
+RUN apk add --no-cache bash
+
+# Set the working directory, including for when we exec in
+WORKDIR /usr/src/app
+
+# Copy just package.json files, as they are unlikely to change often, before installing dependencies
+COPY package*.json ./
+
+# Install
+RUN npm install
+
+# Copy all into the app directory
+COPY / .
+
+# Expose app port
+EXPOSE 8000
+
+# Start on start!
+CMD [ "npm", "start" ]

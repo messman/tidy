@@ -1,5 +1,21 @@
-node_modules
-build
+#root
 TODO.txt
-npm-debug.log
-.vscode
+
+# app
+app/node_modules
+app/dist
+app/build
+app/npm-debug.log
+
+# api
+api/apis
+api/node_modules
+api/dist
+api/npm-debug.log
+
+# proxy
+proxy/*-ssl*
+proxy/*.key
+proxy/*.pem
+proxy/*.txt
+proxy/*.sh
