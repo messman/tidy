@@ -3,12 +3,16 @@ import * as ReactDOM from "react-dom";
 
 import { DEFINE } from "../services/define";
 import App from "../views";
+import { GlobalAppStyles } from "@/styles/theme";
 
 const date = new Date(DEFINE.BUILD.TIME);
 if (console && console.log)
 	console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${date}`);
 
 ReactDOM.render(
-	<App />,
+	<>
+		<GlobalAppStyles />
+		<App />
+	</>,
 	document.getElementById("react-root")
 );

@@ -9,7 +9,8 @@ export const theme = {
 
 export const GlobalAppStyles = createGlobalStyle`
 	body {
-		background-color: ${() => theme.color.black} !important;
+		font-family: ${theme.fontFamily};
+		background-color: ${theme.color.black};
 	}
 `;
 
