@@ -1,6 +1,6 @@
 const path = require("path");
 
-const webpack = require("webpack");
+const CopyPlugin = require('copy-webpack-plugin');
 
 const buildTime = (new Date()).getTime();
 const version = "1.1.0"; // AGM_QT_V
@@ -10,7 +10,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const htmlPluginOptions = {
 	title: "Quick-Tides",
-	filename: "../index.html",
+	filename: "./index.html",
 	template: "./src/index.template.ejs",
 	minify: false,
 	xhtml: true, // Use XHTML-compliance
@@ -48,8 +48,7 @@ const baseWebpackOptions = {
 	output: {
 		filename: "[name].js",
 		hashDigestLength: 10,
-		path: path.resolve(__dirname, "./dist"),
-		publicPath: "./dist/"
+		path: path.resolve(__dirname, "./dist")
 	},
 
 	resolve: {
@@ -70,8 +69,12 @@ const baseWebpackOptions = {
 	},
 
 	plugins: [
-		// Clean the "dist" folder each time
+		// Clean the output folder each time
 		new CleanWebpackPlugin(),
+		new CopyPlugin([
+			// Copy to output folder, but then go one up
+			{ from: 'src/static/favicons', to: './' },
+		]),
 	]
 };
 

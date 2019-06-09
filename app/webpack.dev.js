@@ -21,8 +21,7 @@ module.exports = merge(base.base, {
 
 	devServer: {
 		port: 8888,
-		publicPath: "./dist/",
-		contentBase: "./",
+		contentBase: false,
 		open: "google chrome"
 	},
 
