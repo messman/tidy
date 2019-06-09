@@ -1,16 +1,39 @@
 import baseStyled, { css as baseCss, ThemedStyledInterface, BaseThemedCssFunction, createGlobalStyle } from "styled-components";
+export { ThemeProvider } from "styled-components";
 
 export const theme = {
 	color: {
-		bg: "white",
+		bgDark: "#1E416A",
+		bgMed: "#44658C",
+		bgLight: "#BFCDDD",
+		emphasis: "#CEB740",
+		layerDark: "#4777AE",
+		layerMed: "#6399D6",
+		layerLight: "#D3E1F2",
 	},
-	fontFamily: `monospace`
+	fontFamily: `'Nunito', sans-serif`
 }
 
 export const GlobalAppStyles = createGlobalStyle`
-	body {
+	
+	html {
 		font-family: ${theme.fontFamily};
-		background-color: ${theme.color.bg};
+		font-weight: 400;
+	}
+	
+	body {
+		background-color: ${theme.color.bgDark};
+		color: ${theme.color.layerLight};
+	}
+
+	html, body {
+		margin: 0;
+		padding: 0;
+		height: 100%;
+	}
+
+	* {
+		box-sizing: border-box;
 	}
 `;
 
@@ -23,3 +46,5 @@ export default styled;
 
 // Export wrapped css
 export const css = baseCss as BaseThemedCssFunction<Theme>;
+
+export type StyledFC<T> = React.FC<T & { className?: string }>;

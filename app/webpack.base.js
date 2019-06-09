@@ -41,7 +41,7 @@ const DEFINE = {
 
 const baseWebpackOptions = {
 	entry: {
-		index: "./src/entries/index.tsx",
+		index: "./src/entries/entry-index.tsx",
 		vendor: [
 			"react",
 			"react-dom",
