@@ -1,22 +1,16 @@
 import "./index.scss";
 
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import { Tabs, Tab, TabView, TabButton } from "../components";
 import { Tide } from "./tide/tide";
 import { Settings } from "./settings/settings";
 
-import { DEFINE } from "../services/define";
 import * as Noaa from "../services/noaa";
 import { Info } from "./info/info";
 import { More } from "./more/more";
 import { Charts } from "./charts/charts";
 import { AppError, Loading } from "../components";
-
-const date = new Date(DEFINE.BUILD.TIME);
-if (console && console.log)
-	console.log(`${DEFINE.BUILD.IS_PRODUCTION ? "Production" : "Debug"} | ${date}`);
 
 interface AppProps {
 }
@@ -29,7 +23,7 @@ interface AppState {
 	noaaRequestError: Error,
 }
 
-class App extends React.Component<AppProps, AppState> {
+export default class App extends React.Component<AppProps, AppState> {
 
 	constructor(props: AppProps) {
 		super(props);
@@ -163,8 +157,3 @@ class App extends React.Component<AppProps, AppState> {
 		)
 	}
 }
-
-ReactDOM.render(
-	<App />,
-	document.getElementById("react-root")
-);

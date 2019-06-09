@@ -5,6 +5,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const buildTime = (new Date()).getTime();
 const version = "1.1.0"; // AGM_QT_V
 
+const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
+
 // Cleans a directory
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
@@ -39,7 +41,7 @@ const DEFINE = {
 
 const baseWebpackOptions = {
 	entry: {
-		index: "./src/views/index.tsx",
+		index: "./src/entries/index.tsx",
 		vendor: [
 			"react",
 			"react-dom",
@@ -54,6 +56,10 @@ const baseWebpackOptions = {
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions (so that you don't need to type out the extension yourself).
 		extensions: [".ts", ".tsx", ".js", ".json"],
+
+		alias: {
+			"@": path.resolve(__dirname, "./src")
+		}
 	},
 
 	module: {
@@ -63,7 +69,17 @@ const baseWebpackOptions = {
 			// babel-loader: converts javascript to javascript (es5) (.babelrc)
 			{
 				test: /\.tsx?$/,
-				loaders: ["babel-loader", "ts-loader"]
+				use: [
+					{
+						loader: "babel-loader"
+					},
+					{
+						loader: "ts-loader",
+						options: {
+							getCustomTransformers: () => ({ before: [createStyledComponentsTransformer()] })
+						}
+					}
+				]
 			},
 		]
 	},

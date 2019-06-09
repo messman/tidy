@@ -10,7 +10,13 @@
 		"noImplicitThis": false,
 		"outDir": "./build",
 		"target": "es2017",
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"baseUrl": ".",
+		"paths": {
+			"@*": [
+				"src/*"
+			]
+		}
 	},
 	"exclude": [
 		"node_modules"

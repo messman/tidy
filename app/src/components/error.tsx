@@ -1,13 +1,35 @@
 import * as React from "react";
 
-import * as Noaa from "../../services/noaa";
-
-import "./error.scss";
+import * as Noaa from "../services/noaa";
+import styled from "@/styles/theme";
 
 interface AppErrorProps {
 	error: Error,
 	jsonErrs: Noaa.JSONError[]
 }
+
+const Window = styled.div`
+	color: rgb(255, 202, 202);
+	padding: 1rem;
+	background-color: rgb(218, 81, 81);
+`;
+
+const Title = styled.h1`
+	margin: 0;
+	text-align: left;
+`
+
+const SubTitle = styled.h3`
+	margin: 0;
+	text-align: left;
+`
+
+const Line = styled.hr`
+	border: none;
+	border-bottom: 2px solid rgb(177, 33, 33);
+	margin: 1rem 0;
+`
+
 
 export class AppError extends React.Component<AppErrorProps> {
 
@@ -42,27 +64,27 @@ export class AppError extends React.Component<AppErrorProps> {
 		}
 
 		return (
-			<div className="react-error tab-view-bg">
+			<Window>
 				<header>
-					<h1>Uh-oh!</h1>
-					<h3>Something's gone wrong.</h3>
+					<Title>Uh-oh!</Title>
+					<SubTitle>Something's gone wrong.</SubTitle>
 				</header>
-				<hr />
+				<Line />
 				<p>
 					It looks like the application isn't working correctly.
 					If the problem persists, please reach out to the developer
 					on GitHub by going to the <strong>Info</strong> tab.
 				</p>
-				<hr />
-				<div className="detailed">
-					<div className="detailed-header">
+				<Line />
+				<div>
+					<div>
 						Detailed error information:
 					</div>
-					<div className="detailed-content">
+					<div>
 						{errContent}
 					</div>
 				</div>
-			</div>
+			</Window>
 		);
 	}
 }
