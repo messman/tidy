@@ -2,7 +2,7 @@ import baseStyled, { css as baseCss, ThemedStyledInterface, BaseThemedCssFunctio
 
 export const theme = {
 	color: {
-		black: "black",
+		bg: "white",
 	},
 	fontFamily: `monospace`
 }
@@ -10,7 +10,7 @@ export const theme = {
 export const GlobalAppStyles = createGlobalStyle`
 	body {
 		font-family: ${theme.fontFamily};
-		background-color: ${theme.color.black};
+		background-color: ${theme.color.bg};
 	}
 `;
 
