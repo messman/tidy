@@ -6,7 +6,7 @@ const buildTime = (new Date()).getTime();
 const version = "1.1.0"; // AGM_QT_V
 
 // Cleans a directory
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const htmlPluginOptions = {
 	title: "Quick-Tides",
@@ -55,9 +55,6 @@ const baseWebpackOptions = {
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions (so that you don't need to type out the extension yourself).
 		extensions: [".ts", ".tsx", ".js", ".json"],
-
-		// Resolve imports from node_modules or src
-		modules: ["node_modules", "src"]
 	},
 
 	module: {
@@ -67,7 +64,6 @@ const baseWebpackOptions = {
 			// babel-loader: converts javascript to javascript (es5) (.babelrc)
 			{
 				test: /\.tsx?$/,
-				exclude: ["./node_modules/"],
 				loaders: ["babel-loader", "ts-loader"]
 			},
 		]
@@ -75,15 +71,7 @@ const baseWebpackOptions = {
 
 	plugins: [
 		// Clean the "dist" folder each time
-		new CleanWebpackPlugin(["./dist"]),
-		// Filter out all the vendor libraries and put that in its own chunk
-		new webpack.optimize.CommonsChunkPlugin({
-			name: "vendor"
-		}),
-		// Filter out all the "Webpack" manifest code and put that in its own chunk
-		new webpack.optimize.CommonsChunkPlugin({
-			name: "runtime"
-		})
+		new CleanWebpackPlugin(),
 	]
 };
 

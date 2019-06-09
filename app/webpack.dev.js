@@ -15,13 +15,15 @@ const totalHTMLPluginOptions = merge(base.html,
 );
 
 module.exports = merge(base.base, {
+	mode: "development",
 
 	devtool: "cheap-module-source-map",
 
 	devServer: {
 		port: 8888,
 		publicPath: "./dist/",
-		contentBase: "./"
+		contentBase: "./",
+		open: "google chrome"
 	},
 
 	module: {
