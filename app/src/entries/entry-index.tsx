@@ -21,5 +21,5 @@ ReactDOM.render(
 			</>
 		</ThemeProvider>
 	</ResponsiveLayoutProvider>,
-	document.body
+	document.getElementById("react-root")
 );

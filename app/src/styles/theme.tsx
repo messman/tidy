@@ -26,7 +26,7 @@ export const GlobalAppStyles = createGlobalStyle`
 		color: ${theme.color.layerLight};
 	}
 
-	html, body {
+	html, body, #react-root {
 		margin: 0;
 		padding: 0;
 		height: 100%;

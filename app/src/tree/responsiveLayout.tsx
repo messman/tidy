@@ -1,7 +1,8 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/theme";
+import styled from "@/styles/theme";
 import { WindowDimensions } from "@/unit/hooks/useWindowDimensions";
 import { ResponsiveLayoutType } from "@/unit/hooks/useResponsiveLayout";
+import { Flex, FlexColumn, FlexRow } from "@/unit/components/flex";
 
 export function pickLayout(dimensions: WindowDimensions): ResponsiveLayoutType {
 	// TODO: maybe we can pass previous dimensions or previous layout here? To prevent any jarring stuff
@@ -68,60 +69,6 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	);
 }
 
-
-
-interface FlexProps {
-	flex?: number | "none";
-}
-
-const Flex = styled.div<FlexProps>`
-	position: relative;
-	flex: ${props => props.flex};
-`;
-
-Flex.defaultProps = {
-	flex: 1
-}
-
-interface FlexContainerProps extends FlexProps {
-	alignItems?: "stretch" | "center";
-}
-
-const _FlexColumn: StyledFC<FlexContainerProps> = (props) => {
-	return (
-		<Flex className={props.className} flex={props.flex}>
-			{props.children}
-		</Flex>
-	);
-}
-
-export const FlexColumn = styled(_FlexColumn)`
-	display: flex;
-	flex-direction: column;
-	align-items: ${props => props.alignItems};
-`;
-
-FlexColumn.defaultProps = {
-	alignItems: "stretch"
-};
-
-const _FlexRow: StyledFC<FlexContainerProps> = (props) => {
-	return (
-		<Flex className={props.className} flex={props.flex}>
-			{props.children}
-		</Flex>
-	);
-}
-
-export const FlexRow = styled(_FlexRow)`
-	display: flex;
-	flex-direction: row;
-	align-items: ${props => props.alignItems};
-`;
-
-FlexRow.defaultProps = {
-	alignItems: "stretch"
-};
 
 const Root = styled(FlexColumn)`
 	height: 100%;
