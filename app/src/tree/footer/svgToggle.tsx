@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/theme";
 
 export enum SVGToggleState {
 	hidden,
@@ -28,14 +28,14 @@ const Toggle = styled.button<ToggleProps> `
 	margin: 1rem;
 `;
 
-export const SVGToggle: React.FC<SVGToggleProps> = (props) => {
+export const SVGToggle: StyledFC<SVGToggleProps> = (props) => {
 	if (props.state === SVGToggleState.hidden) {
 		return <div></div>;
 	}
 	function onClick() {
 		props.onToggle(props.state === SVGToggleState.on ? false : true);
 	}
-	return (<Toggle onClick={onClick} title={props.title} isOn={props.state === SVGToggleState.on}>
+	return (<Toggle className={props.className} onClick={onClick} title={props.title} isOn={props.state === SVGToggleState.on}>
 		{props.svg}
 	</Toggle>);
 };
