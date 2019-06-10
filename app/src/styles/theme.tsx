@@ -1,4 +1,4 @@
-import baseStyled, { css as baseCss, ThemedStyledInterface, BaseThemedCssFunction, createGlobalStyle } from "styled-components";
+import baseStyled, { css as baseCss, ThemedStyledInterface, BaseThemedCssFunction, createGlobalStyle, ThemeProps, FlattenInterpolation } from "styled-components";
 export { ThemeProvider } from "styled-components";
 
 export const theme = {
@@ -46,5 +46,6 @@ export default styled;
 
 // Export wrapped css
 export const css = baseCss as BaseThemedCssFunction<Theme>;
+export type ThemedCSS = FlattenInterpolation<ThemeProps<Theme>>;
 
 export type StyledFC<T> = React.FC<T & { className?: string }>;

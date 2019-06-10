@@ -1,11 +1,9 @@
 import * as React from "react";
-import styled, { css, StyledFC } from "@/styles/theme";
+import styled, { css, StyledFC, ThemedCSS } from "@/styles/theme";
 import { FlexColumn } from "@/unit/components/flex";
-import { FlattenSimpleInterpolation } from "styled-components";
-
 
 interface CustomCSSFlexColumnProps {
-	customCSS: FlattenSimpleInterpolation;
+	customCSS: ThemedCSS;
 }
 
 const _CustomCSSFlexColumn: StyledFC<CustomCSSFlexColumnProps> = (props) => {
@@ -20,22 +18,20 @@ const StyledCustomCSSFlexColumn = styled(_CustomCSSFlexColumn)`
 
 export interface BackgroundFillProps {
 	fillWithSidebar: boolean,
+	sidebarCss: ThemedCSS,
 	fillWithOverlay: boolean
+	overlayCss: ThemedCSS,
 }
 
 export const BackgroundFill: React.FC<BackgroundFillProps> = (props) => {
 
-	let backgroundCss: FlattenSimpleInterpolation = null;
+	let backgroundCss: ThemedCSS = null;
 
 	if (props.fillWithSidebar) {
-		backgroundCss = css`
-			background-color: red;
-		`;
+		backgroundCss = props.sidebarCss;
 	}
 	else if (props.fillWithOverlay) {
-		backgroundCss = css`
-			background-color: blue;
-		`;
+		backgroundCss = props.overlayCss;
 	}
 
 	return (

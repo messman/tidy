@@ -9,6 +9,7 @@ import { FooterToggleState } from "./footer/footerToggle";
 import { BackgroundFill } from "./backgroundFill";
 import { FlexColumn } from "@/unit/components/flex";
 import styled from "@/styles/theme";
+import { About, aboutBackgroundColor } from "./about/about";
 
 
 interface AppProps {
@@ -67,12 +68,16 @@ export const App: React.FC<AppProps> = (props) => {
 		<Root>
 			<BackgroundFill
 				fillWithSidebar={fillWithSidebar}
+				sidebarCss={null}
 				fillWithOverlay={fillWithOverlay}
+				overlayCss={aboutBackgroundColor}
 			>
 				<ResponsiveLayout
 					layout={layout}
 					fillWithSidebar={fillWithSidebar}
 					fillWithOverlay={fillWithOverlay}
+
+					overlay={<About />}
 
 					footer={
 						<Footer
