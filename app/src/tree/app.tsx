@@ -36,15 +36,20 @@ export const App: React.FC<AppProps> = (props) => {
 
 	function longTermOnToggle(isOn: boolean) {
 		setLongTermToggleState(isOn ? SVGToggleState.on : SVGToggleState.visible);
+		setAboutToggleState(SVGToggleState.visible);
 	}
 
 	function aboutOnToggle(isOn: boolean) {
 		setAboutToggleState(isOn ? SVGToggleState.on : SVGToggleState.visible);
+		setLongTermToggleState(pickLongTermToggleState(SVGToggleState.visible, layout));
 	}
 
 	return (
 		<ResponsiveLayout
 			layout={layout}
+			fillWithLongTerm={longTermToggleState === SVGToggleState.on}
+			fillWithAbout={aboutToggleState === SVGToggleState.on}
+
 			footer={
 				<Footer
 					longTermToggleState={longTermToggleState}

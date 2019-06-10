@@ -14,6 +14,8 @@ export function pickLayout(dimensions: WindowDimensions): ResponsiveLayoutType {
 
 interface ResponsiveLayoutProps {
 	layout: ResponsiveLayoutType,
+	fillWithLongTerm: boolean,
+	fillWithAbout: boolean,
 
 	header?: JSX.Element,
 	timeline?: JSX.Element,
@@ -31,7 +33,17 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	const footer = props.footer || <p>Footer</p>
 
 	let layoutElements: JSX.Element = null;
-	if (props.layout === ResponsiveLayoutType.compact) {
+	if (props.fillWithAbout) {
+		layoutElements = (
+			<Flex>{about}</Flex>
+		);
+	}
+	else if (props.fillWithLongTerm) {
+		layoutElements = (
+			<Flex>{longTerm}</Flex>
+		);
+	}
+	else if (props.layout === ResponsiveLayoutType.compact) {
 		layoutElements = (
 			<>
 				<Flex>{header}</Flex>
