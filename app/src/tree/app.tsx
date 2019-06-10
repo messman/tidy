@@ -5,18 +5,32 @@ import { useResponsiveLayoutContext, ResponsiveLayoutType } from "@/unit/hooks/u
 import * as Noaa from "../services/noaa";
 import { ResponsiveLayout } from "./responsiveLayout";
 import { Footer } from "./footer/footer";
-import { SVGToggleState, SVGToggle } from "./footer/svgToggle";
+import { FooterToggleState } from "./footer/footerToggle";
+import { BackgroundFill } from "./backgroundFill";
+import { FlexColumn } from "@/unit/components/flex";
+import styled from "@/styles/theme";
 
 
 interface AppProps {
 }
 
-function pickLongTermToggleState(previous: SVGToggleState, layout: ResponsiveLayoutType): SVGToggleState {
-	if (layout === ResponsiveLayoutType.wide)
-		return SVGToggleState.hidden;
-	else if (previous === SVGToggleState.hidden)
-		return SVGToggleState.visible;
-	return previous;
+interface DualToggleState {
+	sidebar: FooterToggleState,
+	overlay: FooterToggleState
+}
+
+function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggleState, layout: ResponsiveLayoutType): DualToggleState {
+	const state: DualToggleState = { sidebar, overlay };
+	if (layout === ResponsiveLayoutType.wide) {
+		state.sidebar = FooterToggleState.hidden;
+		if (state.overlay === FooterToggleState.hidden) {
+			state.overlay = FooterToggleState.visible;
+		}
+	}
+	else if (state.sidebar === FooterToggleState.hidden && state.overlay !== FooterToggleState.on) {
+		state.sidebar = FooterToggleState.visible;
+	}
+	return state;
 }
 
 export const App: React.FC<AppProps> = (props) => {
@@ -24,43 +38,60 @@ export const App: React.FC<AppProps> = (props) => {
 	const layout = useResponsiveLayoutContext();
 	console.log(layout);
 
-
-	const [longTermToggleState, setLongTermToggleState] = useState<SVGToggleState>(pickLongTermToggleState(SVGToggleState.visible, layout));
-	const [aboutToggleState, setAboutToggleState] = useState<SVGToggleState>(SVGToggleState.visible);
+	const [dualToggleState, setDualToggleState] = useState<DualToggleState>(decideDualToggleState(FooterToggleState.visible, FooterToggleState.visible, layout));
 
 	useEffect(() => {
-		setLongTermToggleState((prev) => {
-			return pickLongTermToggleState(prev, layout);
+		setDualToggleState((prev) => {
+			return decideDualToggleState(prev.sidebar, prev.overlay, layout);
 		});
 	}, [layout]);
 
-	function longTermOnToggle(isOn: boolean) {
-		setLongTermToggleState(isOn ? SVGToggleState.on : SVGToggleState.visible);
-		setAboutToggleState(SVGToggleState.visible);
+	function sidebarOnToggle(isOn: boolean) {
+		if (isOn)
+			setDualToggleState(decideDualToggleState(FooterToggleState.on, FooterToggleState.hidden, layout));
+		else
+			setDualToggleState(decideDualToggleState(FooterToggleState.visible, FooterToggleState.visible, layout));
 	}
 
-	function aboutOnToggle(isOn: boolean) {
-		setAboutToggleState(isOn ? SVGToggleState.on : SVGToggleState.visible);
-		setLongTermToggleState(pickLongTermToggleState(SVGToggleState.visible, layout));
+	function overlayOnToggle(isOn: boolean) {
+		if (isOn)
+			setDualToggleState(decideDualToggleState(FooterToggleState.hidden, FooterToggleState.on, layout));
+		else
+			setDualToggleState(decideDualToggleState(FooterToggleState.visible, FooterToggleState.visible, layout));
 	}
+
+	const fillWithSidebar = dualToggleState.sidebar === FooterToggleState.on;
+	const fillWithOverlay = dualToggleState.overlay === FooterToggleState.on;
 
 	return (
-		<ResponsiveLayout
-			layout={layout}
-			fillWithLongTerm={longTermToggleState === SVGToggleState.on}
-			fillWithAbout={aboutToggleState === SVGToggleState.on}
+		<Root>
+			<BackgroundFill
+				fillWithSidebar={fillWithSidebar}
+				fillWithOverlay={fillWithOverlay}
+			>
+				<ResponsiveLayout
+					layout={layout}
+					fillWithSidebar={fillWithSidebar}
+					fillWithOverlay={fillWithOverlay}
 
-			footer={
-				<Footer
-					longTermToggleState={longTermToggleState}
-					longTermOnToggle={longTermOnToggle}
-					aboutToggleState={aboutToggleState}
-					aboutOnToggle={aboutOnToggle}
+					footer={
+						<Footer
+							longTermToggleState={dualToggleState.sidebar}
+							longTermOnToggle={sidebarOnToggle}
+							aboutToggleState={dualToggleState.overlay}
+							aboutOnToggle={overlayOnToggle}
+						/>
+					}
 				/>
-			}
-		/>
+			</BackgroundFill>
+		</Root>
 	);
 }
+
+const Root = styled(FlexColumn)`
+	height: 100%;
+	width: 100%;
+`
 
 
 

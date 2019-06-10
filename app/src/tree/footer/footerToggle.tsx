@@ -1,16 +1,16 @@
 import * as React from "react";
 import styled, { StyledFC } from "@/styles/theme";
 
-export enum SVGToggleState {
+export enum FooterToggleState {
 	hidden,
 	visible,
 	on
 }
 
-export interface SVGToggleProps {
+export interface FooterToggleProps {
 	svg: JSX.Element;
 	title: string;
-	state: SVGToggleState;
+	state: FooterToggleState;
 	onToggle: (isToggled: boolean) => void;
 }
 
@@ -28,14 +28,14 @@ const Toggle = styled.button<ToggleProps> `
 	margin: 1rem;
 `;
 
-export const SVGToggle: StyledFC<SVGToggleProps> = (props) => {
-	if (props.state === SVGToggleState.hidden) {
+export const FooterToggle: StyledFC<FooterToggleProps> = (props) => {
+	if (props.state === FooterToggleState.hidden) {
 		return <div></div>;
 	}
 	function onClick() {
-		props.onToggle(props.state === SVGToggleState.on ? false : true);
+		props.onToggle(props.state === FooterToggleState.on ? false : true);
 	}
-	return (<Toggle className={props.className} onClick={onClick} title={props.title} isOn={props.state === SVGToggleState.on}>
+	return (<Toggle className={props.className} onClick={onClick} title={props.title} isOn={props.state === FooterToggleState.on}>
 		{props.svg}
 	</Toggle>);
 };

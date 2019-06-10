@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Flex, FlexRow } from "@/unit/components/flex";
-import { SVGToggleState, SVGToggle } from "./svgToggle";
+import { FooterToggleState, FooterToggle } from "./footerToggle";
 import styled from "@/styles/theme";
 
 interface FooterProps {
-	longTermToggleState: SVGToggleState,
+	longTermToggleState: FooterToggleState,
 	longTermOnToggle: (isOn: boolean) => void,
-	aboutToggleState: SVGToggleState,
+	aboutToggleState: FooterToggleState,
 	aboutOnToggle: (isOn: boolean) => void,
 }
 
@@ -15,19 +15,26 @@ export const Footer: React.FC<FooterProps> = (props) => {
 	const longTermSvg = <p>Long Term</p>;
 	const aboutSvg = <p>About</p>;
 
+	let title: JSX.Element = null;
+	if (props.longTermToggleState !== FooterToggleState.on && props.aboutToggleState !== FooterToggleState.on) {
+		title = (
+			<Flex>
+				<FooterLocationTitle>Wells, Maine</FooterLocationTitle>
+			</Flex>
+		)
+	}
+
 	return (
 		<FlexRow flex={0} alignItems="center">
 			<Flex>
-				<SVGToggle
+				<FooterToggle
 					svg={longTermSvg}
 					title="See Tides Schedule"
 					state={props.longTermToggleState}
 					onToggle={props.longTermOnToggle}
 				/>
 			</Flex>
-			<Flex>
-				<FooterLocationTitle>Wells, Maine</FooterLocationTitle>
-			</Flex>
+			{title}
 			<Flex>
 				<RightSVGToggle
 					svg={aboutSvg}
@@ -40,7 +47,7 @@ export const Footer: React.FC<FooterProps> = (props) => {
 	);
 }
 
-const RightSVGToggle = styled(SVGToggle)`
+const RightSVGToggle = styled(FooterToggle)`
 	display: block;
 	margin-left: auto;
 `;

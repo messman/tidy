@@ -6,7 +6,7 @@ import { Flex, FlexColumn, FlexRow } from "@/unit/components/flex";
 
 export function pickLayout(dimensions: WindowDimensions): ResponsiveLayoutType {
 	// TODO: maybe we can pass previous dimensions or previous layout here? To prevent any jarring stuff
-	if (dimensions.width > 1400) {
+	if (dimensions.width > 1000) {
 		return ResponsiveLayoutType.wide;
 	}
 	return ResponsiveLayoutType.compact;
@@ -14,31 +14,31 @@ export function pickLayout(dimensions: WindowDimensions): ResponsiveLayoutType {
 
 interface ResponsiveLayoutProps {
 	layout: ResponsiveLayoutType,
-	fillWithLongTerm: boolean,
-	fillWithAbout: boolean,
+	fillWithSidebar: boolean,
+	fillWithOverlay: boolean,
 
 	header?: JSX.Element,
 	timeline?: JSX.Element,
 	footer?: JSX.Element,
-	longTerm?: JSX.Element,
-	about?: JSX.Element,
+	sidebar?: JSX.Element,
+	overlay?: JSX.Element,
 }
 
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 
 	const header = props.header || <DebugView>Header {props.layout}</DebugView>
 	const timeline = props.timeline || <DebugView>Timeline</DebugView>
-	const longTerm = props.longTerm || <DebugView>Long Term</DebugView>
-	const about = props.about || <DebugView>About</DebugView>
+	const longTerm = props.sidebar || <DebugView>Long Term</DebugView>
+	const about = props.overlay || <DebugView>About</DebugView>
 	const footer = props.footer || <p>Footer</p>
 
 	let layoutElements: JSX.Element = null;
-	if (props.fillWithAbout) {
+	if (props.fillWithOverlay) {
 		layoutElements = (
 			<Flex>{about}</Flex>
 		);
 	}
-	else if (props.fillWithLongTerm) {
+	else if (props.fillWithSidebar) {
 		layoutElements = (
 			<Flex>{longTerm}</Flex>
 		);
@@ -72,20 +72,15 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	}
 
 	return (
-		<Root>
-			<FlexColumn>
-				{layoutElements}
-				{footer}
-			</FlexColumn>
-		</Root>
+		<FlexColumn>
+			{layoutElements}
+			{footer}
+		</FlexColumn>
 	);
 }
 
 
-const Root = styled(FlexColumn)`
-	height: 100%;
-	width: 100%;
-`
+
 
 
 const Filler = styled.div`
