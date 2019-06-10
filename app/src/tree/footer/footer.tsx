@@ -3,10 +3,11 @@ import { Flex, FlexRow } from "@/unit/components/flex";
 import { SVGToggleState, SVGToggle } from "./svgToggle";
 import styled from "@/styles/theme";
 
-
 interface FooterProps {
 	longTermToggleState: SVGToggleState,
+	longTermOnToggle: (isOn: boolean) => void,
 	aboutToggleState: SVGToggleState,
+	aboutOnToggle: (isOn: boolean) => void,
 }
 
 export const Footer: React.FC<FooterProps> = (props) => {
@@ -20,7 +21,7 @@ export const Footer: React.FC<FooterProps> = (props) => {
 				svg={longTermSvg}
 				title="See Tides Schedule"
 				state={props.longTermToggleState}
-				onToggle={() => alert('click!')}
+				onToggle={props.longTermOnToggle}
 			/>
 			<Flex>
 				<FooterLocationTitle>Wells, Maine</FooterLocationTitle>
@@ -29,7 +30,7 @@ export const Footer: React.FC<FooterProps> = (props) => {
 				svg={aboutSvg}
 				title="About"
 				state={props.aboutToggleState}
-				onToggle={() => alert('click!')}
+				onToggle={props.aboutOnToggle}
 			/>
 		</FlexRow>
 	);
