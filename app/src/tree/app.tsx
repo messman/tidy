@@ -11,6 +11,7 @@ import { FlexColumn } from "@/unit/components/flex";
 import styled from "@/styles/theme";
 import { About, aboutBackgroundColor } from "./about/about";
 import { LongTerm } from "./longterm/longterm";
+import { mockDataCall } from "@/data/mock"
 
 
 interface AppProps {
@@ -37,6 +38,10 @@ function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggle
 
 export const App: React.FC<AppProps> = (props) => {
 	//const { success, error, isLoading } = usePromise(() => Noaa.getNoaaData(650));
+	const { success, error, isLoading } = usePromise(() => mockDataCall(1000, true));
+	console.log(success, error, isLoading);
+
+
 	const layout = useResponsiveLayoutContext();
 	console.log(layout);
 
@@ -78,6 +83,7 @@ export const App: React.FC<AppProps> = (props) => {
 					fillWithSidebar={fillWithSidebar}
 					fillWithOverlay={fillWithOverlay}
 
+					header={<p>{`${!!success ? 'success' : ''}${!!error ? 'error' : ''}${!!isLoading ? 'isLoading' : ''}`}</p>}
 					overlay={<About />}
 					sidebar={<LongTerm />}
 
