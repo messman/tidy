@@ -18,7 +18,7 @@ export const GlobalAppStyles = createGlobalStyle`
 	
 	html {
 		font-family: ${theme.fontFamily};
-		font-weight: 400;
+		font-weight: 200;
 	}
 	
 	body {
