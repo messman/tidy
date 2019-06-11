@@ -10,6 +10,7 @@ import { BackgroundFill } from "./backgroundFill";
 import { FlexColumn } from "@/unit/components/flex";
 import styled from "@/styles/theme";
 import { About, aboutBackgroundColor } from "./about/about";
+import { LongTerm } from "./longterm/longterm";
 
 
 interface AppProps {
@@ -78,6 +79,7 @@ export const App: React.FC<AppProps> = (props) => {
 					fillWithOverlay={fillWithOverlay}
 
 					overlay={<About />}
+					sidebar={<LongTerm />}
 
 					footer={
 						<Footer

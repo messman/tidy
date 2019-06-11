@@ -12,7 +12,7 @@ interface AboutProps {
 
 export const About: React.FC<AboutProps> = (props) => {
 	return (
-		<C.Padding>
+		<ScrollPadding>
 			<C.Section>
 				<C.Title>Quick Tides</C.Title>
 				<C.Text>By Andrew Messier</C.Text>
@@ -39,6 +39,11 @@ export const About: React.FC<AboutProps> = (props) => {
 				<C.SubTitle>Version</C.SubTitle>
 				<C.Text>[VERSION]</C.Text>
 			</C.Section>
-		</C.Padding>
+		</ScrollPadding>
 	);
 }
+
+
+const ScrollPadding = styled(C.Padding)`
+	overflow-y: auto;
+`;

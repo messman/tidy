@@ -6,7 +6,7 @@ import { Flex, FlexColumn, FlexRow } from "@/unit/components/flex";
 
 export function pickLayout(dimensions: WindowDimensions): ResponsiveLayoutType {
 	// TODO: maybe we can pass previous dimensions or previous layout here? To prevent any jarring stuff
-	if (dimensions.width > 1000) {
+	if (dimensions.width > 1200) {
 		return ResponsiveLayoutType.wide;
 	}
 	return ResponsiveLayoutType.compact;
@@ -34,14 +34,10 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 
 	let layoutElements: JSX.Element = null;
 	if (props.fillWithOverlay) {
-		layoutElements = (
-			<Flex>{about}</Flex>
-		);
+		layoutElements = about;
 	}
 	else if (props.fillWithSidebar) {
-		layoutElements = (
-			<Flex>{longTerm}</Flex>
-		);
+		layoutElements = longTerm;
 	}
 	else if (props.layout === ResponsiveLayoutType.compact) {
 		layoutElements = (
@@ -66,7 +62,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 					<Flex>{header}</Flex>
 					<Flex>{timeline}</Flex>
 				</FlexColumn>
-				<Flex>{longTerm}</Flex>
+				{longTerm}
 			</FlexRow>
 		);
 	}
