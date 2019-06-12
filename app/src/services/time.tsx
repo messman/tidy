@@ -17,13 +17,26 @@ export function createPrettyTime(date: Date): PrettyTime {
 }
 
 export function createPrettyTimespan(time: number): string {
-	const minutes = Math.ceil(time / 1000 / 60);
-	if (minutes <= 1)
-		return "right about now";
-	if (minutes < 100)
-		return `in ${minutes} min`;
-	const hours = Math.round(minutes / 60);
-	if (hours === 1)
-		return "in an hour";
-	return `in ${hours} hours`;
+	let minutes = Math.ceil(time / 1000 / 60);
+	if (minutes > 0) {
+		if (minutes <= 1)
+			return "right about now";
+		if (minutes < 100)
+			return `in ${minutes} min`;
+		const hours = Math.round(minutes / 60);
+		if (hours === 1)
+			return "in an hour";
+		return `in ${hours} hours`;
+	}
+	else {
+		minutes = Math.abs(minutes);
+		if (minutes <= 1)
+			return "moments ago";
+		if (minutes < 100)
+			return `${minutes} min ago`;
+		const hours = Math.round(minutes / 60);
+		if (hours === 1)
+			return "about an hour ago";
+		return `${hours} hours ago`;
+	}
 }

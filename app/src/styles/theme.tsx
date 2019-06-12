@@ -1,5 +1,5 @@
 import baseStyled, { css as baseCss, ThemedStyledInterface, BaseThemedCssFunction, createGlobalStyle, ThemeProps, FlattenInterpolation } from "styled-components";
-export { ThemeProvider } from "styled-components";
+export { ThemeProvider, keyframes } from "styled-components";
 
 export const theme = {
 	color: {

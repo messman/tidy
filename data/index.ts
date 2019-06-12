@@ -13,32 +13,36 @@ export interface RError {
 }
 
 export interface RSuccess {
-	current: {
-		tides: {
-			percent: number,
-			height: number,
-			previous: TideEvent,
-			next: TideEvent
-		},
-		sun: {
-			nextEvent: SunEvent
-		},
-		weather: WeatherEvent
+	current: RSuccessCurrent,
+	predictions: RSuccessPredictions
+}
+
+export interface RSuccessCurrent {
+	tides: {
+		percent: number,
+		height: number,
+		previous: TideEvent,
+		next: TideEvent
 	},
-	predictions: {
-		tides: {
-			maxHeight: number,
-			minHeight: number,
-			events: TideEvent[],
-		}
-		sun: SunEvent[],
-		weather: WeatherEvent[]
+	sun: {
+		nextEvent: SunEvent
+	},
+	weather: WeatherEvent
+}
+
+export interface RSuccessPredictions {
+	tides: {
+		maxHeight: number,
+		minHeight: number,
+		events: TideEvent[],
 	}
+	sun: SunEvent[],
+	weather: WeatherEvent[]
 }
 
 export interface TideEvent {
 	time: Date,
-	type: 'low' | 'high'
+	isLow: boolean,
 	height: number
 }
 
@@ -86,8 +90,8 @@ export function getSuccessResponse(): APIResponse {
 				tides: {
 					percent: .7,
 					height: 8.5,
-					previous: createTideEvent("1/1/2019 8:00:00", 'low', 0),
-					next: createTideEvent("1/1/2019 14:20:00", 'high', 11)
+					previous: createTideEvent("1/1/2019 8:00:00", true, 0),
+					next: createTideEvent("1/1/2019 14:20:00", false, 11)
 				},
 				sun: {
 					nextEvent: createSunEvent("1/1/2019 17:10:00", false)
@@ -108,26 +112,26 @@ export function getSuccessResponse(): APIResponse {
 					minHeight: 0,
 					maxHeight: 12,
 					events: [
-						createTideEvent("1/1/2019 14:20:00", 'high', 11),
-						createTideEvent("1/1/2019 20:30:00", 'low', 1),
-						createTideEvent("1/2/2019 02:40:00", 'high', 10.5),
-						createTideEvent("1/2/2019 09:60:00", 'low', 1),
-						createTideEvent("1/2/2019 15:20:00", 'high', 11.5),
-						createTideEvent("1/2/2019 20:10:00", 'low', 2),
-						createTideEvent("1/3/2019 02:30:00", 'high', 8.9),
-						createTideEvent("1/3/2019 08:20:00", 'low', 0.6),
-						createTideEvent("1/3/2019 14:20:00", 'high', 11),
-						createTideEvent("1/3/2019 21:40:00", 'low', .4),
-						createTideEvent("1/4/2019 03:50:00", 'high', 10.8),
-						createTideEvent("1/4/2019 10:10:00", 'low', 3),
-						createTideEvent("1/4/2019 16:00:00", 'high', 12),
-						createTideEvent("1/4/2019 22:10:00", 'low', 4),
-						createTideEvent("1/5/2019 04:10:00", 'high', 7),
-						createTideEvent("1/5/2019 10:40:00", 'low', 0),
-						createTideEvent("1/5/2019 17:20:00", 'high', 10),
-						createTideEvent("1/5/2019 23:30:00", 'low', 1),
-						createTideEvent("1/6/2019 05:40:00", 'high', 11.5),
-						createTideEvent("1/6/2019 11:20:00", 'low', 1.3),
+						createTideEvent("1/1/2019 14:20:00", false, 11),
+						createTideEvent("1/1/2019 20:30:00", true, 1),
+						createTideEvent("1/2/2019 02:40:00", false, 10.5),
+						createTideEvent("1/2/2019 09:60:00", true, 1),
+						createTideEvent("1/2/2019 15:20:00", false, 11.5),
+						createTideEvent("1/2/2019 20:10:00", true, 2),
+						createTideEvent("1/3/2019 02:30:00", false, 8.9),
+						createTideEvent("1/3/2019 08:20:00", true, 0.6),
+						createTideEvent("1/3/2019 14:20:00", false, 11),
+						createTideEvent("1/3/2019 21:40:00", true, .4),
+						createTideEvent("1/4/2019 03:50:00", false, 10.8),
+						createTideEvent("1/4/2019 10:10:00", true, 3),
+						createTideEvent("1/4/2019 16:00:00", false, 12),
+						createTideEvent("1/4/2019 22:10:00", true, 4),
+						createTideEvent("1/5/2019 04:10:00", false, 7),
+						createTideEvent("1/5/2019 10:40:00", true, 0),
+						createTideEvent("1/5/2019 17:20:00", false, 10),
+						createTideEvent("1/5/2019 23:30:00", true, 1),
+						createTideEvent("1/6/2019 05:40:00", false, 11.5),
+						createTideEvent("1/6/2019 11:20:00", true, 1.3),
 					]
 				},
 				sun: [
@@ -181,8 +185,8 @@ export function getSuccessResponse(): APIResponse {
 	}
 }
 
-function createTideEvent(time: string, type: 'low' | 'high', height: number): TideEvent {
-	return { time: new Date(time), type, height };
+function createTideEvent(time: string, isLow: boolean, height: number): TideEvent {
+	return { time: new Date(time), isLow, height };
 }
 
 function createSunEvent(time: string, isSunrise: boolean): SunEvent {

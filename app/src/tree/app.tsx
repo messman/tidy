@@ -12,6 +12,7 @@ import styled from "@/styles/theme";
 import { About, aboutBackgroundColor } from "./about/about";
 import { LongTerm } from "./longterm/longterm";
 import { mockDataCall } from "@/data/mock"
+import { Header } from "./header/header";
 
 
 interface AppProps {
@@ -38,8 +39,8 @@ function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggle
 
 export const App: React.FC<AppProps> = (props) => {
 	//const { success, error, isLoading } = usePromise(() => Noaa.getNoaaData(650));
-	const { success, error, isLoading } = usePromise(() => mockDataCall(1000, true));
-	console.log(success, error, isLoading);
+	const { success: apiResponse, error, isLoading } = usePromise(() => mockDataCall(3000, true));
+	console.log(apiResponse, error, isLoading);
 
 
 	const layout = useResponsiveLayoutContext();
@@ -83,7 +84,12 @@ export const App: React.FC<AppProps> = (props) => {
 					fillWithSidebar={fillWithSidebar}
 					fillWithOverlay={fillWithOverlay}
 
-					header={<p>{`${!!success ? 'success' : ''}${!!error ? 'error' : ''}${!!isLoading ? 'isLoading' : ''}`}</p>}
+					header={
+						<Header
+							isLoading={isLoading}
+							apiResponse={apiResponse}
+						/>
+					}
 					overlay={<About />}
 					sidebar={<LongTerm />}
 
