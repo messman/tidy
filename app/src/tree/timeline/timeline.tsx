@@ -76,5 +76,6 @@ const Other = styled(Flex)`
 `
 
 const FlexSpace = styled(Flex)`
+	z-index: 0;
 	background-image: linear-gradient(180deg, ${props => props.theme.color.layerDark} 0%, ${props => props.theme.color.bgMed} 100%);
 `;

@@ -34,6 +34,7 @@ export const GlobalAppStyles = createGlobalStyle`
 
 	* {
 		box-sizing: border-box;
+		z-index: 1
 	}
 `;
 
