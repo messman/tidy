@@ -31,15 +31,23 @@ export const Text = styled.p`
 `;
 
 const ShadowTop = styled.div`
+	display: block;
+	width: 100%;
+	height: 1px;
 	position: relative;
 	z-index: 1;
 	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
+	background-color: ${props => props.theme.color.bgDark};
 `;
 
 const ShadowBottom = styled.div`
+	display: block;
+	width: 100%;
+	height: 1px;
 	position: relative;
 	z-index: 1;
 	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
+	background-color: ${props => props.theme.color.bgDark};
 `;
 
 export const ShadowBox: React.FC = (props) => {

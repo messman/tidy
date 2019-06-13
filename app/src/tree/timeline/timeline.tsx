@@ -4,8 +4,12 @@ import styled, { css, ThemedCSS } from "@/styles/theme";
 import * as C from "@/styles/common";
 import { useResponsiveLayoutContext } from "@/unit/hooks/useResponsiveLayout";
 import { ResponsiveLayoutType, getLayoutRange } from "../responsiveLayout";
+import { APIResponse } from "../../../../data";
+import { CurrentConditions } from "./currentConditions";
 
 interface TimelineProps {
+	isLoading: boolean,
+	apiResponse: APIResponse
 }
 
 export const Timeline: React.FC<TimelineProps> = (props) => {
@@ -17,21 +21,23 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 		<Border>
 			<FlexRow flex={"none"}>
 				<One>
-					<div>{layout}</div>
-					<div>{layout}</div>
+					<CurrentConditions {...props} />
 				</One>
 				<Other>
-					<div>Hello</div>
+					<h1>Hello</h1>
+					<h1>Hello</h1>
+					<h1>Hello</h1>
 				</Other>
 			</FlexRow>
 			<FlexRow>
-				<One>Other</One>
+				<One>
+					<C.ShadowBox>
+						<FlexSpace />
+					</C.ShadowBox>
+				</One>
 				<Other>Hello</Other>
 			</FlexRow>
 		</Border>
-		// <C.ShadowBox>
-		// 	<FlexSpace></FlexSpace>
-		// </C.ShadowBox>
 	);
 }
 
@@ -51,18 +57,15 @@ const OptionalFlexRow = styled.div<OptionalFlexRowProps>`
 
 
 const Border = styled(FlexColumn)`
-	background-color: ${props => props.theme.color.bgMed};
 	overflow-y: auto;
 	white-space: nowrap;
 `;
 
-const One = styled(Flex)`
+const One = styled(FlexColumn)`
 	width: 100vw;
 	max-width: ${ResponsiveLayoutType.regular}px;
-	border: 1px solid yellow;
 	flex: none;
 	position: relative;
-	display: block;
 `;
 
 const Other = styled(Flex)`

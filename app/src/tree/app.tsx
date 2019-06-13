@@ -94,6 +94,8 @@ export const App: React.FC<AppProps> = (props) => {
 
 					timeline={
 						<Timeline
+							isLoading={isLoading}
+							apiResponse={apiResponse}
 						/>
 					}
 

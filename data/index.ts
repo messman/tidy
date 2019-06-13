@@ -48,7 +48,7 @@ export interface TideEvent {
 
 export interface SunEvent {
 	time: Date,
-	type: 'sunrise' | 'sunset'
+	isSunrise: boolean
 }
 
 export interface WeatherEvent {
@@ -190,7 +190,7 @@ function createTideEvent(time: string, isLow: boolean, height: number): TideEven
 }
 
 function createSunEvent(time: string, isSunrise: boolean): SunEvent {
-	return { time: new Date(time), type: isSunrise ? 'sunrise' : 'sunset' };
+	return { time: new Date(time), isSunrise };
 }
 
 function createWeatherEvent(time: string, isCloudy: boolean, temp: number, chanceRain: number, wind: number): WeatherEvent {
