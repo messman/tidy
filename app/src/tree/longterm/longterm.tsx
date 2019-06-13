@@ -19,8 +19,9 @@ export const LongTerm: React.FC<LongTermProps> = (props) => {
 					<FlexRight>10pm</FlexRight>
 				</FlexRow>
 			</PaddingWithoutBottom>
-			<FlexSpace></FlexSpace>
-			<ShadowBottom></ShadowBottom>
+			<C.ShadowBox>
+				<FlexSpace />
+			</C.ShadowBox>
 		</ScrollFlex>
 	);
 }
@@ -32,21 +33,7 @@ const ScrollFlex = styled(FlexColumn)`
 const PaddingWithoutBottom = styled.div`
 	padding: 1rem;
 	padding-bottom: 0;
-
-	/* For the top shadow */
-	position: relative;
-	z-index: 1;
-	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
 `;
-
-const ShadowBottom = styled.div`
-	width: 100%;
-
-	/* For the top shadow */
-	position: relative;
-	z-index: 1;
-	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
-`
 
 const FlexRight = styled(Flex)`
 	text-align: right;

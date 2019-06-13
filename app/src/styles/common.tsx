@@ -1,7 +1,8 @@
 import styled from "./theme";
 import { Flex } from "@/unit/components/flex";
+import * as React from "react";
 
-export const Padding = styled(Flex)`
+export const FlexPadding = styled(Flex)`
 	padding: 1rem;
 `;
 
@@ -28,3 +29,25 @@ export const Text = styled.p`
 	font-size: 1.2rem;
 	margin: .2rem;
 `;
+
+const ShadowTop = styled.div`
+	position: relative;
+	z-index: 1;
+	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
+`;
+
+const ShadowBottom = styled.div`
+	position: relative;
+	z-index: 1;
+	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
+`;
+
+export const ShadowBox: React.FC = (props) => {
+	return (
+		<>
+			<ShadowTop />
+			{props.children}
+			<ShadowBottom />
+		</>
+	)
+}

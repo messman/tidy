@@ -16,7 +16,7 @@ export const Header: React.FC<HeaderProps> = (props) => {
 	const { isLoading, apiResponse } = props;
 
 	return (
-		<C.Padding>
+		<HeaderPadding>
 			<HeaderTitle
 				isLoading={isLoading}
 				apiResponse={apiResponse}
@@ -27,9 +27,14 @@ export const Header: React.FC<HeaderProps> = (props) => {
 					apiResponse={apiResponse}
 				/>
 			</UpperPadding>
-		</C.Padding>
+		</HeaderPadding>
 	);
 }
+
+const HeaderPadding = styled.div`
+	padding: 1rem;
+	margin-bottom: 1rem;
+`;
 
 const UpperPadding = styled.div`
 	margin-top: 2rem;

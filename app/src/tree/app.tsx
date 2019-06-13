@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { usePromise } from "@/unit/hooks/usePromise";
-import { useResponsiveLayoutContext, ResponsiveLayoutType } from "@/unit/hooks/useResponsiveLayout";
+import { useResponsiveLayoutContext } from "@/unit/hooks/useResponsiveLayout";
 import * as Noaa from "../services/noaa";
-import { ResponsiveLayout } from "./responsiveLayout";
+import { ResponsiveLayout, ResponsiveLayoutType } from "./responsiveLayout";
 import { Footer } from "./footer/footer";
 import { FooterToggleState } from "./footer/footerToggle";
 import { BackgroundFill } from "./backgroundFill";
@@ -13,6 +13,7 @@ import { About, aboutBackgroundColor } from "./about/about";
 import { LongTerm } from "./longterm/longterm";
 import { mockDataCall } from "@/data/mock"
 import { Header } from "./header/header";
+import { Timeline } from "./timeline/timeline";
 
 
 interface AppProps {
@@ -39,7 +40,7 @@ function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggle
 
 export const App: React.FC<AppProps> = (props) => {
 	//const { success, error, isLoading } = usePromise(() => Noaa.getNoaaData(650));
-	const { success: apiResponse, error, isLoading } = usePromise(() => mockDataCall(3000, true));
+	const { success: apiResponse, error, isLoading } = usePromise(() => mockDataCall(500, true));
 	console.log(apiResponse, error, isLoading);
 
 
@@ -90,6 +91,12 @@ export const App: React.FC<AppProps> = (props) => {
 							apiResponse={apiResponse}
 						/>
 					}
+
+					timeline={
+						<Timeline
+						/>
+					}
+
 					overlay={<About />}
 					sidebar={<LongTerm />}
 

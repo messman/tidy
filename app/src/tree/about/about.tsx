@@ -44,6 +44,6 @@ export const About: React.FC<AboutProps> = (props) => {
 }
 
 
-const ScrollPadding = styled(C.Padding)`
+const ScrollPadding = styled(C.FlexPadding)`
 	overflow-y: auto;
 `;

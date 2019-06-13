@@ -2,17 +2,12 @@ import * as React from "react";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useWindowDimensions, WindowDimensions } from "./useWindowDimensions";
 
-export enum ResponsiveLayoutType {
-	compact,
-	regular,
-	wide
-}
 
 export interface PickLayout {
-	(dimensions: WindowDimensions): ResponsiveLayoutType
+	(dimensions: WindowDimensions): number
 }
 
-function useResponsiveLayout(pickLayout: PickLayout): ResponsiveLayoutType {
+function useResponsiveLayout(pickLayout: PickLayout): number {
 
 	const dimensions = useWindowDimensions();
 	const [layout, setLayout] = useState(pickLayout(dimensions));
@@ -25,8 +20,8 @@ function useResponsiveLayout(pickLayout: PickLayout): ResponsiveLayoutType {
 	return layout;
 }
 
-const ResponsiveLayoutCtx = createContext<ResponsiveLayoutType>(null);
-export const useResponsiveLayoutContext = () => useContext(ResponsiveLayoutCtx);
+const ResponsiveLayoutCtx = createContext<number>(null);
+export const useResponsiveLayoutContext = () => useContext<number>(ResponsiveLayoutCtx);
 
 export interface ResponsiveLayoutProviderProps {
 	pickLayout: PickLayout

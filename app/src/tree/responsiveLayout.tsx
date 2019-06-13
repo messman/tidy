@@ -1,15 +1,30 @@
 import * as React from "react";
 import styled from "@/styles/theme";
 import { WindowDimensions } from "@/unit/hooks/useWindowDimensions";
-import { ResponsiveLayoutType } from "@/unit/hooks/useResponsiveLayout";
 import { Flex, FlexColumn, FlexRow } from "@/unit/components/flex";
 
-export function pickLayout(dimensions: WindowDimensions): ResponsiveLayoutType {
-	// TODO: maybe we can pass previous dimensions or previous layout here? To prevent any jarring stuff
-	if (dimensions.width > 1200) {
-		return ResponsiveLayoutType.wide;
-	}
-	return ResponsiveLayoutType.compact;
+
+export enum ResponsiveLayoutType {
+	compact = 0,
+	regular = 500,
+	wide = 1200
+}
+
+const layoutKeys = Object.keys(ResponsiveLayoutType).filter(function (key) {
+	return isNaN(parseInt(key, 10));
+}).reverse();
+
+export function pickLayout(dimensions: WindowDimensions): number {
+	return ResponsiveLayoutType[layoutKeys.find(function (key) {
+		return dimensions.width > ResponsiveLayoutType[key];
+	})];
+}
+
+export function getLayoutRange(layoutType: ResponsiveLayoutType): [number, number | null] {
+	const index = layoutKeys.findIndex(function (key) {
+		return ResponsiveLayoutType[key] === layoutType;
+	});
+	return [ResponsiveLayoutType[layoutKeys[index]], index === 0 ? null : ResponsiveLayoutType[layoutKeys[index - 1]]]
 }
 
 interface ResponsiveLayoutProps {
@@ -17,52 +32,39 @@ interface ResponsiveLayoutProps {
 	fillWithSidebar: boolean,
 	fillWithOverlay: boolean,
 
-	header?: JSX.Element,
+	header: JSX.Element,
 	timeline?: JSX.Element,
-	footer?: JSX.Element,
-	sidebar?: JSX.Element,
-	overlay?: JSX.Element,
+	footer: JSX.Element,
+	sidebar: JSX.Element,
+	overlay: JSX.Element,
 }
 
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
-
-	const header = props.header || <DebugView>Header {props.layout}</DebugView>
-	const timeline = props.timeline || <DebugView>Timeline</DebugView>
-	const longTerm = props.sidebar || <DebugView>Long Term</DebugView>
-	const about = props.overlay || <DebugView>About</DebugView>
-	const footer = props.footer || <p>Footer</p>
+	const { header, timeline, sidebar, overlay, footer } = props;
 
 	let layoutElements: JSX.Element = null;
 	if (props.fillWithOverlay) {
-		layoutElements = about;
+		layoutElements = overlay;
 	}
 	else if (props.fillWithSidebar) {
-		layoutElements = longTerm;
+		layoutElements = sidebar;
 	}
-	else if (props.layout === ResponsiveLayoutType.compact) {
+	else if (props.layout === ResponsiveLayoutType.compact || props.layout === ResponsiveLayoutType.regular) {
 		layoutElements = (
 			<>
-				<Flex>{header}</Flex>
-				<Flex>{timeline}</Flex>
-			</>
-		);
-	}
-	else if (props.layout === ResponsiveLayoutType.regular) {
-		layoutElements = (
-			<>
-				<Flex>{header}</Flex>
-				<Flex>{timeline}</Flex>
+				{header}
+				{timeline}
 			</>
 		);
 	}
 	else if (props.layout === ResponsiveLayoutType.wide) {
 		layoutElements = (
 			<FlexRow>
-				<FlexColumn flex={2} >
-					<Flex>{header}</Flex>
-					<Flex>{timeline}</Flex>
+				<FlexColumn flex={1.8} >
+					{header}
+					{timeline}
 				</FlexColumn>
-				{longTerm}
+				{sidebar}
 			</FlexRow>
 		);
 	}
