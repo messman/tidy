@@ -15,7 +15,19 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 
 	return (
 		<Border>
-			{layout}
+			<FlexRow flex={"none"}>
+				<One>
+					<div>{layout}</div>
+					<div>{layout}</div>
+				</One>
+				<Other>
+					<div>Hello</div>
+				</Other>
+			</FlexRow>
+			<FlexRow>
+				<One>Other</One>
+				<Other>Hello</Other>
+			</FlexRow>
 		</Border>
 		// <C.ShadowBox>
 		// 	<FlexSpace></FlexSpace>
@@ -23,18 +35,42 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 	);
 }
 
-const Border = styled(FlexColumn)`
-	border: 1px solid red;
+interface OptionalFlexRowProps {
+	useFlex?: boolean
+}
 
+const OptionalFlexRow = styled.div<OptionalFlexRowProps>`
 	font-size: 0;
+
 	> * {
 		font-size: initial;
 	}
+
+	flex: ${props => props.useFlex ? 1 : "none"};
 `;
 
-const One = styled.div`
-	width: 100vw;
+
+const Border = styled(FlexColumn)`
+	background-color: ${props => props.theme.color.bgMed};
+	overflow-y: auto;
+	white-space: nowrap;
 `;
+
+const One = styled(Flex)`
+	width: 100vw;
+	max-width: ${ResponsiveLayoutType.regular}px;
+	border: 1px solid yellow;
+	flex: none;
+	position: relative;
+	display: block;
+`;
+
+const Other = styled(Flex)`
+	border: 1px solid red;
+	flex-shrink: 0;
+	flex: 1;
+	min-width: 500px;
+`
 
 const FlexSpace = styled(Flex)`
 	background-image: linear-gradient(180deg, ${props => props.theme.color.layerDark} 0%, ${props => props.theme.color.bgMed} 100%);
