@@ -19,14 +19,14 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 	console.log(layout, ResponsiveLayoutType[layout], getLayoutRange(layout));
 
 	const waveAnimationOptions: WaveAnimationOptions = {
-		amplitude: 8,
-		waveSeparation: 18,
+		amplitude: 10,
+		waveSeparation: 12,
 		topBottomPadding: 0,
 		period: 210,
 		periodVariation: 5,
-		periodSeconds: 4,
-		periodSecondsVariation: 1,
-		timeOffsetSecondsVariation: -2
+		periodSeconds: 4.5,
+		periodSecondsVariation: 2,
+		timeOffsetSecondsVariation: -3
 	};
 
 	return (

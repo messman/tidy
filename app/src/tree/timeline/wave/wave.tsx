@@ -54,7 +54,8 @@ export const Wave: React.FC<WaveProps> = (props) => {
 			lowerPaddingPixels: topBottomPadding,
 			wavePeriod: period - periodVariation,
 			periodDurationSeconds: periodSeconds - periodSecondsVariation,
-			timeOffsetSeconds: timeOffsetSecondsVariation * 2
+			timeOffsetSeconds: timeOffsetSecondsVariation * 2,
+			isForward: true
 		}
 
 		animationOptions1 = {
@@ -64,7 +65,8 @@ export const Wave: React.FC<WaveProps> = (props) => {
 			lowerPaddingPixels: topBottomPadding,
 			wavePeriod: period,
 			periodDurationSeconds: periodSeconds,
-			timeOffsetSeconds: timeOffsetSecondsVariation
+			timeOffsetSeconds: timeOffsetSecondsVariation,
+			isForward: false,
 		}
 
 		animationOptions2 = {
@@ -74,7 +76,8 @@ export const Wave: React.FC<WaveProps> = (props) => {
 			lowerPaddingPixels: topBottomPadding,
 			wavePeriod: period + periodVariation,
 			periodDurationSeconds: periodSeconds + periodSecondsVariation,
-			timeOffsetSeconds: 0
+			timeOffsetSeconds: 0,
+			isForward: true
 		}
 	}
 
@@ -131,13 +134,16 @@ export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
 
 		const name = `wave_${index}`;
 
+		const from = a.isForward ? -width : "0";
+		const to = a.isForward ? "0" : -width;
+
 		wave = (
 			<svg className={props.className} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
 				<defs>
 					<path id={name} d={path}></path>
 				</defs>
 				<use xlinkHref={`#${name}`} x="0" y="0">
-					<animate attributeName="x" from={-width} to="0" dur={`${totalDurationSeconds}s`} begin={a.timeOffsetSeconds} repeatCount="indefinite" />
+					<animate attributeName="x" from={from} to={to} dur={`${totalDurationSeconds}s`} begin={a.timeOffsetSeconds} repeatCount="indefinite" />
 				</use>
 			</svg>
 		);
@@ -182,7 +188,8 @@ interface SVGWaveAnimationOptions {
 	/** Pixels for the period of a wave */
 	wavePeriod: number,
 	periodDurationSeconds: number,
-	timeOffsetSeconds: number
+	timeOffsetSeconds: number,
+	isForward: boolean
 }
 
 interface SVGWaveProps {
