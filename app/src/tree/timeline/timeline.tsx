@@ -23,9 +23,10 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 		waveSeparation: 18,
 		topBottomPadding: 0,
 		period: 210,
-		periodVariation: 15,
-		periodSeconds: 5,
-		periodSecondsVariation: 1.5,
+		periodVariation: 5,
+		periodSeconds: 4,
+		periodSecondsVariation: 1,
+		timeOffsetSecondsVariation: -2
 	};
 
 	return (

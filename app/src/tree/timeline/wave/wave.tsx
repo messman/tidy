@@ -20,6 +20,7 @@ export interface WaveAnimationOptions {
 	periodVariation: number,
 	periodSeconds: number,
 	periodSecondsVariation: number,
+	timeOffsetSecondsVariation: number
 }
 
 export const Wave: React.FC<WaveProps> = (props) => {
@@ -42,7 +43,8 @@ export const Wave: React.FC<WaveProps> = (props) => {
 			period,
 			periodVariation,
 			periodSeconds,
-			periodSecondsVariation
+			periodSecondsVariation,
+			timeOffsetSecondsVariation
 		} = props.animationOptions;
 
 		animationOptions0 = {
@@ -52,6 +54,7 @@ export const Wave: React.FC<WaveProps> = (props) => {
 			lowerPaddingPixels: topBottomPadding,
 			wavePeriod: period - periodVariation,
 			periodDurationSeconds: periodSeconds - periodSecondsVariation,
+			timeOffsetSeconds: timeOffsetSecondsVariation * 2
 		}
 
 		animationOptions1 = {
@@ -61,6 +64,7 @@ export const Wave: React.FC<WaveProps> = (props) => {
 			lowerPaddingPixels: topBottomPadding,
 			wavePeriod: period,
 			periodDurationSeconds: periodSeconds,
+			timeOffsetSeconds: timeOffsetSecondsVariation
 		}
 
 		animationOptions2 = {
@@ -70,40 +74,44 @@ export const Wave: React.FC<WaveProps> = (props) => {
 			lowerPaddingPixels: topBottomPadding,
 			wavePeriod: period + periodVariation,
 			periodDurationSeconds: periodSeconds + periodSecondsVariation,
+			timeOffsetSeconds: 0
 		}
 	}
 
 	return (
-		<>
-			<Flex ref={ref}></Flex>
-			<SVGWave
-				index={0}
-				width={size.width}
-				height={size.height}
-				heightPercent={heightPercent}
-				animationOptions={animationOptions0}
-			/>
-			<SVGWave
-				index={1}
-				width={size.width}
-				height={size.height}
-				heightPercent={heightPercent}
-				animationOptions={animationOptions1}
-			/>
-			<SVGWave
-				index={2}
-				width={size.width}
-				height={size.height}
-				heightPercent={heightPercent}
-				animationOptions={animationOptions2}
-			/>
-		</>
+		<C.ShadowBox>
+			<FlexSpace ref={ref}>
+				<SVGWave
+					index={0}
+					width={size.width}
+					height={size.height}
+					heightPercent={heightPercent}
+					animationOptions={animationOptions0}
+				/>
+				<SVGWave
+					index={1}
+					width={size.width}
+					height={size.height}
+					heightPercent={heightPercent}
+					animationOptions={animationOptions1}
+				/>
+				<SVGWave
+					index={2}
+					width={size.width}
+					height={size.height}
+					heightPercent={heightPercent}
+					animationOptions={animationOptions2}
+				/>
+				<OpacityCover heightPercent={heightPercent} />
+			</FlexSpace>
+		</C.ShadowBox>
 	);
 }
 
 const FlexSpace = styled(Flex)`
 	z-index: 0;
-	background-image: linear-gradient(180deg, ${props => props.theme.color.layerDark} 0%, ${props => props.theme.color.bgMed} 100%);
+	background-image: linear-gradient(180deg, ${props => props.theme.color.skyUpper} 2%, ${props => props.theme.color.skyLower} 38%);
+	overflow: hidden;
 `;
 
 export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
@@ -126,11 +134,10 @@ export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
 		wave = (
 			<svg className={props.className} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
 				<defs>
-					<path id={name} d={path}>
-					</path>
+					<path id={name} d={path}></path>
 				</defs>
 				<use xlinkHref={`#${name}`} x="0" y="0">
-					<animate attributeName="x" from={-width} to="0" dur={`${totalDurationSeconds}s`} repeatCount="indefinite" />
+					<animate attributeName="x" from={-width} to="0" dur={`${totalDurationSeconds}s`} begin={a.timeOffsetSeconds} repeatCount="indefinite" />
 				</use>
 			</svg>
 		);
@@ -139,13 +146,27 @@ export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
 }
 
 const SVGWave = styled(_SVGWave)`
+	-webkit-filter: drop-shadow(5px 5px 4px rgba(0, 0, 0, .7));
+	filter: drop-shadow(5px 5px 4px rgba(0, 0, 0, .7));
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: .7;
 	fill: ${props => (([props.theme.color.layerLight, props.theme.color.layerMed, props.theme.color.layerDark])[props.index])};
+`;
+
+interface OpacityCoverProps {
+	heightPercent: number
+}
+
+const OpacityCover = styled.div<OpacityCoverProps>`
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: linear-gradient(180deg, transparent ${props => props.heightPercent * 100}%, ${props => props.theme.color.bgMed} 100%);
 `;
 
 
@@ -161,6 +182,7 @@ interface SVGWaveAnimationOptions {
 	/** Pixels for the period of a wave */
 	wavePeriod: number,
 	periodDurationSeconds: number,
+	timeOffsetSeconds: number
 }
 
 interface SVGWaveProps {

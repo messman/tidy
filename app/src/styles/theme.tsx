@@ -10,6 +10,8 @@ export const theme = {
 		layerDark: "#4777AE",
 		layerMed: "#6399D6",
 		layerLight: "#D3E1F2",
+		skyUpper: "#86B6ED",
+		skyLower: "#C4DFFF"
 	},
 	fontFamily: `'Nunito', sans-serif`
 }
