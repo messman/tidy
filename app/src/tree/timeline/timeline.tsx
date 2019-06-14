@@ -6,6 +6,7 @@ import { useResponsiveLayoutContext } from "@/unit/hooks/useResponsiveLayout";
 import { ResponsiveLayoutType, getLayoutRange } from "../responsiveLayout";
 import { APIResponse } from "../../../../data";
 import { CurrentConditions } from "./currentConditions";
+import { Wave, WaveAnimationOptions } from "./wave/wave";
 
 interface TimelineProps {
 	isLoading: boolean,
@@ -16,6 +17,16 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 
 	const layout = useResponsiveLayoutContext();
 	console.log(layout, ResponsiveLayoutType[layout], getLayoutRange(layout));
+
+	const waveAnimationOptions: WaveAnimationOptions = {
+		amplitude: 8,
+		waveSeparation: 18,
+		topBottomPadding: 0,
+		period: 210,
+		periodVariation: 15,
+		periodSeconds: 5,
+		periodSecondsVariation: 1.5,
+	};
 
 	return (
 		<Border>
@@ -31,30 +42,13 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 			</FlexRow>
 			<FlexRow>
 				<One>
-					<C.ShadowBox>
-						<FlexSpace />
-					</C.ShadowBox>
+					<Wave {...props} animationOptions={waveAnimationOptions} />
 				</One>
 				<Other>Hello</Other>
 			</FlexRow>
 		</Border>
 	);
 }
-
-interface OptionalFlexRowProps {
-	useFlex?: boolean
-}
-
-const OptionalFlexRow = styled.div<OptionalFlexRowProps>`
-	font-size: 0;
-
-	> * {
-		font-size: initial;
-	}
-
-	flex: ${props => props.useFlex ? 1 : "none"};
-`;
-
 
 const Border = styled(FlexColumn)`
 	overflow-y: auto;
@@ -74,8 +68,3 @@ const Other = styled(Flex)`
 	flex: 1;
 	min-width: 500px;
 `
-
-const FlexSpace = styled(Flex)`
-	z-index: 0;
-	background-image: linear-gradient(180deg, ${props => props.theme.color.layerDark} 0%, ${props => props.theme.color.bgMed} 100%);
-`;
