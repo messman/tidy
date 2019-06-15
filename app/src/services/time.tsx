@@ -16,6 +16,14 @@ export function createPrettyTime(date: Date): PrettyTime {
 	}
 }
 
+export function createPrettyHour(date: Date): string {
+	let hours = date.getHours();
+	let ampm = hours >= 12 ? "pm" : "am";
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	return `${hours}${ampm}`
+}
+
 export function createPrettyTimespan(time: number): string {
 	let minutes = Math.ceil(time / 1000 / 60);
 	if (minutes > 0) {
@@ -39,4 +47,9 @@ export function createPrettyTimespan(time: number): string {
 			return "about an hour ago";
 		return `${hours} hours ago`;
 	}
+}
+
+export function timeToPixels(startDate: Date, endDate: Date): number {
+	const hours = (endDate.getTime() - startDate.getTime()) / 1000 / 60 / 60;
+	return hours * 50
 }

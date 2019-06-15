@@ -61,7 +61,6 @@ const One = styled(FlexColumn)`
 `;
 
 const Other = styled(Flex)`
-	border: 1px solid red;
 	flex-shrink: 0;
 	flex: 1;
 	min-width: 500px;

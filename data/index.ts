@@ -171,14 +171,14 @@ export function getSuccessResponse(): APIResponse {
 					createWeatherEvent("1/4/2019 06:00:00", true, 61, .6, 7),
 					createWeatherEvent("1/4/2019 09:00:00", true, 61, .6, 7),
 					createWeatherEvent("1/4/2019 12:00:00", true, 61, .6, 7),
-					createWeatherEvent("1/5/2019 15:00:00", true, 61, .6, 7),
-					createWeatherEvent("1/5/2019 18:00:00", true, 61, .6, 7),
-					createWeatherEvent("1/5/2019 21:00:00", true, 61, .6, 7),
-					createWeatherEvent("1/6/2019 00:00:00", true, 61, .6, 7),
-					createWeatherEvent("1/6/2019 03:00:00", true, 61, .6, 7),
-					createWeatherEvent("1/6/2019 06:00:00", true, 61, .6, 7),
-					createWeatherEvent("1/6/2019 09:00:00", true, 65, .2, 7),
-					createWeatherEvent("1/6/2019 12:00:00", true, 65, .2, 7),
+					createWeatherEvent("1/4/2019 15:00:00", true, 61, .6, 7),
+					createWeatherEvent("1/4/2019 18:00:00", true, 61, .6, 7),
+					createWeatherEvent("1/4/2019 21:00:00", true, 61, .6, 7),
+					createWeatherEvent("1/5/2019 00:00:00", true, 61, .6, 7),
+					createWeatherEvent("1/5/2019 03:00:00", true, 61, .6, 7),
+					createWeatherEvent("1/5/2019 06:00:00", true, 61, .6, 7),
+					createWeatherEvent("1/5/2019 09:00:00", true, 65, .2, 7),
+					createWeatherEvent("1/5/2019 12:00:00", true, 65, .2, 7),
 				]
 			}
 		}
