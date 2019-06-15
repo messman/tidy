@@ -26,7 +26,7 @@ export const CurrentConditions: React.FC<CurrentConditionsProps> = (props) => {
 			weatherText += `, ${weather.chanceRain * 100}% chance for rain`;
 		}
 
-		sunText = `${sun.nextEvent.isSunrise ? "Sunrise" : "Sunset"} ${createPrettyTimespan(sun.nextEvent.time.getTime() - success.info.time.getTime())}`
+		sunText = `${sun.next.isSunrise ? "Sunrise" : "Sunset"} ${createPrettyTimespan(sun.next.time.getTime() - success.info.time.getTime())}`
 
 		windText = `${weather.wind} ${weather.windUnit} winds, ${weather.windDirection}`;
 	}

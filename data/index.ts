@@ -25,7 +25,8 @@ export interface RSuccessCurrent {
 		next: TideEvent
 	},
 	sun: {
-		nextEvent: SunEvent
+		previous: SunEvent,
+		next: SunEvent
 	},
 	weather: WeatherEvent
 }
@@ -94,7 +95,8 @@ export function getSuccessResponse(): APIResponse {
 					next: createTideEvent("1/1/2019 14:20:00", false, 11)
 				},
 				sun: {
-					nextEvent: createSunEvent("1/1/2019 17:10:00", false)
+					previous: createSunEvent("1/1/2019 16:10:00", true),
+					next: createSunEvent("1/1/2019 17:10:00", false)
 				},
 				weather: {
 					time: new Date("1/1/2019 12:15:00"),
@@ -135,6 +137,7 @@ export function getSuccessResponse(): APIResponse {
 					]
 				},
 				sun: [
+					createSunEvent("1/1/2019 06:10:00", true),
 					createSunEvent("1/1/2019 17:10:00", false),
 					createSunEvent("1/2/2019 06:10:00", true),
 					createSunEvent("1/2/2019 17:10:00", false),
@@ -145,6 +148,7 @@ export function getSuccessResponse(): APIResponse {
 					createSunEvent("1/5/2019 06:10:00", true),
 					createSunEvent("1/5/2019 17:10:00", false),
 					createSunEvent("1/6/2019 06:10:00", true),
+					createSunEvent("1/6/2019 17:10:00", false),
 				],
 				weather: [
 					createWeatherEvent("1/1/2019 15:00:00", false, 65, .5, 4),

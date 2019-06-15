@@ -49,7 +49,15 @@ export function createPrettyTimespan(time: number): string {
 	}
 }
 
+
+const pixelsPerHour = 50;
+export const pixelsPerDay = 24 * pixelsPerHour;
+
 export function timeToPixels(startDate: Date, endDate: Date): number {
 	const hours = (endDate.getTime() - startDate.getTime()) / 1000 / 60 / 60;
-	return hours * 50
+	return hours * pixelsPerHour;
+}
+
+export function isSameDay(a: Date, b: Date): boolean {
+	return !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }

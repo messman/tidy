@@ -1,9 +1,8 @@
 import * as React from "react";
 import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
 import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
-import * as C from "@/styles/common";
 import { APIResponse, WeatherEvent } from "../../../../../data";
-import { useRef } from "react";
+import * as C from "@/styles/common";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 import { timeToPixels, createPrettyHour } from "@/services/time";
 
@@ -25,11 +24,11 @@ export const WeatherFlag: StyledFC<WeatherFlagProps> = (props) => {
 
 	return (
 		<Flag left={left}>
-			<C.Text>{time}</C.Text>
-			<C.Text>{temp}</C.Text>
-			<C.Text>{event.status}</C.Text>
-			<C.Text>{percentRain}</C.Text>
-			<C.Text>{windText}</C.Text>
+			<C.SmallText>{time}</C.SmallText>
+			<C.SmallText>{temp}</C.SmallText>
+			<C.SmallText>{event.status}</C.SmallText>
+			<C.SmallText>{percentRain}</C.SmallText>
+			<C.SmallText>{windText}</C.SmallText>
 		</Flag>
 	);
 }

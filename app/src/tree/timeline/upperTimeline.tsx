@@ -2,7 +2,7 @@ import * as React from "react";
 import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
 import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
 import { Weather } from "./weather/weather";
-import { Time } from "./time/time";
+import { TimeBar } from "./timeBar/timeBar";
 
 interface UpperTimelineProps {
 }
@@ -11,10 +11,8 @@ export const UpperTimeline: StyledFC<UpperTimelineProps> = (props) => {
 
 	return (
 		<div>
-			<Weather>
-			</Weather>
-			<Time>
-			</Time>
+			<Weather />
+			<TimeBar />
 			<SeparatorBar />
 		</div>
 	);

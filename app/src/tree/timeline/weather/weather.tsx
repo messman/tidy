@@ -37,5 +37,5 @@ export const Weather: StyledFC<WeatherProps> = (props) => {
 
 const WeatherContainer = styled.div`
 	position: relative;
-	height: calc(20vh + 35px);
+	height: calc(15vh + 15px);
 `;
