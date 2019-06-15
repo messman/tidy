@@ -7,6 +7,7 @@ import { ResponsiveLayoutType, getLayoutRange } from "../responsiveLayout";
 import { APIResponse } from "../../../../data";
 import { CurrentConditions } from "./currentConditions";
 import { Wave, WaveAnimationOptions } from "./wave/wave";
+import { UpperTimeline } from "./upperTimeline";
 
 interface TimelineProps {
 	isLoading: boolean,
@@ -14,6 +15,7 @@ interface TimelineProps {
 }
 
 export const Timeline: React.FC<TimelineProps> = (props) => {
+	const { isLoading, apiResponse } = props;
 
 	const layout = useResponsiveLayoutContext();
 	console.log(layout, ResponsiveLayoutType[layout], getLayoutRange(layout));
@@ -36,9 +38,10 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 					<CurrentConditions {...props} />
 				</One>
 				<Other>
-					<h1>Hello</h1>
-					<h1>Hello</h1>
-					<h1>Hello</h1>
+					<UpperTimeline
+						isLoading={isLoading}
+						apiResponse={apiResponse}
+					/>
 				</Other>
 			</FlexRow>
 			<FlexRow>
