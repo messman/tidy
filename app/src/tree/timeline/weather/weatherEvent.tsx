@@ -7,14 +7,12 @@ import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 
 interface WeatherEventProps {
-	isLoading: boolean,
-	apiResponse: APIResponse
 }
 
 export const WeatherEvent: StyledFC<WeatherEventProps> = (props) => {
 
 	return (
-		
+		null
 	);
 }
 

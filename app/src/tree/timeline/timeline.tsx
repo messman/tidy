@@ -8,15 +8,12 @@ import { APIResponse } from "../../../../data";
 import { CurrentConditions } from "./currentConditions";
 import { Wave, WaveAnimationOptions } from "./wave/wave";
 import { UpperTimeline } from "./upperTimeline";
+import { useAppDataContext } from "../appData";
 
 interface TimelineProps {
-	isLoading: boolean,
-	apiResponse: APIResponse
 }
 
 export const Timeline: React.FC<TimelineProps> = (props) => {
-	const { isLoading, apiResponse } = props;
-
 	const layout = useResponsiveLayoutContext();
 	console.log(layout, ResponsiveLayoutType[layout], getLayoutRange(layout));
 
@@ -38,15 +35,12 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 					<CurrentConditions {...props} />
 				</One>
 				<Other>
-					<UpperTimeline
-						isLoading={isLoading}
-						apiResponse={apiResponse}
-					/>
+					<UpperTimeline />
 				</Other>
 			</FlexRow>
 			<FlexRow>
 				<One>
-					<Wave {...props} animationOptions={waveAnimationOptions} />
+					<Wave animationOptions={waveAnimationOptions} />
 				</One>
 				<Other>Hello</Other>
 			</FlexRow>

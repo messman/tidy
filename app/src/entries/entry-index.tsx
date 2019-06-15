@@ -6,6 +6,7 @@ import { App } from "../tree/app";
 import { GlobalAppStyles, ThemeProvider, theme } from "@/styles/theme";
 import { ResponsiveLayoutProvider } from "@/unit/hooks/useResponsiveLayout";
 import { pickLayout } from "@/tree/responsiveLayout";
+import { AppDataProvider } from "@/tree/appData";
 
 
 const date = new Date(DEFINE.BUILD.TIME);
@@ -14,12 +15,14 @@ if (console && console.log)
 
 ReactDOM.render(
 	<ResponsiveLayoutProvider pickLayout={pickLayout}>
-		<ThemeProvider theme={theme}>
-			<>
-				<GlobalAppStyles />
-				<App />
-			</>
-		</ThemeProvider>
+		<AppDataProvider>
+			<ThemeProvider theme={theme}>
+				<>
+					<GlobalAppStyles />
+					<App />
+				</>
+			</ThemeProvider>
+		</AppDataProvider>
 	</ResponsiveLayoutProvider>,
 	document.getElementById("react-root")
 );

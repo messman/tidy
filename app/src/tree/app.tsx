@@ -2,7 +2,6 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { usePromise } from "@/unit/hooks/usePromise";
 import { useResponsiveLayoutContext } from "@/unit/hooks/useResponsiveLayout";
-import * as Noaa from "../services/noaa";
 import { ResponsiveLayout, ResponsiveLayoutType } from "./responsiveLayout";
 import { Footer } from "./footer/footer";
 import { FooterToggleState } from "./footer/footerToggle";
@@ -14,6 +13,7 @@ import { LongTerm } from "./longterm/longterm";
 import { mockDataCall } from "@/data/mock"
 import { Header } from "./header/header";
 import { Timeline } from "./timeline/timeline";
+import { AppDataProvider } from "./appData";
 
 
 interface AppProps {
@@ -39,11 +39,6 @@ function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggle
 }
 
 export const App: React.FC<AppProps> = (props) => {
-	//const { success, error, isLoading } = usePromise(() => Noaa.getNoaaData(650));
-	const { success: apiResponse, error, isLoading } = usePromise(() => mockDataCall(500, true));
-	console.log(apiResponse, error, isLoading);
-
-
 	const layout = useResponsiveLayoutContext();
 	console.log(layout);
 
@@ -85,19 +80,8 @@ export const App: React.FC<AppProps> = (props) => {
 					fillWithSidebar={fillWithSidebar}
 					fillWithOverlay={fillWithOverlay}
 
-					header={
-						<Header
-							isLoading={isLoading}
-							apiResponse={apiResponse}
-						/>
-					}
-
-					timeline={
-						<Timeline
-							isLoading={isLoading}
-							apiResponse={apiResponse}
-						/>
-					}
+					header={<Header />}
+					timeline={<Timeline />}
 
 					overlay={<About />}
 					sidebar={<LongTerm />}

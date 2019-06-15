@@ -2,25 +2,23 @@ import * as React from "react";
 import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
 import styled, { css, ThemedCSS } from "@/styles/theme";
 import * as C from "@/styles/common";
-import { RSuccessCurrent, RError, APIResponse } from "../../../../data";
 import { TextPlaceholder } from "@/styles/placeholder";
 import { createPrettyTimespan } from "@/services/time";
+import { useAppDataContext } from "../appData";
 
 interface CurrentConditionsProps {
-	isLoading: boolean,
-	apiResponse: APIResponse
 }
 
 export const CurrentConditions: React.FC<CurrentConditionsProps> = (props) => {
 
-	const { isLoading, apiResponse } = props;
+	const { isLoading, success } = useAppDataContext();
 
 	let tempText = "";
 	let weatherText = "";
 	let sunText = "";
 	let windText = "";
-	if (!isLoading && apiResponse && apiResponse.success) {
-		const { weather, sun } = apiResponse.success.current;
+	if (!isLoading && success && success.success) {
+		const { weather, sun } = success.success.current;
 
 		tempText = `${weather.temp} ${weather.tempUnit}`;
 		weatherText = weather.status;
@@ -28,7 +26,7 @@ export const CurrentConditions: React.FC<CurrentConditionsProps> = (props) => {
 			weatherText += `, ${weather.chanceRain * 100}% chance for rain`;
 		}
 
-		sunText = `${sun.nextEvent.isSunrise ? "Sunrise" : "Sunset"} ${createPrettyTimespan(sun.nextEvent.time.getTime() - apiResponse.info.time.getTime())}`
+		sunText = `${sun.nextEvent.isSunrise ? "Sunrise" : "Sunset"} ${createPrettyTimespan(sun.nextEvent.time.getTime() - success.info.time.getTime())}`
 
 		windText = `${weather.wind} ${weather.windUnit} winds, ${weather.windDirection}`;
 	}

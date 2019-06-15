@@ -7,8 +7,6 @@ import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 
 interface TimeProps {
-	isLoading: boolean,
-	apiResponse: APIResponse
 }
 
 export const Time: StyledFC<TimeProps> = (props) => {

@@ -2,13 +2,11 @@ import * as React from "react";
 import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
 import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
-import { APIResponse } from "../../../../../data";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
+import { useAppDataContext } from "@/tree/appData";
 
 interface WaveProps {
-	isLoading: boolean,
-	apiResponse: APIResponse
 	animationOptions: WaveAnimationOptions
 }
 
@@ -24,7 +22,7 @@ export interface WaveAnimationOptions {
 }
 
 export const Wave: React.FC<WaveProps> = (props) => {
-	const { isLoading, apiResponse } = props;
+	const { isLoading, success } = useAppDataContext();
 
 	const ref = useRef<HTMLDivElement>(null);
 	const size = useElementSize(ref, 300);
@@ -33,8 +31,8 @@ export const Wave: React.FC<WaveProps> = (props) => {
 	let animationOptions0: SVGWaveAnimationOptions = null;
 	let animationOptions1: SVGWaveAnimationOptions = null;
 	let animationOptions2: SVGWaveAnimationOptions = null;
-	if (!isLoading && apiResponse && apiResponse.success) {
-		heightPercent = apiResponse.success.current.tides.percent;
+	if (!isLoading && success && success.success) {
+		heightPercent = success.success.current.tides.percent;
 
 		const {
 			amplitude,

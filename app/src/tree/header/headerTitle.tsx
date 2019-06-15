@@ -1,22 +1,18 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS } from "@/styles/theme";
 import * as C from "@/styles/common";
-import { RSuccessCurrent, RError, APIResponse } from "../../../../data";
 import { TextPlaceholder } from "@/styles/placeholder";
+import { useAppDataContext } from "../appData";
 
 interface HeaderTitleProps {
-	isLoading: boolean,
-	apiResponse: APIResponse
 }
 
 export const HeaderTitle: React.FC<HeaderTitleProps> = (props) => {
 
-	const { isLoading, apiResponse } = props;
+	const { isLoading, success } = useAppDataContext();
 
 	let text = "";
-	if (!isLoading && apiResponse && apiResponse.success) {
-		const { percent, next } = apiResponse.success.current.tides;
+	if (!isLoading && success && success.success) {
+		const { percent, next } = success.success.current.tides;
 		if (percent > .90) {
 			text = "The tide is high."
 		}
@@ -30,7 +26,7 @@ export const HeaderTitle: React.FC<HeaderTitleProps> = (props) => {
 
 	return (
 		<C.Title>
-			<TextPlaceholder show={props.isLoading} length={10}>
+			<TextPlaceholder show={isLoading} length={10}>
 				{text}
 			</TextPlaceholder>
 		</C.Title>

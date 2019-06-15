@@ -5,27 +5,18 @@ import * as C from "@/styles/common";
 import { RSuccessCurrent, RError, APIResponse } from "../../../../data";
 import { HeaderTitle } from "./headerTitle";
 import { HeaderSubTitle } from "./headerSubTitle";
+import { useAppDataContext } from "../appData";
 
 interface HeaderProps {
-	isLoading: boolean,
-	apiResponse: APIResponse
 }
 
 export const Header: React.FC<HeaderProps> = (props) => {
 
-	const { isLoading, apiResponse } = props;
-
 	return (
 		<HeaderPadding>
-			<HeaderTitle
-				isLoading={isLoading}
-				apiResponse={apiResponse}
-			/>
+			<HeaderTitle />
 			<UpperPadding>
-				<HeaderSubTitle
-					isLoading={isLoading}
-					apiResponse={apiResponse}
-				/>
+				<HeaderSubTitle />
 			</UpperPadding>
 		</HeaderPadding>
 	);
