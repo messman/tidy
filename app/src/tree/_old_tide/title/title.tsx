@@ -48,7 +48,7 @@ export class Title extends React.Component<TitleProps> {
 				}
 
 				const timeUntilNext = Math.abs(waterLevel.next.time.getTime() - waterLevel.current.time.getTime());
-				const currentPrettyTime = Time.createPrettyTime(waterLevel.current.time);
+				const currentPrettyTime = Time.createOldPrettyTime(waterLevel.current.time);
 				message = `As of ${currentPrettyTime.time} ${currentPrettyTime.ampm}, ${waterLevel.currentIsRising ? "high" : "low"} tide is ${Time.createPrettyTimespan(timeUntilNext)}.`;
 
 				if (waterLevel.currentIsRising)
@@ -58,9 +58,9 @@ export class Title extends React.Component<TitleProps> {
 
 				lastNext = (
 					<div className="lastnext">
-						<LastNext name="left" title={`Last ${waterLevel.previous.isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(waterLevel.previous.time)} />
-						<LastNext name="center" title={`Next ${waterLevel.next.isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(waterLevel.next.time)} />
-						<LastNext name="right" title={`Next ${waterLevel.predictionsAfterCurrent[1].isHigh ? "High" : "Low"}`} prettyTime={Time.createPrettyTime(waterLevel.predictionsAfterCurrent[1].time)} />
+						<LastNext name="left" title={`Last ${waterLevel.previous.isHigh ? "High" : "Low"}`} prettyTime={Time.createOldPrettyTime(waterLevel.previous.time)} />
+						<LastNext name="center" title={`Next ${waterLevel.next.isHigh ? "High" : "Low"}`} prettyTime={Time.createOldPrettyTime(waterLevel.next.time)} />
+						<LastNext name="right" title={`Next ${waterLevel.predictionsAfterCurrent[1].isHigh ? "High" : "Low"}`} prettyTime={Time.createOldPrettyTime(waterLevel.predictionsAfterCurrent[1].time)} />
 					</div >
 				)
 			}

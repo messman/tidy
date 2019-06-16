@@ -13,7 +13,7 @@ export class More extends React.Component<MoreProps> {
 	render() {
 		const { noaa } = this.props;
 		const current = noaa.data.current;
-		const prettyTime = Time.createPrettyTime(current.airTemp.time);
+		const prettyTime = Time.createOldPrettyTime(current.airTemp.time);
 		return (
 			<div className="more tab-view-bg">
 				<header>

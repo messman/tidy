@@ -3,7 +3,7 @@ export interface PrettyTime {
 	ampm: "AM" | "PM"
 }
 
-export function createPrettyTime(date: Date): PrettyTime {
+export function createOldPrettyTime(date: Date): PrettyTime {
 	let hours = date.getHours();
 	let minutes = date.getMinutes();
 	let ampm: "PM" | "AM" = hours >= 12 ? "PM" : "AM";
@@ -14,6 +14,16 @@ export function createPrettyTime(date: Date): PrettyTime {
 		time: `${hours}:${minutesString}`,
 		ampm
 	}
+}
+
+export function createPrettyTime(date: Date): string {
+	let hours = date.getHours();
+	let minutes = date.getMinutes();
+	let ampm = hours >= 12 ? "pm" : "am";
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	const minutesString = minutes.toString().padStart(2, "0");
+	return `${hours}:${minutesString}${ampm}`;
 }
 
 export function createPrettyHour(date: Date): string {
