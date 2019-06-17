@@ -117,7 +117,7 @@ export function getSuccessResponse(): APIResponse {
 						createTideEvent("1/1/2019 14:20:00", false, 11),
 						createTideEvent("1/1/2019 20:30:00", true, 1),
 						createTideEvent("1/2/2019 02:40:00", false, 10.5),
-						createTideEvent("1/2/2019 09:60:00", true, 1),
+						createTideEvent("1/2/2019 09:50:00", true, 1),
 						createTideEvent("1/2/2019 15:20:00", false, 11.5),
 						createTideEvent("1/2/2019 20:10:00", true, 2),
 						createTideEvent("1/3/2019 02:30:00", false, 8.9),
