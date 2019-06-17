@@ -5,6 +5,7 @@ import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels } from "@/services/time";
 import { DayRange } from "./dayRange";
 import { SunEvent } from "../../../../../data";
+import { EventMarkers } from "./eventMarkers/eventMarkers";
 
 // IMPORTANT ASSUMPTION - there is always a sunrise for a sunset in the returned data.
 
@@ -43,6 +44,7 @@ export const TimeBar: StyledFC<TimeBarProps> = (props) => {
 	return (
 		<DayContainer>
 			{days}
+			<EventMarkers />
 		</DayContainer>
 	);
 }

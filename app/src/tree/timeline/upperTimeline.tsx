@@ -19,6 +19,6 @@ export const UpperTimeline: StyledFC<UpperTimelineProps> = (props) => {
 }
 
 const SeparatorBar = styled.div`
-	height: 3px;
+	height: 4px;
 	background-color: ${props => props.theme.color.bgDark};
 `
