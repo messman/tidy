@@ -9,6 +9,7 @@ import { CurrentConditions } from "./currentConditions";
 import { Wave, WaveAnimationOptions } from "./wave/wave";
 import { UpperTimeline } from "./upperTimeline";
 import { useAppDataContext } from "../appData";
+import { MainChart } from "./mainChart/mainChart";
 
 interface TimelineProps {
 }
@@ -30,23 +31,30 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 
 	return (
 		<Border>
-			<FlexRow flex={"none"}>
+			<Upper flex={"none"}>
 				<One>
 					<CurrentConditions {...props} />
 				</One>
 				<Other>
 					<UpperTimeline />
 				</Other>
-			</FlexRow>
+			</Upper>
 			<FlexRow>
 				<One>
 					<Wave animationOptions={waveAnimationOptions} />
 				</One>
-				<Other>Hello</Other>
+				<Other>
+					<MainChart />
+				</Other>
 			</FlexRow>
 		</Border>
 	);
 }
+
+// So that timeline markers show over the chart lines
+const Upper = styled(FlexRow)`
+	z-index: 5;
+`;
 
 const Border = styled(FlexColumn)`
 	overflow-y: auto;

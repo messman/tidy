@@ -5,6 +5,7 @@ import * as C from "@/styles/common";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 import { useAppDataContext } from "@/tree/appData";
+import * as Bezier from "@/services/bezier";
 
 interface WaveProps {
 	animationOptions: WaveAnimationOptions
@@ -126,7 +127,7 @@ export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
 		const freq = Math.round(width / a.wavePeriod);
 
 		// Get the path
-		const path = getPath(width, height, a.upperPaddingPixels, a.lowerPaddingPixels, heightPercent, a.offsetAboveHeight, a.amplitudePixels, freq);
+		const path = Bezier.getPath(width, height, a.upperPaddingPixels, a.lowerPaddingPixels, heightPercent, a.offsetAboveHeight, a.amplitudePixels, freq);
 
 		const totalDurationSeconds = a.periodDurationSeconds * freq;
 
@@ -197,47 +198,4 @@ interface SVGWaveProps {
 	/** How far up the wave should be. [0, 1] */
 	heightPercent: number,
 	animationOptions: SVGWaveAnimationOptions
-}
-
-function roundPercent(outOf1: number): string {
-	return Math.round(outOf1 * 100).toString();
-}
-
-function roundVal(num: number): number {
-	return Math.round(num * 100) / 100;
-}
-
-function getPath(totalWidth: number, totalHeight: number, topPadding: number, bottomPadding: number, heightPercent: number, offset: number, amplitude: number, freq: number): string {
-	// Coordinate system is from top left
-	let y = (totalHeight - topPadding - bottomPadding) * (1 - heightPercent);
-	y = y + topPadding - offset;
-	y = roundVal(y);
-
-	const period = totalWidth / freq;
-	const bezierLength = period / 2;
-	const cp1Length = roundVal(bezierLength / 3);
-	const cp2Length = roundVal(bezierLength - cp1Length);
-
-	// Firefox: path cannot use commas
-	// Bezier is relative to start point of the bezier, not absolute
-	// c (first control point) (second control point) (how far to actually go)
-	const singleWaveBezier = `c ${cp1Length} -${amplitude} ${cp2Length} -${amplitude} ${bezierLength} 0 c${cp1Length} ${amplitude} ${cp2Length} ${amplitude} ${bezierLength} 0`;
-	let waveBezier = "";
-	for (let i = 0; i < freq; i++)
-		waveBezier += singleWaveBezier + " ";
-	/*
-		One wave:
-			 ____
-			/    \
-		(A)/      \       /
-				   \     /
-					-----
-		Where (A) is the top distance 
-	*/
-
-	// Make 2 waves (first of which covers the whole viewbox - second of which is completely offscreen) so we are 2X the viewbox width
-	// Coordinate system is from top left
-	// "m0 (Y amount for percent) (bezier) (bezier) v(total - Y amount for percent) h-(2 * total width) v-(total - y amount for percent) z"
-	return `M0 ${y} ${waveBezier} ${waveBezier} v${totalHeight - y} h-${totalWidth * 2} v-${totalHeight - y} z`
-	// M0,${p} c13,0 20.3,-${r} 33.3,-${r} c13,0 20.3,${r} 33.3,${r} c13,0 20.3,-${r} 33.3,-${r} v100 h-100 v-${100 - p} z
 }

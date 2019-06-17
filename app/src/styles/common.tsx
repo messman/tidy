@@ -36,7 +36,7 @@ export const SmallText = styled.p`
 	margin: 0;
 `;
 
-const ShadowTop = styled.div`
+export const ShadowTop = styled.div`
 	display: block;
 	width: 100%;
 	height: 1px;
@@ -46,7 +46,7 @@ const ShadowTop = styled.div`
 	background-color: ${props => props.theme.color.bgDark};
 `;
 
-const ShadowBottom = styled.div`
+export const ShadowBottom = styled.div`
 	display: block;
 	width: 100%;
 	height: 1px;

@@ -14,35 +14,35 @@ interface EventMarkerProps {
 
 export const WeatherEventMarker = styled.div<EventMarkerProps>`
 	${sharedMarkerStyles}
-	left: ${props => props.positionLeft - 3}px;
+	left: ${props => props.positionLeft - 4}px;
 	background-color: ${props => props.theme.color.layerLight};
 
-	top: 7px;
-	width: 6px;
-	height: 6px;
+	top: 6px;
+	width: 8px;
+	height: 8px;
 	z-index: 3;
 `;
 
 export const DayEventMarker = styled.div<EventMarkerProps>`
 	${sharedMarkerStyles}
-	left: ${props => props.positionLeft - 5}px;
+	left: ${props => props.positionLeft - 6}px;
 	background-color: ${props => props.theme.color.layerLight};
 
-	bottom: 2px;
-	width: 10px;
-	height: 10px;
+	bottom: 1px;
+	width: 12px;
+	height: 12px;
 	z-index: 3;
 	border-radius: 50%;
 `;
 
 export const TideEventMarker = styled.div<EventMarkerProps>`
 	${sharedMarkerStyles}
-	left: ${props => props.positionLeft - 5}px;
+	left: ${props => props.positionLeft - 6}px;
 	background-color: ${props => props.theme.color.emphasis};
 
-	bottom: 2px;
-	width: 10px;
-	height: 10px;
+	bottom: 1px;
+	width: 12px;
+	height: 12px;
 	z-index: 4;
 	border-radius: 50%;
 `;
