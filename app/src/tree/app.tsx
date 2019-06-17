@@ -40,7 +40,6 @@ function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggle
 
 export const App: React.FC<AppProps> = (props) => {
 	const layout = useResponsiveLayoutContext();
-	console.log(layout);
 
 	const [dualToggleState, setDualToggleState] = useState<DualToggleState>(decideDualToggleState(FooterToggleState.visible, FooterToggleState.visible, layout));
 

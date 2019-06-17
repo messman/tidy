@@ -16,7 +16,6 @@ interface TimelineProps {
 
 export const Timeline: React.FC<TimelineProps> = (props) => {
 	const layout = useResponsiveLayoutContext();
-	console.log(layout, ResponsiveLayoutType[layout], getLayoutRange(layout));
 
 	const waveAnimationOptions: WaveAnimationOptions = {
 		amplitude: 10,

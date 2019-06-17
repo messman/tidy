@@ -24,8 +24,6 @@ export const DayRange: StyledFC<DayRangeProps> = (props) => {
 		width = timeToPixels(startTime, nextDay);
 	}
 
-	console.log(sunrise, sunset);
-
 	return (
 		<DayRangeContainer total={width}>
 			<FullDay

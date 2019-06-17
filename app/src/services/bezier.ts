@@ -73,7 +73,6 @@ export function createChartLine(points: Point[], controlPointLateral: number, cl
 	minX *= scaleFactorX;
 	maxX *= scaleFactorX;
 	maxY = maxY - minY;
-	console.log(scaleToX, maxX, scaleToY, maxY)
 	points = points.map(function (p) {
 		const x = p.x * scaleFactorX;
 		const y = p.y * scaleFactorY;
