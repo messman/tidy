@@ -7,6 +7,7 @@ import { timeToPixels, isSameDay } from "@/services/time";
 import { Point, createChartLine } from "@/services/bezier";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
+import { ExtremeCards } from "./extremeCards";
 
 interface ChartForegroundProps {
 }
@@ -52,7 +53,9 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 	return (
 		<>
 			<C.TimelinePadding />
-			<Flex ref={ref} />
+			<CardRefContainer ref={ref} >
+				<ExtremeCards heightInPixels={size.height} />
+			</CardRefContainer>
 			{lowerTimelinePadding}
 			{fillSVG}
 			{strokeSVG}
@@ -60,6 +63,10 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 
 	);
 }
+
+const CardRefContainer = styled(Flex)`
+	z-index: 6;
+`;
 
 const LowerTimelinePadding = styled(C.TimelinePadding)`
 	background-color: ${props => props.theme.color.bgMed};
@@ -89,6 +96,8 @@ const FillSVG = styled(_SVGPath)`
 	height: 100%;
 	fill: ${props => props.theme.color.bgMed};
 	opacity: .5;
+
+	z-index: 5;
 `;
 
 const StrokeSVG = styled(_SVGPath)`
@@ -100,6 +109,8 @@ const StrokeSVG = styled(_SVGPath)`
 	stroke: ${props => props.theme.color.emphasis};
 	stroke-width: 16px;
 	fill: transparent;
+
+	z-index: 7;
 `;
 
 
