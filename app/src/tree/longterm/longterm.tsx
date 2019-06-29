@@ -19,9 +19,9 @@ export const LongTerm: React.FC<LongTermProps> = (props) => {
 					<FlexRight>10pm</FlexRight>
 				</FlexRow>
 			</PaddingWithoutBottom>
-			<C.ShadowBox>
-				<FlexSpace />
-			</C.ShadowBox>
+			<C.ShadowTop />
+			<FlexSpace />
+			<C.ShadowBottom />
 		</ScrollFlex>
 	);
 }

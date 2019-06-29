@@ -89,7 +89,7 @@ export function getSuccessResponse(): APIResponse {
 		success: {
 			current: {
 				tides: {
-					percent: .7,
+					percent: .75,
 					height: 8.5,
 					previous: createTideEvent("1/1/2019 8:00:00", true, 0),
 					next: createTideEvent("1/1/2019 14:20:00", false, 11)

@@ -60,10 +60,10 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	else if (props.layout === ResponsiveLayoutType.wide) {
 		layoutElements = (
 			<FlexRow>
-				<FlexColumn flex={1.8} >
+				<StrongFlexColumn flex={1.8} >
 					{header}
 					{timeline}
-				</FlexColumn>
+				</StrongFlexColumn>
 				{sidebar}
 			</FlexRow>
 		);
@@ -78,25 +78,6 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 }
 
 
-
-
-
-const Filler = styled.div`
-	height: 100%;
-	width: 100%;
-	padding: 1rem;
+const StrongFlexColumn = styled(FlexColumn)`
+	overflow: hidden;
 `;
-
-const Border = styled.div`
-	height: 100%;
-	width: 100%;
-	border: 1px solid ${props => props.theme.color.layerLight};
-`;
-
-const DebugView: React.FC = (props) => {
-	return (
-		<Filler>
-			<Border>Debug {props.children}</Border>
-		</Filler>
-	);
-}

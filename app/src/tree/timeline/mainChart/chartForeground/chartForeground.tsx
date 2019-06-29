@@ -22,7 +22,11 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 
 	let fillSVG: JSX.Element = null;
 	let strokeSVG: JSX.Element = null;
+	let lowerTimelinePadding: JSX.Element = <C.TimelinePadding />;
+
 	if (size.width > 1 && size.height > 1) {
+		lowerTimelinePadding = <LowerTimelinePadding />;
+
 		const startTime = success.info.time;
 		const previous = success.success.current.tides.previous;
 		const points: Point[] = [
@@ -47,7 +51,9 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 
 	return (
 		<>
-			<Sizer ref={ref} />
+			<C.TimelinePadding />
+			<Flex ref={ref} />
+			{lowerTimelinePadding}
 			{fillSVG}
 			{strokeSVG}
 		</>
@@ -55,12 +61,9 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 	);
 }
 
-const Sizer = styled.div`
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
+const LowerTimelinePadding = styled(C.TimelinePadding)`
+	background-color: ${props => props.theme.color.bgMed};
+	opacity: .5;
 `;
 
 export interface SVGPathProps {

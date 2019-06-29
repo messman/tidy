@@ -41,7 +41,7 @@ export const ShadowTop = styled.div`
 	width: 100%;
 	height: 1px;
 	position: relative;
-	z-index: 1;
+	z-index: 2;
 	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
 	background-color: ${props => props.theme.color.bgDark};
 `;
@@ -51,17 +51,11 @@ export const ShadowBottom = styled.div`
 	width: 100%;
 	height: 1px;
 	position: relative;
-	z-index: 1;
+	z-index: 2;
 	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
 	background-color: ${props => props.theme.color.bgDark};
 `;
 
-export const ShadowBox: React.FC = (props) => {
-	return (
-		<>
-			<ShadowTop />
-			{props.children}
-			<ShadowBottom />
-		</>
-	)
-}
+export const TimelinePadding = styled.div`
+	height: 5vh;
+`;

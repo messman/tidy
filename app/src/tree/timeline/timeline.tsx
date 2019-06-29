@@ -67,8 +67,7 @@ const One = styled(FlexColumn)`
 	position: relative;
 `;
 
-const Other = styled(Flex)`
+const Other = styled(FlexColumn)`
 	flex-shrink: 0;
 	flex: 1;
-	/* min-width: 500px; */
-`
+`;

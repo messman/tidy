@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
 import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
-import * as C from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels, isSameDay } from "@/services/time";
 
@@ -33,22 +32,10 @@ export const ChartBackground: StyledFC<ChartBackgroundProps> = (props) => {
 	return (
 		<>
 			<Background />
-			<ShadowTopAbsolute />
-			<ShadowBottomAbsolute />
 			{eventLines}
 		</>
 	);
 }
-
-const ShadowTopAbsolute = styled(C.ShadowTop)`
-	position: absolute;
-	top: 0;
-`;
-
-const ShadowBottomAbsolute = styled(C.ShadowBottom)`
-	position: absolute;
-	bottom: 0;
-`;
 
 const Background = styled.div`
 	position: absolute;

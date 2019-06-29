@@ -32,8 +32,11 @@ export const Wave: React.FC<WaveProps> = (props) => {
 	let animationOptions0: SVGWaveAnimationOptions = null;
 	let animationOptions1: SVGWaveAnimationOptions = null;
 	let animationOptions2: SVGWaveAnimationOptions = null;
+	let lowerTimelinePadding: JSX.Element = <C.TimelinePadding />;
 	if (!isLoading && success && success.success) {
 		heightPercent = success.success.current.tides.percent;
+
+		lowerTimelinePadding = <LowerTimelinePadding />;
 
 		const {
 			amplitude,
@@ -81,39 +84,49 @@ export const Wave: React.FC<WaveProps> = (props) => {
 	}
 
 	return (
-		<C.ShadowBox>
-			<FlexSpace ref={ref}>
-				<SVGWave
-					index={0}
-					width={size.width}
-					height={size.height}
-					heightPercent={heightPercent}
-					animationOptions={animationOptions0}
-				/>
-				<SVGWave
-					index={1}
-					width={size.width}
-					height={size.height}
-					heightPercent={heightPercent}
-					animationOptions={animationOptions1}
-				/>
-				<SVGWave
-					index={2}
-					width={size.width}
-					height={size.height}
-					heightPercent={heightPercent}
-					animationOptions={animationOptions2}
-				/>
+		<>
+			<C.ShadowTop />
+			<Container>
+				<C.TimelinePadding />
+				<Flex ref={ref}>
+					<SVGWave
+						index={0}
+						width={size.width}
+						height={size.height}
+						heightPercent={heightPercent}
+						animationOptions={animationOptions0}
+					/>
+					<SVGWave
+						index={1}
+						width={size.width}
+						height={size.height}
+						heightPercent={heightPercent}
+						animationOptions={animationOptions1}
+					/>
+					<SVGWave
+						index={2}
+						width={size.width}
+						height={size.height}
+						heightPercent={heightPercent}
+						animationOptions={animationOptions2}
+					/>
+				</Flex>
+				{lowerTimelinePadding}
 				<OpacityCover heightPercent={heightPercent} />
-			</FlexSpace>
-		</C.ShadowBox>
+			</Container>
+			<C.ShadowBottom />
+		</>
 	);
 }
 
-const FlexSpace = styled(Flex)`
+const Container = styled(FlexColumn)`
 	z-index: 0;
 	background-image: linear-gradient(180deg, ${props => props.theme.color.skyUpper} 2%, ${props => props.theme.color.skyLower} 38%);
 	overflow: hidden;
+`;
+
+const LowerTimelinePadding = styled(C.TimelinePadding)`
+	background-color: ${props => props.theme.color.layerDark};
 `;
 
 export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
@@ -150,6 +163,8 @@ export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
 	return wave;
 }
 
+
+
 const SVGWave = styled(_SVGWave)`
 	-webkit-filter: drop-shadow(5px 5px 4px rgba(0, 0, 0, .7));
 	filter: drop-shadow(5px 5px 4px rgba(0, 0, 0, .7));
@@ -158,6 +173,7 @@ const SVGWave = styled(_SVGWave)`
 	left: 0;
 	width: 100%;
 	height: 100%;
+	overflow: visible;
 	fill: ${props => (([props.theme.color.layerLight, props.theme.color.layerMed, props.theme.color.layerDark])[props.index])};
 `;
 
