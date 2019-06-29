@@ -29,11 +29,12 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 	};
 
 	return (
-		<Border>
+		<Container>
 			<Upper flex={"none"}>
 				<One>
 					<CurrentConditions {...props} />
 				</One>
+				<Border />
 				<Other>
 					<UpperTimeline />
 				</Other>
@@ -42,11 +43,12 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 				<One>
 					<Wave animationOptions={waveAnimationOptions} />
 				</One>
+				<Border />
 				<Other>
 					<MainChart />
 				</Other>
 			</FlexRow>
-		</Border>
+		</Container>
 	);
 }
 
@@ -55,7 +57,7 @@ const Upper = styled(FlexRow)`
 	z-index: 5;
 `;
 
-const Border = styled(FlexColumn)`
+const Container = styled(FlexColumn)`
 	overflow-y: auto;
 	white-space: nowrap;
 `;
@@ -65,6 +67,15 @@ const One = styled(FlexColumn)`
 	max-width: ${ResponsiveLayoutType.regular}px;
 	flex: none;
 	position: relative;
+`;
+
+const Border = styled.div`
+	position: relative;
+	z-index: 1000;
+	height: 100%;
+	width: 2px;
+	background-color: ${props => props.theme.color.bgDark};
+	flex-shrink: 0;
 `;
 
 const Other = styled(FlexColumn)`
