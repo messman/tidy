@@ -149,7 +149,7 @@ const BottomCardBackground = styled(CardBackground)`
 `;
 
 const Line = styled.div`
-	height: 8vh;
+	height: 4vh;
 	width: 1px;
 	background-color: ${props => props.theme.color.layerLight};
 	flex-shrink: 0;

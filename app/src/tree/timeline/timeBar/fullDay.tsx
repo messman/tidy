@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
-import { pixelsPerDay, isSameDay, timeToPixels, createPrettyTime } from "@/services/time";
+import { pixelsPerDay, isSameDay, timeToPixels, createPrettyTime, createPrettyDate } from "@/services/time";
 
 interface FullDayProps {
 	timeInDay: Date,
@@ -20,7 +20,7 @@ export const FullDay: React.FC<FullDayProps> = (props) => {
 
 	const startBar = !!timeInDay ? null : <FullDayStartBar />;
 	const endBar = <FullDayEndBar />;
-	const dayName = `${sunrise.getMonth() + 1}/${sunrise.getDate()}`;
+	const dayName = createPrettyDate(sunrise);
 	const startDayName = !!timeInDay ? null : <DayNameStartText>{dayName}</DayNameStartText>;
 	const endDayName = <DayNameEndText>{dayName}</DayNameEndText>;
 

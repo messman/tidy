@@ -16,6 +16,25 @@ export function createOldPrettyTime(date: Date): PrettyTime {
 	}
 }
 
+export function createPrettyDate(date: Date): string {
+	return `${date.getMonth() + 1}/${date.getDate()}`;
+}
+
+const daysOfWeek = [
+	"Sun",
+	"Mon",
+	"Tue",
+	"Wed",
+	"Thu",
+	"Fri",
+	"Sat"
+];
+
+export function createPrettyDateDay(date: Date): string {
+	const dayOfWeek = daysOfWeek[date.getDay()];
+	return `${dayOfWeek} ${createPrettyDate(date)}`;
+}
+
 export function createPrettyTime(date: Date): string {
 	let hours = date.getHours();
 	let minutes = date.getMinutes();

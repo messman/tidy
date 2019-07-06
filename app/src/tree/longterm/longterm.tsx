@@ -2,32 +2,51 @@ import * as React from "react";
 import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
 import styled, { css, ThemedCSS } from "@/styles/theme";
 import * as C from "@/styles/common";
+import { useAppDataContext } from "../appData";
+import { DailyView, DailyViewProps } from "./dailyView/dailyView";
+import { createPrettyHour } from "@/services/time";
 
 interface LongTermProps {
 }
 
+export const minHour = 6;
+export const maxHour = 22;
+
+const minHourDate = new Date();
+minHourDate.setHours(minHour);
+const minHourText = createPrettyHour(minHourDate);
+const maxHourDate = new Date();
+maxHourDate.setHours(maxHour);
+const maxHourText = createPrettyHour(maxHourDate);
+
+
+
 export const LongTerm: React.FC<LongTermProps> = (props) => {
 	return (
-		<ScrollFlex>
-
+		<FlexColumn>
 			<PaddingWithoutBottom>
 				<C.Section>
 					<C.Title>Long-term tides</C.Title>
 				</C.Section>
 				<FlexRow>
-					<Flex>6am</Flex>
-					<FlexRight>10pm</FlexRight>
+					<Flex>{minHourText}</Flex>
+					<FlexRight>{maxHourText}</FlexRight>
 				</FlexRow>
 			</PaddingWithoutBottom>
 			<C.ShadowTop />
-			<FlexSpace />
+			<ScrollFlex>
+				<LongTermDailyViewList />
+			</ScrollFlex>
 			<C.ShadowBottom />
-		</ScrollFlex>
+		</FlexColumn>
 	);
 }
 
-const ScrollFlex = styled(FlexColumn)`
+const ScrollFlex = styled(Flex)`
 	overflow-y: auto;
+	flex-basis: 0;
+	z-index: 0;
+	background-image: linear-gradient(180deg, ${props => props.theme.color.layerDark} 0%, ${props => props.theme.color.bgMed} 100%);
 `;
 
 const PaddingWithoutBottom = styled.div`
@@ -40,6 +59,26 @@ const FlexRight = styled(Flex)`
 `;
 
 const FlexSpace = styled(Flex)`
-	z-index: 0;
-	background-image: linear-gradient(180deg, ${props => props.theme.color.layerDark} 0%, ${props => props.theme.color.bgMed} 100%);
 `;
+
+interface LongTermDailyViewListProps {
+}
+
+export const LongTermDailyViewList: React.FC<LongTermDailyViewListProps> = (props) => {
+	const { isLoading, success } = useAppDataContext();
+
+	if (isLoading || !success) {
+		return null;
+	}
+
+	const daily = success.success.daily;
+	const all = [daily.today, ...daily.future];
+
+	const list = all.map(function (day, index) {
+		return <DailyView key={day.date.getTime()} dailyEvent={day} isToday={index === 0} ></DailyView>
+	});
+
+	return (
+		<>{list}</>
+	);
+}

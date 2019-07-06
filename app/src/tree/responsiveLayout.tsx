@@ -64,7 +64,9 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 					{header}
 					{timeline}
 				</StrongFlexColumn>
-				{sidebar}
+				<SidebarWrapper>
+					{sidebar}
+				</SidebarWrapper>
 			</FlexRow>
 		);
 	}
@@ -80,4 +82,8 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 
 const StrongFlexColumn = styled(FlexColumn)`
 	overflow: hidden;
+`;
+
+const SidebarWrapper = styled(FlexColumn)`
+	border-left: 2px solid ${props => props.theme.color.bgDark};
 `;
