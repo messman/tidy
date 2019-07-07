@@ -1,4 +1,4 @@
-import styled from "./theme";
+import styled, { css } from "./theme";
 import { Flex } from "@/unit/components/flex";
 import * as React from "react";
 
@@ -36,13 +36,21 @@ export const SmallText = styled.p`
 	margin: 0;
 `;
 
+const shadowStyle = css`
+	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
+`
+
+export const shadowBelowStyle = css`
+	box-shadow: .1rem .1rem .4rem 0 ${props => props.theme.color.bgDark};
+`
+
 export const ShadowTop = styled.div`
 	display: block;
 	width: 100%;
 	height: 1px;
 	position: relative;
 	z-index: 2;
-	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
+	${shadowStyle}
 	background-color: ${props => props.theme.color.bgDark};
 `;
 
@@ -52,7 +60,7 @@ export const ShadowBottom = styled.div`
 	height: 1px;
 	position: relative;
 	z-index: 2;
-	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
+	${shadowStyle}
 	background-color: ${props => props.theme.color.bgDark};
 `;
 

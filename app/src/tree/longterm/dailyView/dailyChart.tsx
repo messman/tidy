@@ -1,11 +1,11 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC, css } from "@/styles/theme";
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 import { DailyInfo } from "../../../../../data";
 
-interface ChartForegroundProps {
+interface DailyChartProps {
 	minHour: number,
 	maxHour: number,
 	minTideHeight: number,
@@ -13,14 +13,15 @@ interface ChartForegroundProps {
 	dailyEvent: DailyInfo
 }
 
-export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
+export const DailyChart: StyledFC<DailyChartProps> = (props) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const size = useElementSize(ref, 300);
 
 	let fillSVG: JSX.Element = null;
 	let strokeSVG: JSX.Element = null;
 
-	if (size.width > 1 && size.height > 1) {
+	const goodSize = size.width > 1 && size.height > 1
+	if (goodSize) {
 
 		const tides = props.dailyEvent.tides;
 		const day = props.dailyEvent.date;
@@ -55,7 +56,10 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 
 
 	return (
-		<Container ref={ref} >
+		<Container>
+			<UpperPadding />
+			<Sizer ref={ref} />
+			<LowerPadding showGradient={goodSize} />
 			{fillSVG}
 			{strokeSVG}
 		</Container>
@@ -64,6 +68,9 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 
 const Container = styled.div`
 	position: relative;
+`;
+
+const Sizer = styled.div`
 	height: 6rem;
 `;
 
@@ -92,4 +99,25 @@ const StrokeSVG = styled(SVGPath)`
 	z-index: 7;
 `;
 
+// Problem - for this and the other chart line, the only reason we can storke outside of the svg container onto the padding elements is because the SVGs are overlaid and actually much larger.
+// They are constrained by their size but absolutely positions at 50%, vertically centered. So I can't make this upper padding less without making the lower padding less.
+const paddingHeightStyle = css`
+	height: 1.5rem;
+`;
 
+const UpperPadding = styled.div`
+	${paddingHeightStyle};
+`;
+
+interface LowerPaddingProps {
+	showGradient: boolean
+}
+
+const LowerPadding = styled.div<LowerPaddingProps>`
+	${paddingHeightStyle};
+	opacity: .5;
+
+	${props => props.showGradient && css`
+		background-image: linear-gradient(180deg, ${props => props.theme.color.bgMed} 10%, ${props => props.theme.color.bgDark} 100%);
+	`}
+`;

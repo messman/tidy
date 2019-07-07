@@ -4,7 +4,7 @@ import styled, { css, ThemedCSS } from "@/styles/theme";
 import * as C from "@/styles/common";
 import { WeatherEvent, TideEvent, DailyInfo } from "../../../../../data";
 import { createPrettyTime, isSameDay, createPrettyDate, createPrettyDateDay } from "@/services/time";
-import { ChartForeground } from "./chartForeground";
+import { DailyChart } from "./dailyChart";
 
 export interface DailyViewProps {
 	isToday: boolean,
@@ -56,36 +56,44 @@ export const DailyView: React.FC<DailyViewProps> = (props) => {
 	const dateText = props.isToday ? 'Today' : createPrettyDateDay(daily.date);
 
 	return (
-		<Container>
-			<FlexRow>
-				<Flex>
-					<DateText>{dateText}</DateText>
-				</Flex>
-				<Flex>
-					<WeatherText>{daily.weather.status}</WeatherText>
-				</Flex>
-				<Flex>
-					<RainText>{daily.weather.chanceRain * 100}%</RainText>
-				</Flex>
-			</FlexRow>
-			<ChartForeground
-				minHour={props.minHour}
-				maxHour={props.maxHour}
-				minTideHeight={props.minTideHeight}
-				maxTideHeight={props.maxTideHeight}
+		<Center>
 
-				dailyEvent={daily}
-			/>
-			<FlexRow>
-				{tideEventsText}
-			</FlexRow>
-			<C.ShadowBottom />
-		</Container>
+			<Container>
+				<FlexRow>
+					<Flex>
+						<DateText>{dateText}</DateText>
+					</Flex>
+					<Flex>
+						<WeatherText>{daily.weather.status}</WeatherText>
+					</Flex>
+					<Flex>
+						<RainText>{daily.weather.chanceRain * 100}%</RainText>
+					</Flex>
+				</FlexRow>
+				<DailyChart
+					minHour={props.minHour}
+					maxHour={props.maxHour}
+					minTideHeight={props.minTideHeight}
+					maxTideHeight={props.maxTideHeight}
+
+					dailyEvent={daily}
+				/>
+				<FlexRow>
+					{tideEventsText}
+				</FlexRow>
+			</Container>
+		</Center>
 	);
 }
 
+const Center = styled.div`
+	margin: 0 auto;
+	max-width: 600px;
+	`;
+
 const Container = styled.div`
 	background-color: ${props => props.theme.color.bgDark};
+	${C.shadowBelowStyle}
 	margin: .5rem .5rem 0 .5rem;
 
 	&:last-child {
@@ -149,6 +157,7 @@ const TwoPartTideText: React.FC<TideTextProps> = (props) => {
 
 const TideTextContainer = styled.div`
 	${commonUpperText}
+	padding-top: 0;
 `;
 
 const LongText = styled(C.SmallText)`
