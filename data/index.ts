@@ -1,3 +1,5 @@
+import { isSameDay } from "@/services/time";
+
 export interface APIResponse {
 	info: RInfo,
 	error: RError,
@@ -333,20 +335,24 @@ function getLocalTideEvents(): void {
 }
 getLocalTideEvents();
 
+let hasSetSunPredictions = false;
 function getLocalSunEvents(): void {
 	allSun.some(function (sunEvent, i) {
 		const sun = apiResponse.success.current.sun;
 		if (!sun.previous) {
 			sun.previous = sunEvent;
 		}
+
+		if (!hasSetSunPredictions && isSameDay(sunEvent.time, now)) {
+			apiResponse.success.predictions.sun = allSun.slice(i);
+			hasSetSunPredictions = true;
+		}
+
 		if (sun.previous.time < sunEvent.time && sunEvent.time < now) {
 			sun.previous = sunEvent;
 		}
 		if (!sun.next && sunEvent.time > now) {
 			sun.next = sunEvent;
-
-			apiResponse.success.predictions.sun = allSun.slice(i);
-
 			return true;
 		}
 		return false;

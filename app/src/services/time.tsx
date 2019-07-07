@@ -90,3 +90,9 @@ export function timeToPixels(startDate: Date, endDate: Date): number {
 export function isSameDay(a: Date, b: Date): boolean {
 	return !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
+
+export function beginOfDay(date: Date): Date {
+	var begin = new Date(date.getTime());
+	begin.setHours(0, 0, 0, 0);
+	return begin;
+}
