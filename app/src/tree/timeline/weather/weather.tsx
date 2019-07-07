@@ -38,4 +38,6 @@ export const Weather: StyledFC<WeatherProps> = (props) => {
 const WeatherContainer = styled.div`
 	position: relative;
 	height: calc(15vh + 15px);
+	/* to provide space for the flag content */
+	min-height: 135px;
 `;

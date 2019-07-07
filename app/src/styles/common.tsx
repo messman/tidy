@@ -12,7 +12,7 @@ export const Section = styled.div`
 `;
 
 export const Title = styled.h1`
-	font-size: 3rem;
+	font-size: 2.5rem;
 	line-height: 3rem;
 	margin: 0;
 	margin-bottom: .5rem;
@@ -20,7 +20,7 @@ export const Title = styled.h1`
 `;
 
 export const SubTitle = styled.p`
-	font-size: 1.5rem;
+	font-size: 1.4rem;
 	font-weight: 400;
 	margin: .2rem;
 `;

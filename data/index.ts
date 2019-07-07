@@ -1,5 +1,3 @@
-import { isSameDay } from "@/services/time";
-
 export interface APIResponse {
 	info: RInfo,
 	error: RError,
@@ -273,8 +271,6 @@ const apiResponse: APIResponse = {
 				createWeatherEvent("1/4/2019 21:00:00", true, 61, .6, 7),
 				createWeatherEvent("1/5/2019 00:00:00", true, 61, .6, 7),
 				createWeatherEvent("1/5/2019 03:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/5/2019 06:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/5/2019 09:00:00", true, 65, .2, 7),
 			]
 		},
 		daily: {

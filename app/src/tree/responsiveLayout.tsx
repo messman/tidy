@@ -86,4 +86,6 @@ const StrongFlexColumn = styled(FlexColumn)`
 
 const SidebarWrapper = styled(FlexColumn)`
 	border-left: 2px solid ${props => props.theme.color.bgDark};
+	width: 600px;
+	flex: initial;
 `;

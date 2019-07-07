@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Flex, FlexRow } from "@/unit/components/flex";
 import { FooterToggleState, FooterToggle } from "./footerToggle";
+import * as C from "@/styles/common";
 import styled from "@/styles/theme";
 
 interface FooterProps {
@@ -19,7 +20,7 @@ export const Footer: React.FC<FooterProps> = (props) => {
 	if (props.longTermToggleState !== FooterToggleState.on && props.aboutToggleState !== FooterToggleState.on) {
 		title = (
 			<Flex>
-				<FooterLocationTitle>Wells, Maine</FooterLocationTitle>
+				<FooterLocationTitle>Wells, ME</FooterLocationTitle>
 			</Flex>
 		)
 	}
@@ -52,8 +53,9 @@ const RightSVGToggle = styled(FooterToggle)`
 	margin-left: auto;
 `;
 
-const FooterLocationTitle = styled.h2`
+const FooterLocationTitle = styled(C.SubTitle)`
 	flex: 1;
 	display: block;
 	text-align: center;
+	margin: 0;
 `;
