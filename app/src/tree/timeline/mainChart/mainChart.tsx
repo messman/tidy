@@ -16,9 +16,7 @@ export const MainChart: StyledFC<MainChartProps> = (props) => {
 		return null;
 	}
 
-	const tideEvents = success.success.predictions.tides.events;
-	const lastEvent = tideEvents[tideEvents.length - 1];
-	const totalWidth = timeToPixels(success.info.time, lastEvent.time);
+	const totalWidth = timeToPixels(success.info.time, success.success.predictions.cutoffDate);
 	return (
 		<FlexColumn>
 			<C.ShadowTop />

@@ -4,20 +4,30 @@ import styled, { css, ThemedCSS } from "@/styles/theme";
 import * as C from "@/styles/common";
 import { WeatherEvent, TideEvent, DailyInfo } from "../../../../../data";
 import { createPrettyTime, isSameDay, createPrettyDate, createPrettyDateDay } from "@/services/time";
-import { minHour, maxHour } from "../longterm";
+import { ChartForeground } from "./chartForeground";
 
 export interface DailyViewProps {
 	isToday: boolean,
+	minHour: number,
+	maxHour: number,
+	minTideHeight: number,
+	maxTideHeight: number,
 	dailyEvent: DailyInfo
 }
 
 export const DailyView: React.FC<DailyViewProps> = (props) => {
 	const daily = props.dailyEvent;
 
+	const minHour = new Date(daily.date);
+	minHour.setHours(props.minHour, 0, 0, 0);
+
+	const maxHour = new Date(daily.date);
+	maxHour.setHours(props.maxHour, 0, 0, 0);
+
 	let qualifiedTideEvents = daily.tides
 		.filter(function (tide) {
 			// between 
-			return isSameDay(tide.time, daily.date) && tide.time.getHours() >= minHour && tide.time.getHours() <= maxHour;
+			return isSameDay(tide.time, daily.date) && tide.time >= minHour && tide.time <= maxHour;
 		});
 
 	// Either 2 or 3 for the max/min value that we currently have.
@@ -58,7 +68,14 @@ export const DailyView: React.FC<DailyViewProps> = (props) => {
 					<RainText>{daily.weather.chanceRain * 100}%</RainText>
 				</Flex>
 			</FlexRow>
-			Bezier
+			<ChartForeground
+				minHour={props.minHour}
+				maxHour={props.maxHour}
+				minTideHeight={props.minTideHeight}
+				maxTideHeight={props.maxTideHeight}
+
+				dailyEvent={daily}
+			/>
 			<FlexRow>
 				{tideEventsText}
 			</FlexRow>

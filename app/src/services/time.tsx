@@ -79,10 +79,14 @@ export function createPrettyTimespan(time: number): string {
 }
 
 
-const pixelsPerHour = 50;
-export const pixelsPerDay = 24 * pixelsPerHour;
+const _pixelsPerHour = 40;
+export const pixelsPerDay = 24 * _pixelsPerHour;
 
 export function timeToPixels(startDate: Date, endDate: Date): number {
+	return timeToPixelsWithConstant(startDate, endDate, _pixelsPerHour);
+}
+
+function timeToPixelsWithConstant(startDate: Date, endDate: Date, pixelsPerHour: number): number {
 	const hours = (endDate.getTime() - startDate.getTime()) / 1000 / 60 / 60;
 	return hours * pixelsPerHour;
 }

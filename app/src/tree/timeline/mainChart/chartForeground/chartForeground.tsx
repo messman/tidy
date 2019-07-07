@@ -4,7 +4,7 @@ import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels, isSameDay } from "@/services/time";
-import { Point, createChartLine } from "@/services/bezier";
+import { Point, createChartLine, ChartLineInput, makeRect, Rect, SVGPath } from "@/services/bezier";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 import { ExtremeCards } from "./extremeCards";
@@ -29,24 +29,36 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 		lowerTimelinePadding = <LowerTimelinePadding />;
 
 		const startTime = success.info.time;
-		const previous = success.success.current.tides.previous;
-		const points: Point[] = [
-			{
-				x: timeToPixels(startTime, previous.time),
-				y: previous.height
-			}
-		]
-		success.success.predictions.tides.events.forEach(function (t) {
-			points.push({
-				x: timeToPixels(startTime, t.time),
-				y: t.height
-			});
-		});
-		const fill = createChartLine(points, 130, true, size.width, size.height);
-		fillSVG = <FillSVG path={fill.path} width={fill.width} height={fill.height} />
+		const endTime = success.success.predictions.cutoffDate;
 
-		const stroke = createChartLine(points, 130, false, size.width, size.height);
-		strokeSVG = <StrokeSVG path={stroke.path} width={stroke.width} height={stroke.height} />
+
+		const previous = success.success.current.tides.previous;
+		const tidePredictions = success.success.predictions.tides;
+		const allTides = [previous, ...tidePredictions.events];
+		const points: Point[] = allTides.map(function (t) {
+			return {
+				x: t.time.getTime(),
+				y: t.height
+			};
+		});
+
+		const min = tidePredictions.minHeight;
+		const max = tidePredictions.maxHeight;
+
+		const chartLineInput: ChartLineInput = {
+			points: points,
+			controlPointLateral: 110,
+			closePath: true,
+			sourceRect: makeRect(startTime.getTime(), min, endTime.getTime(), max),
+			destRect: makeRect(0, 0, size.width, size.height),
+		};
+
+		const fill = createChartLine(chartLineInput);
+		fillSVG = <FillSVG path={fill.path} destRect={chartLineInput.destRect} />
+
+		chartLineInput.closePath = false;
+		const stroke = createChartLine(chartLineInput);
+		strokeSVG = <StrokeSVG path={stroke.path} destRect={chartLineInput.destRect} />
 	}
 
 
@@ -73,22 +85,8 @@ const LowerTimelinePadding = styled(C.TimelinePadding)`
 	opacity: .5;
 `;
 
-export interface SVGPathProps {
-	width: number,
-	height: number,
-	path: string
-}
 
-const _SVGPath: StyledFC<SVGPathProps> = (props) => {
-	const { width, height, path } = props;
-	return (
-		<svg className={props.className} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`} >
-			<path d={path}></path>
-		</svg>
-	);
-}
-
-const FillSVG = styled(_SVGPath)`
+const FillSVG = styled(SVGPath)`
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -100,7 +98,7 @@ const FillSVG = styled(_SVGPath)`
 	z-index: 5;
 `;
 
-const StrokeSVG = styled(_SVGPath)`
+const StrokeSVG = styled(SVGPath)`
 	position: absolute;
 	top: 0;
 	left: 0;
