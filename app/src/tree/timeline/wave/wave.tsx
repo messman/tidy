@@ -33,7 +33,7 @@ export const Wave: React.FC<WaveProps> = (props) => {
 	let animationOptions1: SVGWaveAnimationOptions = null;
 	let animationOptions2: SVGWaveAnimationOptions = null;
 	let lowerTimelinePadding: JSX.Element = <C.TimelinePadding />;
-	if (!isLoading && success && success.success) {
+	if (!isLoading && success && success.success && !size.isSizing) {
 		heightPercent = success.success.current.tides.percent;
 
 		lowerTimelinePadding = <LowerTimelinePadding />;

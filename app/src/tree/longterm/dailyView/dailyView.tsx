@@ -36,9 +36,9 @@ export const DailyView: React.FC<DailyViewProps> = (props) => {
 		tideEventsText = (
 			<>
 				<NoShrinkFlex />
-				<TwoPartTideText event={qualifiedTideEvents[0]} />
+				<TideText event={qualifiedTideEvents[0]} />
 				<NoShrinkFlex />
-				<TwoPartTideText event={qualifiedTideEvents[1]} />
+				<TideText event={qualifiedTideEvents[1]} />
 				<NoShrinkFlex />
 			</>
 		);
@@ -46,9 +46,13 @@ export const DailyView: React.FC<DailyViewProps> = (props) => {
 	else {
 		tideEventsText = (
 			<>
-				<ThreePartTideText event={qualifiedTideEvents[0]}></ThreePartTideText>
-				<ThreePartTideText event={qualifiedTideEvents[1]}></ThreePartTideText>
-				<ThreePartTideText event={qualifiedTideEvents[2]}></ThreePartTideText>
+				<NoShrinkFlex />
+				<TideText event={qualifiedTideEvents[0]}></TideText>
+				<NoShrinkFlex />
+				<TideText event={qualifiedTideEvents[1]}></TideText>
+				<NoShrinkFlex />
+				<TideText event={qualifiedTideEvents[2]}></TideText>
+				<NoShrinkFlex />
 			</>
 		);
 	}
@@ -130,27 +134,9 @@ const NoShrinkFlex = styled(Flex)`
 
 const TideText: React.FC<TideTextProps> = (props) => {
 	return (
-		<>
+		<NoShrinkFlex>
 			<LongText>{props.event.isLow ? "Low" : "High"}</LongText>
 			<LongText>{createPrettyTime(props.event.time)} {props.event.height}ft</LongText>
-		</>
-	);
-}
-
-const ThreePartTideText: React.FC<TideTextProps> = (props) => {
-	return (
-		<Flex>
-			<TideTextContainer>
-				<TideText {...props} />
-			</TideTextContainer>
-		</Flex>
-	);
-}
-
-const TwoPartTideText: React.FC<TideTextProps> = (props) => {
-	return (
-		<NoShrinkFlex>
-			<TideText {...props} />
 		</NoShrinkFlex>
 	);
 }

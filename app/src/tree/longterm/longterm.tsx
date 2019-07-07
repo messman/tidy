@@ -26,10 +26,10 @@ export const LongTerm: React.FC<LongTermProps> = (props) => {
 				<C.Section>
 					<C.Title>Long-term tides</C.Title>
 				</C.Section>
-				<FlexRow>
+				<TimeRow>
 					<Flex>{minHourText}</Flex>
 					<FlexRight>{maxHourText}</FlexRight>
-				</FlexRow>
+				</TimeRow>
 			</PaddingWithoutBottom>
 			<C.ShadowTop />
 			<ScrollFlex>
@@ -56,7 +56,9 @@ const FlexRight = styled(Flex)`
 	text-align: right;
 `;
 
-const FlexSpace = styled(Flex)`
+const TimeRow = styled(FlexRow)`
+	max-width: 600px;
+	margin: 0 auto;
 `;
 
 interface LongTermDailyViewListProps {

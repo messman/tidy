@@ -1,12 +1,14 @@
 import { useState, useRef, useLayoutEffect } from "react";
 
 export interface ElementSize {
+	isSizing: boolean,
 	width: number,
 	height: number
 }
 
+const initialState: ElementSize = { width: -1, height: -1, isSizing: true };
 export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObject<T>, throttleTimeoutMs?: number): ElementSize {
-	const [size, setSize] = useState<ElementSize>({ width: -1, height: -1 });
+	const [size, setSize] = useState<ElementSize>({ width: -1, height: -1, isSizing: true });
 	const throttleTimeoutId = useRef(-1);
 	const timeout = (isNaN(throttleTimeoutMs) || throttleTimeoutMs < 10) ? 10 : throttleTimeoutMs;
 
@@ -16,17 +18,16 @@ export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObjec
 				throttleTimeoutId.current = -1;
 				if (ref.current) {
 					const rect = ref.current.getBoundingClientRect();
-					setSize(function (previousSize) {
-						if (previousSize.width === rect.width && previousSize.height === rect.height) {
-							return previousSize;
-						}
-						return {
-							width: rect.width,
-							height: rect.height
-						};
+					setSize({
+						width: rect.width,
+						height: rect.height,
+						isSizing: false
 					});
 				}
 			}, timeout);
+
+			// While in progress, don
+			setSize(initialState);
 		}
 	}
 
