@@ -5,6 +5,7 @@ import * as C from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
 import { WeatherFlag } from "./weatherFlag";
 import { start } from "repl";
+import { filterWeatherEvents } from "../upperTimeline";
 
 interface WeatherProps {
 }
@@ -15,7 +16,7 @@ export const Weather: StyledFC<WeatherProps> = (props) => {
 	let weatherEvents: JSX.Element = null;
 	if (!isLoading && success && success.success) {
 		const startTime = success.info.time;
-		const events = success.success.predictions.weather;
+		const events = filterWeatherEvents(success.success.predictions.weather, success.success.predictions.cutoffDate);
 
 		weatherEvents = (
 			<>

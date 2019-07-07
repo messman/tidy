@@ -5,6 +5,7 @@ import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels, isSameDay } from "@/services/time";
 import { WeatherEventMarker, DayEventMarker, TideEventMarker } from "./eventMarker";
 import { SunEvent, WeatherEvent } from "../../../../../../data";
+import { filterWeatherEvents } from "../../upperTimeline";
 
 interface EventMarkersProps {
 }
@@ -18,7 +19,8 @@ export const EventMarkers: StyledFC<EventMarkersProps> = (props) => {
 	const markers: JSX.Element[] = [];
 	const startTime = success.info.time;
 
-	success.success.predictions.weather.forEach(function (ev) {
+	const weatherEvents = filterWeatherEvents(success.success.predictions.weather, success.success.predictions.cutoffDate);
+	weatherEvents.forEach(function (ev) {
 		const key = `w_${ev.time.getTime()}`;
 		markers.push(<WeatherEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 	});
