@@ -16,8 +16,6 @@ interface PercentViewProps {
 export const PercentView: React.FC<PercentViewProps> = (props) => {
 
 	let { visualHeightPercent, eventHeightPercent, height } = props;
-	visualHeightPercent = .1;
-
 	let topPercent = -1;
 	if (visualHeightPercent < .5) {
 		topPercent = (1 - visualHeightPercent) * .5
@@ -32,7 +30,14 @@ export const PercentView: React.FC<PercentViewProps> = (props) => {
 
 	return (
 		<CenterPoint topPercent={topPercent}>
-			{heightPercentText}
+			<Container>
+				<Backdrop />
+				<Text>
+					<div>{heightPercentText}</div>
+					<div>{height} ft</div>
+
+				</Text>
+			</Container>
 		</CenterPoint>
 	);
 }
@@ -59,4 +64,29 @@ const CenterPoint = styled.div<CenterPointProps>`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+`;
+
+const Container = styled.div`
+	position: relative;
+`;
+
+const Backdrop = styled.div`
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: ${props => props.theme.color.layerMed};
+	opacity: .3;
+	border-radius: .5rem;
+`;
+
+const Text = styled.div`
+	position: relative;
+	padding: .5rem 1rem;
+	color: ${props => props.theme.color.layerLight};
+	font-size: 2rem;
+	text-align: center;
+	font-weight: 400;
+	opacity: .7
 `;
