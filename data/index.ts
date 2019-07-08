@@ -20,7 +20,7 @@ export interface RSuccess {
 
 export interface RSuccessCurrent {
 	tides: {
-		percent: number,
+		percentBetweenPrevNext: number,
 		height: number,
 		previous: TideEvent,
 		next: TideEvent
@@ -176,8 +176,8 @@ const apiResponse: APIResponse = {
 	success: {
 		current: {
 			tides: {
-				percent: .75,
-				height: 8.5,
+				percentBetweenPrevNext: .71,
+				height: 8.0,
 				previous: null, // DYNAMIC - createTideEvent("1/1/2019 8:00:00", true, 0),
 				next: null // DYNAMIC - createTideEvent("1/1/2019 14:20:00", false, 11)
 			},

@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 import { useAppDataContext } from "@/tree/appData";
 import * as Bezier from "@/services/bezier";
+import { PercentView } from "./percentView";
 
 interface WaveProps {
 	animationOptions: WaveAnimationOptions
@@ -28,15 +29,33 @@ export const Wave: React.FC<WaveProps> = (props) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const size = useElementSize(ref, 300);
 
-	let heightPercent = -1;
 	let animationOptions0: SVGWaveAnimationOptions = null;
 	let animationOptions1: SVGWaveAnimationOptions = null;
 	let animationOptions2: SVGWaveAnimationOptions = null;
 	let lowerTimelinePadding: JSX.Element = <C.TimelinePadding />;
+	let percentView: JSX.Element = null;
+
+	// Visual height percent is what the user will believe is for between prev and next, but 
+	// is actually between short-term min and max to match the chart.
+	// The numbers we display will match so nbd.
+	let visualHeightPercent = -1;
+
 	if (!isLoading && success && success.success && !size.isSizing) {
-		heightPercent = success.success.current.tides.percent;
+		const tides = success.success.current.tides;
+		const predictTides = success.success.predictions.tides;
+
+		visualHeightPercent = (tides.height - predictTides.minHeight) / (predictTides.maxHeight - predictTides.minHeight);
+		// Turn into a rough sine wave
+		// y = .5sin(xpi - .5pi) + .5 from 0 to 1
+		visualHeightPercent = .5 * Math.sin((visualHeightPercent * Math.PI) - (.5 * Math.PI)) + .5;
 
 		lowerTimelinePadding = <LowerTimelinePadding />;
+
+		percentView = <PercentView
+			height={tides.height}
+			visualHeightPercent={visualHeightPercent}
+			eventHeightPercent={tides.percentBetweenPrevNext}
+		/>
 
 		const {
 			amplitude,
@@ -93,26 +112,27 @@ export const Wave: React.FC<WaveProps> = (props) => {
 						index={0}
 						width={size.width}
 						height={size.height}
-						heightPercent={heightPercent}
+						heightPercent={visualHeightPercent}
 						animationOptions={animationOptions0}
 					/>
 					<SVGWave
 						index={1}
 						width={size.width}
 						height={size.height}
-						heightPercent={heightPercent}
+						heightPercent={visualHeightPercent}
 						animationOptions={animationOptions1}
 					/>
 					<SVGWave
 						index={2}
 						width={size.width}
 						height={size.height}
-						heightPercent={heightPercent}
+						heightPercent={visualHeightPercent}
 						animationOptions={animationOptions2}
 					/>
 				</Flex>
 				{lowerTimelinePadding}
-				<OpacityCover heightPercent={heightPercent} />
+				<OpacityCover heightPercent={visualHeightPercent} />
+				{percentView}
 			</Container>
 			<C.ShadowBottom />
 		</>

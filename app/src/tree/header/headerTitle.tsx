@@ -12,7 +12,7 @@ export const HeaderTitle: React.FC<HeaderTitleProps> = (props) => {
 
 	let text = "";
 	if (!isLoading && success && success.success) {
-		const { percent, next } = success.success.current.tides;
+		const { percentBetweenPrevNext: percent, next } = success.success.current.tides;
 		if (percent > .90) {
 			text = "The tide is high."
 		}

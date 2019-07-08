@@ -14,7 +14,7 @@ export const HeaderSubTitle: React.FC<HeaderSubTitleProps> = (props) => {
 	let nextText = "";
 	let previousText = "";
 	if (!isLoading && success && success.success) {
-		const { percent, next, previous } = success.success.current.tides;
+		const { percentBetweenPrevNext: percent, next, previous } = success.success.current.tides;
 
 		nextText = `${next.isLow ? 'Low' : 'High'} tide is ${createPrettyTimespan(next.time.getTime() - success.info.time.getTime())}`;
 

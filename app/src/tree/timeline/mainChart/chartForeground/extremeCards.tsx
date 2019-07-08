@@ -4,11 +4,7 @@ import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels, isSameDay, createPrettyTime } from "@/services/time";
-import { Point, createChartLine } from "@/services/bezier";
-import { useRef } from "react";
-import { useElementSize } from "@/unit/hooks/useElementSize";
 import { TideEvent } from "../../../../../../data";
-import { TideEventMarker } from "../../timeBar/eventMarkers/eventMarker";
 
 interface ExtremeCardsProps {
 	heightInPixels: number;
@@ -25,6 +21,7 @@ export const ExtremeCards: StyledFC<ExtremeCardsProps> = (props) => {
 	const tides = success.success.predictions.tides;
 	const tideEvents = tides.events;
 	const maxHeight = tides.maxHeight;
+	const minHeight = tides.minHeight;
 
 	const cards = tideEvents.map(function (tideEvent, index) {
 		if (index === tideEvents.length - 1) {
@@ -36,7 +33,7 @@ export const ExtremeCards: StyledFC<ExtremeCardsProps> = (props) => {
 			return null;
 		}
 
-		const percent = (tideEvent.height / maxHeight) * 100;
+		const percent = ((tideEvent.height - minHeight) / (maxHeight - minHeight)) * 100;
 
 		if (tideEvent.isLow) {
 			return (
