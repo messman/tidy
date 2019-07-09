@@ -3,6 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import { build } from "./build";
 
 export const app = express();
 
@@ -13,7 +14,8 @@ app.use(cookieParser());
 
 // CORS 
 app.use(function (req, res, next) {
-	res.header("Access-Control-Allow-Origin", "tides.andrewmessier.com");
+	const origin = build.isProduction ? "tides.andrewmessier.com" : "*";
+	res.header("Access-Control-Allow-Origin", origin);
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
 });
