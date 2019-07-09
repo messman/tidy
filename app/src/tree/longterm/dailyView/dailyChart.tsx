@@ -41,7 +41,6 @@ export const DailyChart: StyledFC<DailyChartProps> = (props) => {
 
 		const chartLineInput: ChartLineInput = {
 			points: points,
-			controlPointLateral: 100,
 			closePath: true,
 			sourceRect: makeRect(startTime.getTime(), props.minTideHeight, endTime.getTime(), props.maxTideHeight),
 			destRect: makeRect(0, 0, size.width, size.height),

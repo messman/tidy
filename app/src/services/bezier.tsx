@@ -64,9 +64,6 @@ export function makePoint(x: number, y: number): Point {
 
 export interface ChartLineInput {
 	points: Point[],
-	/** How far out on each side the bezier control points should go horizontally. */
-	// TODO: Seems like this should be about 33% of the distance in pixels between two points... might be able to make this an average.
-	controlPointLateral: number,
 	// Close the path when doing a fill - but not for a path.
 	closePath: boolean,
 	sourceRect: Rect,
@@ -90,7 +87,12 @@ export function createChartLine(input: ChartLineInput): ChartLineOutput {
 
 	const p1 = points[0];
 	const p2 = points[1];
-	const controlPointLateral = input.controlPointLateral;
+	const pLast = points[points.length - 1];
+	const totalWidth = pLast.x - p1.x;
+	const averageDistance = totalWidth / (points.length - 1);
+	const controlPointLateral = averageDistance * .4;
+
+	//const controlPointLateral = input.controlPointLateral;
 	let bezier = `M${p1.x} ${p1.y} C ${roundVal(p1.x + controlPointLateral)} ${p1.y} ${roundVal(p2.x - controlPointLateral)} ${p2.y} ${p2.x} ${p2.y}`;
 
 	for (let i = 2; i < points.length; i++) {
@@ -101,8 +103,6 @@ export function createChartLine(input: ChartLineInput): ChartLineOutput {
 	let fullPath = bezier;
 	if (input.closePath) {
 		// Move horizontally not by the destRect bounds, but rather by the total width since we end outside of the rect.
-		const pLast = points[points.length - 1];
-		var totalWidth = pLast.x - p1.x;
 		// Move up (down visually) to the destRect.top, which should be your max value. Then across, then back up to the start. 
 		fullPath = `${bezier} v${input.destRect.top - pLast.y} h${-totalWidth} v${-input.destRect.top - p1.y} z`
 	}

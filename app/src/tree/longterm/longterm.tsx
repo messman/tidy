@@ -5,6 +5,7 @@ import * as C from "@/styles/common";
 import { useAppDataContext } from "../appData";
 import { DailyView, DailyViewProps } from "./dailyView/dailyView";
 import { createPrettyHour } from "@/services/time";
+import { TimeSlider } from "./timeSlider";
 
 interface LongTermProps {
 }
@@ -26,10 +27,12 @@ export const LongTerm: React.FC<LongTermProps> = (props) => {
 				<C.Section>
 					<C.Title>Long-term tides</C.Title>
 				</C.Section>
-				<TimeRow>
-					<Flex>{minHourText}</Flex>
-					<FlexRight>{maxHourText}</FlexRight>
-				</TimeRow>
+				<TimeSlider
+					minHour={minHour}
+					minHourText={minHourText}
+					maxHour={maxHour}
+					maxHourText={maxHourText}
+				/>
 			</PaddingWithoutBottom>
 			<C.ShadowTop />
 			<ScrollFlex>
@@ -50,15 +53,7 @@ const ScrollFlex = styled(Flex)`
 const PaddingWithoutBottom = styled.div`
 	padding: 1rem;
 	padding-bottom: 0;
-`;
-
-const FlexRight = styled(Flex)`
-	text-align: right;
-`;
-
-const TimeRow = styled(FlexRow)`
-	max-width: 600px;
-	margin: 0 auto;
+	z-index: 3;
 `;
 
 interface LongTermDailyViewListProps {

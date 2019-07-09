@@ -47,7 +47,6 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 
 		const chartLineInput: ChartLineInput = {
 			points: points,
-			controlPointLateral: 110,
 			closePath: true,
 			sourceRect: makeRect(startTime.getTime(), min, endTime.getTime(), max),
 			destRect: makeRect(0, 0, size.width, size.height),
