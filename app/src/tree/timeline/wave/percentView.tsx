@@ -78,7 +78,8 @@ const Backdrop = styled.div`
 	height: 100%;
 	background-color: ${props => props.theme.color.layerMed};
 	opacity: .3;
-	border-radius: .5rem;
+	border-radius: .25rem;
+	${C.shadowBelowStyle}
 `;
 
 const Text = styled.div`

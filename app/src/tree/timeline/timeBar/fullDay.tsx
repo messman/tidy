@@ -50,7 +50,7 @@ export const FullDay: React.FC<FullDayProps> = (props) => {
 }
 
 const ShadowSmallTextStyle = styled(C.SmallText)`
-	text-shadow: 0px 0px 5px ${props => props.theme.color.bgDark};
+	text-shadow: 0px 0px 3px ${props => props.theme.color.bgDark}, 0px 0px 7px ${props => props.theme.color.bgDark};
 `;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -137,10 +137,12 @@ const SunEventText = styled(_SunEventText)`
 //////////////////////////////////////////////////////////////////////////////////////////
 
 interface FullDayBackgroundGradientProps {
+	lower: number,
 	sunrise: number,
 	mid1: number,
 	mid2: number,
-	sunset: number,
+	sunset: number
+	upper: number,
 	total: number
 }
 
@@ -150,7 +152,16 @@ const FullDayBackgroundGradient = styled.div<FullDayBackgroundGradientProps>`
 	right: 0;
 	width: ${props => props.total}px;
 	height: 100%;
-	background-image: linear-gradient(90deg, ${props => props.theme.color.layerDark} 0px, ${props => props.theme.color.layerMed} ${props => props.sunrise}px, ${props => props.theme.color.layerLight} ${props => props.mid1}px, ${props => props.theme.color.layerLight} ${props => props.mid2}px, ${props => props.theme.color.layerMed} ${props => props.sunset}px, ${props => props.theme.color.layerDark} ${props => props.total}px);
+	background-image: linear-gradient(90deg,
+		${props => props.theme.color.layerDark} 0px,
+		${props => props.theme.color.layerDark} ${props => props.lower}px,
+		${props => props.theme.color.layerMed} ${props => props.sunrise}px,
+		${props => props.theme.color.bgLight} ${props => props.mid1}px,
+		${props => props.theme.color.bgLight} ${props => props.mid2}px,
+		${props => props.theme.color.layerMed} ${props => props.sunset}px,
+		${props => props.theme.color.layerDark} ${props => props.upper}px,
+		${props => props.theme.color.layerDark} ${props => props.total}px
+	);
 `;
 
 interface FullDayBackgroundProps {
@@ -161,17 +172,23 @@ interface FullDayBackgroundProps {
 const FullDayBackground: StyledFC<FullDayBackgroundProps> = (props) => {
 	const { sunrisePx, sunsetPx } = props;
 
-	const mid1Px = sunrisePx + ((sunsetPx - sunrisePx) * (1 / 3));
-	const mid2Px = sunrisePx + ((sunsetPx - sunrisePx) * (2 / 3));
+
+	const lower1Px = sunrisePx * (3 / 5);
+	const mid1Px = sunrisePx + ((sunsetPx - sunrisePx) * (1 / 5));
+	const mid2Px = sunrisePx + ((sunsetPx - sunrisePx) * (4 / 5));
+	const upper1Px = sunsetPx + ((pixelsPerDay - sunsetPx) * (2 / 5))
 	const total = pixelsPerDay;
 
 	return (
 		<FullDayBackgroundGradient
 			className={props.className}
+
+			lower={lower1Px}
 			sunrise={sunrisePx}
 			mid1={mid1Px}
 			mid2={mid2Px}
 			sunset={sunsetPx}
+			upper={upper1Px}
 			total={total}
 		>
 			{props.children}

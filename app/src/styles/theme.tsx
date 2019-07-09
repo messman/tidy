@@ -1,6 +1,5 @@
 import baseStyled, { css as baseCss, ThemedStyledInterface, BaseThemedCssFunction, createGlobalStyle, ThemeProps, FlattenInterpolation } from "styled-components";
 export { ThemeProvider, keyframes } from "styled-components";
-import { forwardRef } from "react";
 
 export interface Theme {
 	color: {
