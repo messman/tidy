@@ -342,7 +342,7 @@ function getLocalTideEvents(): void {
 	let firstPastLimit = false;
 	const shortTermTides = allTides.filter(function (t) {
 		if (t.time > now) {
-			if (t.time < shortTermLimitDate) {
+			if (t.time <= shortTermLimitDate) {
 				return true;
 			}
 			if (!firstPastLimit) {
@@ -384,7 +384,7 @@ function getLocalSunEvents(): void {
 	// Go one past so it looks continuous.
 	let firstPastLimit = false;
 	const shortTermSun = allSun.filter(function (sun) {
-		if (sun.time > now && sun.time < shortTermLimitDate) {
+		if (sun.time > now && sun.time <= shortTermLimitDate) {
 			return true;
 		}
 		if (!firstPastLimit) {

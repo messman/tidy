@@ -6,7 +6,7 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node ./dist/index",
+		"start": "tsc && node ./dist/index",
 		"debug": "DEBUG=quick-tides-api node ./dist/index"
 	},
 	"repository": {
@@ -19,19 +19,21 @@
 		"url": "https://github.com/messman/quick-tides-api/issues"
 	},
 	"homepage": "https://github.com/messman/quick-tides-api#readme",
-	"dependencies": {
+	"devDependencies": {
 		"@types/cookie-parser": "^1.4.1",
 		"@types/debug": "0.0.30",
-		"@types/express": "^4.16.0",
+		"@types/express": "^4.17.0",
 		"@types/morgan": "^1.7.35",
-		"@types/node": "^10.5.8",
-		"@types/node-fetch": "^2.1.2",
+		"@types/node": "^10.14.12",
+		"@types/node-fetch": "^2.3.7",
+		"typescript": "^3.5.3"
+	},
+	"dependencies": {
 		"body-parser": "^1.18.3",
 		"cookie-parser": "^1.4.3",
 		"debug": "^3.1.0",
 		"express": "^4.16.3",
-		"morgan": "^1.9.0",
-		"node-fetch": "^2.2.0",
-		"typescript": "^3.0.1"
+		"morgan": "^1.9.1",
+		"node-fetch": "^2.2.0"
 	}
 }
