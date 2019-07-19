@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"incremental": true,
 		"allowJs": false,
 		"alwaysStrict": true,
 		"checkJs": false,
@@ -11,6 +12,7 @@
 		"target": "es2017",
 		"sourceMap": true,
 		"outDir": "./dist",
+		"noEmitOnError": true,
 	},
 	"exclude": [
 		"node_modules"

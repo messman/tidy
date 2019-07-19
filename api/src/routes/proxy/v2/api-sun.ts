@@ -1,4 +1,5 @@
 import { SingleAPIResponse } from "./api";
+import fetch from "node-fetch";
 
 export interface SunResponse {
 
