@@ -1,4 +1,4 @@
-import { APIResponse } from "../../../../../data/apiResponse";
+import { APIResponse } from "../../../data/apiResponse";
 
 export interface SerializedDate {
 	d: string,

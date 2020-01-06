@@ -1,7 +1,7 @@
 import express from "express";
 export const router = express.Router();
 
-import { getData, SerializedAPIResponse } from "./fetch";
+import { getData, SerializedAPIResponse } from "./collector";
 
 const expirationMS: number = 1000 * 60 * 10; // 10 minutes
 
