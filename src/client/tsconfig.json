@@ -1,20 +1,19 @@
 {
+	"extends": "../tsconfig-base.json",
 	"compilerOptions": {
-		"allowJs": false,
-		"alwaysStrict": true,
-		"checkJs": false,
+		"rootDir": ".",
+		"outFile": "./dist/shared.js",
 		"jsx": "react",
 		"module": "esnext",
-		"noImplicitAny": false,
-		"noImplicitReturns": false,
-		"noImplicitThis": false,
-		"outDir": "./build",
-		"target": "es2017",
 		"moduleResolution": "node",
 		"baseUrl": ".",
+		"outDir": "./build",
 		"paths": {
 			"@/*": [
-				"src/*"
+				"*"
+			],
+			"@shared/*": [
+				"../shared/*"
 			]
 		}
 	},
@@ -22,8 +21,12 @@
 		"node_modules"
 	],
 	"include": [
-		"src/**/*",
-		"../data/**/*"
+		"**/*"
+	],
+	"references": [
+		{
+			"path": "../shared"
+		}
 	],
 	"compileOnSave": false
 }

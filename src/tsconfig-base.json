@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"target": "es2017",
+		"sourceMap": true,
+		"declaration": true,
+		"declarationMap": true,
+		"incremental": true,
+		"composite": true,
+		"allowJs": false,
+		"checkJs": false,
+		"alwaysStrict": true,
+		"noImplicitAny": false,
+		"noImplicitReturns": false,
+		"noImplicitThis": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": false,
+		"noEmitOnError": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"strictBindCallApply": true,
+		"preserveConstEnums": true
+	}
+}

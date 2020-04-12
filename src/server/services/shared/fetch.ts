@@ -15,22 +15,6 @@ export interface SingleUntypedAPIResponse {
 	issues: Issue[]
 }
 
-function issue(level: IssueLevel, user: string, dev: string, data?: {}): Issue {
-	return {
-		level: level,
-		userMessage: user,
-		dev: {
-			message: dev,
-			data: data || null
-		},
-	}
-}
-export function warningIssue(user: string, dev: string, data?: {}): Issue {
-	return issue(IssueLevel.warning, user, dev, data);
-}
-export function errorIssue(user: string, dev: string, data?: {}): Issue {
-	return issue(IssueLevel.error, user, dev, data);
-}
 
 /**
  * Gets the JSON at the URL. If failed, won't throw. Instead result will be null and the issues array

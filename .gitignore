@@ -1,21 +1,8 @@
-#root
+# root
 TODO.txt
+NOTES.txt
 
-# app
-app/node_modules
-app/dist
-app/build
-app/npm-debug.log
-
-# api
-api/apis
-api/node_modules
-api/dist
-api/npm-debug.log
-
-# proxy
-proxy/*-ssl*
-proxy/*.key
-proxy/*.pem
-proxy/*.txt
-proxy/*.sh
+**/node_modules
+**/dist
+**/build
+npm-debug.log

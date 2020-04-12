@@ -1,102 +1,24 @@
-export interface APIResponse {
-	info: RInfo,
-	error: RError,
-	success: RSuccess
-}
+import { Info } from "../all/info";
+import { AllResponse, AllDailyInfo } from "../all/allResponse";
+import { WeatherEvent } from "../weather/weatherEvent";
+import { TideEvent } from "../tide/tideEvent";
+import { SunEvent } from "../astro/astroEvent";
+import { errorIssue } from "../all/issue";
 
-export interface RInfo {
-	time: Date
-}
 
-export interface RError {
-	errors: Error[]
-}
-
-export interface RSuccess {
-	current: RSuccessCurrent,
-	predictions: RSuccessPredictions,
-	daily: RSuccessDaily
-}
-
-export interface RSuccessCurrent {
-	tides: {
-		percentBetweenPrevNext: number,
-		height: number,
-		previous: TideEvent,
-		next: TideEvent
-	},
-	sun: {
-		previous: SunEvent,
-		next: SunEvent
-	},
-	weather: WeatherEvent
-}
-
-export interface RSuccessPredictions {
-	cutoffDate: Date,
-	tides: {
-		minHeight: number,
-		maxHeight: number,
-		events: TideEvent[],
-	}
-	sun: SunEvent[],
-	weather: WeatherEvent[]
-}
-
-export interface RSuccessDaily {
-	weather: WeatherEvent[],
-	tides: {
-		minHeight: number,
-		maxHeight: number,
-	}
-	today: DailyInfo,
-	future: DailyInfo[]
-}
-
-export interface TideEvent {
-	time: Date,
-	isLow: boolean,
-	height: number
-}
-
-export interface SunEvent {
-	time: Date,
-	isSunrise: boolean
-}
-
-export interface WeatherEvent {
-	time: Date,
-	status: 'cloudy' | 'raining' | 'sunny',
-	temp: number,
-	tempUnit: string,
-	chanceRain: number,
-	wind: number,
-	windUnit: string,
-	windDirection: string
-}
-
-export interface DailyInfo {
-	date: Date,
-	weather: WeatherEvent,
-	tides: TideEvent[],
-	sun: SunEvent[]
-}
-
-////////////////////////////////////////////////////////
-
-function createInfo(date: Date): RInfo {
+function createInfo(date: Date | null): Info {
 	return {
 		time: date || new Date()
 	}
 }
 
-export function getErrorResponse(): APIResponse {
+export function getErrorResponse(): AllResponse {
 	return {
 		info: createInfo(null),
 		error: {
-			errors: [new Error('Could not fetch NOAA data')]
+			errors: [errorIssue('Could not fetch any data', 'Here is a dev message')]
 		},
-		success: null
+		data: null
 	}
 }
 
@@ -170,20 +92,21 @@ const allSun: SunEvent[] = [
 
 const now = new Date("1/1/2019 12:30:00");
 
-const apiResponse: APIResponse = {
+const apiResponse: AllResponse = {
 	info: createInfo(now),
 	error: null,
-	success: {
+	data: {
+		warning: null,
 		current: {
 			tides: {
 				percentBetweenPrevNext: .71,
 				height: 8.0,
-				previous: null, // DYNAMIC - createTideEvent("1/1/2019 8:00:00", true, 0),
-				next: null // DYNAMIC - createTideEvent("1/1/2019 14:20:00", false, 11)
+				previous: null!, // DYNAMIC - createTideEvent("1/1/2019 8:00:00", true, 0),
+				next: null! // DYNAMIC - createTideEvent("1/1/2019 14:20:00", false, 11)
 			},
 			sun: {
-				previous: null, // DYNAMIC - createSunEvent("1/1/2019 16:10:00", true),
-				next: null, // DYNAMIC - createSunEvent("1/1/2019 17:10:00", false)
+				previous: null!, // DYNAMIC - createSunEvent("1/1/2019 16:10:00", true),
+				next: null!, // DYNAMIC - createSunEvent("1/1/2019 17:10:00", false)
 			},
 			weather: {
 				time: new Date("1/1/2019 12:15:00"),
@@ -197,7 +120,7 @@ const apiResponse: APIResponse = {
 			}
 		},
 		predictions: {
-			cutoffDate: null,
+			cutoffDate: null!,
 			tides: {
 				minHeight: -1,
 				maxHeight: -1,
@@ -274,6 +197,7 @@ const apiResponse: APIResponse = {
 			]
 		},
 		daily: {
+			cutoffDate: null!,
 			weather: [
 				createWeatherEvent("1/1/2019 00:00:00", false, 65, .5, 4),
 				createWeatherEvent("1/2/2019 00:00:00", false, 65, .5, 4),
@@ -289,7 +213,7 @@ const apiResponse: APIResponse = {
 				minHeight: -1,
 				maxHeight: -1,
 			},
-			today: null, // createDaily("1/1/2019", [createTideEvent("1/1/2019 8:00:00", true, 0), createTideEvent("1/1/2019 14:20:00", false, 11), createTideEvent("1/1/2019 20:30:00", true, 1)], createWeatherEvent("1/1/2019 15:00:00", false, 65, .5, 4), [createSunEvent("1/1/2019 06:10:00", true), createSunEvent("1/1/2019 17:10:00", false)]),
+			today: null!, // createDaily("1/1/2019", [createTideEvent("1/1/2019 8:00:00", true, 0), createTideEvent("1/1/2019 14:20:00", false, 11), createTideEvent("1/1/2019 20:30:00", true, 1)], createWeatherEvent("1/1/2019 15:00:00", false, 65, .5, 4), [createSunEvent("1/1/2019 06:10:00", true), createSunEvent("1/1/2019 17:10:00", false)]),
 			future: [],
 			// [
 			// 	createDaily("1/2/2019", [createTideEvent("1/2/2019 02:40:00", false, 10.5), createTideEvent("1/2/2019 09:50:00", true, 1), createTideEvent("1/2/2019 15:20:00", false, 11.5), createTideEvent("1/2/2019 20:10:00", true, 2)], createWeatherEvent("1/2/2019 00:00:00", false, 65, .4, 4), [createSunEvent("1/2/2019 06:10:00", true), createSunEvent("1/2/2019 17:10:00", false)]),
@@ -302,7 +226,7 @@ const apiResponse: APIResponse = {
 	}
 }
 
-export function getSuccessResponse(): APIResponse {
+export function getSuccessResponse(): AllResponse {
 	return apiResponse;
 }
 
@@ -317,11 +241,11 @@ export function getSuccessResponse(): APIResponse {
 const shortTermLimitDate = new Date(now);
 shortTermLimitDate.setHours(24, 0, 0, 0);
 shortTermLimitDate.setDate(shortTermLimitDate.getDate() + 3);
-apiResponse.success.predictions.cutoffDate = shortTermLimitDate;
+apiResponse.data!.predictions.cutoffDate = shortTermLimitDate;
 
 function getLocalTideEvents(): void {
 
-	const tides = apiResponse.success.current.tides;
+	const tides = apiResponse.data!.current.tides;
 
 	allTides.some(function (t, i) {
 
@@ -352,21 +276,21 @@ function getLocalTideEvents(): void {
 		}
 		return false;
 	});
-	apiResponse.success.predictions.tides.events = shortTermTides;
+	apiResponse.data!.predictions.tides.events = shortTermTides;
 	let minShortTideHeight: number = Infinity;
 	let maxShortTideHeight: number = -Infinity;
 	shortTermTides.forEach(function (t) {
 		minShortTideHeight = Math.min(minShortTideHeight, t.height);
 		maxShortTideHeight = Math.max(maxShortTideHeight, t.height);
 	});
-	apiResponse.success.predictions.tides.minHeight = minShortTideHeight;
-	apiResponse.success.predictions.tides.maxHeight = maxShortTideHeight;
+	apiResponse.data!.predictions.tides.minHeight = minShortTideHeight;
+	apiResponse.data!.predictions.tides.maxHeight = maxShortTideHeight;
 }
 getLocalTideEvents();
 
 function getLocalSunEvents(): void {
 	allSun.some(function (sunEvent, i) {
-		const sun = apiResponse.success.current.sun;
+		const sun = apiResponse.data!.current.sun;
 		if (!sun.previous) {
 			sun.previous = sunEvent;
 		}
@@ -393,7 +317,7 @@ function getLocalSunEvents(): void {
 		}
 		return false;
 	});
-	apiResponse.success.predictions.sun = shortTermSun;
+	apiResponse.data!.predictions.sun = shortTermSun;
 }
 getLocalSunEvents();
 
@@ -403,7 +327,7 @@ function beginOfDay(date: Date): Date {
 	return begin;
 }
 
-let lastDay: Date = null;
+let lastDay: Date = null!;
 let thisDayEvents: TideEvent[] = []
 let days: TideEvent[][] = [];
 allTides.forEach(function (tideEvent, i) {
@@ -430,7 +354,7 @@ const endIndex = days.length - 1;
 
 function getDailies() {
 
-	const dailiesMap: { [key: number]: DailyInfo } = {};
+	const dailiesMap: { [key: number]: AllDailyInfo } = {};
 
 	for (let i = startIndex; i < endIndex; i++) {
 		const day = days[i];
@@ -439,17 +363,17 @@ function getDailies() {
 
 		const dayTime = beginOfDay(day[0].time);
 
-		const dailyInfo: DailyInfo = {
+		const dailyInfo: AllDailyInfo = {
 			date: dayTime,
 			tides: [dayBefore[dayBefore.length - 1], ...day, dayAfter[0]],
 			sun: [], // done after
-			weather: null // done after
+			weather: null! // done after
 		};
 
 		dailiesMap[dayTime.getTime()] = dailyInfo;
 	}
 
-	apiResponse.success.daily.weather.forEach(function (dailyWeatherEvent) {
+	apiResponse.data!.daily.weather.forEach(function (dailyWeatherEvent) {
 		const dayTimeKey = dailyWeatherEvent.time.getTime();
 		const daily = dailiesMap[dayTimeKey];
 		if (daily) {
@@ -467,8 +391,8 @@ function getDailies() {
 
 	const allDailies = Object.values(dailiesMap);
 	const [today, ...future] = allDailies;
-	apiResponse.success.daily.today = today;
-	apiResponse.success.daily.future = future;
+	apiResponse.data!.daily.today = today;
+	apiResponse.data!.daily.future = future;
 
 	let minLongTideHeight: number = Infinity;
 	let maxLongTideHeight: number = -Infinity;
@@ -478,8 +402,8 @@ function getDailies() {
 			maxLongTideHeight = Math.max(maxLongTideHeight, t.height);
 		});
 	});
-	apiResponse.success.daily.tides.minHeight = minLongTideHeight;
-	apiResponse.success.daily.tides.maxHeight = maxLongTideHeight;
+	apiResponse.data!.daily.tides.minHeight = minLongTideHeight;
+	apiResponse.data!.daily.tides.maxHeight = maxLongTideHeight;
 }
 getDailies();
 
@@ -514,12 +438,12 @@ function createWeatherEvent(time: string, isCloudy: boolean, temp: number, chanc
 }
 
 
-function createDaily(dayTime: string, tideEvents: TideEvent[], weatherEvent: WeatherEvent, sunEvents: SunEvent[]): DailyInfo {
-	return {
-		date: new Date(`${dayTime} 00:00:00`),
-		tides: tideEvents,
-		weather: weatherEvent,
-		sun: sunEvents
-	};
-}
+// function createDaily(dayTime: string, tideEvents: TideEvent[], weatherEvent: WeatherEvent, sunEvents: SunEvent[]): AllDailyInfo {
+// 	return {
+// 		date: new Date(`${dayTime} 00:00:00`),
+// 		tides: tideEvents,
+// 		weather: weatherEvent,
+// 		sun: sunEvents
+// 	};
+// }
 

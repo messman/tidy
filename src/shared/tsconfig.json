@@ -2,17 +2,12 @@
 	"extends": "../tsconfig-base.json",
 	"compilerOptions": {
 		"rootDir": ".",
-		"outFile": "./dist/shared.js",
+		"outDir": "./dist"
 	},
 	"exclude": [
 		"node_modules"
 	],
 	"include": [
 		"**/*"
-	],
-	"references": [
-		{
-			"path": "../shared"
-		}
 	]
 }
