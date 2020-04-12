@@ -3,18 +3,12 @@
 /**
  * Module dependencies.
  */
-
 import { app } from "./app";
 import * as http from "http";
-import { build } from "./build";
-
-import debugRoot from "debug";
-const debug = debugRoot("quick-tides-api");
 
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(process.env.PORT || "8000");
 app.set("port", port);
 
@@ -35,7 +29,6 @@ server.on("listening", onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
 	var port = parseInt(val, 10);
 
@@ -55,16 +48,12 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
 	if (error.syscall !== "listen") {
 		throw error;
 	}
 
-	var bind = typeof port === "string"
-		? "Pipe " + port
-		: "Port " + port;
-
+	const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 	// Handle specific listen errors with friendly messages
 	switch (error.code) {
 		case "EACCES":
@@ -83,14 +72,8 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
-	var addr = server.address();
-	var bind = typeof addr === "string"
-		? "pipe " + addr
-		: "port " + addr.port;
-	debug("Listening on " + bind);
-	debug("Version:" + build.version);
-	debug("Time:" + build.time);
-	debug((new Date()).getTimezoneOffset());
+	const addr = server.address();
+	const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+	console.log("Listening on " + bind);
 }

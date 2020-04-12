@@ -276,7 +276,7 @@ function processRawNoaaCurrent(raw: Raw.Response, clean: Clean.Response): void {
 // Required for every request
 const defaultFetchOptions = {
 	station: 8419317, // Default: Wells, ME https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
-	application: "messman_quick-tides-api",
+	application: "messman_tidy",
 	format: "json",
 	time_zone: "lst_ldt", // Local Time with DST offset
 	units: "english", // english | metric

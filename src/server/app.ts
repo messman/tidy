@@ -1,33 +1,17 @@
 import express from "express";
-
 import morgan from "morgan";
-import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
-import { build } from "./build";
 
 export const app = express();
 
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 
-// CORS 
-app.use(function (req, res, next) {
-	const origin = build.isProduction ? "tides.andrewmessier.com" : "*";
-	res.header("Access-Control-Allow-Origin", origin);
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	next();
-});
-
-import { router as indexRouter } from "./routes/index";
 import { router as proxyRouter } from "./routes/proxy";
 
-// Main API access route
-app.use("/proxy", proxyRouter);
-
 // Fall-through
-app.use("/", indexRouter);
+app.use("/", proxyRouter);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {

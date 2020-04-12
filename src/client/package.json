@@ -1,7 +1,6 @@
 {
-	"name": "quick-tides",
-	"//": "AGM_QT_V",
-	"version": "1.1.0",
+	"name": "tidy",
+	"version": "3.0.0",
 	"description": "A mobile-first web app that uses NOAA data to show a simple view of tide information.",
 	"main": "webpack.config.js",
 	"scripts": {
@@ -13,7 +12,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/messman/quick-tides.git"
+		"url": "git+https://github.com/messman/tidy.git"
 	},
 	"keywords": [
 		"javascript",
@@ -25,9 +24,9 @@
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/messman/quick-tides/issues"
+		"url": "https://github.com/messman/tidy/issues"
 	},
-	"homepage": "https://github.com/messman/quick-tides#readme",
+	"homepage": "https://github.com/messman/tidy#readme",
 	"dependencies": {
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",

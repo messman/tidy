@@ -6,7 +6,7 @@ import { getNoaaData } from "./requests";
 
 const expirationMS: number = 1000 * 60 * 10; // 10 minutes
 
-let lastResponse: CleanResponse = null;
+let lastResponse: CleanResponse | null = null;
 let lastResponseTime: number = -1;
 
 let latestCacheHits: number = 0;
@@ -24,7 +24,7 @@ router.get("/latest", async function (req, res) {
 	const now = Date.now();
 	let isCached = false;
 	let cachedForMs = 0;
-	let response: CleanResponse = lastResponse;
+	let response: CleanResponse | null = lastResponse;
 
 	if (!response || lastResponseTime === -1 || now > lastResponseTime + expirationMS) {
 

@@ -1,38 +1,31 @@
 {
-	"name": "quick-tides-api",
-	"//": "AGM_QT_V",
-	"version": "1.1.0",
-	"description": "A proxy api for the quick-tides project.",
+	"name": "tidy-api",
+	"version": "3.0.0",
+	"description": "An api for the tidy project.",
 	"main": "dist/index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "tsc && node ./dist/index",
-		"debug": "DEBUG=quick-tides-api node ./dist/index"
+		"start": "tsc && node ./dist/index"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/messman/quick-tides-api.git"
+		"url": "git+https://github.com/messman/tidy-api.git"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/messman/quick-tides-api/issues"
+		"url": "https://github.com/messman/tidy-api/issues"
 	},
-	"homepage": "https://github.com/messman/quick-tides-api#readme",
+	"homepage": "https://github.com/messman/tidy-api#readme",
 	"devDependencies": {
-		"@types/cookie-parser": "^1.4.1",
-		"@types/debug": "0.0.30",
 		"@types/express": "^4.17.0",
 		"@types/luxon": "^1.15.2",
 		"@types/morgan": "^1.7.35",
-		"@types/node": "^10.14.12",
+		"@types/node": "^10.17.19",
 		"@types/node-fetch": "^2.3.7",
-		"typescript": "^3.5.3"
+		"typescript": "^3.8.0"
 	},
 	"dependencies": {
 		"body-parser": "^1.18.3",
-		"cookie-parser": "^1.4.3",
-		"debug": "^3.1.0",
 		"express": "^4.16.3",
 		"luxon": "^1.17.1",
 		"morgan": "^1.9.1",
