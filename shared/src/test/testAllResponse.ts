@@ -247,7 +247,7 @@ function getLocalTideEvents(): void {
 
 	const tides = apiResponse.data!.current.tides;
 
-	allTides.some(function (t, i) {
+	allTides.some(function (t) {
 
 		if (!tides.previous) {
 			tides.previous = t;
@@ -289,7 +289,7 @@ function getLocalTideEvents(): void {
 getLocalTideEvents();
 
 function getLocalSunEvents(): void {
-	allSun.some(function (sunEvent, i) {
+	allSun.some(function (sunEvent) {
 		const sun = apiResponse.data!.current.sun;
 		if (!sun.previous) {
 			sun.previous = sunEvent;

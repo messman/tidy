@@ -1,7 +1,7 @@
 export interface WeatherEvent {
 	/** Time of the weather event. */
 	time: Date,
-	/** The desciption of the weather at the time. */
+	/** The description of the weather at the time. */
 	status: 'cloudy' | 'raining' | 'sunny',
 	/** The temperature. */
 	temp: number,

@@ -2,7 +2,7 @@
 TODO.txt
 NOTES.txt
 
-**/node_modules
-**/dist
-**/build
+node_modules
+dist
+build
 npm-debug.log

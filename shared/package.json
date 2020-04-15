@@ -1,0 +1,16 @@
+{
+	"name": "tidy-shared",
+	"version": "1.0.0",
+	"description": "Shared code between client and server for tidy.",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"start": "ts-webpack-builder"
+	},
+	"author": "Andrew Messier",
+	"license": "MIT",
+	"dependencies": {},
+	"devDependencies": {
+		"typescript": "^3.8.3"
+	}
+}
