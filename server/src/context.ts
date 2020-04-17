@@ -1,0 +1,102 @@
+import { DateTime } from "luxon";
+
+export interface APIConfiguration {
+	configuration: {
+		location: {
+			/**
+			 * The timezone to use. This should match the location from which we're fetching data - like for Maine,
+			 * it will be America/New_York. 
+			 * Implementations should take care of DST offsets.
+			 */
+			timeZoneLabel: string
+
+		},
+
+		time: {
+			/**
+			 * Time to make all requests based off of. Should probably be "now", and that may be all that's supported for now.
+			 */
+			referenceTime: Date,
+
+			/**
+			 * Number of days into the future to grab short-term data (data that shows in our scrolling data view).
+			 * So if 3, adds 3 days and goes to end of that day.
+			 * Should be shorter than long-term date.
+			 */
+			shortTermDataFetchDays: number,
+			/**
+			 * Number of days into the future to grab long-term data (data that shows in our long-term view).
+			 * So if 7, adds 7 days and goes to end of that day.
+			 * Should be longer than short-term date.
+			 */
+			longTermDataFetchDays: number
+		}
+
+		tides: {
+			/**
+			 * Number of days in the past to look for tides.
+			 * So if 2, subtracts 2 days and then goes to the beginning of that day.
+			 */
+			daysInPastToFetchTides: number
+		},
+
+		weather: {
+			/** The gap in hours between weather data - so we aren't grabbing more data than we need from the API to send down to a client that can't show it. */
+			hoursGapBetweenWeatherData: number
+		}
+	}
+}
+
+export interface APIConfigurationContext extends APIConfiguration {
+	context: {
+		/** Time of the request, from which all searches will be relatively based. Adjusted to proper timezone. Includes DST offset. */
+		referenceTimeInZone: DateTime,
+
+		/** The maximum date for which we should get any data for short term information. Should be in the future at the end of that day. */
+		maxShortTermDataFetch: DateTime,
+		/** The maximum date for which we should get any data for long term information. Should be in the future at the end of that day. */
+		maxLongTermDataFetch: DateTime,
+
+		tides: {
+			/**
+			 * The minimum date to get tides data for. Should be in the past, at least one day, at the beginning of that day.
+			 * Based on configuration and time of request.
+			 */
+			minimumTidesDataFetch: DateTime
+		},
+
+		weather: {
+		}
+	}
+}
+
+/**
+ * Creates a request context. Currently creates the 'time of request' within.
+ */
+export function createContext(apiConfiguration: APIConfiguration): APIConfigurationContext {
+	if (!apiConfiguration) {
+		throw new Error('no configuration provided');
+	}
+	const configuration = apiConfiguration.configuration;
+	const configurationContext = apiConfiguration as APIConfigurationContext;
+
+	// Associate the time with the location.
+	const referenceTime = DateTime.fromJSDate(configuration.time.referenceTime).setZone(configuration.location.timeZoneLabel);
+
+	configurationContext.context = {
+		referenceTimeInZone: referenceTime,
+
+		// Use start of next day, instead of "23:59:99...", so add 1 to the value.
+		maxShortTermDataFetch: referenceTime.plus({ days: configuration.time.shortTermDataFetchDays + 1 }).startOf("day"),
+		maxLongTermDataFetch: referenceTime.plus({ days: configuration.time.longTermDataFetchDays + 1 }).startOf("day"),
+
+		tides: {
+			minimumTidesDataFetch: referenceTime.minus({ days: configuration.tides.daysInPastToFetchTides }).startOf("day"),
+		},
+
+		weather: {
+		}
+	};
+
+	return configurationContext;
+};

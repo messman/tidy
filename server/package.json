@@ -1,0 +1,21 @@
+{
+	"name": "tidy-server",
+	"version": "1.0.0",
+	"description": "Server-side code for tidy.",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"start": "ts-webpack-builder"
+	},
+	"author": "Andrew Messier",
+	"license": "MIT",
+	"dependencies": {
+		"luxon": "^1.23.0",
+		"node-fetch": "^2.6.0"
+	},
+	"devDependencies": {
+		"@types/luxon": "^1.22.0",
+		"@types/node-fetch": "^2.5.6",
+		"typescript": "^3.8.3"
+	}
+}

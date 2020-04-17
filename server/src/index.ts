@@ -1,6 +1,3 @@
-export * from './test/randomize';
-export * from './test/equation';
-
 export * from './all/allResponse';
 export * from './all/info';
 export * from './all/issue';

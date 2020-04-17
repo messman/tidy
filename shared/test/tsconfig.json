@@ -1,0 +1,13 @@
+{
+	"extends": "../../tsconfig-base.json",
+	"compilerOptions": {
+		"module": "commonjs",
+		"sourceMap": false,
+		"declaration": false,
+		"declarationMap": false,
+		"incremental": false
+	},
+	"files": [
+		"./index.ts"
+	]
+}

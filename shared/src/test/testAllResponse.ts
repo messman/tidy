@@ -8,7 +8,8 @@ import { errorIssue } from "../all/issue";
 
 function createInfo(date: Date | null): Info {
 	return {
-		time: date || new Date()
+		processingTime: date || new Date(),
+		referenceTime: date || new Date()
 	}
 }
 
@@ -348,7 +349,7 @@ allTides.forEach(function (tideEvent, i) {
 	}
 });
 
-console.log(days);
+//console.log(days);
 const startIndex = 1;
 const endIndex = days.length - 1;
 
