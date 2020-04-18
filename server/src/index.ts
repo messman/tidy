@@ -1,3 +1,1 @@
-export * from './test/equation';
-export * from './test/randomize';
-export * from './test/testAllResponse';
+export * from './test';
