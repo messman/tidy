@@ -1,6 +1,5 @@
 import { Info, AllResponse, AllDailyInfo, WeatherEvent, TideEvent, SunEvent, errorIssue, AllResponseData } from 'tidy-shared';
 import { APIConfigurationContext } from '../context';
-import { DateTime } from 'luxon';
 
 export function success(configContext: APIConfigurationContext): AllResponse {
 
@@ -27,7 +26,7 @@ export function failure(configContext: APIConfigurationContext): AllResponse {
 function createInfo(configContext: APIConfigurationContext): Info {
 	return {
 		referenceTime: configContext.configuration.time.referenceTime,
-		processingTime: new DateTime().toUTC().toJSDate()
+		processingTime: new Date()
 	}
 }
 

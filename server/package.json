@@ -6,8 +6,8 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"start": "ts-webpack-builder",
-		"test": "tsc --p test/tsconfig.json && node test/index.js",
-		"test-again": "node test/index.js"
+		"test": "tsc --p test/tsconfig.json && node test/test.js",
+		"test-again": "node test/test.js"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",

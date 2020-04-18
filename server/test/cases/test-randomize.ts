@@ -1,4 +1,4 @@
-import { randomizer, quadraticFromPoints, linearFromPoints } from '../dist/index';
+import { randomizer, quadraticFromPoints, linearFromPoints } from '../../dist/index';
 import * as assert from 'assert';
 
 function logWithArgs<F extends (...args: any) => any>(f: F, ...args: Parameters<F>): void {
