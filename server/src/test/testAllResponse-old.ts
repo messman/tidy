@@ -1,10 +1,4 @@
-import { Info } from "../all/info";
-import { AllResponse, AllDailyInfo } from "../all/allResponse";
-import { WeatherEvent } from "../weather/weatherEvent";
-import { TideEvent } from "../tide/tideEvent";
-import { SunEvent } from "../astro/astroEvent";
-import { errorIssue } from "../all/issue";
-
+import { Info, AllResponse, AllDailyInfo, WeatherEvent, TideEvent, SunEvent, errorIssue } from 'tidy-shared';
 
 function createInfo(date: Date | null): Info {
 	return {

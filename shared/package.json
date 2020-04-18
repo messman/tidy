@@ -5,18 +5,12 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"start": "ts-webpack-builder",
-		"test": "tsc --p test/tsconfig.json && node test/index.js",
-		"test-again": "node test/index.js"
+		"start": "ts-webpack-builder"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",
-	"dependencies": {
-		"seedrandom": "^3.0.5"
-	},
+	"dependencies": {},
 	"devDependencies": {
-		"@types/node": "^13.11.1",
-		"@types/seedrandom": "^2.4.28",
 		"typescript": "^3.8.3"
 	}
 }
