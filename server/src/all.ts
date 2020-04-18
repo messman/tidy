@@ -1,5 +1,6 @@
-import { APIConfiguration } from "./context";
+import { APIConfiguration, createContext } from "./context";
 import { AllResponse } from "tidy-shared";
+import { success } from "./test";
 
 export function createConfigurationFor(time: Date, timeZoneLabel: string): APIConfiguration {
 	return {
@@ -27,10 +28,8 @@ export function createWellsConfiguration(): APIConfiguration {
 }
 
 export function getForConfiguration(configuration: APIConfiguration): AllResponse {
-	//const context = createContext(configuration);
-
-	return configuration && null!;
-
+	const context = createContext(configuration);
+	return success(context);
 }
 
 export function serializeResponse(response: AllResponse): string {

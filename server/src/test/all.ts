@@ -1,21 +1,41 @@
-import { Info, AllResponse, AllDailyInfo, WeatherEvent, TideEvent, SunEvent, errorIssue } from 'tidy-shared';
+import { Info, AllResponse, AllDailyInfo, WeatherEvent, TideEvent, SunEvent, errorIssue, AllResponseData } from 'tidy-shared';
+import { APIConfigurationContext } from '../context';
+import { DateTime } from 'luxon';
 
-function createInfo(date: Date | null): Info {
+export function success(configContext: APIConfigurationContext): AllResponse {
+
+	const data: AllResponseData = null!;
+
+
 	return {
-		processingTime: date || new Date(),
-		referenceTime: date || new Date()
-	}
+		info: createInfo(configContext),
+		error: null,
+		data: data
+	};
 }
 
-export function getErrorResponse(): AllResponse {
+export function failure(configContext: APIConfigurationContext): AllResponse {
 	return {
-		info: createInfo(null),
+		info: createInfo(configContext),
 		error: {
 			errors: [errorIssue('Could not fetch any data', 'Here is a dev message')]
 		},
 		data: null
+	};
+}
+
+function createInfo(configContext: APIConfigurationContext): Info {
+	return {
+		referenceTime: configContext.configuration.time.referenceTime,
+		processingTime: new DateTime().toUTC().toJSDate()
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
 
 const allTides: TideEvent[] = [
 	// Past
@@ -87,142 +107,134 @@ const allSun: SunEvent[] = [
 
 const now = new Date("1/1/2019 12:30:00");
 
-const apiResponse: AllResponse = {
-	info: createInfo(now),
-	error: null,
-	data: {
-		warning: null,
-		current: {
-			tides: {
-				percentBetweenPrevNext: .71,
-				height: 8.0,
-				previous: null!, // DYNAMIC - createTideEvent("1/1/2019 8:00:00", true, 0),
-				next: null! // DYNAMIC - createTideEvent("1/1/2019 14:20:00", false, 11)
-			},
-			sun: {
-				previous: null!, // DYNAMIC - createSunEvent("1/1/2019 16:10:00", true),
-				next: null!, // DYNAMIC - createSunEvent("1/1/2019 17:10:00", false)
-			},
-			weather: {
-				time: new Date("1/1/2019 12:15:00"),
-				status: 'cloudy',
-				temp: 60,
-				tempUnit: 'F',
-				chanceRain: .5,
-				wind: 5,
-				windUnit: 'mph',
-				windDirection: 'ENE'
-			}
+const responseData: AllResponseData = {
+	warning: null,
+	current: {
+		tides: {
+			percentBetweenPrevNext: .71,
+			height: 8.0,
+			previous: null!, // DYNAMIC - createTideEvent("1/1/2019 8:00:00", true, 0),
+			next: null! // DYNAMIC - createTideEvent("1/1/2019 14:20:00", false, 11)
 		},
-		predictions: {
-			cutoffDate: null!,
-			tides: {
-				minHeight: -1,
-				maxHeight: -1,
-				events: [],
-				// [
-				// 	createTideEvent("1/1/2019 14:20:00", false, 11),
-				// 	createTideEvent("1/1/2019 20:30:00", true, 1),
-				// 	createTideEvent("1/2/2019 02:40:00", false, 10.5),
-				// 	createTideEvent("1/2/2019 09:50:00", true, 1),
-				// 	createTideEvent("1/2/2019 15:20:00", false, 11.5),
-				// 	createTideEvent("1/2/2019 20:10:00", true, 2),
-				// 	createTideEvent("1/3/2019 02:30:00", false, 8.9),
-				// 	createTideEvent("1/3/2019 08:20:00", true, 0.6),
-				// 	createTideEvent("1/3/2019 14:20:00", false, 11),
-				// 	createTideEvent("1/3/2019 21:40:00", true, .4),
-				// 	createTideEvent("1/4/2019 03:50:00", false, 10.8),
-				// 	createTideEvent("1/4/2019 10:10:00", true, 3),
-				// 	createTideEvent("1/4/2019 16:00:00", false, 12),
-				// 	createTideEvent("1/4/2019 22:10:00", true, 4),
-				// 	createTideEvent("1/5/2019 04:10:00", false, 7),
-				// 	createTideEvent("1/5/2019 10:40:00", true, 0),
-				// 	createTideEvent("1/5/2019 17:20:00", false, 10),
-				// 	createTideEvent("1/5/2019 23:30:00", true, 1),
-				// 	createTideEvent("1/6/2019 05:40:00", false, 11.5),
-				// 	createTideEvent("1/6/2019 11:20:00", true, 1.3),
-				// 	createTideEvent("1/6/2019 17:40:00", true, 10.1),
-				// ]
-			},
-			sun: [],
-			// [
-			// 	createSunEvent("1/1/2019 06:10:00", true),
-			// 	createSunEvent("1/1/2019 17:10:00", false),
-			// 	createSunEvent("1/2/2019 06:10:00", true),
-			// 	createSunEvent("1/2/2019 17:10:00", false),
-			// 	createSunEvent("1/3/2019 06:10:00", true),
-			// 	createSunEvent("1/3/2019 17:10:00", false),
-			// 	createSunEvent("1/4/2019 06:10:00", true),
-			// 	createSunEvent("1/4/2019 17:10:00", false),
-			// 	createSunEvent("1/5/2019 06:10:00", true),
-			// 	createSunEvent("1/5/2019 17:10:00", false),
-			// 	createSunEvent("1/6/2019 06:10:00", true),
-			// 	createSunEvent("1/6/2019 17:10:00", false),
-			// ],
-			weather: [
-				createWeatherEvent("1/1/2019 15:00:00", false, 65, .5, 4),
-				createWeatherEvent("1/1/2019 18:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/1/2019 21:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/2/2019 00:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/2/2019 03:00:00", true, 62, .4, 4),
-				createWeatherEvent("1/2/2019 06:00:00", true, 62, .4, 4),
-				createWeatherEvent("1/2/2019 09:00:00", true, 62, .8, 4),
-				createWeatherEvent("1/2/2019 12:00:00", true, 62, .8, 4),
-				createWeatherEvent("1/2/2019 15:00:00", true, 62, .8, 5),
-				createWeatherEvent("1/2/2019 18:00:00", true, 62, .8, 5),
-				createWeatherEvent("1/2/2019 21:00:00", true, 68, .5, 5),
-				createWeatherEvent("1/3/2019 00:00:00", true, 68, .5, 5),
-				createWeatherEvent("1/3/2019 03:00:00", true, 68, .5, 5),
-				createWeatherEvent("1/3/2019 06:00:00", true, 68, .2, 5),
-				createWeatherEvent("1/3/2019 09:00:00", true, 68, .2, 5),
-				createWeatherEvent("1/3/2019 12:00:00", false, 68, .9, 5),
-				createWeatherEvent("1/3/2019 15:00:00", false, 68, .9, 5),
-				createWeatherEvent("1/3/2019 18:00:00", false, 68, .9, 3),
-				createWeatherEvent("1/3/2019 21:00:00", false, 68, .3, 3),
-				createWeatherEvent("1/4/2019 00:00:00", false, 61, .6, 3),
-				createWeatherEvent("1/4/2019 03:00:00", false, 61, .6, 3),
-				createWeatherEvent("1/4/2019 06:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/4/2019 09:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/4/2019 12:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/4/2019 15:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/4/2019 18:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/4/2019 21:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/5/2019 00:00:00", true, 61, .6, 7),
-				createWeatherEvent("1/5/2019 03:00:00", true, 61, .6, 7),
-			]
+		sun: {
+			previous: null!, // DYNAMIC - createSunEvent("1/1/2019 16:10:00", true),
+			next: null!, // DYNAMIC - createSunEvent("1/1/2019 17:10:00", false)
 		},
-		daily: {
-			cutoffDate: null!,
-			weather: [
-				createWeatherEvent("1/1/2019 00:00:00", false, 65, .5, 4),
-				createWeatherEvent("1/2/2019 00:00:00", false, 65, .5, 4),
-				createWeatherEvent("1/3/2019 00:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/4/2019 00:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/5/2019 00:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/6/2019 00:00:00", true, 62, .4, 4),
-				createWeatherEvent("1/7/2019 00:00:00", true, 62, .4, 4),
-				createWeatherEvent("1/8/2019 00:00:00", true, 62, .8, 4),
-				createWeatherEvent("1/9/2019 00:00:00", true, 62, .8, 4),
-			],
-			tides: {
-				minHeight: -1,
-				maxHeight: -1,
-			},
-			today: null!, // createDaily("1/1/2019", [createTideEvent("1/1/2019 8:00:00", true, 0), createTideEvent("1/1/2019 14:20:00", false, 11), createTideEvent("1/1/2019 20:30:00", true, 1)], createWeatherEvent("1/1/2019 15:00:00", false, 65, .5, 4), [createSunEvent("1/1/2019 06:10:00", true), createSunEvent("1/1/2019 17:10:00", false)]),
-			future: [],
-			// [
-			// 	createDaily("1/2/2019", [createTideEvent("1/2/2019 02:40:00", false, 10.5), createTideEvent("1/2/2019 09:50:00", true, 1), createTideEvent("1/2/2019 15:20:00", false, 11.5), createTideEvent("1/2/2019 20:10:00", true, 2)], createWeatherEvent("1/2/2019 00:00:00", false, 65, .4, 4), [createSunEvent("1/2/2019 06:10:00", true), createSunEvent("1/2/2019 17:10:00", false)]),
-			// 	createDaily("1/3/2019", [createTideEvent("1/3/2019 02:30:00", false, 8.9), createTideEvent("1/3/2019 08:20:00", true, 0.6), createTideEvent("1/3/2019 14:20:00", false, 11), createTideEvent("1/3/2019 21:40:00", true, .4)], createWeatherEvent("1/3/2019 00:00:00", true, 68, .5, 5), [createSunEvent("1/3/2019 06:10:00", true), createSunEvent("1/3/2019 17:10:00", false)]),
-			// 	createDaily("1/4/2019", [createTideEvent("1/4/2019 03:50:00", false, 10.8), createTideEvent("1/4/2019 10:10:00", true, 3), createTideEvent("1/4/2019 16:00:00", false, 12), createTideEvent("1/4/2019 22:10:00", true, 4)], createWeatherEvent("1/4/2019 00:00:00", false, 61, .6, 3), [createSunEvent("1/4/2019 06:10:00", true), createSunEvent("1/4/2019 17:10:00", false)]),
-			// 	createDaily("1/5/2019", [createTideEvent("1/5/2019 04:10:00", false, 7), createTideEvent("1/5/2019 10:40:00", true, 0), createTideEvent("1/5/2019 17:20:00", false, 10), createTideEvent("1/5/2019 23:30:00", true, 1)], createWeatherEvent("1/5/2019 00:00:00", true, 61, .6, 7), [createSunEvent("1/5/2019 06:10:00", true), createSunEvent("1/5/2019 17:10:00", false)]),
-			// 	createDaily("1/6/2019", [createTideEvent("1/6/2019 05:40:00", false, 11.5), createTideEvent("1/6/2019 11:20:00", true, 1.3), createTideEvent("1/6/2019 17:40:00", true, 10.1)], createWeatherEvent("1/6/2019 00:00:00", true, 61, .6, 7), [createSunEvent("1/6/2019 06:10:00", true), createSunEvent("1/6/2019 17:10:00", false)]),
-			// ]
+		weather: {
+			time: new Date("1/1/2019 12:15:00"),
+			status: 'cloudy',
+			temp: 60,
+			tempUnit: 'F',
+			chanceRain: .5,
+			wind: 5,
+			windUnit: 'mph',
+			windDirection: 'ENE'
 		}
+	},
+	predictions: {
+		cutoffDate: null!,
+		tides: {
+			minHeight: -1,
+			maxHeight: -1,
+			events: [],
+			// [
+			// 	createTideEvent("1/1/2019 14:20:00", false, 11),
+			// 	createTideEvent("1/1/2019 20:30:00", true, 1),
+			// 	createTideEvent("1/2/2019 02:40:00", false, 10.5),
+			// 	createTideEvent("1/2/2019 09:50:00", true, 1),
+			// 	createTideEvent("1/2/2019 15:20:00", false, 11.5),
+			// 	createTideEvent("1/2/2019 20:10:00", true, 2),
+			// 	createTideEvent("1/3/2019 02:30:00", false, 8.9),
+			// 	createTideEvent("1/3/2019 08:20:00", true, 0.6),
+			// 	createTideEvent("1/3/2019 14:20:00", false, 11),
+			// 	createTideEvent("1/3/2019 21:40:00", true, .4),
+			// 	createTideEvent("1/4/2019 03:50:00", false, 10.8),
+			// 	createTideEvent("1/4/2019 10:10:00", true, 3),
+			// 	createTideEvent("1/4/2019 16:00:00", false, 12),
+			// 	createTideEvent("1/4/2019 22:10:00", true, 4),
+			// 	createTideEvent("1/5/2019 04:10:00", false, 7),
+			// 	createTideEvent("1/5/2019 10:40:00", true, 0),
+			// 	createTideEvent("1/5/2019 17:20:00", false, 10),
+			// 	createTideEvent("1/5/2019 23:30:00", true, 1),
+			// 	createTideEvent("1/6/2019 05:40:00", false, 11.5),
+			// 	createTideEvent("1/6/2019 11:20:00", true, 1.3),
+			// 	createTideEvent("1/6/2019 17:40:00", true, 10.1),
+			// ]
+		},
+		sun: [],
+		// [
+		// 	createSunEvent("1/1/2019 06:10:00", true),
+		// 	createSunEvent("1/1/2019 17:10:00", false),
+		// 	createSunEvent("1/2/2019 06:10:00", true),
+		// 	createSunEvent("1/2/2019 17:10:00", false),
+		// 	createSunEvent("1/3/2019 06:10:00", true),
+		// 	createSunEvent("1/3/2019 17:10:00", false),
+		// 	createSunEvent("1/4/2019 06:10:00", true),
+		// 	createSunEvent("1/4/2019 17:10:00", false),
+		// 	createSunEvent("1/5/2019 06:10:00", true),
+		// 	createSunEvent("1/5/2019 17:10:00", false),
+		// 	createSunEvent("1/6/2019 06:10:00", true),
+		// 	createSunEvent("1/6/2019 17:10:00", false),
+		// ],
+		weather: [
+			createWeatherEvent("1/1/2019 15:00:00", false, 65, .5, 4),
+			createWeatherEvent("1/1/2019 18:00:00", false, 65, .4, 4),
+			createWeatherEvent("1/1/2019 21:00:00", false, 65, .4, 4),
+			createWeatherEvent("1/2/2019 00:00:00", false, 65, .4, 4),
+			createWeatherEvent("1/2/2019 03:00:00", true, 62, .4, 4),
+			createWeatherEvent("1/2/2019 06:00:00", true, 62, .4, 4),
+			createWeatherEvent("1/2/2019 09:00:00", true, 62, .8, 4),
+			createWeatherEvent("1/2/2019 12:00:00", true, 62, .8, 4),
+			createWeatherEvent("1/2/2019 15:00:00", true, 62, .8, 5),
+			createWeatherEvent("1/2/2019 18:00:00", true, 62, .8, 5),
+			createWeatherEvent("1/2/2019 21:00:00", true, 68, .5, 5),
+			createWeatherEvent("1/3/2019 00:00:00", true, 68, .5, 5),
+			createWeatherEvent("1/3/2019 03:00:00", true, 68, .5, 5),
+			createWeatherEvent("1/3/2019 06:00:00", true, 68, .2, 5),
+			createWeatherEvent("1/3/2019 09:00:00", true, 68, .2, 5),
+			createWeatherEvent("1/3/2019 12:00:00", false, 68, .9, 5),
+			createWeatherEvent("1/3/2019 15:00:00", false, 68, .9, 5),
+			createWeatherEvent("1/3/2019 18:00:00", false, 68, .9, 3),
+			createWeatherEvent("1/3/2019 21:00:00", false, 68, .3, 3),
+			createWeatherEvent("1/4/2019 00:00:00", false, 61, .6, 3),
+			createWeatherEvent("1/4/2019 03:00:00", false, 61, .6, 3),
+			createWeatherEvent("1/4/2019 06:00:00", true, 61, .6, 7),
+			createWeatherEvent("1/4/2019 09:00:00", true, 61, .6, 7),
+			createWeatherEvent("1/4/2019 12:00:00", true, 61, .6, 7),
+			createWeatherEvent("1/4/2019 15:00:00", true, 61, .6, 7),
+			createWeatherEvent("1/4/2019 18:00:00", true, 61, .6, 7),
+			createWeatherEvent("1/4/2019 21:00:00", true, 61, .6, 7),
+			createWeatherEvent("1/5/2019 00:00:00", true, 61, .6, 7),
+			createWeatherEvent("1/5/2019 03:00:00", true, 61, .6, 7),
+		]
+	},
+	daily: {
+		cutoffDate: null!,
+		weather: [
+			createWeatherEvent("1/1/2019 00:00:00", false, 65, .5, 4),
+			createWeatherEvent("1/2/2019 00:00:00", false, 65, .5, 4),
+			createWeatherEvent("1/3/2019 00:00:00", false, 65, .4, 4),
+			createWeatherEvent("1/4/2019 00:00:00", false, 65, .4, 4),
+			createWeatherEvent("1/5/2019 00:00:00", false, 65, .4, 4),
+			createWeatherEvent("1/6/2019 00:00:00", true, 62, .4, 4),
+			createWeatherEvent("1/7/2019 00:00:00", true, 62, .4, 4),
+			createWeatherEvent("1/8/2019 00:00:00", true, 62, .8, 4),
+			createWeatherEvent("1/9/2019 00:00:00", true, 62, .8, 4),
+		],
+		tides: {
+			minHeight: -1,
+			maxHeight: -1,
+		},
+		today: null!, // createDaily("1/1/2019", [createTideEvent("1/1/2019 8:00:00", true, 0), createTideEvent("1/1/2019 14:20:00", false, 11), createTideEvent("1/1/2019 20:30:00", true, 1)], createWeatherEvent("1/1/2019 15:00:00", false, 65, .5, 4), [createSunEvent("1/1/2019 06:10:00", true), createSunEvent("1/1/2019 17:10:00", false)]),
+		future: [],
+		// [
+		// 	createDaily("1/2/2019", [createTideEvent("1/2/2019 02:40:00", false, 10.5), createTideEvent("1/2/2019 09:50:00", true, 1), createTideEvent("1/2/2019 15:20:00", false, 11.5), createTideEvent("1/2/2019 20:10:00", true, 2)], createWeatherEvent("1/2/2019 00:00:00", false, 65, .4, 4), [createSunEvent("1/2/2019 06:10:00", true), createSunEvent("1/2/2019 17:10:00", false)]),
+		// 	createDaily("1/3/2019", [createTideEvent("1/3/2019 02:30:00", false, 8.9), createTideEvent("1/3/2019 08:20:00", true, 0.6), createTideEvent("1/3/2019 14:20:00", false, 11), createTideEvent("1/3/2019 21:40:00", true, .4)], createWeatherEvent("1/3/2019 00:00:00", true, 68, .5, 5), [createSunEvent("1/3/2019 06:10:00", true), createSunEvent("1/3/2019 17:10:00", false)]),
+		// 	createDaily("1/4/2019", [createTideEvent("1/4/2019 03:50:00", false, 10.8), createTideEvent("1/4/2019 10:10:00", true, 3), createTideEvent("1/4/2019 16:00:00", false, 12), createTideEvent("1/4/2019 22:10:00", true, 4)], createWeatherEvent("1/4/2019 00:00:00", false, 61, .6, 3), [createSunEvent("1/4/2019 06:10:00", true), createSunEvent("1/4/2019 17:10:00", false)]),
+		// 	createDaily("1/5/2019", [createTideEvent("1/5/2019 04:10:00", false, 7), createTideEvent("1/5/2019 10:40:00", true, 0), createTideEvent("1/5/2019 17:20:00", false, 10), createTideEvent("1/5/2019 23:30:00", true, 1)], createWeatherEvent("1/5/2019 00:00:00", true, 61, .6, 7), [createSunEvent("1/5/2019 06:10:00", true), createSunEvent("1/5/2019 17:10:00", false)]),
+		// 	createDaily("1/6/2019", [createTideEvent("1/6/2019 05:40:00", false, 11.5), createTideEvent("1/6/2019 11:20:00", true, 1.3), createTideEvent("1/6/2019 17:40:00", true, 10.1)], createWeatherEvent("1/6/2019 00:00:00", true, 61, .6, 7), [createSunEvent("1/6/2019 06:10:00", true), createSunEvent("1/6/2019 17:10:00", false)]),
+		// ]
 	}
-}
-
-export function getSuccessResponse(): AllResponse {
-	return apiResponse;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,11 +248,11 @@ export function getSuccessResponse(): AllResponse {
 const shortTermLimitDate = new Date(now);
 shortTermLimitDate.setHours(24, 0, 0, 0);
 shortTermLimitDate.setDate(shortTermLimitDate.getDate() + 3);
-apiResponse.data!.predictions.cutoffDate = shortTermLimitDate;
+responseData.predictions.cutoffDate = shortTermLimitDate;
 
 function getLocalTideEvents(): void {
 
-	const tides = apiResponse.data!.current.tides;
+	const tides = responseData.current.tides;
 
 	allTides.some(function (t) {
 
@@ -271,21 +283,21 @@ function getLocalTideEvents(): void {
 		}
 		return false;
 	});
-	apiResponse.data!.predictions.tides.events = shortTermTides;
+	responseData.predictions.tides.events = shortTermTides;
 	let minShortTideHeight: number = Infinity;
 	let maxShortTideHeight: number = -Infinity;
 	shortTermTides.forEach(function (t) {
 		minShortTideHeight = Math.min(minShortTideHeight, t.height);
 		maxShortTideHeight = Math.max(maxShortTideHeight, t.height);
 	});
-	apiResponse.data!.predictions.tides.minHeight = minShortTideHeight;
-	apiResponse.data!.predictions.tides.maxHeight = maxShortTideHeight;
+	responseData.predictions.tides.minHeight = minShortTideHeight;
+	responseData.predictions.tides.maxHeight = maxShortTideHeight;
 }
 getLocalTideEvents();
 
 function getLocalSunEvents(): void {
 	allSun.some(function (sunEvent) {
-		const sun = apiResponse.data!.current.sun;
+		const sun = responseData.current.sun;
 		if (!sun.previous) {
 			sun.previous = sunEvent;
 		}
@@ -312,7 +324,7 @@ function getLocalSunEvents(): void {
 		}
 		return false;
 	});
-	apiResponse.data!.predictions.sun = shortTermSun;
+	responseData.predictions.sun = shortTermSun;
 }
 getLocalSunEvents();
 
@@ -368,7 +380,7 @@ function getDailies() {
 		dailiesMap[dayTime.getTime()] = dailyInfo;
 	}
 
-	apiResponse.data!.daily.weather.forEach(function (dailyWeatherEvent) {
+	responseData.daily.weather.forEach(function (dailyWeatherEvent) {
 		const dayTimeKey = dailyWeatherEvent.time.getTime();
 		const daily = dailiesMap[dayTimeKey];
 		if (daily) {
@@ -386,8 +398,8 @@ function getDailies() {
 
 	const allDailies = Object.values(dailiesMap);
 	const [today, ...future] = allDailies;
-	apiResponse.data!.daily.today = today;
-	apiResponse.data!.daily.future = future;
+	responseData.daily.today = today;
+	responseData.daily.future = future;
 
 	let minLongTideHeight: number = Infinity;
 	let maxLongTideHeight: number = -Infinity;
@@ -397,8 +409,8 @@ function getDailies() {
 			maxLongTideHeight = Math.max(maxLongTideHeight, t.height);
 		});
 	});
-	apiResponse.data!.daily.tides.minHeight = minLongTideHeight;
-	apiResponse.data!.daily.tides.maxHeight = maxLongTideHeight;
+	responseData.daily.tides.minHeight = minLongTideHeight;
+	responseData.daily.tides.maxHeight = maxLongTideHeight;
 }
 getDailies();
 

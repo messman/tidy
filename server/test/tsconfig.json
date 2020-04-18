@@ -7,7 +7,7 @@
 		"declarationMap": false,
 		"incremental": false
 	},
-	"files": [
-		"./index.ts"
+	"include": [
+		"./*.ts"
 	]
 }
