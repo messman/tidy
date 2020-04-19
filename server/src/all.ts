@@ -14,7 +14,8 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string): APICo
 				longTermDataFetchDays: 7,
 			},
 			tides: {
-				daysInPastToFetchTides: 1
+				daysInPastToFetchTides: 1,
+				tideHeightPrecision: 2
 			},
 			weather: {
 				hoursGapBetweenWeatherData: 3

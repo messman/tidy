@@ -37,7 +37,10 @@ export interface APIConfiguration {
 			 * Number of days in the past to look for tides.
 			 * So if 2, subtracts 2 days and then goes to the beginning of that day.
 			 */
-			daysInPastToFetchTides: number
+			daysInPastToFetchTides: number,
+
+			/** Digits after the decimal to include in height measurements. */
+			tideHeightPrecision: number,
 		},
 
 		weather: {
@@ -86,9 +89,9 @@ export function createContext(apiConfiguration: APIConfiguration): APIConfigurat
 	configurationContext.context = {
 		referenceTimeInZone: referenceTime,
 
-		// Use start of next day, instead of "23:59:99...", so add 1 to the value.
-		maxShortTermDataFetch: referenceTime.plus({ days: configuration.time.shortTermDataFetchDays + 1 }).startOf("day"),
-		maxLongTermDataFetch: referenceTime.plus({ days: configuration.time.longTermDataFetchDays + 1 }).startOf("day"),
+		// Use that day, but note you may have to translate to 'beginning of next day' for some logic.
+		maxShortTermDataFetch: referenceTime.plus({ days: configuration.time.shortTermDataFetchDays }).endOf("day"),
+		maxLongTermDataFetch: referenceTime.plus({ days: configuration.time.longTermDataFetchDays }).endOf("day"),
 
 		tides: {
 			minimumTidesDataFetch: referenceTime.minus({ days: configuration.tides.daysInPastToFetchTides }).startOf("day"),

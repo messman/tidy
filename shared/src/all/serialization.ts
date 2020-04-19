@@ -1,4 +1,4 @@
-import { AllResponse } from "./allResponse";
+import { AllResponse } from "./all-response";
 
 export function serialize(response: AllResponse): string {
 	return JSON.stringify(response);

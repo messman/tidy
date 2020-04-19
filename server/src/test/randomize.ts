@@ -80,19 +80,3 @@ function shake(randomFunc: RandomFunc, min: number, max: number, precision: numb
 	return randomFloat(randomFunc, shakenMin, shakenMax, precision, inclusive);
 }
 const shakeSet = makeFunctionSet(shake);
-
-
-// tide height highs (random) - 6 to 9
-// tide height lows (random) - 0 to 2.5
-// tide time high/low (random) - 5.6 hours to 6.5 hours
-// sunrise (function) - ([5:30,7] to [5:30,7]) - linear
-// sunset (function) - ([18,19] to [18,19]) - linear
-// weather time (function) - always 3 apart
-// weather type (function) - polynomial 
-// weather temp (function) - polynomial
-// weather precip (function) - polynomial
-// weather wind (function) - polynomial
-// weather wind direction (function) - polynomial
-
-
-export const defaultRandomizer = randomizer('unchanged_constant');

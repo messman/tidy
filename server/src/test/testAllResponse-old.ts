@@ -1,9 +1,10 @@
-import { Info, AllResponse, AllDailyInfo, WeatherEvent, TideEvent, SunEvent, errorIssue } from 'tidy-shared';
+import { Info, AllResponse, WeatherEvent, TideEvent, SunEvent, errorIssue } from 'tidy-shared';
 
 function createInfo(date: Date | null): Info {
 	return {
 		processingTime: date || new Date(),
-		referenceTime: date || new Date()
+		referenceTime: date || new Date(),
+		tideHeightPrecision: 0
 	}
 }
 
@@ -94,7 +95,6 @@ const apiResponse: AllResponse = {
 		warning: null,
 		current: {
 			tides: {
-				percentBetweenPrevNext: .71,
 				height: 8.0,
 				previous: null!, // DYNAMIC - createTideEvent("1/1/2019 8:00:00", true, 0),
 				next: null! // DYNAMIC - createTideEvent("1/1/2019 14:20:00", false, 11)
@@ -117,9 +117,11 @@ const apiResponse: AllResponse = {
 		predictions: {
 			cutoffDate: null!,
 			tides: {
-				minHeight: -1,
-				maxHeight: -1,
+				lowest: null!,
+				highest: null!,
 				events: [],
+				outsideNext: null!,
+				outsidePrevious: null!
 				// [
 				// 	createTideEvent("1/1/2019 14:20:00", false, 11),
 				// 	createTideEvent("1/1/2019 20:30:00", true, 1),
@@ -193,30 +195,9 @@ const apiResponse: AllResponse = {
 		},
 		daily: {
 			cutoffDate: null!,
-			weather: [
-				createWeatherEvent("1/1/2019 00:00:00", false, 65, .5, 4),
-				createWeatherEvent("1/2/2019 00:00:00", false, 65, .5, 4),
-				createWeatherEvent("1/3/2019 00:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/4/2019 00:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/5/2019 00:00:00", false, 65, .4, 4),
-				createWeatherEvent("1/6/2019 00:00:00", true, 62, .4, 4),
-				createWeatherEvent("1/7/2019 00:00:00", true, 62, .4, 4),
-				createWeatherEvent("1/8/2019 00:00:00", true, 62, .8, 4),
-				createWeatherEvent("1/9/2019 00:00:00", true, 62, .8, 4),
-			],
-			tides: {
-				minHeight: -1,
-				maxHeight: -1,
-			},
-			today: null!, // createDaily("1/1/2019", [createTideEvent("1/1/2019 8:00:00", true, 0), createTideEvent("1/1/2019 14:20:00", false, 11), createTideEvent("1/1/2019 20:30:00", true, 1)], createWeatherEvent("1/1/2019 15:00:00", false, 65, .5, 4), [createSunEvent("1/1/2019 06:10:00", true), createSunEvent("1/1/2019 17:10:00", false)]),
-			future: [],
-			// [
-			// 	createDaily("1/2/2019", [createTideEvent("1/2/2019 02:40:00", false, 10.5), createTideEvent("1/2/2019 09:50:00", true, 1), createTideEvent("1/2/2019 15:20:00", false, 11.5), createTideEvent("1/2/2019 20:10:00", true, 2)], createWeatherEvent("1/2/2019 00:00:00", false, 65, .4, 4), [createSunEvent("1/2/2019 06:10:00", true), createSunEvent("1/2/2019 17:10:00", false)]),
-			// 	createDaily("1/3/2019", [createTideEvent("1/3/2019 02:30:00", false, 8.9), createTideEvent("1/3/2019 08:20:00", true, 0.6), createTideEvent("1/3/2019 14:20:00", false, 11), createTideEvent("1/3/2019 21:40:00", true, .4)], createWeatherEvent("1/3/2019 00:00:00", true, 68, .5, 5), [createSunEvent("1/3/2019 06:10:00", true), createSunEvent("1/3/2019 17:10:00", false)]),
-			// 	createDaily("1/4/2019", [createTideEvent("1/4/2019 03:50:00", false, 10.8), createTideEvent("1/4/2019 10:10:00", true, 3), createTideEvent("1/4/2019 16:00:00", false, 12), createTideEvent("1/4/2019 22:10:00", true, 4)], createWeatherEvent("1/4/2019 00:00:00", false, 61, .6, 3), [createSunEvent("1/4/2019 06:10:00", true), createSunEvent("1/4/2019 17:10:00", false)]),
-			// 	createDaily("1/5/2019", [createTideEvent("1/5/2019 04:10:00", false, 7), createTideEvent("1/5/2019 10:40:00", true, 0), createTideEvent("1/5/2019 17:20:00", false, 10), createTideEvent("1/5/2019 23:30:00", true, 1)], createWeatherEvent("1/5/2019 00:00:00", true, 61, .6, 7), [createSunEvent("1/5/2019 06:10:00", true), createSunEvent("1/5/2019 17:10:00", false)]),
-			// 	createDaily("1/6/2019", [createTideEvent("1/6/2019 05:40:00", false, 11.5), createTideEvent("1/6/2019 11:20:00", true, 1.3), createTideEvent("1/6/2019 17:40:00", true, 10.1)], createWeatherEvent("1/6/2019 00:00:00", true, 61, .6, 7), [createSunEvent("1/6/2019 06:10:00", true), createSunEvent("1/6/2019 17:10:00", false)]),
-			// ]
+			tideExtremes: null!,
+			days: null!,
+
 		}
 	}
 }
@@ -238,50 +219,7 @@ shortTermLimitDate.setHours(24, 0, 0, 0);
 shortTermLimitDate.setDate(shortTermLimitDate.getDate() + 3);
 apiResponse.data!.predictions.cutoffDate = shortTermLimitDate;
 
-function getLocalTideEvents(): void {
 
-	const tides = apiResponse.data!.current.tides;
-
-	allTides.some(function (t) {
-
-		if (!tides.previous) {
-			tides.previous = t;
-		}
-		if (tides.previous.time < t.time && t.time < now) {
-			tides.previous = t;
-		}
-		if (!tides.next && t.time > now) {
-			tides.next = t;
-			return true;
-		}
-		return false;
-	});
-
-	// Go one past so it looks continuous.
-	let firstPastLimit = false;
-	const shortTermTides = allTides.filter(function (t) {
-		if (t.time > now) {
-			if (t.time <= shortTermLimitDate) {
-				return true;
-			}
-			if (!firstPastLimit) {
-				firstPastLimit = true;
-				return true;
-			}
-		}
-		return false;
-	});
-	apiResponse.data!.predictions.tides.events = shortTermTides;
-	let minShortTideHeight: number = Infinity;
-	let maxShortTideHeight: number = -Infinity;
-	shortTermTides.forEach(function (t) {
-		minShortTideHeight = Math.min(minShortTideHeight, t.height);
-		maxShortTideHeight = Math.max(maxShortTideHeight, t.height);
-	});
-	apiResponse.data!.predictions.tides.minHeight = minShortTideHeight;
-	apiResponse.data!.predictions.tides.maxHeight = maxShortTideHeight;
-}
-getLocalTideEvents();
 
 function getLocalSunEvents(): void {
 	allSun.some(function (sunEvent) {
@@ -343,64 +281,50 @@ allTides.forEach(function (tideEvent, i) {
 	}
 });
 
-//console.log(days);
-const startIndex = 1;
-const endIndex = days.length - 1;
+// //console.log(days);
+// const startIndex = 1;
+// const endIndex = days.length - 1;
 
-function getDailies() {
+// function getDailies() {
 
-	const dailiesMap: { [key: number]: AllDailyInfo } = {};
+// 	const dailiesMap: { [key: number]: AllDailyInfo } = {};
 
-	for (let i = startIndex; i < endIndex; i++) {
-		const day = days[i];
-		const dayBefore = days[i - 1];
-		const dayAfter = days[i + 1];
+// 	for (let i = startIndex; i < endIndex; i++) {
+// 		const day = days[i];
 
-		const dayTime = beginOfDay(day[0].time);
+// 		const dayTime = beginOfDay(day[0].time);
 
-		const dailyInfo: AllDailyInfo = {
-			date: dayTime,
-			tides: [dayBefore[dayBefore.length - 1], ...day, dayAfter[0]],
-			sun: [], // done after
-			weather: null! // done after
-		};
+// 		const dailyInfo: AllDailyInfo = {
+// 			date: dayTime,
+// 			tides: null!,
+// 			sun: [], // done after
+// 			weather: null! // done after
+// 		};
 
-		dailiesMap[dayTime.getTime()] = dailyInfo;
-	}
+// 		dailiesMap[dayTime.getTime()] = dailyInfo;
+// 	}
 
-	apiResponse.data!.daily.weather.forEach(function (dailyWeatherEvent) {
-		const dayTimeKey = dailyWeatherEvent.time.getTime();
-		const daily = dailiesMap[dayTimeKey];
-		if (daily) {
-			daily.weather = dailyWeatherEvent;
-		}
-	});
+// 	apiResponse.data!.daily.weather.forEach(function (dailyWeatherEvent) {
+// 		const dayTimeKey = dailyWeatherEvent.time.getTime();
+// 		const daily = dailiesMap[dayTimeKey];
+// 		if (daily) {
+// 			daily.weather = dailyWeatherEvent;
+// 		}
+// 	});
 
-	allSun.forEach(function (sunEvent) {
-		const dayTimeKey = beginOfDay(sunEvent.time).getTime();
-		const daily = dailiesMap[dayTimeKey];
-		if (daily) {
-			daily.sun.push(sunEvent);
-		}
-	});
+// 	allSun.forEach(function (sunEvent) {
+// 		const dayTimeKey = beginOfDay(sunEvent.time).getTime();
+// 		const daily = dailiesMap[dayTimeKey];
+// 		if (daily) {
+// 			daily.sun.push(sunEvent);
+// 		}
+// 	});
 
-	const allDailies = Object.values(dailiesMap);
-	const [today, ...future] = allDailies;
-	apiResponse.data!.daily.today = today;
-	apiResponse.data!.daily.future = future;
 
-	let minLongTideHeight: number = Infinity;
-	let maxLongTideHeight: number = -Infinity;
-	allDailies.forEach(function (d) {
-		d.tides.forEach(function (t) {
-			minLongTideHeight = Math.min(minLongTideHeight, t.height);
-			maxLongTideHeight = Math.max(maxLongTideHeight, t.height);
-		});
-	});
-	apiResponse.data!.daily.tides.minHeight = minLongTideHeight;
-	apiResponse.data!.daily.tides.maxHeight = maxLongTideHeight;
-}
-getDailies();
+
+
+// }
+// getDailies();
 
 
 
