@@ -43,6 +43,14 @@ export interface APIConfiguration {
 			tideHeightPrecision: number,
 		},
 
+		astro: {
+			/**
+			 * Number of days in the past to look for sunrise/sunset data.
+			 * So if 2, subtracts 2 days and then goes to the beginning of that day.
+			 */
+			daysInPastToFetchSun: number,
+		},
+
 		weather: {
 			/** The gap in hours between weather data - so we aren't grabbing more data than we need from the API to send down to a client that can't show it. */
 			hoursGapBetweenWeatherData: number
@@ -67,6 +75,14 @@ export interface APIConfigurationContext extends APIConfiguration {
 			 */
 			minimumTidesDataFetch: DateTime
 		},
+
+		astro: {
+			/**
+			 * The minimum date to get sunrise/sunset data for. Should be in the past, at least one day, at the beginning of that day.
+			 * Based on configuration and time of request.
+			 */
+			minimumSunDataFetch: DateTime
+		}
 
 		weather: {
 		}
@@ -95,6 +111,10 @@ export function createContext(apiConfiguration: APIConfiguration): APIConfigurat
 
 		tides: {
 			minimumTidesDataFetch: referenceTime.minus({ days: configuration.tides.daysInPastToFetchTides }).startOf("day"),
+		},
+
+		astro: {
+			minimumSunDataFetch: referenceTime.minus({ days: configuration.astro.daysInPastToFetchSun }).startOf("day"),
 		},
 
 		weather: {

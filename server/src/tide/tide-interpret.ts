@@ -1,12 +1,13 @@
 import { AllCurrentTides, TideEventRange, TideExtremes, TideStatus, TideEvent } from 'tidy-shared';
 import { APIConfigurationContext } from '../context';
 import { DateTime } from 'luxon';
+import { ForDay } from '../all';
 
 export interface InterpretedTides {
 	currentTides: AllCurrentTides,
 	shortTermTides: TideEventRange,
 	longTermTideExtremes: TideExtremes,
-	longTermTides: TideEventRange[]
+	longTermTides: ForDay<TideEventRange>[]
 }
 
 export function interpretTides(configurationContext: APIConfigurationContext, pastEvents: TideEvent[], current: TideStatus, futureEvents: TideEvent[]): InterpretedTides {
@@ -82,7 +83,7 @@ function interpretShortTerm(configurationContext: APIConfigurationContext, previ
 	};
 }
 
-function interpretLongTerm(configurationContext: APIConfigurationContext, pastEvents: TideEvent[], futureEvents: TideEvent[]): [TideExtremes, TideEventRange[]] {
+function interpretLongTerm(configurationContext: APIConfigurationContext, pastEvents: TideEvent[], futureEvents: TideEvent[]): [TideExtremes, ForDay<TideEventRange>[]] {
 
 	// Day matters in this section, so we use Luxon (for time zones).
 
@@ -105,7 +106,7 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 		}
 	});
 
-	const longTermEventRanges: TideEventRange[] = [];
+	const longTermEventRanges: ForDay<TideEventRange>[] = [];
 
 	const longTermLimitDay = configurationContext.context.maxLongTermDataFetch;
 	const referenceDay = configurationContext.context.referenceTimeInZone.startOf('day');
@@ -129,11 +130,14 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 			const [minEvent, maxEvent] = getMinMaxEvents(events);
 
 			longTermEventRanges.push({
-				lowest: minEvent,
-				highest: maxEvent,
-				events: events,
-				outsidePrevious: previousDayEvents[previousDayEvents.length - 1],
-				outsideNext: nextDayEvents[0]
+				day: dayOfEvents.diff(referenceDay, 'days').days,
+				entity: {
+					lowest: minEvent,
+					highest: maxEvent,
+					events: events,
+					outsidePrevious: previousDayEvents[previousDayEvents.length - 1],
+					outsideNext: nextDayEvents[0]
+				}
 			});
 		}
 	});
@@ -144,7 +148,8 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 	let minEvent: TideEvent = null!;
 	let maxEvent: TideEvent = null!;
 
-	longTermEventRanges.forEach(function (r) {
+	longTermEventRanges.forEach(function (f) {
+		const r = f.entity;
 		if (r.lowest.height < minHeight) {
 			minHeight = r.lowest.height;
 			minEvent = r.lowest;

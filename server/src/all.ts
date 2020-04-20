@@ -17,6 +17,9 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string): APICo
 				daysInPastToFetchTides: 1,
 				tideHeightPrecision: 2
 			},
+			astro: {
+				daysInPastToFetchSun: 1
+			},
 			weather: {
 				hoursGapBetweenWeatherData: 3
 			}
@@ -35,4 +38,9 @@ export function getForConfiguration(configuration: APIConfiguration): AllRespons
 
 export function serializeResponse(response: AllResponse): string {
 	return (response && null) || '';
+}
+
+export interface ForDay<T> {
+	day: number
+	entity: T
 }
