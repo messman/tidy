@@ -2,7 +2,7 @@ import { Errors, Warnings } from "./issue";
 import { Info } from "./info";
 import { SunEvent } from "../astro/astro-event";
 import { TideEvent, TideEventRange, TideExtremes } from "../tide/tide-event";
-import { WeatherEvent } from "../weather/weather-event";
+import { WeatherStatus, DailyWeather } from "../weather/weather-status";
 
 export interface AllResponse {
 	/** Info about the request. */
@@ -35,7 +35,7 @@ export interface AllCurrent {
 		next: SunEvent
 	},
 	/** The current weather information. */
-	weather: WeatherEvent
+	weather: WeatherStatus
 }
 
 export interface AllCurrentTides {
@@ -55,7 +55,7 @@ export interface AllPredictions {
 	/** Predictions for sun events.  */
 	sun: SunEvent[],
 	/** Predictions for weather events. */
-	weather: WeatherEvent[]
+	weather: WeatherStatus[]
 }
 
 export interface AllDaily {
@@ -71,7 +71,7 @@ export interface AllDailyDay {
 	/** The date. A day, but not a specific time. */
 	date: Date,
 	/** The weather event to describe the day. */
-	weather: WeatherEvent,
+	weather: DailyWeather,
 	/** Tide events for the day - includes events on the day before and the day after for continuity. */
 	tides: TideEventRange,
 	/** Sun events specific to the day. */

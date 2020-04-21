@@ -108,7 +108,7 @@ function createRootNumberIterator(rootTimeValues: RootTimeValue[], timeZone: str
 	return create(iterableData, nwsIteratorOptions);
 }
 
-const timespanRegex = /([0-9]+)([a-zA-Z])([0-9]*)([a-zA-Z]?)/;
+
 
 export function getRootTimespan(timeString: string, timeZone: string): TimeSpan {
 	// 2019-07-19T10:00:00+00:00/PT1H means 7/10/2019, 10 AM GMT, for 1 hour

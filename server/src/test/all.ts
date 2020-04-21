@@ -1,4 +1,4 @@
-import { Info, AllResponse, errorIssue, AllResponseData, TideEvent, TideStatus, SunEvent, TideEventRange, AllDailyDay } from 'tidy-shared';
+import { Info, AllResponse, errorIssue, AllResponseData, TideEvent, TideStatus, SunEvent, TideEventRange, AllDailyDay, DailyWeather } from 'tidy-shared';
 import { APIConfigurationContext } from '../context';
 import { interpretTides } from '../tide/tide-interpret';
 import { randomizer } from './randomize';
@@ -6,6 +6,8 @@ import { DateTime } from 'luxon';
 import { linearFromPoints } from './equation';
 import { interpretAstro } from '../astro/astro-interpret';
 import { ForDay } from '../all';
+import { IntermediateWeatherValues } from '../weather/weather-intermediate';
+import { interpretWeather } from '../weather/weather-interpret';
 
 export function success(configContext: APIConfigurationContext): AllResponse {
 
@@ -15,6 +17,9 @@ export function success(configContext: APIConfigurationContext): AllResponse {
 	const sunEvents = createAstroData(configContext);
 	const interpretedAstro = interpretAstro(configContext, sunEvents);
 
+	const intermediateWeather = createWeatherData(configContext);
+	const interpretedWeather = interpretWeather(configContext, intermediateWeather);
+
 	const data: AllResponseData = {
 		warning: null!,
 		current: {
@@ -22,19 +27,19 @@ export function success(configContext: APIConfigurationContext): AllResponse {
 				previous: interpretedAstro.previousEvent,
 				next: interpretedAstro.nextEvent
 			},
-			weather: null!,
+			weather: interpretedWeather.currentWeather,
 			tides: interpretedTides.currentTides
 		},
 		predictions: {
 			cutoffDate: configContext.context.maxShortTermDataFetch.toJSDate(),
 			sun: interpretedAstro.shortTermEvents,
-			weather: null!,
+			weather: interpretedWeather.shortTermWeather,
 			tides: interpretedTides.shortTermTides
 		},
 		daily: {
 			cutoffDate: configContext.context.maxLongTermDataFetch.toJSDate(),
 			tideExtremes: interpretedTides.longTermTideExtremes,
-			days: mergeForLongTerm(configContext, interpretedTides.longTermTides, interpretedAstro.longTermEvents)
+			days: mergeForLongTerm(configContext, interpretedTides.longTermTides, interpretedAstro.longTermEvents, interpretedWeather.longTermWeather)
 		}
 	};
 
@@ -63,7 +68,7 @@ function createInfo(configContext: APIConfigurationContext): Info {
 	}
 }
 
-function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<TideEventRange>[], sunEvents: ForDay<SunEvent[]>[]): AllDailyDay[] {
+function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<TideEventRange>[], sunEvents: ForDay<SunEvent[]>[], weatherEvents: ForDay<DailyWeather>[]): AllDailyDay[] {
 
 	const referenceDay = configContext.context.referenceTimeInZone.startOf('day');
 	const dayMap: Map<number, AllDailyDay> = new Map();
@@ -81,6 +86,12 @@ function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<
 		const record = dayMap.get(s.day);
 		if (record) {
 			record.sun = s.entity;
+		}
+	});
+	weatherEvents.forEach((w) => {
+		const record = dayMap.get(w.day);
+		if (record) {
+			record.weather = w.entity;
 		}
 	});
 
@@ -204,6 +215,10 @@ export function createAstroData(configContext: APIConfigurationContext): SunEven
 	}
 
 	return sunEvents;
+}
+
+export function createWeatherData(configContext: APIConfigurationContext): IntermediateWeatherValues {
+	return configContext && null!;
 }
 
 

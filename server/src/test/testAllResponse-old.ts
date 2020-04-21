@@ -1,4 +1,4 @@
-import { Info, AllResponse, WeatherEvent, TideEvent, SunEvent, errorIssue } from 'tidy-shared';
+import { Info, AllResponse, WeatherStatus, TideEvent, SunEvent, errorIssue } from 'tidy-shared';
 
 function createInfo(date: Date | null): Info {
 	return {
@@ -103,16 +103,7 @@ const apiResponse: AllResponse = {
 				previous: null!, // DYNAMIC - createSunEvent("1/1/2019 16:10:00", true),
 				next: null!, // DYNAMIC - createSunEvent("1/1/2019 17:10:00", false)
 			},
-			weather: {
-				time: new Date("1/1/2019 12:15:00"),
-				status: 'cloudy',
-				temp: 60,
-				tempUnit: 'F',
-				chanceRain: .5,
-				wind: 5,
-				windUnit: 'mph',
-				windDirection: 'ENE'
-			}
+			weather: null!
 		},
 		predictions: {
 			cutoffDate: null!,
@@ -343,17 +334,8 @@ function createSunEvents(dateTime: string, sunriseTime: string, sunsetTime: stri
 	return [createSunEvent(`${dateTime} ${sunriseTime}`, true), createSunEvent(`${dateTime} ${sunsetTime}`, false)];
 }
 
-function createWeatherEvent(time: string, isCloudy: boolean, temp: number, chanceRain: number, wind: number): WeatherEvent {
-	return {
-		time: new Date(time),
-		status: isCloudy ? 'cloudy' : "sunny",
-		temp: temp,
-		tempUnit: 'F',
-		chanceRain: chanceRain,
-		wind: wind,
-		windUnit: 'mph',
-		windDirection: 'ENE'
-	}
+function createWeatherEvent(...args: any[]): WeatherStatus {
+	return args && null!;
 }
 
 
