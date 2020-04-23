@@ -1,13 +1,14 @@
-import { Info, AllResponse, errorIssue, AllResponseData, TideEvent, TideStatus, SunEvent, TideEventRange, AllDailyDay, DailyWeather } from 'tidy-shared';
+import { Info, AllResponse, errorIssue, AllResponseData, TideEvent, TideStatus, SunEvent, TideEventRange, AllDailyDay, DailyWeather, WindDirection, WeatherStatusType } from 'tidy-shared';
 import { APIConfigurationContext } from '../context';
 import { interpretTides } from '../tide/tide-interpret';
-import { randomizer } from './randomize';
+import { randomizer, Randomizer } from './randomize';
 import { DateTime } from 'luxon';
-import { linearFromPoints } from './equation';
+import { linearFromPoints, quadraticFromPoints } from './equation';
 import { interpretAstro } from '../astro/astro-interpret';
 import { ForDay } from '../all';
 import { IntermediateWeatherValues } from '../weather/weather-intermediate';
 import { interpretWeather } from '../weather/weather-interpret';
+import { IterableTimeData } from '../util/iterator';
 
 export function success(configContext: APIConfigurationContext): AllResponse {
 
@@ -68,7 +69,7 @@ function createInfo(configContext: APIConfigurationContext): Info {
 	}
 }
 
-function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<TideEventRange>[], sunEvents: ForDay<SunEvent[]>[], weatherEvents: ForDay<DailyWeather>[]): AllDailyDay[] {
+function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<TideEventRange>[], sunEvents: ForDay<SunEvent[]>[], weatherEvents: DailyWeather[]): AllDailyDay[] {
 
 	const referenceDay = configContext.context.referenceTimeInZone.startOf('day');
 	const dayMap: Map<number, AllDailyDay> = new Map();
@@ -89,9 +90,10 @@ function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<
 		}
 	});
 	weatherEvents.forEach((w) => {
-		const record = dayMap.get(w.day);
+		const day = DateTime.fromJSDate(w.day, { zone: configContext.configuration.location.timeZoneLabel }).startOf('day').diff(referenceDay, 'days').days;
+		const record = dayMap.get(day);
 		if (record) {
-			record.weather = w.entity;
+			record.weather = w;
 		}
 	});
 
@@ -218,9 +220,83 @@ export function createAstroData(configContext: APIConfigurationContext): SunEven
 }
 
 export function createWeatherData(configContext: APIConfigurationContext): IntermediateWeatherValues {
-	return configContext && null!;
+	const weatherRandomizer = randomizer('_weather_');
+
+
+	const startDateTime = configContext.context.referenceTimeInZone.startOf('hour');
+	const endDateTime = configContext.context.maxLongTermDataFetch;
+	const temperaturePrecision = configContext.configuration.weather.temperaturePrecision;
+	const defaultPrecision = configContext.configuration.weather.defaultPrecision;
+
+	/*
+		status - poly shake
+		temp - poly shake
+		tempFeelsLike - poly shake
+		chanceRain - poly shake
+		wind - poly shake
+		windDirection - poly shake
+		dewPoint - poly shake
+		cloudCover - poly shake
+		visibility - poly shake
+
+		start time, end time, timespan duration, min, max, inclusive, 
+	*/
+
+	function weatherData(hoursGap: number, minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
+		return quadraticShakeData(weatherRandomizer, startDateTime, endDateTime, hoursGap, minY, maxY, precision, inclusive, shake);
+	}
+
+	const nWindDirection = Object.keys(WindDirection).filter((k) => !isNaN(k as unknown as number)).length;
+	const nWeatherStatusType = Object.keys(WeatherStatusType).filter((k) => !isNaN(k as unknown as number)).length;
+
+	return {
+		temp: weatherData(2, 40, 60, temperaturePrecision, true, .1),
+		tempFeelsLike: weatherData(2, 40, 60, temperaturePrecision, true, .1),
+		chanceRain: weatherData(2, 0, 1, defaultPrecision + 2, true, .1),
+		wind: weatherData(3, 0, 15, defaultPrecision, true, .1),
+		windDirection: weatherData(4, 0, nWindDirection, 0, false, .1).map((data) => {
+			return {
+				span: data.span,
+				value: data.value as WindDirection
+			}
+		}),
+		dewPoint: weatherData(2, 20, 40, temperaturePrecision, true, .1),
+		cloudCover: weatherData(2, 0, 1, defaultPrecision + 2, true, .1),
+		status: weatherData(4, 0, nWeatherStatusType, 0, false, .1).map((data) => {
+			return {
+				span: data.span,
+				value: data.value as WeatherStatusType
+			}
+		}),
+		visibility: weatherData(12, 2, 20, defaultPrecision, true, .1)
+	}
 }
 
+function quadraticShakeData(randomizer: Randomizer, startDateTime: DateTime, endDateTime: DateTime, hoursGap: number, minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
+	const hoursBetween = endDateTime.diff(startDateTime, 'hours').hours;
+
+	const aY = randomizer.randomFloat(minY, maxY, precision, inclusive);
+	const bY = randomizer.randomFloat(minY, maxY, precision, inclusive);
+	const cY = randomizer.randomFloat(minY, maxY, precision, inclusive);
+
+	const midPoint = hoursBetween / 2;
+	const bX = randomizer.shake(0, hoursBetween, 1, midPoint, .5, true);
+	const quadratic = quadraticFromPoints([0, aY], [bX, bY], [hoursBetween, cY]);
+
+	const iterables: IterableTimeData<number>[] = [];
+	for (let hours = 0; hours < hoursBetween; hours += hoursGap) {
+		const value = quadratic(hours);
+		const shakenValue = randomizer.shake(minY, maxY, precision, value, shake, inclusive);
+		iterables.push({
+			span: {
+				begin: startDateTime.plus({ hours: hours }).toJSDate(),
+				end: startDateTime.plus({ hours: hours + hoursGap }).toJSDate()
+			},
+			value: shakenValue
+		});
+	}
+	return iterables;
+}
 
 // weather time (function) - always 3 apart
 // weather type (function) - polynomial 

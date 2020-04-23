@@ -14,7 +14,7 @@ export interface WeatherStatus {
 	/** The wind speed, in miles per hour. */
 	wind: Measurement,
 	/** The wind direction. */
-	windDirection: string,
+	windDirection: WindDirection,
 	/** The dew point, in degrees fahrenheit. */
 	dewPoint: Measurement,
 	/** Percent cloud cover. */
@@ -26,22 +26,14 @@ export interface WeatherStatus {
 export interface DailyWeather {
 	/** The date of the weather status. */
 	day: Date,
-	/** The description of the weather at the time. */
+	/** The description of the weather on the day. */
 	status: WeatherStatusType,
 	/** Minimum expected temperature. */
-	minTemp: Measurement,
+	minTemp: number,
 	/** Maximum expected temperature. */
-	maxTemp: Measurement,
-	/** The temperature, in degrees fahrenheit. */
-	temp: Measurement,
-	/** The temperature "feels like", in degrees fahrenheit. */
-	tempFeelsLike: Measurement,
+	maxTemp: number,
 	/** The chance for rain, as a percentage, between 0 and 1. */
-	chanceRain: Measurement,
-	/** The wind speed, in miles per hour. */
-	wind: Measurement,
-	/** The wind direction. */
-	windDirection: string,
+	maxChanceRain: number,
 }
 
 /** The result data from the iterator call. */
@@ -60,4 +52,23 @@ export enum Change {
 	same,
 	/** This is 'higher' than the previous data. */
 	higher
+}
+
+export enum WindDirection {
+	N,
+	NNE,
+	NE,
+	ENE,
+	E,
+	ESE,
+	SE,
+	SSE,
+	S,
+	SSW,
+	SW,
+	WSW,
+	W,
+	WNW,
+	NW,
+	NNW
 }

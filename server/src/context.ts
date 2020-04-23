@@ -53,7 +53,11 @@ export interface APIConfiguration {
 
 		weather: {
 			/** The gap in hours between weather data - so we aren't grabbing more data than we need from the API to send down to a client that can't show it. */
-			hoursGapBetweenWeatherData: number
+			hoursGapBetweenWeatherData: number,
+			/** Digits after the decimal to include in temperature measurements. */
+			temperaturePrecision: number,
+			/** Digits after the decimal to include in other non-temperature measurements. */
+			defaultPrecision: number,
 		}
 	}
 }

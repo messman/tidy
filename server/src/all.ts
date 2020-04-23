@@ -21,7 +21,9 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string): APICo
 				daysInPastToFetchSun: 1
 			},
 			weather: {
-				hoursGapBetweenWeatherData: 3
+				hoursGapBetweenWeatherData: 3,
+				temperaturePrecision: 1,
+				defaultPrecision: 2
 			}
 		}
 	}

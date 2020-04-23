@@ -1,15 +1,17 @@
-import { IterableData } from "../util/iterator";
+import { IterableTimeData } from "../util/iterator";
+import { WeatherStatusType } from "tidy-shared/dist/weather/weather-status-type";
+import { WindDirection } from "tidy-shared";
 
 
 export interface IntermediateWeatherValues {
-	temperature: IterableData<number>[],
-	apparentTemperature: IterableData<number>[],
-	probabilityOfPrecipitation: IterableData<number>[],
-	windDirection: IterableData<string>[],
-	windSpeed: IterableData<number>[],
-	dewPoint: IterableData<number>[],
-	cloudCover: IterableData<number>[],
-	visibility: IterableData<number>[],
+	temp: IterableTimeData<number>[],
+	tempFeelsLike: IterableTimeData<number>[],
+	chanceRain: IterableTimeData<number>[],
+	windDirection: IterableTimeData<WindDirection>[],
+	wind: IterableTimeData<number>[],
+	dewPoint: IterableTimeData<number>[],
+	cloudCover: IterableTimeData<number>[],
+	visibility: IterableTimeData<number>[],
 
-	icon: IterableData<string>[]
+	status: IterableTimeData<WeatherStatusType>[]
 }
