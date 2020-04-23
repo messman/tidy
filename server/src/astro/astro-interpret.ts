@@ -1,7 +1,7 @@
 import { SunEvent } from 'tidy-shared';
-import { APIConfigurationContext } from '../context';
+import { APIConfigurationContext } from '../all/context';
 import { DateTime } from 'luxon';
-import { ForDay } from '../all';
+import { ForDay } from '../all/all';
 
 export interface InterpretedAstro {
 	previousEvent: SunEvent,
@@ -26,7 +26,7 @@ export function interpretAstro(configurationContext: APIConfigurationContext, su
 	let currentDayLongTermEvents: SunEvent[] = [];
 
 	sunEvents.forEach((s) => {
-		const eventTime = DateTime.fromJSDate(s.time, { zone: configurationContext.configuration.location.timeZoneLabel });
+		const eventTime = configurationContext.action.parseDateForZone(s.time);
 		if (eventTime < referenceTime) {
 			previousEvent = s;
 		}

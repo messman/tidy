@@ -1,3 +1,3 @@
 export * from './test';
-export { createContext } from './context';
-export * from './all';
+export { createContext } from './all/context';
+export * from './all/all';

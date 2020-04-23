@@ -1,5 +1,5 @@
 import { WeatherStatus, DailyWeather, Measurement, WeatherStatusType, WindDirection } from 'tidy-shared';
-import { APIConfigurationContext } from '../context';
+import { APIConfigurationContext } from '../all/context';
 import { IntermediateWeatherValues } from './weather-intermediate';
 import { createTimeChangeIterator, createTimeIterator, TimeIterator } from '../util/iterator';
 import { DateTime } from 'luxon';
@@ -75,7 +75,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 
 	longTermWeatherStatuses.forEach((t) => {
 		// Tide events are already in the time zone we care about.
-		const eventDateTime = DateTime.fromJSDate(t.time, { zone: configurationContext.configuration.location.timeZoneLabel });
+		const eventDateTime = configurationContext.action.parseDateForZone(t.time);
 		if (previousEventDateTime && previousEventDateTime.hasSame(eventDateTime, 'day')) {
 			currentEventsOfDay!.push(t);
 		}
@@ -87,7 +87,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 	});
 
 	const longTermWeather: DailyWeather[] = longTermWeatherStatusesByDay.map((statuses) => {
-		const day = DateTime.fromJSDate(statuses[0].time, { zone: configurationContext.configuration.location.timeZoneLabel }).startOf('day');
+		const day = configurationContext.action.parseDateForZone(statuses[0].time).startOf('day');
 
 		const status = getDailyStatus(statuses.map((s) => {
 			return s.status;

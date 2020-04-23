@@ -1,7 +1,7 @@
 import { AllCurrentTides, TideEventRange, TideExtremes, TideStatus, TideEvent } from 'tidy-shared';
-import { APIConfigurationContext } from '../context';
+import { APIConfigurationContext } from '../all/context';
 import { DateTime } from 'luxon';
-import { ForDay } from '../all';
+import { ForDay } from '../all/all';
 
 export interface InterpretedTides {
 	currentTides: AllCurrentTides,
@@ -95,7 +95,7 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 
 	allEvents.forEach((t) => {
 		// Tide events are already in the time zone we care about.
-		const eventDateTime = DateTime.fromJSDate(t.time, { zone: configurationContext.configuration.location.timeZoneLabel });
+		const eventDateTime = configurationContext.action.parseDateForZone(t.time);
 		if (previousEventDateTime && previousEventDateTime.hasSame(eventDateTime, 'day')) {
 			currentEventsOfDay.push(t);
 		}
@@ -112,7 +112,7 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 	const referenceDay = configurationContext.context.referenceTimeInZone.startOf('day');
 
 	eventsByDay.forEach((events, index) => {
-		const dayOfEvents = DateTime.fromJSDate(events[0].time, { zone: configurationContext.configuration.location.timeZoneLabel }).startOf('day');
+		const dayOfEvents = configurationContext.action.parseDateForZone(events[0].time).startOf('day');
 		if (dayOfEvents < referenceDay) {
 			// Prior to our first day. Ignore.
 		}

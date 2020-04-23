@@ -1,14 +1,16 @@
 import { Info, AllResponse, errorIssue, AllResponseData, TideEvent, TideStatus, SunEvent, TideEventRange, AllDailyDay, DailyWeather, WindDirection, WeatherStatusType } from 'tidy-shared';
-import { APIConfigurationContext } from '../context';
+import { APIConfigurationContext } from '../all/context';
 import { interpretTides } from '../tide/tide-interpret';
 import { randomizer, Randomizer } from './randomize';
 import { DateTime } from 'luxon';
 import { linearFromPoints, quadraticFromPoints } from './equation';
 import { interpretAstro } from '../astro/astro-interpret';
-import { ForDay } from '../all';
+import { ForDay } from '../all/all';
 import { IntermediateWeatherValues } from '../weather/weather-intermediate';
 import { interpretWeather } from '../weather/weather-interpret';
 import { IterableTimeData } from '../util/iterator';
+
+
 
 export function success(configContext: APIConfigurationContext): AllResponse {
 
@@ -61,50 +63,6 @@ export function failure(configContext: APIConfigurationContext): AllResponse {
 	};
 }
 
-function createInfo(configContext: APIConfigurationContext): Info {
-	return {
-		referenceTime: configContext.configuration.time.referenceTime,
-		processingTime: new Date(),
-		tideHeightPrecision: configContext.configuration.tides.tideHeightPrecision
-	}
-}
-
-function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<TideEventRange>[], sunEvents: ForDay<SunEvent[]>[], weatherEvents: DailyWeather[]): AllDailyDay[] {
-
-	const referenceDay = configContext.context.referenceTimeInZone.startOf('day');
-	const dayMap: Map<number, AllDailyDay> = new Map();
-
-	tides.forEach((t) => {
-		const day = referenceDay.plus({ days: t.day });
-		dayMap.set(t.day, {
-			date: day.toJSDate(),
-			sun: null!,
-			weather: null!,
-			tides: t.entity
-		});
-	});
-	sunEvents.forEach((s) => {
-		const record = dayMap.get(s.day);
-		if (record) {
-			record.sun = s.entity;
-		}
-	});
-	weatherEvents.forEach((w) => {
-		const day = DateTime.fromJSDate(w.day, { zone: configContext.configuration.location.timeZoneLabel }).startOf('day').diff(referenceDay, 'days').days;
-		const record = dayMap.get(day);
-		if (record) {
-			record.weather = w;
-		}
-	});
-
-	return Array.from(dayMap.values())
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
 export function createTideData(configContext: APIConfigurationContext): [TideEvent[], TideStatus, TideEvent[]] {
 
 	const tideRandomizer = randomizer('_tide_');
@@ -152,9 +110,9 @@ export function createTideData(configContext: APIConfigurationContext): [TideEve
 
 	// Do an estimation of the current height based on previous and next.
 	const previousEvent = previousEvents[previousEvents.length - 1];
-	const timeOfPrevious = DateTime.fromJSDate(previousEvent.time, { zone: configContext.configuration.location.timeZoneLabel });
+	const timeOfPrevious = configContext.action.parseDateForZone(previousEvent.time);
 	const nextEvent = futureEvents[0];
-	const timeOfNext = DateTime.fromJSDate(nextEvent.time, { zone: configContext.configuration.location.timeZoneLabel });
+	const timeOfNext = configContext.action.parseDateForZone(nextEvent.time);
 	const minutesBetweenReferenceAndPrevious = Math.max(0, referenceTime.diff(timeOfPrevious, 'minutes').minutes);
 	const minutesBetweenNextAndPrevious = timeOfNext.diff(timeOfPrevious, 'minutes').minutes;
 
@@ -297,10 +255,3 @@ function quadraticShakeData(randomizer: Randomizer, startDateTime: DateTime, end
 	}
 	return iterables;
 }
-
-// weather time (function) - always 3 apart
-// weather type (function) - polynomial 
-// weather temp (function) - polynomial
-// weather precip (function) - polynomial
-// weather wind (function) - polynomial
-// weather wind direction (function) - polynomial

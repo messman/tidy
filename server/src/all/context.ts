@@ -87,9 +87,9 @@ export interface APIConfigurationContext extends APIConfiguration {
 			 */
 			minimumSunDataFetch: DateTime
 		}
-
-		weather: {
-		}
+	},
+	action: {
+		parseDateForZone(date: Date): DateTime
 	}
 }
 
@@ -103,8 +103,12 @@ export function createContext(apiConfiguration: APIConfiguration): APIConfigurat
 	const configuration = apiConfiguration.configuration;
 	const configurationContext = apiConfiguration as APIConfigurationContext;
 
+	function parseDateForZone(date: Date): DateTime {
+		return DateTime.fromJSDate(date).setZone(configuration.location.timeZoneLabel);
+	}
+
 	// Associate the time with the location.
-	const referenceTime = DateTime.fromJSDate(configuration.time.referenceTime).setZone(configuration.location.timeZoneLabel);
+	const referenceTime = parseDateForZone(configuration.time.referenceTime);
 
 	configurationContext.context = {
 		referenceTimeInZone: referenceTime,
@@ -119,11 +123,11 @@ export function createContext(apiConfiguration: APIConfiguration): APIConfigurat
 
 		astro: {
 			minimumSunDataFetch: referenceTime.minus({ days: configuration.astro.daysInPastToFetchSun }).startOf("day"),
-		},
-
-		weather: {
 		}
 	};
+	configurationContext.action = {
+		parseDateForZone: parseDateForZone
+	}
 
 	return configurationContext;
 };
