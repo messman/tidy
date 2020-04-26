@@ -54,6 +54,11 @@ export interface APIConfiguration {
 			 * So if 2, subtracts 2 days and then goes to the beginning of that day.
 			 */
 			daysInPastToFetchSun: number,
+
+			/** Latitude used as part of sunrise/sunset calculation. */
+			latitude: number,
+			/** Longitude used as part of sunrise/sunset calculation. */
+			longitude: number,
 		},
 
 		weather: {

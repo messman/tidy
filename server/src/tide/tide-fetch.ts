@@ -5,6 +5,14 @@ import { IntermediateTideValues } from "./tide-intermediate";
 import { mergeIssues } from "../all/all-merge";
 import { DateTime } from "luxon";
 
+/*
+	From https://tidesandcurrents.noaa.gov/api/
+
+	Sample URLs:
+	https://tidesandcurrents.noaa.gov/api/datagetter?application=messman_tidy&station=8419317&format=json&time_zone=lst_ldt&units=english&product=predictions&datum=mllw&interval=hilo&begin_date=20200425%2000%3A00&range=240
+	https://tidesandcurrents.noaa.gov/api/datagetter?application=messman_tidy&station=8419317&format=json&time_zone=lst_ldt&units=english&product=water_level&datum=mllw&date=latest
+*/
+
 export async function fetchTides(configContext: APIConfigurationContext): Promise<IntermediateTideValues> {
 
 	const station = configContext.configuration.tides.station;

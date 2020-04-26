@@ -3,7 +3,7 @@ import { AllResponse, Info } from "tidy-shared";
 import { allTestMerge } from "../test";
 import { AllMergeFunc, allMerge, mergeForLongTerm } from "./all-merge";
 
-export function createConfigurationFor(time: Date, timeZoneLabel: string, station: number): APIConfiguration {
+export function createConfigurationFor(time: Date, timeZoneLabel: string, station: number, latitude: number, longitude: number): APIConfiguration {
 	return {
 		configuration: {
 			location: {
@@ -20,7 +20,9 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 				tideHeightPrecision: 2
 			},
 			astro: {
-				daysInPastToFetchSun: 1
+				daysInPastToFetchSun: 1,
+				latitude: latitude,
+				longitude: longitude
 			},
 			weather: {
 				hoursGapBetweenWeatherData: 3,
@@ -32,7 +34,7 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 }
 
 export function createWellsConfiguration(): APIConfiguration {
-	return createConfigurationFor(new Date(), "America/New_York", 8419317);
+	return createConfigurationFor(new Date(), "America/New_York", 8419317, 43.294043, -70.568704);
 }
 
 export async function getAllForConfiguration(configuration: APIConfiguration): Promise<AllResponse> {
