@@ -4,7 +4,7 @@ import { Issue, errorIssue } from "tidy-shared";
 
 export interface FetchResponse<T> {
 	result: T | null,
-	issues: Issue[]
+	issues: Issue[] | null
 }
 
 /**
@@ -29,7 +29,7 @@ export async function getJSON<T>(url: string, name: string): Promise<FetchRespon
 			const json = await res.json();
 			return {
 				result: json,
-				issues: [],
+				issues: null,
 			};
 		}
 		else {

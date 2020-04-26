@@ -1,9 +1,9 @@
-import { APIConfiguration, createContext, APIConfigurationContext } from "./context";
-import { AllResponse, TideEventRange, AllDailyDay, Info } from "tidy-shared";
-import { success } from "../test";
-import { DateTime } from "luxon";
+import { APIConfiguration, createContext } from "./context";
+import { AllResponse, Info } from "tidy-shared";
+import { allTestMerge } from "../test";
+import { AllMergeFunc, allMerge, mergeForLongTerm } from "./all-merge";
 
-export function createConfigurationFor(time: Date, timeZoneLabel: string): APIConfiguration {
+export function createConfigurationFor(time: Date, timeZoneLabel: string, station: number): APIConfiguration {
 	return {
 		configuration: {
 			location: {
@@ -15,6 +15,7 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string): APICo
 				longTermDataFetchDays: 7,
 			},
 			tides: {
+				station: station,
 				daysInPastToFetchTides: 1,
 				tideHeightPrecision: 2
 			},
@@ -31,54 +32,67 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string): APICo
 }
 
 export function createWellsConfiguration(): APIConfiguration {
-	return createConfigurationFor(new Date(), "America/New_York");
+	return createConfigurationFor(new Date(), "America/New_York", 8419317);
 }
 
-export function getForConfiguration(configuration: APIConfiguration): AllResponse {
-	const context = createContext(configuration);
-	return success(context);
+export async function getAllForConfiguration(configuration: APIConfiguration): Promise<AllResponse> {
+	return getAll(configuration, allMerge);
 }
 
-export interface ForDay<T> {
-	day: number
-	entity: T
+export async function getAllTestForConfiguration(configuration: APIConfiguration): Promise<AllResponse> {
+	return getAll(configuration, allTestMerge);
 }
 
-export function createInfo(configContext: APIConfigurationContext): Info {
-	return {
+async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc): Promise<AllResponse> {
+
+	const configContext = createContext(configuration);
+	const { errors, warnings, interpretedTides, interpretedAstro, interpretedWeather } = await mergeFunc(configContext);
+
+	const info: Info = {
 		referenceTime: configContext.configuration.time.referenceTime,
 		processingTime: new Date(),
 		tideHeightPrecision: configContext.configuration.tides.tideHeightPrecision
 	}
+
+	if (errors) {
+		return {
+			info: info,
+			error: errors,
+			data: null
+		};
+	}
+
+	return {
+		info: info,
+		error: null,
+		data: {
+			warning: warnings,
+			current: {
+				sun: {
+					previous: interpretedAstro.previousEvent,
+					next: interpretedAstro.nextEvent
+				},
+				weather: interpretedWeather.currentWeather,
+				tides: interpretedTides.currentTides
+			},
+			predictions: {
+				cutoffDate: configContext.context.maxShortTermDataFetch.toJSDate(),
+				sun: interpretedAstro.shortTermEvents,
+				weather: interpretedWeather.shortTermWeather,
+				tides: interpretedTides.shortTermTides
+			},
+			daily: {
+				cutoffDate: configContext.context.maxLongTermDataFetch.toJSDate(),
+				tideExtremes: interpretedTides.longTermTideExtremes,
+				days: mergeForLongTerm(configContext, interpretedTides.longTermTides, interpretedAstro.longTermEvents, interpretedWeather.longTermWeather)
+			}
+		}
+	}
+
 }
 
-export function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<TideEventRange>[], sunEvents: ForDay<SunEvent[]>[], weatherEvents: DailyWeather[]): AllDailyDay[] {
 
-	const referenceDay = configContext.context.referenceTimeInZone.startOf('day');
-	const dayMap: Map<number, AllDailyDay> = new Map();
-
-	tides.forEach((t) => {
-		const day = referenceDay.plus({ days: t.day });
-		dayMap.set(t.day, {
-			date: day.toJSDate(),
-			sun: null!,
-			weather: null!,
-			tides: t.entity
-		});
-	});
-	sunEvents.forEach((s) => {
-		const record = dayMap.get(s.day);
-		if (record) {
-			record.sun = s.entity;
-		}
-	});
-	weatherEvents.forEach((w) => {
-		const day = configContext.action.parseDateForZone(w.day).startOf('day').diff(referenceDay, 'days').days;
-		const record = dayMap.get(day);
-		if (record) {
-			record.weather = w;
-		}
-	});
-
-	return Array.from(dayMap.values())
+export interface ForDay<T> {
+	day: number
+	entity: T
 }

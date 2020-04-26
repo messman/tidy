@@ -8,3 +8,4 @@ build
 npm-debug.log
 
 **/test/**/*.js
+**/test/**/*.js.map

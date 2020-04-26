@@ -1,9 +1,10 @@
 import { SunEvent } from 'tidy-shared';
 import { APIConfigurationContext } from '../all/context';
-import { DateTime } from 'luxon';
 import { ForDay } from '../all/all';
+import { AllIssue } from '../all/all-merge';
+import { IntermediateAstroValues } from './astro-intermediate';
 
-export interface InterpretedAstro {
+export interface InterpretedAstro extends AllIssue {
 	previousEvent: SunEvent,
 	nextEvent: SunEvent,
 	shortTermEvents: SunEvent[],
@@ -12,7 +13,18 @@ export interface InterpretedAstro {
 
 // Assumption made: we will always get sun events in pairs - sunrise and sunset - for each day.
 
-export function interpretAstro(configurationContext: APIConfigurationContext, sunEvents: SunEvent[]): InterpretedAstro {
+export function interpretAstro(configurationContext: APIConfigurationContext, intermediateAstro: IntermediateAstroValues): InterpretedAstro {
+
+	if (intermediateAstro.errors) {
+		return {
+			errors: intermediateAstro.errors,
+			warnings: intermediateAstro.warnings,
+			previousEvent: null!,
+			nextEvent: null!,
+			shortTermEvents: null!,
+			longTermEvents: null!
+		}
+	}
 
 	const referenceTime = configurationContext.context.referenceTimeInZone;
 	const referenceDay = referenceTime.startOf('day');
@@ -25,7 +37,7 @@ export function interpretAstro(configurationContext: APIConfigurationContext, su
 	const longTermEvents: ForDay<SunEvent[]>[] = [];
 	let currentDayLongTermEvents: SunEvent[] = [];
 
-	sunEvents.forEach((s) => {
+	intermediateAstro.sunEvents.forEach((s) => {
 		const eventTime = configurationContext.action.parseDateForZone(s.time);
 		if (eventTime < referenceTime) {
 			previousEvent = s;
@@ -55,6 +67,8 @@ export function interpretAstro(configurationContext: APIConfigurationContext, su
 	});
 
 	return {
+		errors: null,
+		warnings: intermediateAstro.warnings,
 		previousEvent: previousEvent,
 		nextEvent: nextEvent,
 		shortTermEvents: shortTermEvents,

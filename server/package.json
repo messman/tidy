@@ -5,9 +5,11 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"start": "ts-webpack-builder",
-		"test": "tsc --p test/tsconfig.json && node test/test.js",
-		"test-again": "node test/test.js"
+		"start": "ts-webpack-builder --isDevelopmentForDebug",
+		"test": "npm run test-build && npm run test-again",
+		"test-build": "tsc --p test/tsconfig.json",
+		"test-again": "node test/test.js",
+		"debug": "node --inspect-brk=9229 test/test.js"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",

@@ -1,69 +1,43 @@
-import { Info, AllResponse, errorIssue, AllResponseData, TideEvent, TideStatus, SunEvent, TideEventRange, AllDailyDay, DailyWeather, WindDirection, WeatherStatusType } from 'tidy-shared';
+import { TideEvent, TideStatus, SunEvent, WindDirection, WeatherStatusType, warningIssue, Warnings } from 'tidy-shared';
 import { APIConfigurationContext } from '../all/context';
 import { interpretTides } from '../tide/tide-interpret';
 import { randomizer, Randomizer } from './randomize';
 import { DateTime } from 'luxon';
 import { linearFromPoints, quadraticFromPoints } from './equation';
 import { interpretAstro } from '../astro/astro-interpret';
-import { ForDay } from '../all/all';
 import { IntermediateWeatherValues } from '../weather/weather-intermediate';
 import { interpretWeather } from '../weather/weather-interpret';
 import { IterableTimeData } from '../util/iterator';
+import { AllMergeFunc, mergeWarnings } from '../all/all-merge';
+import { IntermediateTideValues } from '../tide/tide-intermediate';
+import { IntermediateAstroValues } from '../astro/astro-intermediate';
+import { fetchTides } from '../tide/tide-fetch';
 
+export const allTestMerge: AllMergeFunc = async (configContext: APIConfigurationContext) => {
 
+	//const tideData = createTideData(configContext);
+	const tideData = await fetchTides(configContext);
 
-export function success(configContext: APIConfigurationContext): AllResponse {
-
-	const [pastTideEvents, currentTideStatus, futureTideEvents] = createTideData(configContext);
-	const interpretedTides = interpretTides(configContext, pastTideEvents, currentTideStatus, futureTideEvents);
-
-	const sunEvents = createAstroData(configContext);
-	const interpretedAstro = interpretAstro(configContext, sunEvents);
-
-	const intermediateWeather = createWeatherData(configContext);
-	const interpretedWeather = interpretWeather(configContext, intermediateWeather);
-
-	const data: AllResponseData = {
-		warning: null!,
-		current: {
-			sun: {
-				previous: interpretedAstro.previousEvent,
-				next: interpretedAstro.nextEvent
-			},
-			weather: interpretedWeather.currentWeather,
-			tides: interpretedTides.currentTides
-		},
-		predictions: {
-			cutoffDate: configContext.context.maxShortTermDataFetch.toJSDate(),
-			sun: interpretedAstro.shortTermEvents,
-			weather: interpretedWeather.shortTermWeather,
-			tides: interpretedTides.shortTermTides
-		},
-		daily: {
-			cutoffDate: configContext.context.maxLongTermDataFetch.toJSDate(),
-			tideExtremes: interpretedTides.longTermTideExtremes,
-			days: mergeForLongTerm(configContext, interpretedTides.longTermTides, interpretedAstro.longTermEvents, interpretedWeather.longTermWeather)
-		}
-	};
+	const interpretedTides = interpretTides(configContext, tideData);
+	const interpretedAstro = interpretAstro(configContext, createAstroData(configContext));
+	const interpretedWeather = interpretWeather(configContext, createWeatherData(configContext));
 
 	return {
-		info: createInfo(configContext),
-		error: null,
-		data: data
-	};
+		errors: null,
+		warnings: mergeWarnings(interpretedTides.warnings, interpretedAstro.warnings, interpretedWeather.warnings),
+		interpretedTides: interpretedTides,
+		interpretedAstro: interpretedAstro,
+		interpretedWeather: interpretedWeather
+	}
 }
 
-export function failure(configContext: APIConfigurationContext): AllResponse {
+function createTestWarnings(): Warnings {
 	return {
-		info: createInfo(configContext),
-		error: {
-			errors: [errorIssue('Could not fetch any data', 'Here is a dev message')]
-		},
-		data: null
-	};
+		warnings: [warningIssue('This is test data.', 'This is test data.')]
+	}
 }
 
-export function createTideData(configContext: APIConfigurationContext): [TideEvent[], TideStatus, TideEvent[]] {
+export function createTideData(configContext: APIConfigurationContext): IntermediateTideValues {
 
 	const tideRandomizer = randomizer('_tide_');
 
@@ -125,10 +99,16 @@ export function createTideData(configContext: APIConfigurationContext): [TideEve
 		height: heightWithPrecision
 	};
 
-	return [previousEvents, currentStatus, futureEvents];
+	return {
+		errors: null,
+		warnings: createTestWarnings(),
+		pastEvents: previousEvents,
+		current: currentStatus,
+		futureEvents: futureEvents
+	};
 }
 
-export function createAstroData(configContext: APIConfigurationContext): SunEvent[] {
+export function createAstroData(configContext: APIConfigurationContext): IntermediateAstroValues {
 	const sunRandomizer = randomizer('_sun_');
 
 	let startDateTime = configContext.context.astro.minimumSunDataFetch;
@@ -174,7 +154,11 @@ export function createAstroData(configContext: APIConfigurationContext): SunEven
 		});
 	}
 
-	return sunEvents;
+	return {
+		errors: null,
+		warnings: createTestWarnings(),
+		sunEvents: sunEvents
+	};
 }
 
 export function createWeatherData(configContext: APIConfigurationContext): IntermediateWeatherValues {
@@ -208,6 +192,8 @@ export function createWeatherData(configContext: APIConfigurationContext): Inter
 	const nWeatherStatusType = Object.keys(WeatherStatusType).filter((k) => !isNaN(k as unknown as number)).length;
 
 	return {
+		errors: null,
+		warnings: createTestWarnings(),
 		temp: weatherData(2, 40, 60, temperaturePrecision, true, .1),
 		tempFeelsLike: weatherData(2, 40, 60, temperaturePrecision, true, .1),
 		chanceRain: weatherData(2, 0, 1, defaultPrecision + 2, true, .1),

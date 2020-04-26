@@ -2,21 +2,38 @@ import { AllCurrentTides, TideEventRange, TideExtremes, TideStatus, TideEvent } 
 import { APIConfigurationContext } from '../all/context';
 import { DateTime } from 'luxon';
 import { ForDay } from '../all/all';
+import { AllIssue } from '../all/all-merge';
+import { IntermediateTideValues } from './tide-intermediate';
 
-export interface InterpretedTides {
+export interface InterpretedTides extends AllIssue {
 	currentTides: AllCurrentTides,
 	shortTermTides: TideEventRange,
 	longTermTideExtremes: TideExtremes,
 	longTermTides: ForDay<TideEventRange>[]
 }
 
-export function interpretTides(configurationContext: APIConfigurationContext, pastEvents: TideEvent[], current: TideStatus, futureEvents: TideEvent[]): InterpretedTides {
+export function interpretTides(configurationContext: APIConfigurationContext, intermediateTides: IntermediateTideValues): InterpretedTides {
+
+	if (intermediateTides.errors) {
+		return {
+			errors: intermediateTides.errors,
+			warnings: intermediateTides.warnings,
+			currentTides: null!,
+			shortTermTides: null!,
+			longTermTideExtremes: null!,
+			longTermTides: null!
+		}
+	}
+
+	const { pastEvents, current, futureEvents } = intermediateTides;
 
 	const currentTides = interpretCurrent(pastEvents, current, futureEvents);
-	const shortTermTides = interpretShortTerm(configurationContext, currentTides.previous, futureEvents);
+	const shortTermTides = interpretShortTerm(configurationContext, currentTides.previous, futureEvents!);
 	const [longTermTideExtremes, longTermTides] = interpretLongTerm(configurationContext, pastEvents, futureEvents);
 
 	return {
+		errors: null,
+		warnings: intermediateTides.warnings,
 		currentTides: currentTides,
 		shortTermTides: shortTermTides,
 		longTermTideExtremes: longTermTideExtremes,

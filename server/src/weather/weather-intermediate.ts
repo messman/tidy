@@ -1,9 +1,10 @@
 import { IterableTimeData } from "../util/iterator";
 import { WeatherStatusType } from "tidy-shared/dist/weather/weather-status-type";
 import { WindDirection } from "tidy-shared";
+import { AllIssue } from "../all/all-merge";
 
 
-export interface IntermediateWeatherValues {
+export interface IntermediateWeatherValues extends AllIssue {
 	temp: IterableTimeData<number>[],
 	tempFeelsLike: IterableTimeData<number>[],
 	chanceRain: IterableTimeData<number>[],

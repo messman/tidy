@@ -1,349 +1,185 @@
-import * as Raw from "./requestModels";
-import * as Clean from "./models";
-import fetch from "node-fetch";
+import { APIConfigurationContext } from "../all/context";
+import { TideStatus, TideEvent, errorIssue } from "tidy-shared";
+import { getJSON, FetchResponse } from "../util/fetch";
+import { IntermediateTideValues } from "./tide-intermediate";
+import { mergeIssues } from "../all/all-merge";
+import { DateTime } from "luxon";
 
-const predictionHoursBefore = Math.round(24 * 1.5); // 1.5 days before
-const predictionHoursAfter = Math.round(24 * 5.5); // 5.5 days after
+export async function fetchTides(configContext: APIConfigurationContext): Promise<IntermediateTideValues> {
 
-export async function getNoaaData(): Promise<Clean.Response> {
-	const rawResponse = await getRawNoaaData();
-	const cleanResponse = processRawNoaaData(rawResponse);
-	return cleanResponse;
-}
+	const station = configContext.configuration.tides.station;
+	//const referenceTime = configContext.context.referenceTimeInZone;
+	// Add one day to our max time because we need tides for the day after in order to construct graph UI.
+	const maxTime = configContext.context.maxLongTermDataFetch.plus({ days: 1 });
+	const pastTime = configContext.context.tides.minimumTidesDataFetch;
 
-async function getRawNoaaData(): Promise<Raw.Response> {
+	const startDateAsString = formatDateForRequest(pastTime.toJSDate());
+	const hoursBetween = Math.ceil(maxTime.diff(pastTime, 'hours').hours);
 
-	const response: Raw.Response = {
-		tzo: Infinity,
-		errors: null,
-		data: {
-			waterLevelPrediction: {} as any,
-			currentWaterLevel: {} as any,
-			airPressure: {} as any,
-			airTemp: {} as any,
-			waterTemp: {} as any,
-			wind: {} as any
-		}
-	}
+	const predictionInput: NOAAPredictionInput = Object.assign({}, defaultNOAAInput, ({
+		station: station,
+		product: 'predictions',
+		datum: 'mllw', // From https://tidesandcurrents.noaa.gov/datum_options.html
+		interval: 'hilo', // hi/lo, not just 6 minute intervals
+		begin_date: startDateAsString,
+		range: hoursBetween
+	} as NOAAPredictionInput));
 
-	const requests: Promise<any>[] = [];
+	const currentLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
+		station: station,
+		product: "water_level",
+		datum: "mllw",
+		date: "latest"
+	} as NOAACurrentLevelInput));
 
-	/*
-		NOTE: Concerning times and timezones:
+	const requests: [Promise<FetchResponse<NOAAPredictionOutput>>, Promise<FetchResponse<NOAACurrentLevelOutput>>] = [
+		makeJSONRequest(predictionInput, 'tide prediction'),
+		makeJSONRequest(currentLevelInput, 'tide level')
+	];
 
-		The time zone of the target (Wells, Maine) may be different than that of
-		the server running this service and the client requesting the data.
-		To deal with this, requests ask for local, DST-adjusted times and are handled as
-		strings all the way to the client (except for some math here on the server where timezone
-		doesn't matter).
+	const [predictionResponse, currentLevelResponse] = await Promise.all(requests);
 
-		Below we make requests for predictions and need to pass a date. We *should* really
-		make an initial request to the api that returns the local time so we can get a time offset
-		and apply it to this date. That will work for any time of the year (though may break down
-		around the hour of DST changes).
-		
-		To get around this without needing non-simultaneous requests, we will just assume Wells, Maine
-		is currently at either 4 or 5 hours of time offset (Use 4, since DST season is beach season).
-		This will bring us either exactly correct (or just the difference in time between the DST customs of 
-		the server location and Wells, Maine, which is probably an hour),
-		which will affect at most 1 prediction.
-	*/
-
-	// Next line is where we should be using the current time from Wells, Maine, but instead we will use system time
-	const wellsMaineOffsetMin = -4 * 60; // -4 hours
-	const currentTime = new Date();
-	// TimezoneOffset is positive when behind and negative when ahead, so flip it 
-	const currentTimeOffsetMin = -currentTime.getTimezoneOffset();
-	response.tzo = currentTimeOffsetMin; // For debug
-	currentTime.setMinutes(currentTime.getMinutes() + (currentTimeOffsetMin - wellsMaineOffsetMin));
-
-	// Update the predictions to include the hours before and after that we want
-	const predictionsOpts = Object.assign({}, specificFetchOptions.waterLevelPrediction);
-	const beginDate = newDatePlusHours(-predictionHoursBefore, currentTime);
-	const beginDateAsString = formatDateForRequest(beginDate);
-	predictionsOpts["begin_date"] = beginDateAsString;
-	predictionsOpts["range"] = predictionHoursBefore + predictionHoursAfter;
-
-	requests.push(makeJSONRequest(predictionsOpts, "Water Level Prediction", response.data.waterLevelPrediction));
-
-	requests.push(makeJSONRequest(specificFetchOptions.currentWaterLevel, "Current Water Level", response.data.currentWaterLevel));
-	requests.push(makeJSONRequest(specificFetchOptions.airPressure, "Air Pressure", response.data.airPressure));
-	requests.push(makeJSONRequest(specificFetchOptions.airTemp, "Air Temp", response.data.airTemp));
-	requests.push(makeJSONRequest(specificFetchOptions.waterTemp, "Water Temp", response.data.waterTemp));
-	requests.push(makeJSONRequest(specificFetchOptions.wind, "Wind", response.data.wind));
-
-	await Promise.all(requests);
-	// response object should be ready
-	return response;
-
-}
-
-function processRawNoaaData(rawResponse: Raw.Response): Clean.Response {
-
-	const cleanResponse: Clean.Response = {
-		tzo: rawResponse.tzo,
-		errors: null, // Will fill in below
-		data: {
-			waterLevel: null, // Will fill in below
-			current: null, // Will fill in below
-		}
-	}
-
-	processRawNoaaWaterLevel(rawResponse, cleanResponse);
-	processRawNoaaCurrent(rawResponse, cleanResponse);
-
-	return cleanResponse;
-}
-
-function processRawNoaaWaterLevel(raw: Raw.Response, clean: Clean.Response): void {
-
-	const errors: Raw.JSONError[] = [];
-
-	const rawCurrentWaterLevel = raw.data.currentWaterLevel;
-	const rawWaterLevelPrediction = raw.data.waterLevelPrediction;
-
-	let current: Clean.CurrentData = null;
-	if (isErrorResponse(rawCurrentWaterLevel)) {
-		errors.push(rawCurrentWaterLevel.error);
-	}
-	else {
-		const firstData = rawCurrentWaterLevel.data[0];
-		current = {
-			time: parseTimeFromResponse(firstData.t),
-			val: parseFloat(firstData.v)
-		};
-	}
-
-	let rawPredictions: Raw.WaterLevelPredictionData[] = null;
-	if (isErrorResponse(rawWaterLevelPrediction)) {
-		errors.push(rawWaterLevelPrediction.error);
-	}
-	else {
-		rawPredictions = rawWaterLevelPrediction.predictions;
-	}
-
-	// Leave early if we have issues with the water level responses
-	if (errors.length) {
-		if (clean.errors && clean.errors.length)
-			clean.errors = [...clean.errors, ...errors];
-		else
-			clean.errors = errors;
-		return;
-	}
-
-	// So, our data must exist here for current and predictions
-
-	// Get the predictions parsed
-	const predictions = rawPredictions.map<Clean.WaterLevelPrediction>((rawPrediction) => {
+	const combinedIssues = mergeIssues([predictionResponse.issues, currentLevelResponse.issues]);
+	if (combinedIssues) {
 		return {
-			time: parseTimeFromResponse(rawPrediction.t),
-			val: parseFloat(rawPrediction.v),
-			isHigh: rawPrediction.type.toUpperCase() === "H"
+			errors: {
+				errors: combinedIssues
+			},
+			warnings: null,
+			pastEvents: null!,
+			current: null!,
+			futureEvents: null!
+		}
+	}
+
+	const currentLevelData = currentLevelResponse.result!.data[0];
+	const current: TideStatus = {
+		time: DateTimeFromNOAAString(currentLevelData.t, configContext.configuration.location.timeZoneLabel).toJSDate(),
+		height: parseFloat(parseFloat(currentLevelData.v).toFixed(configContext.configuration.tides.tideHeightPrecision))
+	}
+
+	const pastEvents: TideEvent[] = [];
+	const futureEvents: TideEvent[] = [];
+	const referenceTime = configContext.context.referenceTimeInZone;
+
+	predictionResponse.result!.predictions.forEach((p) => {
+
+		const eventTime = DateTimeFromNOAAString(p.t, configContext.configuration.location.timeZoneLabel);
+		const event: TideEvent = {
+			time: eventTime.toJSDate(),
+			height: parseFloat(parseFloat(p.v).toFixed(configContext.configuration.tides.tideHeightPrecision)),
+			isLow: p.type.toUpperCase() !== "H"
+		};
+
+		if (eventTime > referenceTime) {
+			futureEvents.push(event);
+		}
+		else {
+			pastEvents.push(event);
 		}
 	});
 
-	// Find where the current level is in the predictions
-	let indexOfClosestBefore: number = 0;
 
-	// Below we will parse times just for the sake of math. 
-	// They will all be parsed the same way so it won't affect anything.
+	return {
+		errors: null,
+		warnings: null,
+		pastEvents: pastEvents,
+		current: current,
+		futureEvents: futureEvents
+	};
+}
 
-	const currentTime = (new Date(current.time)).getTime();
-	let minTimeDiff = Infinity;
-	for (let i = 0; i < predictions.length; i++) {
-		const prediction = predictions[i];
-		const diff = currentTime - (new Date(prediction.time)).getTime();
-		if (diff < 0)
-			break;
-		if (diff < minTimeDiff) {
-			indexOfClosestBefore = i;
-			minTimeDiff = diff;
-		}
-	}
+function DateTimeFromNOAAString(time: string, zone: string): DateTime {
+	// 2013-08-08 15:00
+	return DateTime.fromFormat(time, 'yyyy-MM-dd HH:mm', { zone: zone });
+}
 
-	const predictionsBeforeCurrent = predictions.slice(0, indexOfClosestBefore + 1);
-	const previous = predictions[indexOfClosestBefore];
-	const currentIsRising = !previous.isHigh;
-	const next = predictions[indexOfClosestBefore + 1];
-	const predictionsAfterCurrent = predictions.slice(indexOfClosestBefore + 1);
 
-	const high = currentIsRising ? next : previous;
-	const low = currentIsRising ? previous : next;
+// From https://tidesandcurrents.noaa.gov/api/
+interface BaseNOAAInput {
+	application: string,
+	station: number,
+	format: string,
+	time_zone: string,
+	units: 'english' | 'metric',
+	product: string
+}
 
-	// Make sure the current is between the high and low for the purpose of this calculation
-	// So we dont get negative percents or percents over 1
-	const currentValClamped = Math.min(Math.max(current.val, low.val), high.val);
-	const currentPercentFallen = 1 - ((currentValClamped - low.val) / (high.val - low.val));
+const defaultNOAAInput: BaseNOAAInput = {
+	application: 'messman_tidy',
+	station: null!,
+	format: 'json',
+	time_zone: 'lst_ldt', // Local Time with DST offset
+	units: 'english',
+	product: null!
+}
 
-	clean.data.waterLevel = {
-		predictionsBeforeCurrent,
-		previous,
-		current,
-		currentIsRising,
-		currentPercentFallen,
-		next,
-		high,
-		low,
-		predictionsAfterCurrent,
+interface NOAAPredictionInput extends BaseNOAAInput {
+	datum: string,
+	interval: string,
+	begin_date: string,
+	range: number
+}
+
+interface NOAACurrentLevelInput extends BaseNOAAInput {
+	datum: string,
+	date: string
+}
+
+
+interface NOAAPredictionOutput extends NOAARawErrorResponse {
+	predictions: NOAAPredictionEntry[]
+}
+
+interface NOAAPredictionEntry {
+	t: string,
+	v: string,
+	type: 'H' | 'L'
+}
+
+interface NOAACurrentLevelOutput extends NOAARawErrorResponse {
+	data: NOAACurrentLevelEntry[]
+}
+
+interface NOAACurrentLevelEntry {
+	t: string,
+	v: string
+}
+
+interface NOAARawErrorResponse {
+	error: {
+		message: string
 	}
 }
 
-function processRawNoaaCurrent(raw: Raw.Response, clean: Clean.Response): void {
-
-	const errors: Raw.JSONError[] = [];
-
-	clean.data.current = {
-		airPressure: null,
-		airTemp: null,
-		waterTemp: null,
-		wind: null
-	}
-
-	//
-	// Air Pressure
-	const rawAirPressure = raw.data.airPressure;
-	if (isErrorResponse(rawAirPressure)) {
-		errors.push(rawAirPressure.error);
-	}
-	else {
-		const firstData = rawAirPressure.data[0];
-		clean.data.current.airPressure = {
-			time: parseTimeFromResponse(firstData.t),
-			val: parseFloat(firstData.v)
-		};
-	}
-
-	//
-	// Air Temp
-	const rawAirTemp = raw.data.airTemp;
-	if (isErrorResponse(rawAirTemp)) {
-		errors.push(rawAirTemp.error);
-	}
-	else {
-		const firstData = rawAirTemp.data[0];
-		clean.data.current.airTemp = {
-			time: parseTimeFromResponse(firstData.t),
-			val: parseFloat(firstData.v)
-		};
-	}
-
-	//
-	// Water Temp
-	const rawWaterTemp = raw.data.waterTemp;
-	if (isErrorResponse(rawWaterTemp)) {
-		errors.push(rawWaterTemp.error);
-	}
-	else {
-		const firstData = rawWaterTemp.data[0];
-		clean.data.current.waterTemp = {
-			time: parseTimeFromResponse(firstData.t),
-			val: parseFloat(firstData.v)
-		};
-	}
-
-	//
-	// Wind
-	const rawWind = raw.data.wind;
-	if (isErrorResponse(rawWind)) {
-		errors.push(rawWind.error);
-	}
-	else {
-		const firstData = rawWind.data[0];
-		clean.data.current.wind = {
-			time: parseTimeFromResponse(firstData.t),
-			direction: parseFloat(firstData.d),
-			directionCardinal: firstData.dr,
-			gust: parseFloat(firstData.g),
-			speed: parseFloat(firstData.s),
-		};
-	}
-
-	if (errors.length) {
-		if (clean.errors && clean.errors.length)
-			clean.errors = [...clean.errors, ...errors];
-		else
-			clean.errors = errors;
-	}
-}
-
-//
-// Request Info
-//
-
-// Required for every request
-const defaultFetchOptions = {
-	station: 8419317, // Default: Wells, ME https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
-	application: "messman_tidy",
-	format: "json",
-	time_zone: "lst_ldt", // Local Time with DST offset
-	units: "english", // english | metric
-}
-
-// Additional parameters required for certain requests
-const specificFetchOptions = {
-	// Gets the water level **predictions** (may be higher/lower than current! meaning, not always accurate)
-	waterLevelPrediction: { product: "predictions", datum: "mtl", interval: "hilo" /* hi/lo, not just 6 minute intervals */ },
-
-	// Current...
-	currentWaterLevel: { product: "water_level", datum: "mtl", date: "latest" },
-	airTemp: { product: "air_temperature", date: "latest" },
-	waterTemp: { product: "water_temperature", date: "latest" },
-	wind: { product: "wind", date: "latest" },
-	airPressure: { product: "air_pressure", date: "latest" },
-};
-
-//
-// Tools
-//
-
-async function makeJSONRequest<T>(options, errContext: string, responseObject: any): Promise<any> {
+async function makeJSONRequest<T extends NOAARawErrorResponse>(options: any, name: string): Promise<FetchResponse<T>> {
 	const url = createRequestUrl(options);
 
-	console.log(`Requesting ${url}`);
+	const fetched = await getJSON<T>(url, name);
+	const { issues, result } = fetched;
+	if (issues) {
+		// Short-circuit, because it doesn't matter.
+		return fetched as unknown as FetchResponse<T>;
+	}
 
-	function handleErr(e: Error) {
-		const err = responseObject as Raw.ErrorResponse;
-		err.error = {
-			errText: e.message,
-			errContext
+	const errorMessage = result?.error?.message;
+	if (errorMessage) {
+		return {
+			issues: [errorIssue('Error retrieving tide information', errorMessage)],
+			result: null
 		};
 	}
-
-	try {
-		const res = await fetch(url);
-		if (res.ok) {
-			const json = await res.json();
-			if (json["error"]) {
-				// Returned 200, but had an internal error
-				throw new Error(json["error"]["message"]);
-			}
-			const complete = responseObject as Raw.RawResponse<T>;
-			Object.keys(json).forEach((key) => {
-				complete[key] = json[key];
-			});
-		}
-		else {
-			handleErr(new Error(`${res.status}: ${res.statusText}`));
-		}
-	} catch (e) {
-		handleErr(e);
+	return {
+		issues: null,
+		result: result!
 	}
 }
 
+const api_noaa = "https://tidesandcurrents.noaa.gov/api/datagetter";
 // Takes key-val options, returns a query string
-function createRequestUrl(opts: {}): string {
-	// Add default options plus additional options
-	opts = Object.assign({}, defaultFetchOptions, opts);
-	// Encode to string
-	const optsString = Object.keys(opts).map(key => `${key}=${encodeURIComponent(opts[key])}`).join("&");
-	return api_noaa + "?" + optsString;
-}
-
-// Return a new date with modified hours
-function newDatePlusHours(addHours: number, date: Date): Date {
-	const newDate = new Date(date.getTime());
-	newDate.setHours(newDate.getHours() + addHours);
-	return newDate;
+function createRequestUrl(params: { [key: string]: any }): string {
+	const paramsAsString = Object.keys(params).map(key => `${key}=${encodeURIComponent(params[key])}`).join("&");
+	return `${api_noaa}?${paramsAsString}`;
 }
 
 // Return a formatted date minus X hours
@@ -354,13 +190,4 @@ function formatDateForRequest(d: Date): string {
 		return num.toString().padStart(2, "0");
 	});
 	return `${d.getFullYear()}${twos[0]}${twos[1]} ${twos[2]}:${twos[3]}`;
-}
-
-function isErrorResponse(raw: any): raw is Raw.ErrorResponse {
-	return !!raw["error"] && !!raw["error"]["errText"];
-}
-
-function parseTimeFromResponse(timeString: string): string {
-	// Do nothing. See notes elsewhere in this file.
-	return timeString;
 }

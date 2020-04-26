@@ -3,8 +3,9 @@ import { APIConfigurationContext } from '../all/context';
 import { IntermediateWeatherValues } from './weather-intermediate';
 import { createTimeChangeIterator, createTimeIterator, TimeIterator } from '../util/iterator';
 import { DateTime } from 'luxon';
+import { AllIssue } from '../all/all-merge';
 
-export interface InterpretedWeather {
+export interface InterpretedWeather extends AllIssue {
 	currentWeather: WeatherStatus,
 	shortTermWeather: WeatherStatus[],
 	longTermWeather: DailyWeather[]
@@ -22,22 +23,32 @@ interface Iterators {
 	status: TimeIterator<WeatherStatusType>,
 }
 
-export function interpretWeather(configurationContext: APIConfigurationContext, weatherValues: IntermediateWeatherValues): InterpretedWeather {
+export function interpretWeather(configurationContext: APIConfigurationContext, intermediateWeather: IntermediateWeatherValues): InterpretedWeather {
+
+	if (intermediateWeather.errors) {
+		return {
+			errors: intermediateWeather.errors,
+			warnings: intermediateWeather.warnings,
+			currentWeather: null!,
+			shortTermWeather: null!,
+			longTermWeather: null!
+		}
+	}
 
 	const referenceTime = configurationContext.context.referenceTimeInZone;
 	const referenceHour = referenceTime.startOf("hour");
 
 	// Create iterators for each of the root values, stored independently
 	const iterators: Iterators = {
-		temperature: createTimeChangeIterator(weatherValues.temp),
-		feelsLike: createTimeChangeIterator(weatherValues.tempFeelsLike),
-		chanceRain: createTimeChangeIterator(weatherValues.chanceRain),
-		windDirection: createTimeIterator(weatherValues.windDirection),
-		wind: createTimeChangeIterator(weatherValues.wind),
-		dewPoint: createTimeChangeIterator(weatherValues.dewPoint),
-		cloudCover: createTimeChangeIterator(weatherValues.cloudCover),
-		visibility: createTimeChangeIterator(weatherValues.visibility),
-		status: createTimeIterator(weatherValues.status)
+		temperature: createTimeChangeIterator(intermediateWeather.temp),
+		feelsLike: createTimeChangeIterator(intermediateWeather.tempFeelsLike),
+		chanceRain: createTimeChangeIterator(intermediateWeather.chanceRain),
+		windDirection: createTimeIterator(intermediateWeather.windDirection),
+		wind: createTimeChangeIterator(intermediateWeather.wind),
+		dewPoint: createTimeChangeIterator(intermediateWeather.dewPoint),
+		cloudCover: createTimeChangeIterator(intermediateWeather.cloudCover),
+		visibility: createTimeChangeIterator(intermediateWeather.visibility),
+		status: createTimeIterator(intermediateWeather.status)
 	};
 
 	const currentHour = referenceHour.plus({ hours: 1 });
@@ -123,6 +134,8 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 	});
 
 	return {
+		errors: null,
+		warnings: intermediateWeather.warnings,
 		currentWeather: currentWeather,
 		shortTermWeather: shortTermWeather,
 		longTermWeather: longTermWeather

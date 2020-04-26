@@ -2,6 +2,9 @@
 	"compilerOptions": {
 		"module": "esnext",
 		"moduleResolution": "node",
+		"lib": [
+			"ES2019"
+		],
 		"target": "es2017",
 		"sourceMap": true,
 		"declaration": true,

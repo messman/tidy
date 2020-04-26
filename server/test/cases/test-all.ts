@@ -1,8 +1,8 @@
-import { createWellsConfiguration, getForConfiguration } from '../../dist/index';
+import { createWellsConfiguration, getAllTestForConfiguration } from '../../dist/index';
 
-export function run(): void {
+export async function run(): Promise<void> {
 	const configuration = createWellsConfiguration();
 
-	const response = getForConfiguration(configuration);
+	const response = await getAllTestForConfiguration(configuration);
 	console.dir(response, { depth: null });
 }

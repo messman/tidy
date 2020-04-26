@@ -34,6 +34,11 @@ export interface APIConfiguration {
 
 		tides: {
 			/**
+			 * NOAA station, like https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
+			 */
+			station: number,
+
+			/**
 			 * Number of days in the past to look for tides.
 			 * So if 2, subtracts 2 days and then goes to the beginning of that day.
 			 */
