@@ -16,7 +16,6 @@ import { DateTime } from "luxon";
 export async function fetchTides(configContext: APIConfigurationContext): Promise<IntermediateTideValues> {
 
 	const station = configContext.configuration.tides.station;
-	//const referenceTime = configContext.context.referenceTimeInZone;
 	// Add one day to our max time because we need tides for the day after in order to construct graph UI.
 	const maxTime = configContext.context.maxLongTermDataFetch.plus({ days: 1 });
 	const pastTime = configContext.context.tides.minimumTidesDataFetch;

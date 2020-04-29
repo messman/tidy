@@ -11,22 +11,20 @@ import { IterableTimeData } from '../util/iterator';
 import { AllMergeFunc, mergeWarnings } from '../all/all-merge';
 import { IntermediateTideValues } from '../tide/tide-intermediate';
 import { IntermediateAstroValues } from '../astro/astro-intermediate';
-import { fetchTides } from '../tide/tide-fetch';
-import { fetchAstro } from '../astro/astro-fetch';
-import { fetchWeather } from '../weather/weather-fetch';
 
+/** The main 'merge' function for our test data. Creates the fake data for each API area and combines them. */
 export const allTestMerge: AllMergeFunc = async (configContext: APIConfigurationContext) => {
 
-	//const tideData = createTideData(configContext);
-	const tideData = await fetchTides(configContext);
+	const tideData = createTideData(configContext);
+	//const tideData = await fetchTides(configContext);
 	const interpretedTides = interpretTides(configContext, tideData);
 
-	// const astroData = createAstroData(configContext);
-	const astroData = await fetchAstro(configContext);
+	const astroData = createAstroData(configContext);
+	//const astroData = await fetchAstro(configContext);
 	const interpretedAstro = interpretAstro(configContext, astroData);
 
-	//const weatherData = createWeatherData(configContext)
-	const weatherData = await fetchWeather(configContext);
+	const weatherData = createWeatherData(configContext)
+	//const weatherData = await fetchWeather(configContext);
 	const interpretedWeather = interpretWeather(configContext, weatherData);
 
 	return {
@@ -38,12 +36,14 @@ export const allTestMerge: AllMergeFunc = async (configContext: APIConfiguration
 	}
 }
 
+/** Creates fake warnings to test the warnings pattern. */
 function createTestWarnings(): Warnings {
 	return {
 		warnings: [warningIssue('This is test data.', 'This is test data.')]
 	}
 }
 
+/** Creates random tide data. Uses a seeded randomizer. */
 export function createTideData(configContext: APIConfigurationContext): IntermediateTideValues {
 
 	const tideRandomizer = randomizer('_tide_');
@@ -115,6 +115,7 @@ export function createTideData(configContext: APIConfigurationContext): Intermed
 	};
 }
 
+/** Creates random astro/sun data. Uses a seeded randomizer. */
 export function createAstroData(configContext: APIConfigurationContext): IntermediateAstroValues {
 	const sunRandomizer = randomizer('_sun_');
 
@@ -168,9 +169,9 @@ export function createAstroData(configContext: APIConfigurationContext): Interme
 	};
 }
 
+/** Creates random weather data. Uses a seeded randomizer. */
 export function createWeatherData(configContext: APIConfigurationContext): IntermediateWeatherValues {
 	const weatherRandomizer = randomizer('_weather_');
-
 
 	const startDateTime = configContext.context.referenceTimeInZone.startOf('hour');
 	const endDateTime = configContext.context.maxLongTermDataFetch;
@@ -178,17 +179,10 @@ export function createWeatherData(configContext: APIConfigurationContext): Inter
 	const defaultPrecision = configContext.configuration.weather.defaultPrecision;
 
 	/*
-		status - poly shake
-		temp - poly shake
-		tempFeelsLike - poly shake
-		chanceRain - poly shake
-		wind - poly shake
-		windDirection - poly shake
-		dewPoint - poly shake
-		cloudCover - poly shake
-		visibility - poly shake
-
-		start time, end time, timespan duration, min, max, inclusive, 
+		We use some interesting techniques here to generate more realistic random data.
+		Provided some boundaries, the function below will generate a random quadratic curve function, get data
+		from it, then 'shake' that data to make it a little random from data point to data point.
+		Overkill? Definitely.
 	*/
 
 	function weatherData(hoursGap: number, minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
@@ -226,10 +220,12 @@ export function createWeatherData(configContext: APIConfigurationContext): Inter
 function quadraticShakeData(randomizer: Randomizer, startDateTime: DateTime, endDateTime: DateTime, hoursGap: number, minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
 	const hoursBetween = endDateTime.diff(startDateTime, 'hours').hours;
 
+	// Get the three Y points of our quadratic curve.
 	const aY = randomizer.randomFloat(minY, maxY, precision, inclusive);
 	const bY = randomizer.randomFloat(minY, maxY, precision, inclusive);
 	const cY = randomizer.randomFloat(minY, maxY, precision, inclusive);
 
+	// Our first two points will be the max and min of X. The middle point will be random, near the middle.
 	const midPoint = hoursBetween / 2;
 	const bX = randomizer.shake(0, hoursBetween, 1, midPoint, .5, true);
 	const quadratic = quadraticFromPoints([0, aY], [bX, bY], [hoursBetween, cY]);

@@ -3,6 +3,7 @@ import { AllResponse, Info } from "tidy-shared";
 import { allTestMerge } from "../test";
 import { AllMergeFunc, allMerge, mergeForLongTerm } from "./all-merge";
 
+/** Creates a default configuration, requiring the location / time information for the area of interest. */
 export function createConfigurationFor(time: Date, timeZoneLabel: string, station: number, latitude: number, longitude: number): APIConfiguration {
 	return {
 		configuration: {
@@ -33,18 +34,22 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 	}
 }
 
+/** Creates a configuration for Wells, Maine, which is the target location for this application. */
 export function createWellsConfiguration(): APIConfiguration {
 	return createConfigurationFor(new Date(), "America/New_York", 8419317, 43.294043, -70.568704);
 }
 
+/** The main function - retrieves the 'AllResponse' object for the provided configuration. Calls APIs. */
 export async function getAllForConfiguration(configuration: APIConfiguration): Promise<AllResponse> {
 	return getAll(configuration, allMerge);
 }
 
+/** The main test function - creates random data and interprets it using the same common functions from the production function. */
 export async function getAllTestForConfiguration(configuration: APIConfiguration): Promise<AllResponse> {
 	return getAll(configuration, allTestMerge);
 }
 
+/** Common function that takes a 'Merge Function' to resolve issues and warnings and retrieve the data. */
 async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc): Promise<AllResponse> {
 
 	const configContext = createContext(configuration);
@@ -93,7 +98,7 @@ async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc):
 
 }
 
-
+/** Intermediate interface used when merging API data. Holds data for a specific day. */
 export interface ForDay<T> {
 	day: number
 	entity: T

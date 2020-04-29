@@ -178,6 +178,7 @@ async function getIntermediateWeather(configContext: APIConfigurationContext, gr
 	const timeZone = configContext.configuration.location.timeZoneLabel;
 	const { temperature, apparentTemperature, probabilityOfPrecipitation, windDirection, windSpeed, dewpoint, skyCover, visibility } = gridForecastResponse.result!.properties;
 
+	// Create functions to process the raw data by running conversions and adding precision.
 	const temperatureToPrecisionFahrenheit = wrapForPrecision(temperatureCelsiusToFahrenheit, configContext.configuration.weather.temperaturePrecision);
 	const percentToPrecision = wrapForPrecision(toPercent, configContext.configuration.weather.defaultPrecision + 2);
 	const windToPrecisionMiles = wrapForPrecision(windMetersPerSecondToMilesPerHour, configContext.configuration.weather.defaultPrecision);

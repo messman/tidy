@@ -15,6 +15,7 @@ export interface InterpretedAstro extends AllIssue {
 
 export function interpretAstro(configurationContext: APIConfigurationContext, intermediateAstro: IntermediateAstroValues): InterpretedAstro {
 
+	// If we have any errors from the data at the start, get out now.
 	if (intermediateAstro.errors) {
 		return {
 			errors: intermediateAstro.errors,
@@ -38,7 +39,9 @@ export function interpretAstro(configurationContext: APIConfigurationContext, in
 	let currentDayLongTermEvents: SunEvent[] = [];
 
 	intermediateAstro.sunEvents.forEach((s) => {
+		// Get the time in our time zone in a DateTime object.
 		const eventTime = configurationContext.action.parseDateForZone(s.time);
+		// Figure out if it's an event adjacent to our reference time.
 		if (eventTime < referenceTime) {
 			previousEvent = s;
 		}
@@ -46,8 +49,9 @@ export function interpretAstro(configurationContext: APIConfigurationContext, in
 			nextEvent = s;
 		}
 
-		// Short and long term will include the sunrise and sunset of the reference day.
+		// Short and long term will include the sunrise and sunset of the reference day itself.
 
+		// We will have data duplication between short and long term - it's just sunrise/sunset data, so not a big deal.
 		if (eventTime < shortTermLimit) {
 			shortTermEvents.push(s);
 		}

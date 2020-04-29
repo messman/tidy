@@ -106,7 +106,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 
 		let minTemp: number = Infinity;
 		let maxTemp: number = -Infinity;
-		let maxChanceRain: number = -Infinity;
+		let maxChanceRain: number = 0;
 
 		statuses.forEach((s) => {
 			const temp = s.temp.entity;
