@@ -16,3 +16,19 @@ export interface IntermediateWeatherValues extends AllIssue {
 
 	status: IterableTimeData<WeatherStatusType>[]
 }
+
+export function createEmptyIntermediateWeather(): IntermediateWeatherValues {
+	return {
+		errors: null!,
+		warnings: null!,
+		temp: null!,
+		tempFeelsLike: null!,
+		chanceRain: null!,
+		windDirection: null!,
+		wind: null!,
+		dewPoint: null!,
+		cloudCover: null!,
+		visibility: null!,
+		status: null!
+	}
+}

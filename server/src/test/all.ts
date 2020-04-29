@@ -13,6 +13,7 @@ import { IntermediateTideValues } from '../tide/tide-intermediate';
 import { IntermediateAstroValues } from '../astro/astro-intermediate';
 import { fetchTides } from '../tide/tide-fetch';
 import { fetchAstro } from '../astro/astro-fetch';
+import { fetchWeather } from '../weather/weather-fetch';
 
 export const allTestMerge: AllMergeFunc = async (configContext: APIConfigurationContext) => {
 
@@ -23,7 +24,10 @@ export const allTestMerge: AllMergeFunc = async (configContext: APIConfiguration
 	// const astroData = createAstroData(configContext);
 	const astroData = await fetchAstro(configContext);
 	const interpretedAstro = interpretAstro(configContext, astroData);
-	const interpretedWeather = interpretWeather(configContext, createWeatherData(configContext));
+
+	//const weatherData = createWeatherData(configContext)
+	const weatherData = await fetchWeather(configContext);
+	const interpretedWeather = interpretWeather(configContext, weatherData);
 
 	return {
 		errors: null,

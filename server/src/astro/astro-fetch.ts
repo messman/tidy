@@ -17,7 +17,7 @@ import { SunEvent } from "tidy-shared";
 
 export async function fetchAstro(configContext: APIConfigurationContext): Promise<IntermediateAstroValues> {
 
-	const { latitude, longitude } = configContext.configuration.astro;
+	const { latitude, longitude } = configContext.configuration.location;
 	const startDay = configContext.context.astro.minimumSunDataFetch;
 	const endDay = configContext.context.maxLongTermDataFetch;
 	const daysBetween = endDay.diff(startDay, 'days').days;
@@ -199,7 +199,7 @@ function calcGeomMeanAnomalySun(t: number) {
 
 function calcEccentricityEarthOrbit(t: number) {
 	var e = 0.016708634 - t * (0.000042037 + 0.0000001267 * t);
-	return e;		// unitless
+	return e;		// unit-less
 }
 
 function calcSunEqOfCenter(t: number) {

@@ -55,7 +55,7 @@ export enum Change {
 }
 
 export enum WindDirection {
-	N,
+	N = 0,
 	NNE,
 	NE,
 	ENE,

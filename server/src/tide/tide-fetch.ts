@@ -163,7 +163,7 @@ interface NOAARawErrorResponse {
 async function makeJSONRequest<T extends NOAARawErrorResponse>(options: any, name: string): Promise<FetchResponse<T>> {
 	const url = createRequestUrl(options);
 
-	const fetched = await getJSON<T>(url, name);
+	const fetched = await getJSON<T>(url, name, null);
 	const { issues, result } = fetched;
 	if (issues) {
 		// Short-circuit, because it doesn't matter.

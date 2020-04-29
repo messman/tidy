@@ -3,13 +3,16 @@ import { DateTime } from "luxon";
 export interface APIConfiguration {
 	configuration: {
 		location: {
+			/** Latitude used as part of sunrise/sunset calculation and weather lookup. */
+			latitude: number,
+			/** Longitude used as part of sunrise/sunset calculation and weather lookup. */
+			longitude: number,
 			/**
 			 * The timezone to use. This should match the location from which we're fetching data - like for Maine,
 			 * it will be America/New_York. 
 			 * Implementations should take care of DST offsets.
 			 */
 			timeZoneLabel: string
-
 		},
 
 		time: {
@@ -54,11 +57,6 @@ export interface APIConfiguration {
 			 * So if 2, subtracts 2 days and then goes to the beginning of that day.
 			 */
 			daysInPastToFetchSun: number,
-
-			/** Latitude used as part of sunrise/sunset calculation. */
-			latitude: number,
-			/** Longitude used as part of sunrise/sunset calculation. */
-			longitude: number,
 		},
 
 		weather: {

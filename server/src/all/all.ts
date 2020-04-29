@@ -7,6 +7,8 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 	return {
 		configuration: {
 			location: {
+				latitude: latitude,
+				longitude: longitude,
 				timeZoneLabel: timeZoneLabel
 			},
 			time: {
@@ -21,8 +23,6 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 			},
 			astro: {
 				daysInPastToFetchSun: 1,
-				latitude: latitude,
-				longitude: longitude
 			},
 			weather: {
 				hoursGapBetweenWeatherData: 3,

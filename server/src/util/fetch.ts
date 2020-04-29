@@ -11,7 +11,7 @@ export interface FetchResponse<T> {
  * Gets the JSON at the URL. If failed, won't throw. Instead result will be null and the issues array
  * will have an entry.
  */
-export async function getJSON<T>(url: string, name: string): Promise<FetchResponse<T>> {
+export async function getJSON<T>(url: string, name: string, headers: {} | null): Promise<FetchResponse<T>> {
 
 	function handleError(devMessage: string): FetchResponse<T> {
 		const userMessage = `error while fetching data for ${name}`;
@@ -24,7 +24,9 @@ export async function getJSON<T>(url: string, name: string): Promise<FetchRespon
 	}
 
 	try {
-		const res = await fetch.default(url);
+		const res = await fetch.default(url, {
+			headers: headers ? new fetch.Headers(headers) : undefined
+		});
 		if (res.ok) {
 			const json = await res.json();
 			return {
