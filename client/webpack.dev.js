@@ -11,7 +11,7 @@ DEFINE.fetchUrl = JSON.stringify('http://localhost:8000/latest');
 module.exports = merge(base.base, {
 	mode: "development",
 
-	devtool: "cheap-module-source-map",
+	devtool: "source-map",
 
 	devServer: {
 		port: 8888,

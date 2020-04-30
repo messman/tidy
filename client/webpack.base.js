@@ -35,8 +35,9 @@ const baseWebpackOptions = {
 	entry: {
 		index: "./src/entries/entry-index.tsx",
 		vendor: [
-			"react",
-			"react-dom",
+			'react',
+			'react-dom',
+			'styled-components'
 		]
 	},
 	output: {
