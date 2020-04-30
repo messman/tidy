@@ -16,19 +16,12 @@
 		"url": "https://github.com/messman/tidy-api/issues"
 	},
 	"homepage": "https://github.com/messman/tidy-api#readme",
-	"devDependencies": {
-		"@types/express": "^4.17.0",
-		"@types/luxon": "^1.15.2",
-		"@types/morgan": "^1.7.35",
-		"@types/node": "^10.17.19",
-		"@types/node-fetch": "^2.3.7",
-		"typescript": "^3.8.0"
-	},
 	"dependencies": {
-		"body-parser": "^1.18.3",
-		"express": "^4.16.3",
-		"luxon": "^1.17.1",
-		"morgan": "^1.9.1",
-		"node-fetch": "^2.2.0"
+		"express": "^4.17.1"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.6",
+		"@types/node": "^10.17.21",
+		"typescript": "^3.8.3"
 	}
 }

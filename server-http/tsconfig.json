@@ -1,19 +1,14 @@
 {
 	"extends": "../tsconfig-base.json",
 	"compilerOptions": {
-		"rootDir": ".",
-		"outFile": "./dist/shared.js",
+		"module": "commonjs",
+		"sourceMap": true,
+		"declaration": false,
+		"declarationMap": false,
+		"incremental": false,
+		"outDir": "./dist",
 	},
-	"exclude": [
-		"node_modules"
-	],
 	"include": [
-		"**/*",
-		"../shared/build.ts"
-	],
-	"references": [
-		{
-			"path": "../shared"
-		}
+		"./src/**/*.ts",
 	]
 }

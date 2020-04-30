@@ -1,32 +1,108 @@
-import express from "express";
-import morgan from "morgan";
-import bodyParser from "body-parser";
+import { Application, Request, Response, NextFunction } from 'express';
+import { createWellsConfiguration, getAllForConfiguration } from 'tidy-server';
+import { AllResponse } from 'tidy-shared';
 
-export const app = express();
+export function configureApp(app: Application): void {
+	addRoutes(app);
 
-app.use(morgan("dev"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+	// 404 handler
+	app.use(function (_request: Request, response: Response, _next: NextFunction) {
+		response.status(404).send("Not Found");
+	});
 
-import { router as proxyRouter } from "./routes/proxy";
+	// Error handler
+	app.use(function (error: Error, _request: Request, response: Response, _next: NextFunction) {
+		console.error(error.stack)
+		response.status(500).send('Server Error');
+	});
+}
 
-// Fall-through
-app.use("/", proxyRouter);
+const isCaching: boolean = false;
+const cacheExpirationMilliseconds: number = 1000 * 60 * 10; // 10 minutes
 
-// Catch 404 and forward to error handler
-app.use(function (req, res, next) {
-	var err = new Error("Not Found");
-	err["status"] = 404;
-	next(err);
-});
+function addRoutes(app: Application) {
 
-// Error handler
-app.use(function (err, req, res, next) {
-	// Set locals, only providing error in development
-	res.locals.message = err.message;
-	res.locals.error = req.app.get("env") === "development" ? err : {};
+	const stats: StatsResponse = {
+		totalCacheBreaks: 0,
+		recentCacheHits: 0,
+		totalCacheHits: 0,
+		totalHits: 0
+	};
 
-	// Render the error page
-	res.status(err.status || 500);
-	res.send("error");
-});
+	let last: AllResponse | null = null;
+	let cacheExpirationTime: number = -1;
+
+	app.get("/latest", async (_: Request, response: Response<LatestResponse>) => {
+		stats.totalHits++;
+
+		if (isCaching) {
+			const now = Date.now();
+
+			// Check in cache.
+			if (last && (now < cacheExpirationTime)) {
+				stats.recentCacheHits++;
+				stats.totalCacheHits++;
+
+				return response.json({
+					allResponse: last,
+					isFromCache: true,
+					cacheTimeRemaining: cacheExpirationTime - now
+				});
+			}
+			else {
+				stats.totalCacheBreaks++;
+				stats.recentCacheHits = 0;
+			}
+		}
+
+		last = await getResponse();
+		cacheExpirationTime = Date.now() + cacheExpirationMilliseconds;
+
+		return response.json({
+			allResponse: last,
+			isFromCache: false,
+			cacheTimeRemaining: cacheExpirationMilliseconds
+		});
+	});
+
+	app.get("/last", async (_: Request, response: Response<LastResponse>) => {
+		if (!last) {
+			return response.json({
+				allResponse: null,
+				cacheTimeRemaining: 0
+			});
+		}
+
+		return response.json({
+			allResponse: last,
+			cacheTimeRemaining: Date.now() - cacheExpirationTime
+		});
+	});
+
+	app.get("/stats", async (_: Request, res: Response<StatsResponse>) => {
+		return res.json(stats);
+	});
+}
+
+async function getResponse(): Promise<AllResponse> {
+	const configuration = createWellsConfiguration();
+	return await getAllForConfiguration(configuration);
+}
+
+interface LatestResponse {
+	allResponse: AllResponse,
+	isFromCache: boolean,
+	cacheTimeRemaining: number
+}
+
+interface LastResponse {
+	allResponse: AllResponse | null,
+	cacheTimeRemaining: number
+}
+
+interface StatsResponse {
+	totalCacheBreaks: number,
+	recentCacheHits: number,
+	totalCacheHits: number,
+	totalHits: number,
+}
