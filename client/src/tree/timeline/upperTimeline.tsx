@@ -1,14 +1,13 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/theme";
 import { Weather } from "./weather/weather";
 import { TimeBar } from "./timeBar/timeBar";
-import { WeatherEvent } from "../../../../data";
+import { WeatherStatus } from "tidy-shared";
 
 interface UpperTimelineProps {
 }
 
-export const UpperTimeline: StyledFC<UpperTimelineProps> = (props) => {
+export const UpperTimeline: StyledFC<UpperTimelineProps> = () => {
 
 	return (
 		<div>
@@ -29,7 +28,7 @@ const SeparatorBar = styled.div`
  * Check here for wether flags that might go past the cutoff date when rendered in this app. 
  */
 const cutoffHoursBefore = 3; // 3 hours before cutoff date (3 hours itself is okay)
-export function filterWeatherEvents(events: WeatherEvent[], cutoffDate: Date): WeatherEvent[] {
+export function filterWeatherEvents(events: WeatherStatus[], cutoffDate: Date): WeatherStatus[] {
 	const cutoff = new Date(cutoffDate);
 	cutoff.setHours(cutoff.getHours() - cutoffHoursBefore);
 	return events.filter(function (event) {

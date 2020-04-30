@@ -20,7 +20,7 @@ function useResponsiveLayout(pickLayout: PickLayout): number {
 	return layout;
 }
 
-const ResponsiveLayoutCtx = createContext<number>(null);
+const ResponsiveLayoutCtx = createContext<number>(null!);
 export const useResponsiveLayoutContext = () => useContext<number>(ResponsiveLayoutCtx);
 
 export interface ResponsiveLayoutProviderProps {

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Flex, FlexRow } from "@/unit/components/flex";
 import styled, { css, ThemedCSS } from "@/styles/theme";
 import * as C from "@/styles/common";
 
@@ -7,10 +6,7 @@ export const aboutBackgroundColor: ThemedCSS = css`
 	background-image: linear-gradient(91deg, ${props => props.theme.color.bgDark} 0%, ${props => props.theme.color.layerMed} 99%);
 `;
 
-interface AboutProps {
-}
-
-export const About: React.FC<AboutProps> = (props) => {
+export const About: React.FC = () => {
 	return (
 		<ScrollPadding>
 			<C.Section>

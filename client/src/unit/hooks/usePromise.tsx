@@ -9,8 +9,8 @@ export interface PromiseState<T> {
 export function usePromise<T>(promiseFunc: () => Promise<T>): PromiseState<T> {
 	const [state, setState] = useState<PromiseState<T>>({
 		isLoading: true,
-		success: null,
-		error: null
+		success: null!,
+		error: null!
 	});
 
 	const isFirstRun = useRef(true);
@@ -22,13 +22,13 @@ export function usePromise<T>(promiseFunc: () => Promise<T>): PromiseState<T> {
 				setState({
 					isLoading: false,
 					success: resp,
-					error: null,
+					error: null!,
 				});
 			})
 			.catch((err: Error) => {
 				setState({
 					isLoading: false,
-					success: null,
+					success: null!,
 					error: err
 				});
 			});

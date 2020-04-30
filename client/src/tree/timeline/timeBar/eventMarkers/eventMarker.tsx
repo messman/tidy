@@ -1,7 +1,4 @@
-import * as React from "react";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
-import { useAppDataContext } from "@/tree/appData";
-
+import styled, { css } from "@/styles/theme";
 
 const sharedMarkerStyles = css`
 	position: absolute;

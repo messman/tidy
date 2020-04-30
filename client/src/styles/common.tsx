@@ -1,6 +1,5 @@
 import styled, { css } from "./theme";
 import { Flex } from "@/unit/components/flex";
-import * as React from "react";
 
 export const FlexPadding = styled(Flex)`
 	padding: 1rem;

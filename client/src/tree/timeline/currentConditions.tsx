@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS } from "@/styles/theme";
+import { Flex } from "@/unit/components/flex";
+import styled from "@/styles/theme";
 import * as C from "@/styles/common";
 import { TextPlaceholder } from "@/styles/placeholder";
 import { createPrettyTimespan } from "@/services/time";
@@ -9,7 +9,7 @@ import { useAppDataContext } from "../appData";
 interface CurrentConditionsProps {
 }
 
-export const CurrentConditions: React.FC<CurrentConditionsProps> = (props) => {
+export const CurrentConditions: React.FC<CurrentConditionsProps> = () => {
 
 	const { isLoading, success } = useAppDataContext();
 
@@ -17,18 +17,18 @@ export const CurrentConditions: React.FC<CurrentConditionsProps> = (props) => {
 	let weatherText = "";
 	let sunText = "";
 	let windText = "";
-	if (!isLoading && success && success.success) {
-		const { weather, sun } = success.success.current;
+	if (!isLoading && success && success.data) {
+		const { weather, sun } = success.data!.current;
 
-		tempText = `${weather.temp} ${weather.tempUnit}`;
-		weatherText = weather.status;
-		if (weather.status !== 'raining') {
-			weatherText += `, ${weather.chanceRain * 100}% chance for rain`;
+		tempText = `${weather.temp} F`;
+		weatherText = weather.status.toString();
+		if (weatherText !== 'raining') {
+			weatherText += `, ${weather.chanceRain.entity! * 100}% chance for rain`;
 		}
 
-		sunText = `${sun.next.isSunrise ? "Sunrise" : "Sunset"} ${createPrettyTimespan(sun.next.time.getTime() - success.info.time.getTime())}`
+		sunText = `${sun.next.isSunrise ? "Sunrise" : "Sunset"} ${createPrettyTimespan(sun.next.time.getTime() - success.info.referenceTime.getTime())}`
 
-		windText = `${weather.wind} ${weather.windUnit} winds, ${weather.windDirection}`;
+		windText = `${weather.wind} mph winds, ${weather.windDirection}`;
 	}
 
 	return (

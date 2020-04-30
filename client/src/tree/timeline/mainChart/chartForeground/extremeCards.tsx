@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
-import { timeToPixels, isSameDay, createPrettyTime } from "@/services/time";
-import { TideEvent } from "../../../../../../data";
+import { timeToPixels, createPrettyTime } from "@/services/time";
+import { TideEvent } from "tidy-shared";
 
 interface ExtremeCardsProps {
 	heightInPixels: number;
@@ -17,11 +16,11 @@ export const ExtremeCards: StyledFC<ExtremeCardsProps> = (props) => {
 		return null;
 	}
 
-	const startTime = success.info.time;
-	const tides = success.success.predictions.tides;
+	const startTime = success.info.referenceTime;
+	const tides = success.data!.predictions.tides;
 	const tideEvents = tides.events;
-	const maxHeight = tides.maxHeight;
-	const minHeight = tides.minHeight;
+	const maxHeight = tides.highest.height;
+	const minHeight = tides.lowest.height;
 
 	const cards = tideEvents.map(function (tideEvent, index) {
 		if (index === tideEvents.length - 1) {
@@ -79,7 +78,7 @@ const _ExtremeCard: StyledFC<ExtremeCardProps> = (props) => {
 		</>
 	);
 
-	let content: JSX.Element = null;
+	let content: JSX.Element | null = null;
 	if (!props.tideEvent.isLow) {
 		content = (
 			<>

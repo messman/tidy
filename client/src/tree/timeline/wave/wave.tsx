@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import { Flex, FlexColumn } from "@/unit/components/flex";
+import styled, { StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
@@ -26,25 +26,25 @@ export interface WaveAnimationOptions {
 export const Wave: React.FC<WaveProps> = (props) => {
 	const { isLoading, success } = useAppDataContext();
 
-	const ref = useRef<HTMLDivElement>(null);
+	const ref = useRef<HTMLDivElement>(null!);
 	const size = useElementSize(ref, 300);
 
-	let animationOptions0: SVGWaveAnimationOptions = null;
-	let animationOptions1: SVGWaveAnimationOptions = null;
-	let animationOptions2: SVGWaveAnimationOptions = null;
+	let animationOptions0: SVGWaveAnimationOptions | null = null;
+	let animationOptions1: SVGWaveAnimationOptions | null = null;
+	let animationOptions2: SVGWaveAnimationOptions | null = null;
 	let lowerTimelinePadding: JSX.Element = <C.TimelinePadding />;
-	let percentView: JSX.Element = null;
+	let percentView: JSX.Element = null!;
 
 	// Visual height percent is what the user will believe is for between prev and next, but 
 	// is actually between short-term min and max to match the chart.
 	// The numbers we display will match so nbd.
 	let visualHeightPercent = -1;
 
-	if (!isLoading && success && success.success && !size.isSizing) {
-		const tides = success.success.current.tides;
-		const predictTides = success.success.predictions.tides;
+	if (!isLoading && success && success.data && !size.isSizing) {
+		const tides = success.data!.current.tides;
+		const predictTides = success.data!.predictions.tides;
 
-		visualHeightPercent = (tides.height - predictTides.minHeight) / (predictTides.maxHeight - predictTides.minHeight);
+		visualHeightPercent = (tides.height - predictTides.lowest.height) / (predictTides.highest.height - predictTides.lowest.height);
 		// Turn into a rough sine wave
 		// y = .5sin(xpi - .5pi) + .5 from 0 to 1
 		visualHeightPercent = .5 * Math.sin((visualHeightPercent * Math.PI) - (.5 * Math.PI)) + .5;
@@ -54,7 +54,7 @@ export const Wave: React.FC<WaveProps> = (props) => {
 		percentView = <PercentView
 			height={tides.height}
 			visualHeightPercent={visualHeightPercent}
-			eventHeightPercent={tides.percentBetweenPrevNext}
+			eventHeightPercent={.5}
 		/>
 
 		const {
@@ -113,21 +113,21 @@ export const Wave: React.FC<WaveProps> = (props) => {
 						width={size.width}
 						height={size.height}
 						heightPercent={visualHeightPercent}
-						animationOptions={animationOptions0}
+						animationOptions={animationOptions0!}
 					/>
 					<SVGWave
 						index={1}
 						width={size.width}
 						height={size.height}
 						heightPercent={visualHeightPercent}
-						animationOptions={animationOptions1}
+						animationOptions={animationOptions1!}
 					/>
 					<SVGWave
 						index={2}
 						width={size.width}
 						height={size.height}
 						heightPercent={visualHeightPercent}
-						animationOptions={animationOptions2}
+						animationOptions={animationOptions2!}
 					/>
 				</Flex>
 				{lowerTimelinePadding}
@@ -150,7 +150,7 @@ const LowerTimelinePadding = styled(C.TimelinePadding)`
 `;
 
 export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
-	let wave: JSX.Element = null;
+	let wave: JSX.Element | null = null;
 
 	const { width, height, heightPercent, index } = props;
 	if (width > 1 && height > 1 && heightPercent !== -1) {

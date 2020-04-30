@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import { Flex } from "@/unit/components/flex";
+import styled, { StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
-import { timeToPixels, isSameDay } from "@/services/time";
-import { Point, createChartLine, ChartLineInput, makeRect, Rect, SVGPath } from "@/services/bezier";
+import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 import { ExtremeCards } from "./extremeCards";
@@ -12,28 +11,28 @@ import { ExtremeCards } from "./extremeCards";
 interface ChartForegroundProps {
 }
 
-export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
+export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 	const { isLoading, success } = useAppDataContext();
-	const ref = useRef<HTMLDivElement>(null);
+	const ref = useRef<HTMLDivElement>(null!);
 	const size = useElementSize(ref, 300);
 
 	if (isLoading || !success) {
 		return null;
 	}
 
-	let fillSVG: JSX.Element = null;
-	let strokeSVG: JSX.Element = null;
+	let fillSVG: JSX.Element | null = null;
+	let strokeSVG: JSX.Element | null = null;
 	let lowerTimelinePadding: JSX.Element = <C.TimelinePadding />;
 
 	if (size.width > 1 && size.height > 1) {
 		lowerTimelinePadding = <LowerTimelinePadding />;
 
-		const startTime = success.info.time;
-		const endTime = success.success.predictions.cutoffDate;
+		const startTime = success.info.referenceTime;
+		const endTime = success.data!.predictions.cutoffDate;
 
 
-		const previous = success.success.current.tides.previous;
-		const tidePredictions = success.success.predictions.tides;
+		const previous = success.data!.current.tides.previous;
+		const tidePredictions = success.data!.predictions.tides;
 		const allTides = [previous, ...tidePredictions.events];
 		const points: Point[] = allTides.map(function (t) {
 			return {
@@ -42,8 +41,8 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = (props) => {
 			};
 		});
 
-		const min = tidePredictions.minHeight;
-		const max = tidePredictions.maxHeight;
+		const min = tidePredictions.lowest.height;
+		const max = tidePredictions.highest.height;
 
 		const chartLineInput: ChartLineInput = {
 			points: points,

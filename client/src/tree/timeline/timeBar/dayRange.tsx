@@ -1,6 +1,5 @@
 import * as React from "react";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
-import * as C from "@/styles/common";
+import styled, { StyledFC } from "@/styles/theme";
 import { pixelsPerDay, isSameDay, timeToPixels } from "@/services/time";
 import { FullDay } from "./fullDay";
 
@@ -16,7 +15,7 @@ export const DayRange: StyledFC<DayRangeProps> = (props) => {
 	const { startTime, sunrise, sunset } = props;
 
 	let width = pixelsPerDay;
-	let timeInDay: Date = null;
+	let timeInDay: Date = null!;
 	if (isSameDay(startTime, sunrise)) {
 		timeInDay = startTime;
 		const nextDay = new Date(startTime.getTime());

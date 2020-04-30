@@ -29,15 +29,15 @@ export function useWindowDimensions() {
 	return dimensions;
 }
 
-const WindowDimensionsCtx = createContext<WindowDimensions>(null);
+const WindowDimensionsCtx = createContext<WindowDimensions>(null!);
 export const useWindowDimensionsContext = () => useContext(WindowDimensionsCtx);
 
-export const WindowDimensionsProvider = ({ children }) => {
+export const WindowDimensionsProvider = (props: React.ComponentProps<any>) => {
 	const dimensions = useWindowDimensions();
 
 	return (
 		<WindowDimensionsCtx.Provider value={dimensions}>
-			{children}
+			{props.children}
 		</WindowDimensionsCtx.Provider>
 	)
 }

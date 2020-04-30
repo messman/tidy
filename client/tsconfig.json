@@ -1,19 +1,17 @@
 {
 	"extends": "../tsconfig-base.json",
 	"compilerOptions": {
-		"rootDir": ".",
-		"outFile": "./dist/shared.js",
+		"lib": [
+			"DOM",
+			"ES2015"
+		],
+		"target": "ES2015",
 		"jsx": "react",
-		"module": "esnext",
-		"moduleResolution": "node",
+		"outDir": "./ts-build",
 		"baseUrl": ".",
-		"outDir": "./build",
 		"paths": {
 			"@/*": [
-				"*"
-			],
-			"@shared/*": [
-				"../shared/*"
+				"src/*"
 			]
 		}
 	},
@@ -21,12 +19,6 @@
 		"node_modules"
 	],
 	"include": [
-		"**/*"
-	],
-	"references": [
-		{
-			"path": "../shared"
-		}
-	],
-	"compileOnSave": false
+		"src/**/*"
+	]
 }

@@ -1,13 +1,13 @@
 import * as React from "react";
 import { usePromise, PromiseState } from "@/unit/hooks/usePromise";
 import { createContext, useContext } from "react";
-import { mockDataCall } from "@/data/mock";
-import { APIResponse } from "../../../data";
+import { getData } from "@/services/data";
+import { AllResponse } from "tidy-shared";
 
-const AppDataContext = createContext<PromiseState<APIResponse>>(null);
+const AppDataContext = createContext<PromiseState<AllResponse>>(null!);
 
 export const AppDataProvider: React.FC = (props) => {
-	const promiseState = usePromise(() => mockDataCall(650, true));
+	const promiseState = usePromise(() => getData(650));
 
 	return (
 		<AppDataContext.Provider value={promiseState}>

@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS } from "@/styles/theme";
+import { Flex, FlexRow } from "@/unit/components/flex";
+import styled, { css } from "@/styles/theme";
 import * as C from "@/styles/common";
-import { WeatherEvent, TideEvent, DailyInfo } from "../../../../../data";
-import { createPrettyTime, isSameDay, createPrettyDate, createPrettyDateDay } from "@/services/time";
+import { TideEvent, AllDailyDay } from 'tidy-shared';
+import { createPrettyTime, isSameDay, createPrettyDateDay } from "@/services/time";
 import { DailyChart } from "./dailyChart";
 
 export interface DailyViewProps {
@@ -12,7 +12,7 @@ export interface DailyViewProps {
 	maxHour: number,
 	minTideHeight: number,
 	maxTideHeight: number,
-	dailyEvent: DailyInfo
+	dailyEvent: AllDailyDay
 }
 
 export const DailyView: React.FC<DailyViewProps> = (props) => {
@@ -24,14 +24,14 @@ export const DailyView: React.FC<DailyViewProps> = (props) => {
 	const maxHour = new Date(daily.date);
 	maxHour.setHours(props.maxHour, 0, 0, 0);
 
-	let qualifiedTideEvents = daily.tides
+	let qualifiedTideEvents = daily.tides.events
 		.filter(function (tide) {
 			// between 
 			return isSameDay(tide.time, daily.date) && tide.time >= minHour && tide.time <= maxHour;
 		});
 
 	// Either 2 or 3 for the max/min value that we currently have.
-	let tideEventsText: JSX.Element = null;
+	let tideEventsText: JSX.Element | null = null;
 	if (qualifiedTideEvents.length === 2) {
 		tideEventsText = (
 			<>
@@ -71,7 +71,7 @@ export const DailyView: React.FC<DailyViewProps> = (props) => {
 						<WeatherText>{daily.weather.status}</WeatherText>
 					</Flex>
 					<Flex>
-						<RainText>{daily.weather.chanceRain * 100}%</RainText>
+						<RainText>{daily.weather.maxChanceRain * 100}%</RainText>
 					</Flex>
 				</FlexRow>
 				<DailyChart
@@ -140,11 +140,6 @@ const TideText: React.FC<TideTextProps> = (props) => {
 		</NoShrinkFlex>
 	);
 }
-
-const TideTextContainer = styled.div`
-	${commonUpperText}
-	padding-top: 0;
-`;
 
 const LongText = styled(C.SmallText)`
 	white-space: nowrap;

@@ -1,17 +1,16 @@
-// These definitions are set in your webpack config.
-// Will fail if not set proerly in the webpack config.
+import { AllResponse } from 'tidy-shared';
+
+/*
+	These definitions are set in the webpack config and resolved at build time.
+ */
 
 declare let webpack: { [key: string]: any };
 
 export const DEFINE = {
-	BUILD: {
-		IS_PRODUCTION: webpack.BUILD.IS_PRODUCTION as boolean,
-		VERSION: webpack.BUILD.VERSION as string,
-		TIME: webpack.BUILD.TIME as number
-	},
-	DEBUG: {
-		LOCAL_REQUEST_DATA: webpack.DEBUG.LOCAL_REQUEST_DATA as boolean
-	}
+	buildVersion: webpack.buildVersion as string,
+	buildTime: webpack.buildTime as number,
+	localTestData: webpack.localTestData as AllResponse,
+	fetchUrl: webpack.fetchUrl as string
 };
 
 // Make these public on the window for us to easily check

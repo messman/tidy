@@ -1,43 +1,35 @@
 const path = require("path");
 
 const CopyPlugin = require('copy-webpack-plugin');
-
-const buildTime = (new Date()).getTime();
-const version = "1.1.0"; // AGM_QT_V
-
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 
 // Cleans a directory
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const htmlPluginOptions = {
-	title: "Quick-Tides",
 	filename: "./index.html",
 	template: "./src/index.template.ejs",
 	minify: false,
 	xhtml: true, // Use XHTML-compliance
-	user: {
-		buildTime: buildTime,
-		version: version
-	}
 };
 
 /*
-	Note, when using DefinePlugin, webpack will parse the JS, not do a simple find-and-replace.
-	so "webpack" should not be a variable, but instead just a TS interface or "declare let" or similar.
+Should match code in the source directory.
+Note, when using DefinePlugin, webpack will parse the JS, not do a simple find-and-replace.
+so "webpack" should not be a variable, but instead just a TS interface or "declare let" or similar.
 */
+const buildTime = (new Date()).getTime();
+const version = "1.1.0"; // AGM_QT_V
 const DEFINE = {
 	webpack: {
-		BUILD: {
-			IS_PRODUCTION: JSON.stringify(true),
-			VERSION: JSON.stringify(version),
-			TIME: JSON.stringify(buildTime)
-		},
-		DEBUG: {
-			LOCAL_REQUEST_DATA: JSON.stringify(true)
-		}
+		buildVersion: JSON.stringify(version),
+		buildTime: JSON.stringify(buildTime),
+
+		// Overwritten by dev/prod builds
+		localTestData: JSON.stringify(null),
+		fetchUrl: JSON.stringify(null)
 	}
-}
+};
 
 const baseWebpackOptions = {
 	entry: {

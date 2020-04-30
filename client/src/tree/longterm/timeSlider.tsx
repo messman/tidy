@@ -1,10 +1,7 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS } from "@/styles/theme";
+import { Flex, FlexRow } from "@/unit/components/flex";
+import styled from "@/styles/theme";
 import * as C from "@/styles/common";
-import { useAppDataContext } from "../appData";
-import { DailyView, DailyViewProps } from "./dailyView/dailyView";
-import { createPrettyHour } from "@/services/time";
 
 interface TimeSliderProps {
 	minHour: number,

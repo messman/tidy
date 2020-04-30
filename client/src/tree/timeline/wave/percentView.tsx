@@ -1,11 +1,6 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import styled from "@/styles/theme";
 import * as C from "@/styles/common";
-import { useRef } from "react";
-import { useElementSize } from "@/unit/hooks/useElementSize";
-import { useAppDataContext } from "@/tree/appData";
-import * as Bezier from "@/services/bezier";
 
 interface PercentViewProps {
 	visualHeightPercent: number,

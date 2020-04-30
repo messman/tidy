@@ -1,11 +1,9 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/theme";
 import { useAppDataContext } from "@/tree/appData";
-import { timeToPixels } from "@/services/time";
 import { DayRange } from "./dayRange";
-import { SunEvent } from "../../../../../data";
 import { EventMarkers } from "./eventMarkers/eventMarkers";
+import { SunEvent } from "tidy-shared";
 
 // IMPORTANT ASSUMPTION - there is always a sunrise for a sunset in the returned data.
 
@@ -14,14 +12,14 @@ interface TimeBarProps {
 }
 
 
-export const TimeBar: StyledFC<TimeBarProps> = (props) => {
+export const TimeBar: StyledFC<TimeBarProps> = () => {
 
 	const { isLoading, success } = useAppDataContext();
 
-	let days: JSX.Element = null;
-	if (!isLoading && success && success.success) {
-		const startTime = success.info.time;
-		const events = success.success.predictions.sun;
+	let days: JSX.Element | null = null;
+	if (!isLoading && success && success.data) {
+		const startTime = success.info.referenceTime;
+		const events = success.data!.predictions.sun;
 
 		const dayEvents = groupByDays(events);
 
@@ -70,8 +68,8 @@ function groupByDays(sunEvents: SunEvent[]): SunEventGroup[] {
 		const dayKey = `${time.getMonth()}_${time.getDate()}`;
 		if (!days[dayKey]) {
 			days[dayKey] = {
-				sunrise: null,
-				sunset: null
+				sunrise: null!,
+				sunset: null!
 			};
 		}
 		const day = days[dayKey];

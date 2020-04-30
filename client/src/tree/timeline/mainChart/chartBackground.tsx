@@ -1,22 +1,21 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/theme";
 import { useAppDataContext } from "@/tree/appData";
-import { timeToPixels, isSameDay } from "@/services/time";
+import { timeToPixels } from "@/services/time";
 
 interface ChartBackgroundProps {
 }
 
-export const ChartBackground: StyledFC<ChartBackgroundProps> = (props) => {
+export const ChartBackground: StyledFC<ChartBackgroundProps> = () => {
 	const { isLoading, success } = useAppDataContext();
 	if (isLoading || !success) {
 		return null;
 	}
 
 	let eventLines: JSX.Element[] = [];
-	if (!isLoading && success && success.success) {
-		const startTime = success.info.time;
-		const sunEvents = success.success.predictions.sun;
+	if (!isLoading && success && success.data) {
+		const startTime = success.info.referenceTime;
+		const sunEvents = success.data!.predictions.sun;
 		sunEvents.forEach(function (ev) {
 			const key = `d_${ev.time.getTime()}`;
 			eventLines.push(<SunEventLine key={key} positionLeft={timeToPixels(startTime, ev.time)} />);

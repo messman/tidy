@@ -1,21 +1,16 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS } from "@/styles/theme";
-import * as C from "@/styles/common";
-import { useResponsiveLayoutContext } from "@/unit/hooks/useResponsiveLayout";
-import { ResponsiveLayoutType, getLayoutRange } from "../responsiveLayout";
-import { APIResponse } from "../../../../data";
+import { FlexRow, FlexColumn } from "@/unit/components/flex";
+import styled from "@/styles/theme";
+import { ResponsiveLayoutType } from "../responsiveLayout";
 import { CurrentConditions } from "./currentConditions";
 import { Wave, WaveAnimationOptions } from "./wave/wave";
 import { UpperTimeline } from "./upperTimeline";
-import { useAppDataContext } from "../appData";
 import { MainChart } from "./mainChart/mainChart";
 
 interface TimelineProps {
 }
 
 export const Timeline: React.FC<TimelineProps> = (props) => {
-	const layout = useResponsiveLayoutContext();
 
 	const waveAnimationOptions: WaveAnimationOptions = {
 		amplitude: 10,

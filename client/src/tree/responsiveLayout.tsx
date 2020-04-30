@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "@/styles/theme";
 import { WindowDimensions } from "@/unit/hooks/useWindowDimensions";
-import { Flex, FlexColumn, FlexRow } from "@/unit/components/flex";
+import { FlexColumn, FlexRow } from "@/unit/components/flex";
 
 
 export enum ResponsiveLayoutType {
@@ -16,15 +16,15 @@ const layoutKeys = Object.keys(ResponsiveLayoutType).filter(function (key) {
 
 export function pickLayout(dimensions: WindowDimensions): number {
 	return ResponsiveLayoutType[layoutKeys.find(function (key) {
-		return dimensions.width > ResponsiveLayoutType[key];
-	})];
+		return dimensions.width > ResponsiveLayoutType[key as keyof typeof ResponsiveLayoutType];
+	}) as keyof typeof ResponsiveLayoutType];
 }
 
 export function getLayoutRange(layoutType: ResponsiveLayoutType): [number, number | null] {
 	const index = layoutKeys.findIndex(function (key) {
-		return ResponsiveLayoutType[key] === layoutType;
+		return ResponsiveLayoutType[key as keyof typeof ResponsiveLayoutType] === layoutType;
 	});
-	return [ResponsiveLayoutType[layoutKeys[index]], index === 0 ? null : ResponsiveLayoutType[layoutKeys[index - 1]]]
+	return [ResponsiveLayoutType[layoutKeys[index] as keyof typeof ResponsiveLayoutType], index === 0 ? null : ResponsiveLayoutType[layoutKeys[index - 1] as keyof typeof ResponsiveLayoutType]]
 }
 
 interface ResponsiveLayoutProps {
@@ -42,7 +42,7 @@ interface ResponsiveLayoutProps {
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	const { header, timeline, sidebar, overlay, footer } = props;
 
-	let layoutElements: JSX.Element = null;
+	let layoutElements: JSX.Element = null!;
 	if (props.fillWithOverlay) {
 		layoutElements = overlay;
 	}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled, { StyledFC } from "@/styles/theme";
 
-interface FlexProps {
+export interface FlexProps {
 	flex?: number | "none";
 }
 

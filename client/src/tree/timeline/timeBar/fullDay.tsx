@@ -1,7 +1,7 @@
 import * as React from "react";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import styled, { css, StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
-import { pixelsPerDay, isSameDay, timeToPixels, createPrettyTime, createPrettyDate } from "@/services/time";
+import { pixelsPerDay, timeToPixels, createPrettyTime, createPrettyDate } from "@/services/time";
 
 interface FullDayProps {
 	timeInDay: Date,
@@ -24,12 +24,12 @@ export const FullDay: React.FC<FullDayProps> = (props) => {
 	const startDayName = !!timeInDay ? null : <DayNameStartText>{dayName}</DayNameStartText>;
 	const endDayName = <DayNameEndText>{dayName}</DayNameEndText>;
 
-	let sunriseTime: JSX.Element = null;
+	let sunriseTime: JSX.Element | null = null;
 	if (!timeInDay || timeToPixels(timeInDay, sunrise) > 100) {
 		sunriseTime = <SunEventText leftOffset={sunrisePx}>Sunrise {createPrettyTime(sunrise)}</SunEventText>
 	}
 
-	let sunsetTime: JSX.Element = null;
+	let sunsetTime: JSX.Element | null = null;
 	if (!timeInDay || timeToPixels(timeInDay, sunset) > 100) {
 		sunsetTime = <SunEventText leftOffset={sunsetPx}>Sunset {createPrettyTime(sunset)}</SunEventText>
 	}

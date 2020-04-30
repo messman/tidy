@@ -1,15 +1,12 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS } from "@/styles/theme";
-import { RSuccessCurrent, RError, APIResponse } from "../../../../data";
+import styled from "@/styles/theme";
 import { HeaderTitle } from "./headerTitle";
 import { HeaderSubTitle } from "./headerSubTitle";
-import { useAppDataContext } from "../appData";
 
 interface HeaderProps {
 }
 
-export const Header: React.FC<HeaderProps> = (props) => {
+export const Header: React.FC<HeaderProps> = () => {
 
 	return (
 		<HeaderPadding>

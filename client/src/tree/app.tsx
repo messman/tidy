@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { usePromise } from "@/unit/hooks/usePromise";
 import { useResponsiveLayoutContext } from "@/unit/hooks/useResponsiveLayout";
 import { ResponsiveLayout, ResponsiveLayoutType } from "./responsiveLayout";
 import { Footer } from "./footer/footer";
@@ -10,10 +9,8 @@ import { FlexColumn } from "@/unit/components/flex";
 import styled from "@/styles/theme";
 import { About, aboutBackgroundColor } from "./about/about";
 import { LongTerm } from "./longterm/longterm";
-import { mockDataCall } from "@/data/mock"
 import { Header } from "./header/header";
 import { Timeline } from "./timeline/timeline";
-import { AppDataProvider } from "./appData";
 
 
 interface AppProps {
@@ -38,7 +35,7 @@ function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggle
 	return state;
 }
 
-export const App: React.FC<AppProps> = (props) => {
+export const App: React.FC<AppProps> = () => {
 	const layout = useResponsiveLayoutContext();
 
 	const [dualToggleState, setDualToggleState] = useState<DualToggleState>(decideDualToggleState(FooterToggleState.visible, FooterToggleState.visible, layout));
@@ -70,7 +67,7 @@ export const App: React.FC<AppProps> = (props) => {
 		<Root>
 			<BackgroundFill
 				fillWithSidebar={fillWithSidebar}
-				sidebarCss={null}
+				sidebarCss={null!}
 				fillWithOverlay={fillWithOverlay}
 				overlayCss={aboutBackgroundColor}
 			>

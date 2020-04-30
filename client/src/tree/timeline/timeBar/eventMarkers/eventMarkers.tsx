@@ -1,31 +1,29 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/theme";
 import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels, isSameDay } from "@/services/time";
 import { WeatherEventMarker, DayEventMarker, TideEventMarker } from "./eventMarker";
-import { SunEvent, WeatherEvent } from "../../../../../../data";
 import { filterWeatherEvents } from "../../upperTimeline";
 
 interface EventMarkersProps {
 }
 
-export const EventMarkers: StyledFC<EventMarkersProps> = (props) => {
+export const EventMarkers: StyledFC<EventMarkersProps> = () => {
 	const { isLoading, success } = useAppDataContext();
 	if (isLoading || !success) {
 		return null;
 	}
 
 	const markers: JSX.Element[] = [];
-	const startTime = success.info.time;
+	const startTime = success.info.referenceTime;
 
-	const weatherEvents = filterWeatherEvents(success.success.predictions.weather, success.success.predictions.cutoffDate);
+	const weatherEvents = filterWeatherEvents(success.data!.predictions.weather, success.data!.predictions.cutoffDate);
 	weatherEvents.forEach(function (ev) {
 		const key = `w_${ev.time.getTime()}`;
 		markers.push(<WeatherEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 	});
 
-	success.success.predictions.sun.forEach(function (ev) {
+	success.data!.predictions.sun.forEach(function (ev) {
 		const key = `d_${ev.time.getTime()}`;
 		markers.push(<DayEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 		if (ev.isSunrise && isSameDay(startTime, ev.time)) {
@@ -42,7 +40,7 @@ export const EventMarkers: StyledFC<EventMarkersProps> = (props) => {
 		}
 	});
 
-	success.success.predictions.tides.events.forEach(function (ev) {
+	success.data!.predictions.tides.events.forEach(function (ev) {
 		const key = `t_${ev.time.getTime()}`;
 		markers.push(<TideEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 	});

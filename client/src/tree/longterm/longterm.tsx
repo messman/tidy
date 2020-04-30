@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS } from "@/styles/theme";
+import { Flex, FlexColumn } from "@/unit/components/flex";
+import styled from "@/styles/theme";
 import * as C from "@/styles/common";
 import { useAppDataContext } from "../appData";
-import { DailyView, DailyViewProps } from "./dailyView/dailyView";
+import { DailyView } from "./dailyView/dailyView";
 import { createPrettyHour } from "@/services/time";
 import { TimeSlider } from "./timeSlider";
 
@@ -20,7 +20,7 @@ const maxHourDate = new Date();
 maxHourDate.setHours(maxHour);
 const maxHourText = createPrettyHour(maxHourDate);
 
-export const LongTerm: React.FC<LongTermProps> = (props) => {
+export const LongTerm: React.FC<LongTermProps> = () => {
 	return (
 		<FlexColumn>
 			<PaddingWithoutBottom>
@@ -59,26 +59,24 @@ const PaddingWithoutBottom = styled.div`
 interface LongTermDailyViewListProps {
 }
 
-export const LongTermDailyViewList: React.FC<LongTermDailyViewListProps> = (props) => {
+export const LongTermDailyViewList: React.FC<LongTermDailyViewListProps> = () => {
 	const { isLoading, success } = useAppDataContext();
 
 	if (isLoading || !success) {
 		return null;
 	}
 
-	const daily = success.success.daily;
-	const all = [daily.today, ...daily.future];
-	const { minHeight, maxHeight } = success.success.daily.tides;
+	const daily = success.data!.daily;
 
-	const list = all.map(function (day, index) {
+	const list = daily.days.map(function (day, index) {
 		return <DailyView
 			key={day.date.getTime()}
 			dailyEvent={day}
 			isToday={index === 0}
 			minHour={minHour}
 			maxHour={maxHour}
-			minTideHeight={minHeight}
-			maxTideHeight={maxHeight}
+			minTideHeight={day.tides.lowest.height}
+			maxTideHeight={day.tides.highest.height}
 		/>
 	});
 

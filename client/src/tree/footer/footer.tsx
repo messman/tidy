@@ -16,7 +16,7 @@ export const Footer: React.FC<FooterProps> = (props) => {
 	const longTermSvg = <p>Long Term</p>;
 	const aboutSvg = <p>About</p>;
 
-	let title: JSX.Element = null;
+	let title: JSX.Element | null = null;
 	if (props.longTermToggleState !== FooterToggleState.on && props.aboutToggleState !== FooterToggleState.on) {
 		title = (
 			<Flex>

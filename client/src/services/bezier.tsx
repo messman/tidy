@@ -1,10 +1,6 @@
 import * as React from "react";
 import { StyledFC } from "@/styles/theme";
 
-function roundPercent(outOf1: number): string {
-	return Math.round(outOf1 * 100).toString();
-}
-
 function roundVal(num: number): number {
 	return Math.round(num * 100) / 100;
 }

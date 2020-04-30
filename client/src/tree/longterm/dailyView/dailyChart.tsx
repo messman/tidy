@@ -3,22 +3,22 @@ import styled, { StyledFC, css } from "@/styles/theme";
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
-import { DailyInfo } from "../../../../../data";
+import { AllDailyDay } from 'tidy-shared';
 
 interface DailyChartProps {
 	minHour: number,
 	maxHour: number,
 	minTideHeight: number,
 	maxTideHeight: number,
-	dailyEvent: DailyInfo
+	dailyEvent: AllDailyDay
 }
 
 export const DailyChart: StyledFC<DailyChartProps> = (props) => {
-	const ref = useRef<HTMLDivElement>(null);
+	const ref = useRef<HTMLDivElement>(null!);
 	const size = useElementSize(ref, 300);
 
-	let fillSVG: JSX.Element = null;
-	let strokeSVG: JSX.Element = null;
+	let fillSVG: JSX.Element | null = null;
+	let strokeSVG: JSX.Element | null = null;
 
 	const goodSize = size.width > 1 && size.height > 1
 	if (goodSize) {
@@ -32,7 +32,7 @@ export const DailyChart: StyledFC<DailyChartProps> = (props) => {
 		const endTime = new Date(day);
 		endTime.setHours(props.maxHour, 0, 0, 0);
 
-		const points: Point[] = tides.map(function (tide) {
+		const points: Point[] = tides.events.map(function (tide) {
 			return {
 				x: tide.time.getTime(),
 				y: tide.height
@@ -98,7 +98,7 @@ const StrokeSVG = styled(SVGPath)`
 	z-index: 7;
 `;
 
-// Problem - for this and the other chart line, the only reason we can storke outside of the svg container onto the padding elements is because the SVGs are overlaid and actually much larger.
+// Problem - for this and the other chart line, the only reason we can stroke outside of the svg container onto the padding elements is because the SVGs are overlaid and actually much larger.
 // They are constrained by their size but absolutely positions at 50%, vertically centered. So I can't make this upper padding less without making the lower padding less.
 const paddingHeightStyle = css`
 	height: 1.5rem;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { css, StyledFC, ThemedCSS } from "@/styles/theme";
+import styled, { StyledFC, ThemedCSS } from "@/styles/theme";
 import { FlexColumn } from "@/unit/components/flex";
 
 interface CustomCSSFlexColumnProps {
@@ -25,7 +25,7 @@ export interface BackgroundFillProps {
 
 export const BackgroundFill: React.FC<BackgroundFillProps> = (props) => {
 
-	let backgroundCss: ThemedCSS = null;
+	let backgroundCss: ThemedCSS = null!;
 
 	if (props.fillWithSidebar) {
 		backgroundCss = props.sidebarCss;

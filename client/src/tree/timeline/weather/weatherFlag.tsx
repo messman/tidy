@@ -1,14 +1,13 @@
 import * as React from "react";
-import { Flex, FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled, { css, ThemedCSS, StyledFC } from "@/styles/theme";
-import { APIResponse, WeatherEvent } from "../../../../../data";
+import { FlexColumn } from "@/unit/components/flex";
+import styled, { StyledFC } from "@/styles/theme";
 import * as C from "@/styles/common";
-import { useElementSize } from "@/unit/hooks/useElementSize";
 import { timeToPixels, createPrettyHour } from "@/services/time";
+import { WeatherStatus } from "tidy-shared";
 
 interface WeatherFlagProps {
 	startTime: Date,
-	event: WeatherEvent,
+	event: WeatherStatus,
 }
 
 export const WeatherFlag: StyledFC<WeatherFlagProps> = (props) => {
@@ -17,10 +16,10 @@ export const WeatherFlag: StyledFC<WeatherFlagProps> = (props) => {
 	const left = timeToPixels(startTime, event.time);
 
 	const time = createPrettyHour(event.time);
-	const temp = `${event.temp} ${event.tempUnit}`;
-	const percentRain = `${event.chanceRain * 100}%`;
+	const temp = `${event.temp} F`;
+	const percentRain = `${event.chanceRain.entity! * 100}%`;
 
-	const windText = `${event.wind} ${event.windUnit} ${event.windDirection}`;
+	const windText = `${event.wind} mph ${event.windDirection}`;
 
 	return (
 		<Flag left={left}>

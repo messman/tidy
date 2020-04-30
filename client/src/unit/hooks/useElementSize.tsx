@@ -10,7 +10,7 @@ const initialState: ElementSize = { width: -1, height: -1, isSizing: true };
 export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObject<T>, throttleTimeoutMs?: number): ElementSize {
 	const [size, setSize] = useState<ElementSize>({ width: -1, height: -1, isSizing: true });
 	const throttleTimeoutId = useRef(-1);
-	const timeout = (isNaN(throttleTimeoutMs) || throttleTimeoutMs < 10) ? 10 : throttleTimeoutMs;
+	const timeout = (isNaN(throttleTimeoutMs!) || throttleTimeoutMs! < 10) ? 10 : throttleTimeoutMs;
 
 	function handleChange() {
 		if (throttleTimeoutId.current === -1) {

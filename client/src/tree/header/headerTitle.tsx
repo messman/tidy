@@ -6,13 +6,14 @@ import { useAppDataContext } from "../appData";
 interface HeaderTitleProps {
 }
 
-export const HeaderTitle: React.FC<HeaderTitleProps> = (props) => {
+export const HeaderTitle: React.FC<HeaderTitleProps> = () => {
 
 	const { isLoading, success } = useAppDataContext();
 
 	let text = "";
-	if (!isLoading && success && success.success) {
-		const { percentBetweenPrevNext: percent, next } = success.success.current.tides;
+	if (!isLoading && success && success.data) {
+		const { next } = success.data.current.tides;
+		const percent = .5;
 		if (percent > .90) {
 			text = "The tide is high."
 		}
