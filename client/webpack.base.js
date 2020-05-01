@@ -21,24 +21,17 @@ so "webpack" should not be a variable, but instead just a TS interface or "decla
 const buildTime = (new Date()).getTime();
 const version = "1.1.0"; // AGM_QT_V
 const DEFINE = {
-	webpack: {
-		buildVersion: JSON.stringify(version),
-		buildTime: JSON.stringify(buildTime),
+	buildVersion: JSON.stringify(version),
+	buildTime: JSON.stringify(buildTime),
 
-		// Overwritten by dev/prod builds
-		localTestData: JSON.stringify(null),
-		fetchUrl: JSON.stringify(null)
-	}
+	// Overwritten by dev/prod builds
+	localTestData: JSON.stringify(null),
+	fetchUrl: JSON.stringify(null)
 };
 
 const baseWebpackOptions = {
 	entry: {
-		index: "./src/entries/entry-index.tsx",
-		vendor: [
-			'react',
-			'react-dom',
-			'styled-components'
-		]
+		index: "./src/entries/entry-index.tsx"
 	},
 	output: {
 		filename: "[name].js",

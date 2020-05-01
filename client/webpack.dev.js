@@ -20,7 +20,7 @@ module.exports = merge(base.base, {
 	},
 
 	plugins: [
-		new webpack.DefinePlugin(DEFINE),
+		new webpack.DefinePlugin({ __DEFINE__: DEFINE }),
 		new HTMLWebpackPlugin(base.html)
 	]
 });
