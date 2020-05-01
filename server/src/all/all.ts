@@ -1,6 +1,6 @@
 import { APIConfiguration, createContext } from "./context";
 import { AllResponse, Info } from "tidy-shared";
-import { allTestMerge } from "../test";
+import { allTestMerge, TestSeed } from "../test/all";
 import { AllMergeFunc, allMerge, mergeForLongTerm } from "./all-merge";
 
 /** Creates a default configuration, requiring the location / time information for the area of interest. */
@@ -41,19 +41,19 @@ export function createWellsConfiguration(): APIConfiguration {
 
 /** The main function - retrieves the 'AllResponse' object for the provided configuration. Calls APIs. */
 export async function getAllForConfiguration(configuration: APIConfiguration): Promise<AllResponse> {
-	return getAll(configuration, allMerge);
+	return getAll(configuration, allMerge, null);
 }
 
 /** The main test function - creates random data and interprets it using the same common functions from the production function. */
-export async function getAllTestForConfiguration(configuration: APIConfiguration): Promise<AllResponse> {
-	return getAll(configuration, allTestMerge);
+export async function getAllTestForConfiguration(configuration: APIConfiguration, seed: TestSeed): Promise<AllResponse> {
+	return getAll(configuration, allTestMerge, seed);
 }
 
 /** Common function that takes a 'Merge Function' to resolve issues and warnings and retrieve the data. */
-async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc): Promise<AllResponse> {
+async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, testSeed: TestSeed): Promise<AllResponse> {
 
 	const configContext = createContext(configuration);
-	const { errors, warnings, interpretedTides, interpretedAstro, interpretedWeather } = await mergeFunc(configContext);
+	const { errors, warnings, interpretedTides, interpretedAstro, interpretedWeather } = await mergeFunc(configContext, testSeed);
 
 	const info: Info = {
 		referenceTime: configContext.configuration.time.referenceTime,

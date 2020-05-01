@@ -1,3 +1,3 @@
-export * from './test';
-export { createContext } from './all/context';
-export { getAllForConfiguration, getAllTestForConfiguration, createWellsConfiguration } from './all/all';
+export { TestSeed } from './test/all';
+export { createContext, APIConfigurationContext, APIConfiguration } from './all/context';
+export { getAllForConfiguration, getAllTestForConfiguration, createWellsConfiguration, createConfigurationFor } from './all/all';

@@ -12,6 +12,7 @@ import { fetchWeather } from "../weather/weather-fetch";
 import { IntermediateTideValues } from "../tide/tide-intermediate";
 import { IntermediateAstroValues } from "../astro/astro-intermediate";
 import { IntermediateWeatherValues } from "../weather/weather-intermediate";
+import { TestSeed } from "../test/all";
 
 /** Base interface to hold common properties for error and warning. */
 export interface AllIssue {
@@ -28,11 +29,11 @@ export interface AllMerge extends AllIssue {
 
 /** Common type for functions used for either real-life fetching or for testing. */
 export interface AllMergeFunc {
-	(configContext: APIConfigurationContext): Promise<AllMerge>
+	(configContext: APIConfigurationContext, testSeed: TestSeed): Promise<AllMerge>
 }
 
 /** Real-life/production merge function. Should return only errors if any piece of any area is invalid. */
-export const allMerge: AllMergeFunc = async (configContext: APIConfigurationContext) => {
+export const allMerge: AllMergeFunc = async (configContext: APIConfigurationContext, _: TestSeed) => {
 
 	const requests: [Promise<IntermediateTideValues>, Promise<IntermediateAstroValues>, Promise<IntermediateWeatherValues>] = [
 		fetchTides(configContext),

@@ -8,7 +8,7 @@ export async function run(): Promise<void> {
 
 	let response: AllResponse = null!;
 	if (isTest) {
-		response = await getAllTestForConfiguration(configuration);
+		response = await getAllTestForConfiguration(configuration, null);
 	}
 	else {
 		response = await getAllForConfiguration(configuration);

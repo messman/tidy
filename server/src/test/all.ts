@@ -12,18 +12,24 @@ import { AllMergeFunc, mergeWarnings } from '../all/all-merge';
 import { IntermediateTideValues } from '../tide/tide-intermediate';
 import { IntermediateAstroValues } from '../astro/astro-intermediate';
 
-/** The main 'merge' function for our test data. Creates the fake data for each API area and combines them. */
-export const allTestMerge: AllMergeFunc = async (configContext: APIConfigurationContext) => {
+/** A seed value to use to get unique test data. Any falsy value will return the default random data; truthy data will make the data unique based on the truthy value. */
+export type TestSeed = number | string | null;
+function combineSeed(initialSeed: string, testSeed: TestSeed): string {
+	return `${initialSeed}${testSeed ? testSeed : ''}`;
+}
 
-	const tideData = createTideData(configContext);
+/** The main 'merge' function for our test data. Creates the fake data for each API area and combines them. */
+export const allTestMerge: AllMergeFunc = async (configContext: APIConfigurationContext, testSeed: TestSeed) => {
+
+	const tideData = createTideData(configContext, testSeed);
 	//const tideData = await fetchTides(configContext);
 	const interpretedTides = interpretTides(configContext, tideData);
 
-	const astroData = createAstroData(configContext);
+	const astroData = createAstroData(configContext, testSeed);
 	//const astroData = await fetchAstro(configContext);
 	const interpretedAstro = interpretAstro(configContext, astroData);
 
-	const weatherData = createWeatherData(configContext)
+	const weatherData = createWeatherData(configContext, testSeed)
 	//const weatherData = await fetchWeather(configContext);
 	const interpretedWeather = interpretWeather(configContext, weatherData);
 
@@ -44,9 +50,9 @@ function createTestWarnings(): Warnings {
 }
 
 /** Creates random tide data. Uses a seeded randomizer. */
-export function createTideData(configContext: APIConfigurationContext): IntermediateTideValues {
+export function createTideData(configContext: APIConfigurationContext, testSeed: TestSeed): IntermediateTideValues {
 
-	const tideRandomizer = randomizer('_tide_');
+	const tideRandomizer = randomizer(combineSeed(combineSeed('_tide_', testSeed), testSeed));
 
 	// Get our time between highs and lows.
 	// Between 5.8 hours and 6.3 hours
@@ -116,8 +122,8 @@ export function createTideData(configContext: APIConfigurationContext): Intermed
 }
 
 /** Creates random astro/sun data. Uses a seeded randomizer. */
-export function createAstroData(configContext: APIConfigurationContext): IntermediateAstroValues {
-	const sunRandomizer = randomizer('_sun_');
+export function createAstroData(configContext: APIConfigurationContext, testSeed: TestSeed): IntermediateAstroValues {
+	const sunRandomizer = randomizer(combineSeed('_sun_', testSeed));
 
 	let startDateTime = configContext.context.astro.minimumSunDataFetch;
 	const endDateTime = configContext.context.maxLongTermDataFetch;
@@ -170,8 +176,8 @@ export function createAstroData(configContext: APIConfigurationContext): Interme
 }
 
 /** Creates random weather data. Uses a seeded randomizer. */
-export function createWeatherData(configContext: APIConfigurationContext): IntermediateWeatherValues {
-	const weatherRandomizer = randomizer('_weather_');
+export function createWeatherData(configContext: APIConfigurationContext, testSeed: TestSeed): IntermediateWeatherValues {
+	const weatherRandomizer = randomizer(combineSeed('_weather_', testSeed));
 
 	const startDateTime = configContext.context.referenceTimeInZone.startOf('hour');
 	const endDateTime = configContext.context.maxLongTermDataFetch;

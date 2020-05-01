@@ -1,5 +1,6 @@
 const path = require("path");
 
+const yargs = require('yargs');
 const CopyPlugin = require('copy-webpack-plugin');
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 
@@ -14,14 +15,15 @@ const htmlPluginOptions = {
 };
 
 /*
-Should match code in the source directory.
-Note, when using DefinePlugin, webpack will parse the JS, not do a simple find-and-replace.
-so "webpack" should not be a variable, but instead just a TS interface or "declare let" or similar.
+	Should match code in the source directory.
+	Note, when using DefinePlugin, webpack will parse the JS, not do a simple find-and-replace.
 */
 const buildTime = (new Date()).getTime();
-const version = "1.1.0"; // AGM_QT_V
+const packageJson = require('./package.json');
+const buildVersion = packageJson.version;
+
 const DEFINE = {
-	buildVersion: JSON.stringify(version),
+	buildVersion: JSON.stringify(buildVersion),
 	buildTime: JSON.stringify(buildTime),
 
 	// Overwritten by dev/prod builds
@@ -83,5 +85,6 @@ const baseWebpackOptions = {
 module.exports = {
 	html: htmlPluginOptions,
 	base: baseWebpackOptions,
-	DEFINE
+	DEFINE,
+	args: yargs.argv
 };
