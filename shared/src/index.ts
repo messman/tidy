@@ -1,6 +1,7 @@
 export * from './all/all-response';
 export * from './all/info';
 export * from './all/issue';
+export * from './all/serialization';
 export * from './astro/astro-event';
 export * from './tide/tide-event';
 export * from './weather/weather-status';

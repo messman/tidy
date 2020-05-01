@@ -1,27 +1,15 @@
-import { Application, Request, Response, NextFunction } from 'express';
+import { Application, Request, Response } from 'express';
 import { createWellsConfiguration, getAllForConfiguration } from 'tidy-server';
-import { AllResponse } from 'tidy-shared';
-
-export function configureApp(app: Application): void {
-	addRoutes(app);
-
-	// 404 handler
-	app.use(function (_request: Request, response: Response, _next: NextFunction) {
-		response.status(404).send("Not Found");
-	});
-
-	// Error handler
-	app.use(function (error: Error, _request: Request, response: Response, _next: NextFunction) {
-		console.error(error.stack)
-		response.status(500).send('Server Error');
-	});
-}
+import { AllResponse, createReplacer } from 'tidy-shared';
 
 const isCaching: boolean = false;
 const cacheExpirationMilliseconds: number = 1000 * 60 * 10; // 10 minutes
 
-function addRoutes(app: Application) {
+function log(...args: any[]): void {
+	console.log('>', ...args);
+}
 
+export function configureApp(app: Application): void {
 	const stats: StatsResponse = {
 		totalCacheBreaks: 0,
 		recentCacheHits: 0,
@@ -32,7 +20,25 @@ function addRoutes(app: Application) {
 	let last: AllResponse | null = null;
 	let cacheExpirationTime: number = -1;
 
-	app.get("/latest", async (_: Request, response: Response<LatestResponse>) => {
+	/*
+		As discussed in tidy-shared, Dates are serialized to strings and not deserialized back to Dates.
+		There is a serialize/deserialize function pair that handles this issue.
+
+		See 
+		https://itnext.io/how-json-stringify-killed-my-express-server-d8d0565a1a61
+		https://github.com/expressjs/express/pull/2422
+
+		There is a way to set a custom stringify replacer, but for all endpoints, not just one.
+		If you want to do just, one, you have to use send instead of json and serialize yourself.
+		This isn't impossible - source code is here:
+		https://github.com/expressjs/express/blob/master/lib/response.js#L239
+		and also mentioned in Medium article above.
+
+		For this app, we'll just do it globally.
+	*/
+	app.set('json replacer', createReplacer());
+
+	app.get("/latest", async (_: Request, response: Response<AllResponse>) => {
 		stats.totalHits++;
 
 		if (isCaching) {
@@ -43,11 +49,8 @@ function addRoutes(app: Application) {
 				stats.recentCacheHits++;
 				stats.totalCacheHits++;
 
-				return response.json({
-					allResponse: last,
-					isFromCache: true,
-					cacheTimeRemaining: cacheExpirationTime - now
-				});
+				log(`Latest cached - ${cacheExpirationTime - now}ms remaining`);
+				return response.json(last);
 			}
 			else {
 				stats.totalCacheBreaks++;
@@ -58,11 +61,8 @@ function addRoutes(app: Application) {
 		last = await getResponse();
 		cacheExpirationTime = Date.now() + cacheExpirationMilliseconds;
 
-		return response.json({
-			allResponse: last,
-			isFromCache: false,
-			cacheTimeRemaining: cacheExpirationMilliseconds
-		});
+		log(`Latest - caching for ${cacheExpirationMilliseconds}ms`);
+		return response.json(last);
 	});
 
 	app.get("/last", async (_: Request, response: Response<LastResponse>) => {
@@ -87,12 +87,6 @@ function addRoutes(app: Application) {
 async function getResponse(): Promise<AllResponse> {
 	const configuration = createWellsConfiguration();
 	return await getAllForConfiguration(configuration);
-}
-
-interface LatestResponse {
-	allResponse: AllResponse,
-	isFromCache: boolean,
-	cacheTimeRemaining: number
 }
 
 interface LastResponse {

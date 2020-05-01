@@ -1,6 +1,5 @@
-import { AllResponse } from 'tidy-shared';
+import { AllResponse, deserialize } from 'tidy-shared';
 import { DEFINE } from '@/services/define';
-
 
 export async function getData(minTimeMs: number): Promise<AllResponse> {
 
@@ -13,9 +12,12 @@ export async function getData(minTimeMs: number): Promise<AllResponse> {
 	return wrapPromise(fetch(url)
 		.then((res) => {
 			if (res.ok) {
-				return res.json()
-					.then((json) => {
-						return json.response as AllResponse;
+				return res.text()
+					.then((text: string) => {
+						return deserialize(text);
+					})
+					.then((json: AllResponse) => {
+						return json;
 					})
 					.catch((err: Error) => {
 						console.error(err);
