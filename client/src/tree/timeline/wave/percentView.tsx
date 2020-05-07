@@ -1,6 +1,5 @@
 import * as React from "react";
-import styled from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled } from "@/styles/styled";
 
 interface PercentViewProps {
 	visualHeightPercent: number,
@@ -74,7 +73,6 @@ const Backdrop = styled.div`
 	background-color: ${props => props.theme.color.background};
 	opacity: .3;
 	border-radius: .25rem;
-	${C.shadowBelowStyle}
 `;
 
 const Text = styled.div`

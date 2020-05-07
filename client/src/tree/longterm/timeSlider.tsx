@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Flex, FlexRow } from "@/unit/components/flex";
-import styled from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled } from "@/styles/styled";
+import { SmallText } from "@/styles/common";
 
 interface TimeSliderProps {
 	minHour: number,
@@ -14,10 +14,10 @@ export const TimeSlider: React.FC<TimeSliderProps> = (props) => {
 	return (
 		<TimeRow>
 			<Flex>
-				<C.SmallText>{props.minHourText}</C.SmallText>
+				<SmallText>{props.minHourText}</SmallText>
 			</Flex>
 			<FlexRight>
-				<C.SmallText>{props.maxHourText}</C.SmallText>
+				<SmallText>{props.maxHourText}</SmallText>
 			</FlexRight>
 		</TimeRow>
 	);

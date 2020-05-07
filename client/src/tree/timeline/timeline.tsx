@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled from "@/styles/styled";
+import { styled } from "@/styles/styled";
 import { ResponsiveLayoutType } from "../responsiveLayout";
 import { CurrentConditions } from "./currentConditions";
 import { Wave, WaveAnimationOptions } from "./wave/wave";

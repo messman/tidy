@@ -1,4 +1,4 @@
-import styled, { keyframes, StyledFC } from "./styled";
+import { styled, keyframes, StyledFC } from "./styled";
 import * as React from "react";
 
 const shimmerKeyframe = keyframes`

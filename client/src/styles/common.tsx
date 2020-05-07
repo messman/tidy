@@ -1,67 +1,69 @@
-import styled, { css } from "./styled";
-import { Flex } from "@/unit/components/flex";
+import { styled, css } from "./styled";
+import { StyledComponent } from 'styled-components';
+import { Theme } from './theme';
 
-export const FlexPadding = styled(Flex)`
-	padding: 1rem;
+const commonTextStyle = css`
+	vertical-align: top;
 `;
 
-export const Section = styled.div`
-	margin: 0;
-	margin-bottom: 1.5rem;
-`;
+// Default 1rem = 16px
 
-export const Title = styled.h1`
-	font-size: 2.5rem;
-	line-height: 3rem;
-	margin: 0;
-	margin-bottom: .5rem;
-	font-weight: 400;
+/** Title. 2rem / 32px. */
+export const Title = styled.div`
+	${commonTextStyle}
+	font-size: 2rem;
 `;
+export const TitleInline = createInlineVersion(Title);
 
-export const SubTitle = styled.p`
-	font-size: 1.4rem;
-	font-weight: 400;
-	margin: .2rem;
+/** Subtitle. 1.5rem / 24px. */
+export const Subtitle = styled.div`
+	${commonTextStyle}
+	font-size: 1.5rem;
 `;
+export const SubtitleInline = createInlineVersion(Subtitle);
 
-export const Text = styled.p`
-	font-size: 1.2rem;
-	margin: .2rem;
-`;
-
-export const SmallText = styled.p`
+/** Regular text. 1rem / 16px. */
+export const Text = styled.div`
+	${commonTextStyle}
 	font-size: 1rem;
-	font-weight: 400;
-	margin: 0;
+`;
+export const TextInline = createInlineVersion(Text);
+export const TextPara = styled(Text)`
+	${commonTextStyle}
+	margin-bottom: 1rem;
 `;
 
-const shadowStyle = css`
-	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.background};
-`
+/** Small text. .875rem / 14px. */
+export const SmallText = styled.div`
+	${commonTextStyle}
+	font-size: .875rem;
+`;
+export const SmallTextInline = createInlineVersion(SmallText);
 
-export const shadowBelowStyle = css`
-	box-shadow: .1rem .1rem .4rem 0 ${props => props.theme.color.background};
-`
+/** Small text. .75rem / 12px. */
+export const SubText = styled.div`
+	${commonTextStyle}
+	font-size: .75rem;
+`;
+export const SubTextInline = createInlineVersion(SubText);
 
-export const ShadowTop = styled.div`
-	display: block;
-	width: 100%;
-	height: 1px;
-	position: relative;
-	z-index: 2;
-	${shadowStyle}
-	background-color: ${props => props.theme.color.background};
+/** Border-radius style. .5rem / 8px. */
+export const borderRadiusStyle = css`
+	border-radius: .5rem;
 `;
 
-export const ShadowBottom = styled.div`
-	display: block;
-	width: 100%;
-	height: 1px;
-	position: relative;
-	z-index: 2;
-	${shadowStyle}
-	background-color: ${props => props.theme.color.background};
-`;
+/** Smaller padding value, for edges against the screen. .625rem / 10px. */
+export const edgePaddingValue: string = '.625rem';
+/** Larger padding value, for vertical flow. 1rem / 16px. */
+export const flowPaddingValue: string = '1rem';
+
+function createInlineVersion(component: StyledComponent<any, Theme, {}, never>) {
+	return styled(component)`
+		display: inline-block;
+	`;
+}
+
+///////////// OLD
 
 export const TimelinePadding = styled.div`
 	height: 5vh;

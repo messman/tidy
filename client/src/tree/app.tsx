@@ -6,7 +6,7 @@ import { Footer } from "./footer/footer";
 import { FooterToggleState } from "./footer/footerToggle";
 import { BackgroundFill } from "./backgroundFill";
 import { FlexColumn } from "@/unit/components/flex";
-import styled from "@/styles/styled";
+import { styled } from "@/styles/styled";
 import { About, aboutBackgroundColor } from "./about/about";
 import { LongTerm } from "./longterm/longterm";
 import { Header } from "./header/header";

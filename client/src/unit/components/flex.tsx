@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/styled";
+import { styled, StyledFC } from "@/styles/styled";
 
 export interface FlexProps {
 	flex?: number | "none";

@@ -129,3 +129,11 @@ export const LocalStorageThemeProvider: React.FC = (props) => {
 }
 
 export const useLocalStorageTheme = () => useContext(LocalStorageThemeContext);
+export const useCurrentLocalStorageTheme = () => {
+	const localStorageReturn = useContext(LocalStorageThemeContext);
+	if (!localStorageReturn) {
+		console.error('Why is this happening?');
+		return themes[0];
+	}
+	return themes[localStorageReturn[0]];
+}

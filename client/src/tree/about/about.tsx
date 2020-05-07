@@ -1,6 +1,6 @@
 import * as React from "react";
-import styled, { css, ThemedCSS } from "@/styles/styled";
-import * as C from "@/styles/common";
+import { css, ThemedCSS } from "@/styles/styled";
+import { Title, Subtitle, Text } from "@/styles/common";
 
 export const aboutBackgroundColor: ThemedCSS = css`
 	background-image: linear-gradient(91deg, ${props => props.theme.color.background} 0%, ${props => props.theme.color.backgroundLighter} 99%);
@@ -8,38 +8,23 @@ export const aboutBackgroundColor: ThemedCSS = css`
 
 export const About: React.FC = () => {
 	return (
-		<ScrollPadding>
-			<C.Section>
-				<C.Title>Quick Tides</C.Title>
-				<C.Text>By Andrew Messier</C.Text>
-				<C.Text>Dedicated to Mark &amp; Dawna</C.Text>
-				<C.Text>Open Source on GitHub</C.Text>
-			</C.Section>
-			<C.Section>
-				<C.SubTitle>Data Attributions</C.SubTitle>
-				<C.Text>NOAA</C.Text>
-				<C.Text>NWS</C.Text>
-			</C.Section>
-			<C.Section>
-				<C.SubTitle>Design</C.SubTitle>
-				<C.Text>FontAwesome</C.Text>
-				<C.Text>IcoMoon</C.Text>
-			</C.Section>
-			<C.Section>
-				<C.SubTitle>Technologies</C.SubTitle>
-				<C.Text>React</C.Text>
-				<C.Text>TypeScript</C.Text>
-				<C.Text>Sketch</C.Text>
-			</C.Section>
-			<C.Section>
-				<C.SubTitle>Version</C.SubTitle>
-				<C.Text>[VERSION]</C.Text>
-			</C.Section>
-		</ScrollPadding>
+		<>
+			<Title>Quick Tides</Title>
+			<Text>By Andrew Messier</Text>
+			<Text>Dedicated to Mark &amp; Dawna</Text>
+			<Text>Open Source on GitHub</Text>
+			<Subtitle>Data Attributions</Subtitle>
+			<Text>NOAA</Text>
+			<Text>NWS</Text>
+			<Subtitle>Design</Subtitle>
+			<Text>FontAwesome</Text>
+			<Text>IcoMoon</Text>
+			<Subtitle>Technologies</Subtitle>
+			<Text>React</Text>
+			<Text>TypeScript</Text>
+			<Text>Sketch</Text>
+			<Subtitle>Version</Subtitle>
+			<Text>[VERSION]</Text>
+		</>
 	);
 }
-
-
-const ScrollPadding = styled(C.FlexPadding)`
-	overflow-y: auto;
-`;

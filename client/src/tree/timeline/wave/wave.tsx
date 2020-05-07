@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Flex, FlexColumn } from "@/unit/components/flex";
-import styled, { StyledFC } from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled, StyledFC } from "@/styles/styled";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
 import { useAppDataContext } from "@/tree/appData";
@@ -32,7 +31,6 @@ export const Wave: React.FC<WaveProps> = (props) => {
 	let animationOptions0: SVGWaveAnimationOptions | null = null;
 	let animationOptions1: SVGWaveAnimationOptions | null = null;
 	let animationOptions2: SVGWaveAnimationOptions | null = null;
-	let lowerTimelinePadding: JSX.Element = <C.TimelinePadding />;
 	let percentView: JSX.Element = null!;
 
 	// Visual height percent is what the user will believe is for between prev and next, but 
@@ -48,8 +46,6 @@ export const Wave: React.FC<WaveProps> = (props) => {
 		// Turn into a rough sine wave
 		// y = .5sin(xpi - .5pi) + .5 from 0 to 1
 		visualHeightPercent = .5 * Math.sin((visualHeightPercent * Math.PI) - (.5 * Math.PI)) + .5;
-
-		lowerTimelinePadding = <LowerTimelinePadding />;
 
 		percentView = <PercentView
 			height={tides.height}
@@ -104,9 +100,7 @@ export const Wave: React.FC<WaveProps> = (props) => {
 
 	return (
 		<>
-			<C.ShadowTop />
 			<Container>
-				<C.TimelinePadding />
 				<Flex ref={ref}>
 					<SVGWave
 						index={0}
@@ -130,11 +124,9 @@ export const Wave: React.FC<WaveProps> = (props) => {
 						animationOptions={animationOptions2!}
 					/>
 				</Flex>
-				{lowerTimelinePadding}
 				<OpacityCover heightPercent={visualHeightPercent} />
 				{percentView}
 			</Container>
-			<C.ShadowBottom />
 		</>
 	);
 }
@@ -143,10 +135,6 @@ const Container = styled(FlexColumn)`
 	z-index: 0;
 	background-image: linear-gradient(180deg, ${props => props.theme.color.background} 2%, ${props => props.theme.color.background} 38%);
 	overflow: hidden;
-`;
-
-const LowerTimelinePadding = styled(C.TimelinePadding)`
-	background-color: ${props => props.theme.color.background};
 `;
 
 export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {

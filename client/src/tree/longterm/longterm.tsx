@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Flex, FlexColumn } from "@/unit/components/flex";
-import styled from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled } from "@/styles/styled";
+import { Title } from "@/styles/common";
 import { useAppDataContext } from "../appData";
 import { DailyView } from "./dailyView/dailyView";
 import { createPrettyHour } from "@/services/time";
@@ -24,9 +24,7 @@ export const LongTerm: React.FC<LongTermProps> = () => {
 	return (
 		<FlexColumn>
 			<PaddingWithoutBottom>
-				<C.Section>
-					<C.Title>Long-term tides</C.Title>
-				</C.Section>
+				<Title>Long-term tides</Title>
 				<TimeSlider
 					minHour={minHour}
 					minHourText={minHourText}
@@ -34,11 +32,9 @@ export const LongTerm: React.FC<LongTermProps> = () => {
 					maxHourText={maxHourText}
 				/>
 			</PaddingWithoutBottom>
-			<C.ShadowTop />
 			<ScrollFlex>
 				<LongTermDailyViewList />
 			</ScrollFlex>
-			<C.ShadowBottom />
 		</FlexColumn>
 	);
 }

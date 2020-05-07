@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as C from "@/styles/common";
+import { Title } from "@/styles/common";
 import { TextPlaceholder } from "@/styles/placeholder";
 import { useAppDataContext } from "../appData";
 
@@ -26,10 +26,10 @@ export const HeaderTitle: React.FC<HeaderTitleProps> = () => {
 	}
 
 	return (
-		<C.Title>
+		<Title>
 			<TextPlaceholder show={isLoading} length={10}>
 				{text}
 			</TextPlaceholder>
-		</C.Title>
+		</Title>
 	);
 }

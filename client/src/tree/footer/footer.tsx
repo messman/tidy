@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Flex, FlexRow } from "@/unit/components/flex";
 import { FooterToggleState, FooterToggle } from "./footerToggle";
-import * as C from "@/styles/common";
-import styled from "@/styles/styled";
+import { Subtitle } from "@/styles/common";
+import { styled } from "@/styles/styled";
 
 interface FooterProps {
 	longTermToggleState: FooterToggleState,
@@ -53,7 +53,7 @@ const RightSVGToggle = styled(FooterToggle)`
 	margin-left: auto;
 `;
 
-const FooterLocationTitle = styled(C.SubTitle)`
+const FooterLocationTitle = styled(Subtitle)`
 	flex: 1;
 	display: block;
 	text-align: center;

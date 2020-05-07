@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "@/styles/styled";
+import { styled } from "@/styles/styled";
 import { WindowDimensions } from "@/unit/hooks/useWindowDimensions";
 import { FlexColumn, FlexRow } from "@/unit/components/flex";
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as C from "@/styles/common";
+import { Subtitle } from "@/styles/common";
 import { TextPlaceholder } from "@/styles/placeholder";
 import { createPrettyTimespan } from "@/services/time";
 import { useAppDataContext } from "../appData";
@@ -30,16 +30,16 @@ export const HeaderSubTitle: React.FC<HeaderSubTitleProps> = () => {
 
 	return (
 		<>
-			<C.SubTitle>
+			<Subtitle>
 				<TextPlaceholder show={isLoading} length={11}>
 					{nextText}
 				</TextPlaceholder>
-			</C.SubTitle>
-			<C.SubTitle>
+			</Subtitle>
+			<Subtitle>
 				<TextPlaceholder show={isLoading} length={16}>
 					{previousText}
 				</TextPlaceholder>
-			</C.SubTitle>
+			</Subtitle>
 		</>
 	);
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled, StyledFC } from "@/styles/styled";
+import { SmallText } from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels, createPrettyTime } from "@/services/time";
 import { TideEvent } from "tidy-shared";
@@ -72,9 +72,9 @@ const _ExtremeCard: StyledFC<ExtremeCardProps> = (props) => {
 
 	const inner = (
 		<>
-			<C.SmallText>{lowHighText}</C.SmallText>
-			<C.SmallText>{timeText}</C.SmallText>
-			<C.SmallText>{heightText}</C.SmallText>
+			<SmallText>{lowHighText}</SmallText>
+			<SmallText>{timeText}</SmallText>
+			<SmallText>{heightText}</SmallText>
 		</>
 	);
 

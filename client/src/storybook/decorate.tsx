@@ -2,17 +2,21 @@ import * as React from 'react';
 
 import { Wrapper } from "@/tree/wrapper";
 import { DecoratorFn } from "@storybook/react"
+import { styled } from '@/styles/styled';
 
 export const Decorator: DecoratorFn = (storyFn) => {
 	return (
 		<Wrapper>
-			<>
-				<p>PARTY!</p>
+			<StoryPadding>
 				{storyFn()}
-			</>
+			</StoryPadding>
 		</Wrapper>
 	);
 }
+
+const StoryPadding = styled.div`
+	padding: 2rem;
+`;
 
 export interface StoryComponent {
 	(): JSX.Element,

@@ -1,6 +1,6 @@
 import * as React from "react";
-import styled, { css, StyledFC } from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled, css, StyledFC } from "@/styles/styled";
+import { SmallText } from "@/styles/common";
 import { pixelsPerDay, timeToPixels, createPrettyTime, createPrettyDate } from "@/services/time";
 
 interface FullDayProps {
@@ -49,7 +49,7 @@ export const FullDay: React.FC<FullDayProps> = (props) => {
 	);
 }
 
-const ShadowSmallTextStyle = styled(C.SmallText)`
+const ShadowSmallTextStyle = styled(SmallText)`
 	text-shadow: 0px 0px 3px ${props => props.theme.color.background}, 0px 0px 7px ${props => props.theme.color.background};
 `;
 

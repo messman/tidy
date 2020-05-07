@@ -3,8 +3,7 @@ import { Theme } from "./theme";
 export { ThemeProvider, keyframes } from "styled-components";
 
 // Export wrapped styled
-const styled = baseStyled as ThemedStyledInterface<Theme>;
-export default styled;
+export const styled = baseStyled as ThemedStyledInterface<Theme>;
 
 // Export wrapped css
 export const css = baseCss as BaseThemedCssFunction<Theme>;

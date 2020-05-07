@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Flex } from "@/unit/components/flex";
-import styled from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled } from "@/styles/styled";
+import { Text } from "@/styles/common";
 import { TextPlaceholder } from "@/styles/placeholder";
 import { createPrettyTimespan } from "@/services/time";
 import { useAppDataContext } from "../appData";
@@ -35,26 +35,26 @@ export const CurrentConditions: React.FC<CurrentConditionsProps> = () => {
 		<>
 			<Flex />
 			<Padding>
-				<C.Text>
+				<Text>
 					<TextPlaceholder show={isLoading} length={6}>
 						{tempText}
 					</TextPlaceholder>
-				</C.Text>
-				<C.Text>
+				</Text>
+				<Text>
 					<TextPlaceholder show={isLoading} length={16}>
 						{weatherText}
 					</TextPlaceholder>
-				</C.Text>
-				<C.Text>
+				</Text>
+				<Text>
 					<TextPlaceholder show={isLoading} length={10}>
 						{sunText}
 					</TextPlaceholder>
-				</C.Text>
-				<C.Text>
+				</Text>
+				<Text>
 					<TextPlaceholder show={isLoading} length={11}>
 						{windText}
 					</TextPlaceholder>
-				</C.Text>
+				</Text>
 			</Padding>
 		</>
 	);

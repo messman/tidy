@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Flex } from "@/unit/components/flex";
-import styled, { StyledFC } from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled, StyledFC } from "@/styles/styled";
 import { useAppDataContext } from "@/tree/appData";
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
 import { useRef } from "react";
@@ -22,10 +21,8 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 
 	let fillSVG: JSX.Element | null = null;
 	let strokeSVG: JSX.Element | null = null;
-	let lowerTimelinePadding: JSX.Element = <C.TimelinePadding />;
 
 	if (size.width > 1 && size.height > 1) {
-		lowerTimelinePadding = <LowerTimelinePadding />;
 
 		const startTime = success.info.referenceTime;
 		const endTime = success.data!.predictions.cutoffDate;
@@ -62,11 +59,9 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 
 	return (
 		<>
-			<C.TimelinePadding />
 			<CardRefContainer ref={ref} >
 				<ExtremeCards heightInPixels={size.height} />
 			</CardRefContainer>
-			{lowerTimelinePadding}
 			{fillSVG}
 			{strokeSVG}
 		</>
@@ -77,12 +72,6 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 const CardRefContainer = styled(Flex)`
 	z-index: 6;
 `;
-
-const LowerTimelinePadding = styled(C.TimelinePadding)`
-	background-color: ${props => props.theme.color.background};
-	opacity: .5;
-`;
-
 
 const FillSVG = styled(SVGPath)`
 	position: absolute;

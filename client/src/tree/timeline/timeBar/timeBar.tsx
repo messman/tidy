@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/styled";
+import { styled, StyledFC } from "@/styles/styled";
 import { useAppDataContext } from "@/tree/appData";
 import { DayRange } from "./dayRange";
 import { EventMarkers } from "./eventMarkers/eventMarkers";

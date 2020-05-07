@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/styled";
+import { styled, StyledFC } from "@/styles/styled";
 import { Weather } from "./weather/weather";
 import { TimeBar } from "./timeBar/timeBar";
 import { WeatherStatus } from "tidy-shared";

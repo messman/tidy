@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FlexColumn } from "@/unit/components/flex";
-import styled, { StyledFC } from "@/styles/styled";
-import * as C from "@/styles/common";
+import { styled, StyledFC } from "@/styles/styled";
+import { SmallText } from "@/styles/common";
 import { timeToPixels, createPrettyHour } from "@/services/time";
 import { WeatherStatus } from "tidy-shared";
 
@@ -23,11 +23,11 @@ export const WeatherFlag: StyledFC<WeatherFlagProps> = (props) => {
 
 	return (
 		<Flag left={left}>
-			<C.SmallText>{time}</C.SmallText>
-			<C.SmallText>{temp}</C.SmallText>
-			<C.SmallText>{event.status}</C.SmallText>
-			<C.SmallText>{percentRain}</C.SmallText>
-			<C.SmallText>{windText}</C.SmallText>
+			<SmallText>{time}</SmallText>
+			<SmallText>{temp}</SmallText>
+			<SmallText>{event.status}</SmallText>
+			<SmallText>{percentRain}</SmallText>
+			<SmallText>{windText}</SmallText>
 		</Flag>
 	);
 }
