@@ -4,25 +4,29 @@ const webpack = require("webpack");
 const merge = require("webpack-merge");
 const base = require("./webpack.base.js");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
+const getDefine = require('./define');
 
-const DEFINE = base.DEFINE;
-DEFINE.fetchUrl = JSON.stringify('tidy-api.andrewmessier.com');
+module.exports = async () => {
 
-module.exports = merge(base.base, {
-	mode: "production",
+	const DEFINE = await getDefine(false, false);
 
-	output: {
-		filename: "[name].[chunkhash].js",
-	},
+	return merge(base.base, {
+		mode: "production",
 
-	optimization: {
-		minimize: true
-	},
+		output: {
+			filename: "[name].[chunkhash].js",
+		},
 
-	plugins: [
-		new webpack.DefinePlugin({ __DEFINE__: DEFINE }),
-		// Change the module id (unique identifier) to go by path instead of number, so hash names change less often.
-		new webpack.HashedModuleIdsPlugin(),
-		new HTMLWebpackPlugin(base.html),
-	]
-});
+		optimization: {
+			minimize: true
+		},
+
+		plugins: [
+			new webpack.DefinePlugin({ __DEFINE__: DEFINE }),
+			// Change the module id (unique identifier) to go by path instead of number, so hash names change less often.
+			new webpack.HashedModuleIdsPlugin(),
+			new HTMLWebpackPlugin(base.html),
+		]
+	});
+
+};

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { About } from '../tree/about/about';
+import { DEFINE } from '@/services/define';
 
 export default { title: 'Test' };
 
-
 export const withText = () => {
-	return <About />
+	return <p>{DEFINE.buildTime} {DEFINE.buildVersion} {DEFINE.localTestData.info.referenceTime.toISOString()}</p>
 };

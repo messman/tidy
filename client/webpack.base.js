@@ -1,6 +1,5 @@
 const path = require("path");
 
-const yargs = require('yargs');
 const CopyPlugin = require('copy-webpack-plugin');
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 
@@ -12,23 +11,6 @@ const htmlPluginOptions = {
 	template: "./src/index.template.ejs",
 	minify: false,
 	xhtml: true, // Use XHTML-compliance
-};
-
-/*
-	Should match code in the source directory.
-	Note, when using DefinePlugin, webpack will parse the JS, not do a simple find-and-replace.
-*/
-const buildTime = (new Date()).getTime();
-const packageJson = require('./package.json');
-const buildVersion = packageJson.version;
-
-const DEFINE = {
-	buildVersion: JSON.stringify(buildVersion),
-	buildTime: JSON.stringify(buildTime),
-
-	// Overwritten by dev/prod builds
-	localTestData: JSON.stringify(null),
-	fetchUrl: JSON.stringify(null)
 };
 
 const baseWebpackOptions = {
@@ -84,7 +66,5 @@ const baseWebpackOptions = {
 
 module.exports = {
 	html: htmlPluginOptions,
-	base: baseWebpackOptions,
-	DEFINE,
-	args: yargs.argv
+	base: baseWebpackOptions
 };
