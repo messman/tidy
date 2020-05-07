@@ -9,7 +9,8 @@
 		"dev:s": "webpack-dev-server --config webpack.dev.js",
 		"static": "cd dist && python -m SimpleHTTPServer 8888",
 		"production": "webpack --config webpack.prod.js",
-		"production:w": "webpack --config webpack.prod.js --watch"
+		"production:w": "webpack --config webpack.prod.js --watch",
+		"storybook": "start-storybook --port=58888"
 	},
 	"repository": {
 		"type": "git",
@@ -37,6 +38,7 @@
 		"@babel/core": "^7.4.5",
 		"@babel/preset-env": "^7.4.5",
 		"@babel/preset-react": "^7.0.0",
+		"@storybook/react": "^5.3.18",
 		"@types/react": "^16.8.19",
 		"@types/react-dom": "^16.8.4",
 		"@types/styled-components": "^5.1.0",
