@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC, ThemedCSS } from "@/styles/theme";
+import styled, { StyledFC, ThemedCSS } from "@/styles/styled";
 import { FlexColumn } from "@/unit/components/flex";
 
 interface CustomCSSFlexColumnProps {

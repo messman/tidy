@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Flex, FlexColumn } from "@/unit/components/flex";
-import styled from "@/styles/theme";
+import styled from "@/styles/styled";
 import * as C from "@/styles/common";
 import { useAppDataContext } from "../appData";
 import { DailyView } from "./dailyView/dailyView";
@@ -47,7 +47,7 @@ const ScrollFlex = styled(Flex)`
 	overflow-y: auto;
 	flex-basis: 0;
 	z-index: 0;
-	background-image: linear-gradient(180deg, ${props => props.theme.color.layerDark} 0%, ${props => props.theme.color.bgMed} 100%);
+	background-image: linear-gradient(180deg, ${props => props.theme.color.backgroundLighter} 0%, ${props => props.theme.color.background} 100%);
 `;
 
 const PaddingWithoutBottom = styled.div`

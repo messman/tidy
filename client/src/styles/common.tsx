@@ -1,4 +1,4 @@
-import styled, { css } from "./theme";
+import styled, { css } from "./styled";
 import { Flex } from "@/unit/components/flex";
 
 export const FlexPadding = styled(Flex)`
@@ -36,11 +36,11 @@ export const SmallText = styled.p`
 `;
 
 const shadowStyle = css`
-	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.bgDark};
+	box-shadow: 0 0 .5rem .2rem ${props => props.theme.color.background};
 `
 
 export const shadowBelowStyle = css`
-	box-shadow: .1rem .1rem .4rem 0 ${props => props.theme.color.bgDark};
+	box-shadow: .1rem .1rem .4rem 0 ${props => props.theme.color.background};
 `
 
 export const ShadowTop = styled.div`
@@ -50,7 +50,7 @@ export const ShadowTop = styled.div`
 	position: relative;
 	z-index: 2;
 	${shadowStyle}
-	background-color: ${props => props.theme.color.bgDark};
+	background-color: ${props => props.theme.color.background};
 `;
 
 export const ShadowBottom = styled.div`
@@ -60,7 +60,7 @@ export const ShadowBottom = styled.div`
 	position: relative;
 	z-index: 2;
 	${shadowStyle}
-	background-color: ${props => props.theme.color.bgDark};
+	background-color: ${props => props.theme.color.background};
 `;
 
 export const TimelinePadding = styled.div`

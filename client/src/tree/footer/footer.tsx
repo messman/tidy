@@ -2,7 +2,7 @@ import * as React from "react";
 import { Flex, FlexRow } from "@/unit/components/flex";
 import { FooterToggleState, FooterToggle } from "./footerToggle";
 import * as C from "@/styles/common";
-import styled from "@/styles/theme";
+import styled from "@/styles/styled";
 
 interface FooterProps {
 	longTermToggleState: FooterToggleState,

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FlexRow, FlexColumn } from "@/unit/components/flex";
-import styled from "@/styles/theme";
+import styled from "@/styles/styled";
 import { ResponsiveLayoutType } from "../responsiveLayout";
 import { CurrentConditions } from "./currentConditions";
 import { Wave, WaveAnimationOptions } from "./wave/wave";
@@ -69,7 +69,7 @@ const Border = styled.div`
 	z-index: 1000;
 	height: 100%;
 	width: 2px;
-	background-color: ${props => props.theme.color.bgDark};
+	background-color: ${props => props.theme.color.background};
 	flex-shrink: 0;
 `;
 

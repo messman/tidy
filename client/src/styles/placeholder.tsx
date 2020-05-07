@@ -1,4 +1,4 @@
-import styled, { keyframes, StyledFC } from "./theme";
+import styled, { keyframes, StyledFC } from "./styled";
 import * as React from "react";
 
 const shimmerKeyframe = keyframes`
@@ -34,7 +34,7 @@ const Placeholder = styled.span<PlaceholderProps>`
 	animation-name: ${shimmerKeyframe};
 	animation-timing-function: ease-out;
 
-	background-color: ${props => props.theme.color.bgLight};
+	background-color: ${props => props.theme.color.background};
 	border-radius: .1rem;
 `;
 

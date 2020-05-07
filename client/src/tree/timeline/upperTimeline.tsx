@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 import { Weather } from "./weather/weather";
 import { TimeBar } from "./timeBar/timeBar";
 import { WeatherStatus } from "tidy-shared";
@@ -20,7 +20,7 @@ export const UpperTimeline: StyledFC<UpperTimelineProps> = () => {
 
 const SeparatorBar = styled.div`
 	height: 4px;
-	background-color: ${props => props.theme.color.bgDark};
+	background-color: ${props => props.theme.color.background};
 `
 
 /*

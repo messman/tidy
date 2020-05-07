@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Flex } from "@/unit/components/flex";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 import * as C from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
@@ -79,7 +79,7 @@ const CardRefContainer = styled(Flex)`
 `;
 
 const LowerTimelinePadding = styled(C.TimelinePadding)`
-	background-color: ${props => props.theme.color.bgMed};
+	background-color: ${props => props.theme.color.background};
 	opacity: .5;
 `;
 
@@ -90,7 +90,7 @@ const FillSVG = styled(SVGPath)`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	fill: ${props => props.theme.color.bgMed};
+	fill: ${props => props.theme.color.background};
 	opacity: .5;
 
 	z-index: 5;
@@ -102,7 +102,7 @@ const StrokeSVG = styled(SVGPath)`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	stroke: ${props => props.theme.color.emphasis};
+	stroke: ${props => props.theme.color.background};
 	stroke-width: 16px;
 	fill: transparent;
 

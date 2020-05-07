@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 import * as C from "@/styles/common";
 import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels, createPrettyTime } from "@/services/time";
@@ -128,10 +128,10 @@ const BottomExtremeCard = styled(ExtremeCard)`
 `;
 
 const CardBackground = styled.div`
-	background-color: ${props => props.theme.color.bgMed};
+	background-color: ${props => props.theme.color.background};
 	padding: .2rem .6rem;
 	text-align: left;
-	border-color: ${props => props.theme.color.layerLight};
+	border-color: ${props => props.theme.color.background};
 	border-style: solid;
 	border-width: 0;
 `;
@@ -147,6 +147,6 @@ const BottomCardBackground = styled(CardBackground)`
 const Line = styled.div`
 	height: 5vh;
 	width: 1px;
-	background-color: ${props => props.theme.color.layerLight};
+	background-color: ${props => props.theme.color.background};
 	flex-shrink: 0;
 `;

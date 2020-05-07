@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 import { useAppDataContext } from "@/tree/appData";
 import { WeatherFlag } from "./weatherFlag";
 import { filterWeatherEvents } from "../upperTimeline";

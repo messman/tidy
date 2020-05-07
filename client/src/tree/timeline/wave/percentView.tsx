@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "@/styles/theme";
+import styled from "@/styles/styled";
 import * as C from "@/styles/common";
 
 interface PercentViewProps {
@@ -71,7 +71,7 @@ const Backdrop = styled.div`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: ${props => props.theme.color.layerMed};
+	background-color: ${props => props.theme.color.background};
 	opacity: .3;
 	border-radius: .25rem;
 	${C.shadowBelowStyle}
@@ -80,7 +80,7 @@ const Backdrop = styled.div`
 const Text = styled.div`
 	position: relative;
 	padding: .5rem 1rem;
-	color: ${props => props.theme.color.layerLight};
+	color: ${props => props.theme.color.background};
 	font-size: 2rem;
 	text-align: center;
 	font-weight: 400;

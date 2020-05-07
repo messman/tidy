@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FlexColumn } from "@/unit/components/flex";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 import * as C from "@/styles/common";
 import { timeToPixels, createPrettyHour } from "@/services/time";
 import { WeatherStatus } from "tidy-shared";
@@ -47,7 +47,7 @@ const Flag = styled(_Flag)`
 	left: ${props => props.left - 1}px;
 	padding-left: .3rem;
 
-	border-left: 2px solid ${props => props.theme.color.layerLight};
+	border-left: 2px solid ${props => props.theme.color.background};
 `;
 
 

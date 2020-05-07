@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Flex, FlexColumn } from "@/unit/components/flex";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 import * as C from "@/styles/common";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
@@ -141,12 +141,12 @@ export const Wave: React.FC<WaveProps> = (props) => {
 
 const Container = styled(FlexColumn)`
 	z-index: 0;
-	background-image: linear-gradient(180deg, ${props => props.theme.color.skyUpper} 2%, ${props => props.theme.color.skyLower} 38%);
+	background-image: linear-gradient(180deg, ${props => props.theme.color.background} 2%, ${props => props.theme.color.background} 38%);
 	overflow: hidden;
 `;
 
 const LowerTimelinePadding = styled(C.TimelinePadding)`
-	background-color: ${props => props.theme.color.layerDark};
+	background-color: ${props => props.theme.color.background};
 `;
 
 export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
@@ -194,7 +194,7 @@ const SVGWave = styled(_SVGWave)`
 	width: 100%;
 	height: 100%;
 	overflow: visible;
-	fill: ${props => (([props.theme.color.layerLight, props.theme.color.layerMed, props.theme.color.layerDark])[props.index])};
+	fill: ${props => (([props.theme.color.background, props.theme.color.background, props.theme.color.background])[props.index])};
 `;
 
 interface OpacityCoverProps {
@@ -207,7 +207,7 @@ const OpacityCover = styled.div<OpacityCoverProps>`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-image: linear-gradient(180deg, transparent ${props => props.heightPercent * 100}%, ${props => props.theme.color.bgMed} 100%);
+	background-image: linear-gradient(180deg, transparent ${props => props.heightPercent * 100}%, ${props => props.theme.color.background} 100%);
 `;
 
 

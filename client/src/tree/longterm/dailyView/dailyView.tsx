@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Flex, FlexRow } from "@/unit/components/flex";
-import styled, { css } from "@/styles/theme";
+import styled, { css } from "@/styles/styled";
 import * as C from "@/styles/common";
 import { TideEvent, AllDailyDay } from 'tidy-shared';
 import { createPrettyTime, isSameDay, createPrettyDateDay } from "@/services/time";
@@ -96,7 +96,7 @@ const Center = styled.div`
 	`;
 
 const Container = styled.div`
-	background-color: ${props => props.theme.color.bgDark};
+	background-color: ${props => props.theme.color.backgroundLighter};
 	${C.shadowBelowStyle}
 	margin: .5rem .5rem 0 .5rem;
 

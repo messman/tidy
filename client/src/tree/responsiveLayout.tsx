@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "@/styles/theme";
+import styled from "@/styles/styled";
 import { WindowDimensions } from "@/unit/hooks/useWindowDimensions";
 import { FlexColumn, FlexRow } from "@/unit/components/flex";
 
@@ -85,7 +85,7 @@ const StrongFlexColumn = styled(FlexColumn)`
 `;
 
 const SidebarWrapper = styled(FlexColumn)`
-	border-left: 2px solid ${props => props.theme.color.bgDark};
+	border-left: 2px solid ${props => props.theme.color.background};
 	width: 600px;
 	flex: initial;
 `;

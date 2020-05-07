@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 
 export enum FooterToggleState {
 	hidden,
@@ -19,10 +19,10 @@ interface ToggleProps {
 }
 
 const Toggle = styled.button<ToggleProps> `
-	background: ${props => props.isOn ? props => props.theme.color.layerLight : props => props.theme.color.bgDark};
-	color: ${props => props.isOn ? props => props.theme.color.bgDark : props => props.theme.color.layerLight};
+	background: ${props => props.isOn ? props => props.theme.color.background : props => props.theme.color.background};
+	color: ${props => props.isOn ? props => props.theme.color.background : props => props.theme.color.background};
 
-	border: 1px solid ${props => props.theme.color.layerLight};
+	border: 1px solid ${props => props.theme.color.background};
 	border-radius: .5rem;
 	padding: .2rem 1rem;
 	margin: 1rem;

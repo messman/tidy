@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FlexColumn } from "@/unit/components/flex";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels } from "@/services/time";
 import * as C from "@/styles/common";

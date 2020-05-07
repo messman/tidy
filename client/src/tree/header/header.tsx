@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "@/styles/theme";
+import styled from "@/styles/styled";
 import { HeaderTitle } from "./headerTitle";
 import { HeaderSubTitle } from "./headerSubTitle";
 

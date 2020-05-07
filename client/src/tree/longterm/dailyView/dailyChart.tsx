@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC, css } from "@/styles/theme";
+import styled, { StyledFC, css } from "@/styles/styled";
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
 import { useRef } from "react";
 import { useElementSize } from "@/unit/hooks/useElementSize";
@@ -79,7 +79,7 @@ const FillSVG = styled(SVGPath)`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	fill: ${props => props.theme.color.bgMed};
+	fill: ${props => props.theme.color.background};
 	opacity: .5;
 
 	z-index: 5;
@@ -91,7 +91,7 @@ const StrokeSVG = styled(SVGPath)`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	stroke: ${props => props.theme.color.emphasis};
+	stroke: ${props => props.theme.color.background};
 	stroke-width: 12px;
 	fill: transparent;
 
@@ -117,6 +117,6 @@ const LowerPadding = styled.div<LowerPaddingProps>`
 	opacity: .5;
 
 	${props => props.showGradient && css`
-		background-image: linear-gradient(180deg, ${props => props.theme.color.bgMed} 10%, ${props => props.theme.color.bgDark} 100%);
+		background-image: linear-gradient(180deg, ${props => props.theme.color.background} 10%, ${props => props.theme.color.background} 100%);
 	`}
 `;

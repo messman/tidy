@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Flex, FlexRow } from "@/unit/components/flex";
-import styled from "@/styles/theme";
+import styled from "@/styles/styled";
 import * as C from "@/styles/common";
 
 interface TimeSliderProps {

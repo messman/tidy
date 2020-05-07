@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFC } from "@/styles/theme";
+import styled, { StyledFC } from "@/styles/styled";
 import { useAppDataContext } from "@/tree/appData";
 import { timeToPixels } from "@/services/time";
 
@@ -43,7 +43,7 @@ const Background = styled.div`
 	width: 100%;
 	height: 100%;
 
-	background-image: linear-gradient(180deg, ${props => props.theme.color.layerMed} 0%, ${props => props.theme.color.bgMed} 100%);
+	background-image: linear-gradient(180deg, ${props => props.theme.color.background} 0%, ${props => props.theme.color.background} 100%);
 `;
 
 interface LineOffsetProps {
@@ -56,7 +56,7 @@ const SunEventLine = styled.div<LineOffsetProps>`
 	height: 100%;
 	width: 2px;
 	left: ${props => props.positionLeft - 1}px;
-	border-left: 2px dashed ${props => props.theme.color.layerLight};
+	border-left: 2px dashed ${props => props.theme.color.background};
 	opacity: .7;
 `;
 
@@ -66,6 +66,6 @@ const MidnightEventLine = styled.div<LineOffsetProps>`
 	height: 100%;
 	width: 4px;
 	left: ${props => props.positionLeft - 2}px;
-	background-color: ${props => props.theme.color.layerLight};
+	background-color: ${props => props.theme.color.background};
 	opacity: .5;
 `;

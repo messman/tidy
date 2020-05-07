@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { css, StyledFC } from "@/styles/theme";
+import styled, { css, StyledFC } from "@/styles/styled";
 import * as C from "@/styles/common";
 import { pixelsPerDay, timeToPixels, createPrettyTime, createPrettyDate } from "@/services/time";
 
@@ -50,7 +50,7 @@ export const FullDay: React.FC<FullDayProps> = (props) => {
 }
 
 const ShadowSmallTextStyle = styled(C.SmallText)`
-	text-shadow: 0px 0px 3px ${props => props.theme.color.bgDark}, 0px 0px 7px ${props => props.theme.color.bgDark};
+	text-shadow: 0px 0px 3px ${props => props.theme.color.background}, 0px 0px 7px ${props => props.theme.color.background};
 `;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ const FullDayStartEndStyle = css`
 	position: absolute;
 	height: 100%;
 	width: 2px;
-	background-color: ${props => props.theme.color.layerLight};
+	background-color: ${props => props.theme.color.background};
 	opacity: .5;
 `;
 
@@ -153,14 +153,14 @@ const FullDayBackgroundGradient = styled.div<FullDayBackgroundGradientProps>`
 	width: ${props => props.total}px;
 	height: 100%;
 	background-image: linear-gradient(90deg,
-		${props => props.theme.color.layerDark} 0px,
-		${props => props.theme.color.layerDark} ${props => props.lower}px,
-		${props => props.theme.color.layerMed} ${props => props.sunrise}px,
-		${props => props.theme.color.bgLight} ${props => props.mid1}px,
-		${props => props.theme.color.bgLight} ${props => props.mid2}px,
-		${props => props.theme.color.layerMed} ${props => props.sunset}px,
-		${props => props.theme.color.layerDark} ${props => props.upper}px,
-		${props => props.theme.color.layerDark} ${props => props.total}px
+		${props => props.theme.color.background} 0px,
+		${props => props.theme.color.background} ${props => props.lower}px,
+		${props => props.theme.color.background} ${props => props.sunrise}px,
+		${props => props.theme.color.background} ${props => props.mid1}px,
+		${props => props.theme.color.background} ${props => props.mid2}px,
+		${props => props.theme.color.background} ${props => props.sunset}px,
+		${props => props.theme.color.background} ${props => props.upper}px,
+		${props => props.theme.color.background} ${props => props.total}px
 	);
 `;
 

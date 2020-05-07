@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyledFC } from "@/styles/theme";
+import { StyledFC } from "@/styles/styled";
 
 function roundVal(num: number): number {
 	return Math.round(num * 100) / 100;
