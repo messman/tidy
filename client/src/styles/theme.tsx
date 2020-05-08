@@ -3,6 +3,8 @@ import { createContext, useContext } from "react";
 import { createGlobalStyle, ThemeProps, ThemeProvider } from "styled-components";
 import { useLocalStorage, UseLocalStorageReturn } from "@/unit/hooks/useLocalStorage";
 import { keyFactory } from "@/services/localStorage";
+import { SmallTextInline, borderRadiusStyle, edgePaddingValue } from './common';
+import { styled } from './styled';
 
 /** Custom application theme type. */
 export interface Theme {
@@ -61,7 +63,7 @@ const darkTheme: Theme = {
 	fontFamily: `'Work Sans', sans-serif;`
 }
 
-/** The "dark" theme, based off the default. */
+/** The light theme */
 const lightTheme: Theme = {
 	...darkTheme,
 	name: 'light',
@@ -81,7 +83,7 @@ const lightTheme: Theme = {
 export const themes: Theme[] = [darkTheme, lightTheme];
 
 // For some reason, VS Code is not happy to colorize the CSS in this block when `createGlobalStyle` is used with a type.
-export const GlobalAppStyles = createGlobalStyle<ThemeProps<Theme>>`
+export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 	html {
 		font-family: ${p => p.theme.fontFamily};
 		font-weight: 300;
@@ -99,6 +101,7 @@ export const GlobalAppStyles = createGlobalStyle<ThemeProps<Theme>>`
 	}
 
 	* {
+		vertical-align: top;
 		-webkit-text-size-adjust: 100%;
 		box-sizing: border-box;
 		z-index: 1;
@@ -112,6 +115,7 @@ const themeIndexKey = getKey('themeIndex');
 
 export const LocalStorageThemeProvider: React.FC = (props) => {
 
+	console.log('HELLO?!');
 	const localStorageReturn = useLocalStorage(themeIndexKey, 0);
 	const [themeIndex] = localStorageReturn;
 	const theme = themes[themeIndex];
@@ -120,7 +124,7 @@ export const LocalStorageThemeProvider: React.FC = (props) => {
 		<LocalStorageThemeContext.Provider value={localStorageReturn}>
 			<ThemeProvider theme={theme}>
 				<>
-					<GlobalAppStyles />
+					<GlobalStyles />
 					{props.children}
 				</>
 			</ThemeProvider>
@@ -129,11 +133,81 @@ export const LocalStorageThemeProvider: React.FC = (props) => {
 }
 
 export const useLocalStorageTheme = () => useContext(LocalStorageThemeContext);
-export const useCurrentLocalStorageTheme = () => {
-	const localStorageReturn = useContext(LocalStorageThemeContext);
-	if (!localStorageReturn) {
-		console.error('Why is this happening?');
-		return themes[0];
-	}
-	return themes[localStorageReturn[0]];
+export const useCurrentTheme = () => {
+	const [themeIndex] = useContext(LocalStorageThemeContext);
+	return themes[themeIndex];
 }
+
+export const ThemePicker: React.FC = () => {
+
+	const [themeIndex, setThemeIndex] = useLocalStorageTheme();
+
+	function onClick(index: number): void {
+		setThemeIndex(index);
+	}
+
+	const options = themes.map((theme, index) => {
+		return (
+			<ThemePickerOption
+				key={theme.name}
+				name={theme.name}
+				index={index}
+				isSelected={index === themeIndex}
+				onClick={onClick}
+			/>
+		)
+	});
+
+	return (
+		<ThemePickerBubble>
+			{options}
+		</ThemePickerBubble>
+	);
+}
+
+const ThemePickerBubble = styled.div`
+	display: inline-block;
+	font-size: 0;
+
+	background-color: ${p => p.theme.color.backgroundLighter};
+	padding: ${edgePaddingValue};
+	${borderRadiusStyle}
+`;
+
+interface ThemePickerOptionProps {
+	name: string,
+	isSelected: boolean,
+	index: number,
+	onClick: (index: number) => void;
+}
+
+const ThemePickerOption: React.FC<ThemePickerOptionProps> = (props) => {
+
+	function onClick(): void {
+		if (!props.isSelected) {
+			props.onClick(props.index);
+		}
+	}
+
+	return (
+		<ThemePickerOptionBubble isSelected={props.isSelected} onClick={onClick}>
+			<SmallTextInline>{props.name.toUpperCase()}</SmallTextInline>
+		</ThemePickerOptionBubble>
+	)
+};
+
+interface ThemePickerOptionBubbleProps {
+	isSelected: boolean
+}
+
+const ThemePickerOptionBubble = styled.div<ThemePickerOptionBubbleProps>`
+	display: inline-block;
+	font-size: 0;
+
+	min-width: 3.5rem;
+	text-align: center;
+	background-color: ${p => p.isSelected ? p.theme.color.context : 'transparent'};
+	padding: calc(${edgePaddingValue} / 3) ${edgePaddingValue};
+	${borderRadiusStyle}
+	cursor: pointer;
+`;

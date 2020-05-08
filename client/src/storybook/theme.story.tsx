@@ -2,13 +2,13 @@ import * as React from 'react';
 import { decorate } from './decorate';
 import { Title, Subtitle, Text, TextInline, SmallText, SubText, borderRadiusStyle, edgePaddingValue } from '@/styles/common';
 import { styled } from '@/styles/styled';
-import { useCurrentLocalStorageTheme } from '@/styles/theme';
+import { useCurrentTheme } from '@/styles/theme';
 
 export default { title: 'Base/Theme' };
 
 export const Theme = decorate(() => {
 
-	const theme = useCurrentLocalStorageTheme();
+	const theme = useCurrentTheme();
 
 	return (
 		<>
@@ -61,7 +61,7 @@ const LongColorBox = styled.div<ColorBoxProps>`
 	background-color: ${p => p.backgroundColor};
 	${borderRadiusStyle};
 	margin-bottom: ${edgePaddingValue};
-	margin-right: ${edgePaddingValue}
+	margin-right: ${edgePaddingValue};
 `;
 
 const TextColorBox: React.FC<ColorBoxProps> = (props) => {

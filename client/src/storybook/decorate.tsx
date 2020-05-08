@@ -1,27 +1,34 @@
 import * as React from 'react';
 
 import { Wrapper } from "@/tree/wrapper";
-import { DecoratorFn } from "@storybook/react"
 import { styled } from '@/styles/styled';
+import { ThemePicker } from '@/styles/theme';
 
-export const Decorator: DecoratorFn = (storyFn) => {
+const Decorator = (Story: React.FC) => {
 	return (
 		<Wrapper>
 			<StoryPadding>
-				{storyFn()}
+				<PickerPadding>
+					<ThemePicker />
+				</PickerPadding>
+				<Story />
 			</StoryPadding>
 		</Wrapper>
 	);
 }
 
 const StoryPadding = styled.div`
-	padding: 2rem;
+	padding: 1rem;
+`;
+
+const PickerPadding = styled.div`
+	margin-bottom: 1rem;
 `;
 
 export interface StoryComponent {
 	(): JSX.Element,
 	story?: {
-		decorators?: DecoratorFn[]
+		decorators?: any[]
 	}
 }
 

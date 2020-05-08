@@ -14,8 +14,10 @@ export function useLocalStorage<T>(key: string, initialValue: T): UseLocalStorag
 	});
 
 	function setValue(value: T): void {
-		setStoredValue(value);
-		set(key, value);
+		if (!Object.is(value, storedValue)) {
+			setStoredValue(value);
+			set(key, value);
+		}
 	};
 	return [storedValue, setValue];
 }
