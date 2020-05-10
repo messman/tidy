@@ -51,6 +51,14 @@ const baseWebpackOptions = {
 					}
 				]
 			},
+			{
+				test: /\.svg$/,
+				use: [
+					{
+						loader: '@svgr/webpack'
+					}
+				]
+			}
 		]
 	},
 
