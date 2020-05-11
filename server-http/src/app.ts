@@ -38,7 +38,7 @@ export function configureApp(app: Application): void {
 	*/
 	app.set('json replacer', createReplacer());
 
-	app.get("/latest", async (_: Request, response: Response<AllResponse>) => {
+	app.get('/latest', async (_: Request, response: Response<AllResponse>) => {
 		stats.totalHits++;
 
 		if (isCaching) {
@@ -65,7 +65,7 @@ export function configureApp(app: Application): void {
 		return response.json(last);
 	});
 
-	app.get("/last", async (_: Request, response: Response<LastResponse>) => {
+	app.get('/last', async (_: Request, response: Response<LastResponse>) => {
 		if (!last) {
 			return response.json({
 				allResponse: null,
@@ -79,7 +79,7 @@ export function configureApp(app: Application): void {
 		});
 	});
 
-	app.get("/stats", async (_: Request, res: Response<StatsResponse>) => {
+	app.get('/stats', async (_: Request, res: Response<StatsResponse>) => {
 		return res.json(stats);
 	});
 }

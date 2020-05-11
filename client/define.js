@@ -1,6 +1,6 @@
 const yargs = require('yargs');
-const tidyServer = require("tidy-server");
-const jsStringify = require("javascript-stringify");
+const tidyServer = require('tidy-server');
+const jsStringify = require('javascript-stringify');
 
 module.exports = async function (isDevelopment, forceLocalTestData) {
 
