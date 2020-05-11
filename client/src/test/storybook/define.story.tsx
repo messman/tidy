@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DEFINE } from '@/services/define';
 import { decorate } from './decorate';
-import { TextPara } from '@/core/symbol/common';
+import { TextPara } from '@/core/symbol/text';
 
 export default { title: 'Base/Build' };
 

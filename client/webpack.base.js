@@ -1,34 +1,34 @@
-const path = require("path");
+const path = require('path');
 
 const CopyPlugin = require('copy-webpack-plugin');
-const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 
 // Cleans a directory
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const htmlPluginOptions = {
-	filename: "./index.html",
-	template: "./src/index.template.ejs",
+	filename: './index.html',
+	template: './src/index.template.ejs',
 	minify: false,
 	xhtml: true, // Use XHTML-compliance
 };
 
 const baseWebpackOptions = {
 	entry: {
-		index: "./src/entries/entry-index.tsx"
+		index: './src/entry/entry-index.tsx'
 	},
 	output: {
-		filename: "[name].js",
+		filename: '[name].js',
 		hashDigestLength: 10,
-		path: path.resolve(__dirname, "./dist")
+		path: path.resolve(__dirname, './dist')
 	},
 
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions (so that you don't need to type out the extension yourself).
-		extensions: [".ts", ".tsx", ".js", ".json"],
+		extensions: ['.ts', '.tsx', '.js', '.json'],
 
 		alias: {
-			"@": path.resolve(__dirname, "./src")
+			'@': path.resolve(__dirname, './src')
 		}
 	},
 
@@ -41,10 +41,10 @@ const baseWebpackOptions = {
 				test: /\.tsx?$/,
 				use: [
 					{
-						loader: "babel-loader"
+						loader: 'babel-loader'
 					},
 					{
-						loader: "ts-loader",
+						loader: 'ts-loader',
 						options: {
 							getCustomTransformers: () => ({ before: [createStyledComponentsTransformer()] })
 						}

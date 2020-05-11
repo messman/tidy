@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex, FlexRow } from '@/core/layout/flex';
 import { FooterToggleState, FooterToggle } from './footerToggle';
-import { Subtitle } from '@/core/symbol/common';
+import { Subtitle } from '@/core/symbol/text';
 import { styled } from '@/core/style/styled';
 
 interface FooterProps {

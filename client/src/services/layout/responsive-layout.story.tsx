@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { decorate } from '@/test/storybook/decorate';
-import { Subtitle } from '@/core/symbol/common';
+import { Subtitle } from '@/core/symbol/text';
 import { styled } from '@/core/style/styled';
 import { useResponsiveLayout, LayoutBreakpoint, LayoutMode, isInvalidLayoutForApplication } from './responsive-layout';
 

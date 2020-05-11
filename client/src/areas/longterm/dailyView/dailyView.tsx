@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex, FlexRow } from '@/core/layout/flex';
 import { styled, css } from '@/core/style/styled';
-import { SmallText } from '@/core/symbol/common';
+import { SmallText } from '@/core/symbol/text';
 import { TideEvent, AllDailyDay } from 'tidy-shared';
 import { createPrettyTime, isSameDay, createPrettyDateDay } from '@/services/time';
 import { DailyChart } from './dailyChart';
@@ -96,7 +96,7 @@ const Center = styled.div`
 	`;
 
 const Container = styled.div`
-	background-color: ${props => props.theme.color.backgroundLighter};
+	background-color: ${p => p.theme.color.backgroundLighter};
 	margin: .5rem .5rem 0 .5rem;
 
 	&:last-child {

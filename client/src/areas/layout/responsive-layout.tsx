@@ -72,7 +72,7 @@ const StrongFlexColumn = styled(FlexColumn)`
 `;
 
 const SidebarWrapper = styled(FlexColumn)`
-	border-left: 2px solid ${props => props.theme.color.background};
+	border-left: 2px solid ${p => p.theme.color.background};
 	width: 600px;
 	flex: initial;
 `;

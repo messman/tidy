@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { decorate } from './decorate';
-import { Title, Subtitle, Text, TextInline, SmallText, SubText, borderRadiusStyle, edgePaddingValue } from '@/core/symbol/common';
+import { Title, Subtitle, Text, TextInline, SmallText, SubText } from '@/core/symbol/text';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
+import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 
 export default { title: 'Base/Theme' };
 

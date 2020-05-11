@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Subtitle } from '@/core/symbol/common';
+import { Subtitle } from '@/core/symbol/text';
 import { TextPlaceholder } from '@/core/loading/placeholder';
 import { createPrettyTimespan } from '@/services/time';
 import { useAppDataContext } from '@/services/data/appData';

@@ -45,6 +45,6 @@ const DayRangeContainer = styled.div<DayRangeContainerProps>`
 	height: 26px;
 	line-height: 26px;
 
-	width: ${props => props.total}px;
+	width: ${p => p.total}px;
 	overflow: hidden;
 `;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex, FlexColumn } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
-import { Title } from '@/core/symbol/common';
+import { Title } from '@/core/symbol/text';
 import { useAppDataContext } from '@/services/data/appData';
 import { DailyView } from './dailyView/dailyView';
 import { createPrettyHour } from '@/services/time';
@@ -43,7 +43,7 @@ const ScrollFlex = styled(Flex)`
 	overflow-y: auto;
 	flex-basis: 0;
 	z-index: 0;
-	background-image: linear-gradient(180deg, ${props => props.theme.color.backgroundLighter} 0%, ${props => props.theme.color.background} 100%);
+	background-image: linear-gradient(180deg, ${p => p.theme.color.backgroundLighter} 0%, ${p => p.theme.color.background} 100%);
 `;
 
 const PaddingWithoutBottom = styled.div`

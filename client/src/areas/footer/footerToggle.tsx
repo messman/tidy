@@ -19,10 +19,10 @@ interface ToggleProps {
 }
 
 const Toggle = styled.button<ToggleProps> `
-	background: ${props => props.isOn ? props => props.theme.color.background : props => props.theme.color.background};
-	color: ${props => props.isOn ? props => props.theme.color.background : props => props.theme.color.background};
+	background: ${p => p.isOn ? p.theme.color.background : p.theme.color.background};
+	color: ${p => p.isOn ? p.theme.color.background : p.theme.color.background};
 
-	border: 1px solid ${props => props.theme.color.background};
+	border: 1px solid ${p => p.theme.color.background};
 	border-radius: .5rem;
 	padding: .2rem 1rem;
 	margin: 1rem;

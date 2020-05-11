@@ -2,8 +2,9 @@ import * as React from 'react';
 import { createContext, useContext } from 'react';
 import { createGlobalStyle, ThemeProps, ThemeProvider } from 'styled-components';
 import { useLocalStorage, UseLocalStorageReturn, keyFactory } from '@/services/data/local-storage';
-import { SmallTextInline, borderRadiusStyle, edgePaddingValue } from '@/core/symbol/common';
+import { SmallTextInline } from '@/core/symbol/text';
 import { styled } from './styled';
+import { edgePaddingValue, borderRadiusStyle } from './common';
 
 /** Custom application theme type. */
 export interface Theme {

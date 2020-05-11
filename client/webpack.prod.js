@@ -1,9 +1,7 @@
-console.log("~~~~~ PRODUCTION build ~~~~~");
-
-const webpack = require("webpack");
-const merge = require("webpack-merge");
-const base = require("./webpack.base.js");
-const HTMLWebpackPlugin = require("html-webpack-plugin");
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const base = require('./webpack.base.js');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
 const getDefine = require('./define');
 
 module.exports = async () => {
@@ -11,10 +9,10 @@ module.exports = async () => {
 	const DEFINE = await getDefine(false, false);
 
 	return merge(base.base, {
-		mode: "production",
+		mode: 'production',
 
 		output: {
-			filename: "[name].[chunkhash].js",
+			filename: '[name].[chunkhash].js',
 		},
 
 		optimization: {

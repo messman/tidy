@@ -79,7 +79,7 @@ const FillSVG = styled(SVGPath)`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	fill: ${props => props.theme.color.background};
+	fill: ${p => p.theme.color.background};
 	opacity: .5;
 
 	z-index: 5;
@@ -91,7 +91,7 @@ const StrokeSVG = styled(SVGPath)`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	stroke: ${props => props.theme.color.background};
+	stroke: ${p => p.theme.color.background};
 	stroke-width: 16px;
 	fill: transparent;
 

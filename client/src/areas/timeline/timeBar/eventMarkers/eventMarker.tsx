@@ -2,7 +2,7 @@ import { styled, css } from '@/core/style/styled';
 
 const sharedMarkerStyles = css`
 	position: absolute;
-	border: 1px solid ${props => props.theme.color.background};
+	border: 1px solid ${p => p.theme.color.background};
 `;
 
 interface EventMarkerProps {
@@ -11,8 +11,8 @@ interface EventMarkerProps {
 
 export const WeatherEventMarker = styled.div<EventMarkerProps>`
 	${sharedMarkerStyles}
-	left: ${props => props.positionLeft - 4}px;
-	background-color: ${props => props.theme.color.background};
+	left: ${p => p.positionLeft - 4}px;
+	background-color: ${p => p.theme.color.background};
 
 	top: 6px;
 	width: 8px;
@@ -22,8 +22,8 @@ export const WeatherEventMarker = styled.div<EventMarkerProps>`
 
 export const DayEventMarker = styled.div<EventMarkerProps>`
 	${sharedMarkerStyles}
-	left: ${props => props.positionLeft - 6}px;
-	background-color: ${props => props.theme.color.background};
+	left: ${p => p.positionLeft - 6}px;
+	background-color: ${p => p.theme.color.background};
 
 	bottom: 1px;
 	width: 12px;
@@ -34,8 +34,8 @@ export const DayEventMarker = styled.div<EventMarkerProps>`
 
 export const TideEventMarker = styled.div<EventMarkerProps>`
 	${sharedMarkerStyles}
-	left: ${props => props.positionLeft - 6}px;
-	background-color: ${props => props.theme.color.background};
+	left: ${p => p.positionLeft - 6}px;
+	background-color: ${p => p.theme.color.background};
 
 	bottom: 1px;
 	width: 12px;

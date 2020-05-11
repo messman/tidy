@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Title } from '@/core/symbol/common';
+import { Title } from '@/core/symbol/text';
 import { TextPlaceholder } from '@/core/loading/placeholder';
 import { useAppDataContext } from '@/services/data/appData';
 

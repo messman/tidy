@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
-import { SmallText } from '@/core/symbol/common';
+import { SmallText } from '@/core/symbol/text';
 import { useAppDataContext } from '@/services/data/appData';
 import { timeToPixels, createPrettyTime } from '@/services/time';
 import { TideEvent } from 'tidy-shared';
@@ -111,7 +111,7 @@ const ExtremeCard = styled(_ExtremeCard)`
 	position: absolute;
 	width: 1px;
 	height: 1px;
-	left: ${props => props.left}px;
+	left: ${p => p.left}px;
 	
 	display: flex;
 	flex-direction: column;
@@ -119,19 +119,19 @@ const ExtremeCard = styled(_ExtremeCard)`
 `;
 
 const TopExtremeCard = styled(ExtremeCard)`
-	top: ${props => props.top}%;
+	top: ${p => p.top}%;
 `;
 
 const BottomExtremeCard = styled(ExtremeCard)`
-	bottom: ${props => props.bottom}%;
+	bottom: ${p => p.bottom}%;
 	justify-content: flex-end;
 `;
 
 const CardBackground = styled.div`
-	background-color: ${props => props.theme.color.background};
+	background-color: ${p => p.theme.color.background};
 	padding: .2rem .6rem;
 	text-align: left;
-	border-color: ${props => props.theme.color.background};
+	border-color: ${p => p.theme.color.background};
 	border-style: solid;
 	border-width: 0;
 `;
@@ -147,6 +147,6 @@ const BottomCardBackground = styled(CardBackground)`
 const Line = styled.div`
 	height: 5vh;
 	width: 1px;
-	background-color: ${props => props.theme.color.background};
+	background-color: ${p => p.theme.color.background};
 	flex-shrink: 0;
 `;

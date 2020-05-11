@@ -34,7 +34,7 @@ const Placeholder = styled.span<PlaceholderProps>`
 	animation-name: ${shimmerKeyframe};
 	animation-timing-function: ease-out;
 
-	background-color: ${props => props.theme.color.background};
+	background-color: ${p => p.theme.color.background};
 	border-radius: .1rem;
 `;
 

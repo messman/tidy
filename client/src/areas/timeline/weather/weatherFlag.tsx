@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FlexColumn } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
-import { SmallText } from '@/core/symbol/common';
+import { SmallText } from '@/core/symbol/text';
 import { timeToPixels, createPrettyHour } from '@/services/time';
 import { WeatherStatus } from 'tidy-shared';
 
@@ -44,10 +44,10 @@ const Flag = styled(_Flag)`
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	left: ${props => props.left - 1}px;
+	left: ${p => p.left - 1}px;
 	padding-left: .3rem;
 
-	border-left: 2px solid ${props => props.theme.color.background};
+	border-left: 2px solid ${p => p.theme.color.background};
 `;
 
 

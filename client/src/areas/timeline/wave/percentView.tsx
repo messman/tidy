@@ -51,7 +51,7 @@ const CenterPoint = styled.div<CenterPointProps>`
 	position: absolute;
 	width: 1px;
 	height: 1px;
-	top: ${props => props.topPercent}%;
+	top: ${p => p.topPercent}%;
 	left: 50%;
 
 	display: flex;
@@ -70,7 +70,7 @@ const Backdrop = styled.div`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: ${props => props.theme.color.background};
+	background-color: ${p => p.theme.color.background};
 	opacity: .3;
 	border-radius: .25rem;
 `;
@@ -78,7 +78,7 @@ const Backdrop = styled.div`
 const Text = styled.div`
 	position: relative;
 	padding: .5rem 1rem;
-	color: ${props => props.theme.color.background};
+	color: ${p => p.theme.color.background};
 	font-size: 2rem;
 	text-align: center;
 	font-weight: 400;

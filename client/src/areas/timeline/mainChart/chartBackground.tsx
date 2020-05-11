@@ -43,7 +43,7 @@ const Background = styled.div`
 	width: 100%;
 	height: 100%;
 
-	background-image: linear-gradient(180deg, ${props => props.theme.color.background} 0%, ${props => props.theme.color.background} 100%);
+	background-image: linear-gradient(180deg, ${p => p.theme.color.background} 0%, ${p => p.theme.color.background} 100%);
 `;
 
 interface LineOffsetProps {
@@ -55,8 +55,8 @@ const SunEventLine = styled.div<LineOffsetProps>`
 	top: 0;
 	height: 100%;
 	width: 2px;
-	left: ${props => props.positionLeft - 1}px;
-	border-left: 2px dashed ${props => props.theme.color.background};
+	left: ${p => p.positionLeft - 1}px;
+	border-left: 2px dashed ${p => p.theme.color.background};
 	opacity: .7;
 `;
 
@@ -65,7 +65,7 @@ const MidnightEventLine = styled.div<LineOffsetProps>`
 	top: 0;
 	height: 100%;
 	width: 4px;
-	left: ${props => props.positionLeft - 2}px;
-	background-color: ${props => props.theme.color.background};
+	left: ${p => p.positionLeft - 2}px;
+	background-color: ${p => p.theme.color.background};
 	opacity: .5;
 `;

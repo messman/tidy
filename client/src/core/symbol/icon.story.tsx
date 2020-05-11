@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { decorate } from '@/test/storybook/decorate';
-import { Text } from '@/core/symbol/common';
+import { Text } from '@/core/symbol/text';
 import { iconTypes, Icon } from '@/core/symbol/icon';
 
 export default { title: 'Unit/Components/Icon' };

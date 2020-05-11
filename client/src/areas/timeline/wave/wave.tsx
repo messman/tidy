@@ -133,7 +133,7 @@ export const Wave: React.FC<WaveProps> = (props) => {
 
 const Container = styled(FlexColumn)`
 	z-index: 0;
-	background-image: linear-gradient(180deg, ${props => props.theme.color.background} 2%, ${props => props.theme.color.background} 38%);
+	background-image: linear-gradient(180deg, ${p => p.theme.color.background} 2%, ${p => p.theme.color.background} 38%);
 	overflow: hidden;
 `;
 
@@ -182,7 +182,7 @@ const SVGWave = styled(_SVGWave)`
 	width: 100%;
 	height: 100%;
 	overflow: visible;
-	fill: ${props => (([props.theme.color.background, props.theme.color.background, props.theme.color.background])[props.index])};
+	fill: ${p => (([p.theme.color.background, p.theme.color.background, p.theme.color.background])[p.index])};
 `;
 
 interface OpacityCoverProps {
@@ -195,7 +195,7 @@ const OpacityCover = styled.div<OpacityCoverProps>`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-image: linear-gradient(180deg, transparent ${props => props.heightPercent * 100}%, ${props => props.theme.color.background} 100%);
+	background-image: linear-gradient(180deg, transparent ${p => p.heightPercent * 100}%, ${p => p.theme.color.background} 100%);
 `;
 
 

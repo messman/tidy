@@ -7,7 +7,7 @@ export interface FlexProps {
 
 export const Flex = styled.div<FlexProps>`
 	position: relative;
-	flex: ${props => props.flex};
+	flex: ${p => p.flex};
 `;
 
 Flex.defaultProps = {
@@ -32,8 +32,8 @@ const _FlexColumn: StyledFC<FlexContainerProps> = (props) => {
 export const FlexColumn = styled(_FlexColumn)`
 	display: flex;
 	flex-direction: column;
-	align-items: ${props => props.alignItems};
-	justify-content: ${props => props.justifyContent};
+	align-items: ${p => p.alignItems};
+	justify-content: ${p => p.justifyContent};
 `;
 
 FlexColumn.defaultProps = {
@@ -52,8 +52,8 @@ const _FlexRow: StyledFC<FlexContainerProps> = (props) => {
 export const FlexRow = styled(_FlexRow)`
 	display: flex;
 	flex-direction: row;
-	align-items: ${props => props.alignItems};
-	justify-content: ${props => props.justifyContent};
+	align-items: ${p => p.alignItems};
+	justify-content: ${p => p.justifyContent};
 `;
 
 FlexRow.defaultProps = {

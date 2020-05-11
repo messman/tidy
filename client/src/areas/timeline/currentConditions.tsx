@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
-import { Text } from '@/core/symbol/common';
+import { Text } from '@/core/symbol/text';
 import { TextPlaceholder } from '@/core/loading/placeholder';
 import { createPrettyTimespan } from '@/services/time';
 import { useAppDataContext } from '@/services/data/appData';

@@ -79,7 +79,7 @@ const FillSVG = styled(SVGPath)`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	fill: ${props => props.theme.color.background};
+	fill: ${p => p.theme.color.background};
 	opacity: .5;
 
 	z-index: 5;
@@ -91,7 +91,7 @@ const StrokeSVG = styled(SVGPath)`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	stroke: ${props => props.theme.color.background};
+	stroke: ${p => p.theme.color.background};
 	stroke-width: 12px;
 	fill: transparent;
 
@@ -116,7 +116,7 @@ const LowerPadding = styled.div<LowerPaddingProps>`
 	${paddingHeightStyle};
 	opacity: .5;
 
-	${props => props.showGradient && css`
-		background-image: linear-gradient(180deg, ${props => props.theme.color.background} 10%, ${props => props.theme.color.background} 100%);
+	${p => p.showGradient && css`
+		background-image: linear-gradient(180deg, ${p => p.theme.color.background} 10%, ${p => p.theme.color.background} 100%);
 	`}
 `;

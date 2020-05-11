@@ -35,6 +35,6 @@ const _MainChartContainer: StyledFC<MainChartContainerProps> = (props) => {
 }
 
 const MainChartContainer = styled(_MainChartContainer)`
-	width: ${props => props.totalWidth}px;
+	width: ${p => p.totalWidth}px;
 	overflow: hidden;
 `;

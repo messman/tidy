@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, css, StyledFC } from '@/core/style/styled';
-import { SmallText } from '@/core/symbol/common';
+import { SmallText } from '@/core/symbol/text';
 import { pixelsPerDay, timeToPixels, createPrettyTime, createPrettyDate } from '@/services/time';
 
 interface FullDayProps {
@@ -50,7 +50,7 @@ export const FullDay: React.FC<FullDayProps> = (props) => {
 }
 
 const ShadowSmallTextStyle = styled(SmallText)`
-	text-shadow: 0px 0px 3px ${props => props.theme.color.background}, 0px 0px 7px ${props => props.theme.color.background};
+	text-shadow: 0px 0px 3px ${p => p.theme.color.background}, 0px 0px 7px ${p => p.theme.color.background};
 `;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ const AbsoluteContainer = styled.div<AbsoluteContainerProps>`
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: ${props => props.total}px;
+	width: ${p => p.total}px;
 	height: 100%;
 	display: flex;
 `;
@@ -81,7 +81,7 @@ const FullDayStartEndStyle = css`
 	position: absolute;
 	height: 100%;
 	width: 2px;
-	background-color: ${props => props.theme.color.background};
+	background-color: ${p => p.theme.color.background};
 	opacity: .5;
 `;
 
@@ -128,7 +128,7 @@ const _SunEventText: StyledFC<SunEventTextProps> = (props) => {
 
 const SunEventText = styled(_SunEventText)`
 	${FullDayTextStyle}
-	left: ${props => props.leftOffset - 100}px;
+	left: ${p => p.leftOffset - 100}px;
 	width: 200px;
 	text-align: center;
 `;
@@ -150,17 +150,17 @@ const FullDayBackgroundGradient = styled.div<FullDayBackgroundGradientProps>`
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: ${props => props.total}px;
+	width: ${p => p.total}px;
 	height: 100%;
 	background-image: linear-gradient(90deg,
-		${props => props.theme.color.background} 0px,
-		${props => props.theme.color.background} ${props => props.lower}px,
-		${props => props.theme.color.background} ${props => props.sunrise}px,
-		${props => props.theme.color.background} ${props => props.mid1}px,
-		${props => props.theme.color.background} ${props => props.mid2}px,
-		${props => props.theme.color.background} ${props => props.sunset}px,
-		${props => props.theme.color.background} ${props => props.upper}px,
-		${props => props.theme.color.background} ${props => props.total}px
+		${p => p.theme.color.background} 0px,
+		${p => p.theme.color.background} ${p => p.lower}px,
+		${p => p.theme.color.background} ${p => p.sunrise}px,
+		${p => p.theme.color.background} ${p => p.mid1}px,
+		${p => p.theme.color.background} ${p => p.mid2}px,
+		${p => p.theme.color.background} ${p => p.sunset}px,
+		${p => p.theme.color.background} ${p => p.upper}px,
+		${p => p.theme.color.background} ${p => p.total}px
 	);
 `;
 

@@ -69,7 +69,7 @@ const Border = styled.div`
 	z-index: 1000;
 	height: 100%;
 	width: 2px;
-	background-color: ${props => props.theme.color.background};
+	background-color: ${p => p.theme.color.background};
 	flex-shrink: 0;
 `;
 

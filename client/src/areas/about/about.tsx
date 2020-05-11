@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { css, ThemedCSS } from '@/core/style/styled';
-import { Title, Subtitle, Text } from '@/core/symbol/common';
+import { Title, Subtitle, Text } from '@/core/symbol/text';
 
 export const aboutBackgroundColor: ThemedCSS = css`
-	background-image: linear-gradient(91deg, ${props => props.theme.color.background} 0%, ${props => props.theme.color.backgroundLighter} 99%);
+	background-image: linear-gradient(91deg, ${p => p.theme.color.background} 0%, ${p => p.theme.color.backgroundLighter} 99%);
 `;
 
 export const About: React.FC = () => {
