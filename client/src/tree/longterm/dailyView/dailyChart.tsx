@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled, StyledFC, css } from "@/styles/styled";
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
 import { useRef } from "react";
-import { useElementSize } from "@/unit/hooks/useElementSize";
+import { useElementSize } from "@/unit/hooks/layout/element-size";
 import { AllDailyDay } from 'tidy-shared';
 
 interface DailyChartProps {

@@ -6,7 +6,7 @@ const createStyledComponentsTransformer = require("typescript-plugin-styled-comp
 // https://storybook.js.org/docs/configurations/typescript-config/
 module.exports = {
 
-	stories: ['../src/storybook/**/*.story.tsx'],
+	stories: ['../src/**/*.story.tsx'],
 
 	addons: ['@storybook/addon-viewport/register'],
 

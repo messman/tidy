@@ -4,7 +4,7 @@ import { styled, StyledFC } from "@/styles/styled";
 import { useAppDataContext } from "@/tree/appData";
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
 import { useRef } from "react";
-import { useElementSize } from "@/unit/hooks/useElementSize";
+import { useElementSize } from "@/unit/hooks/layout/element-size";
 import { ExtremeCards } from "./extremeCards";
 
 interface ChartForegroundProps {

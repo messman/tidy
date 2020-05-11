@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createContext, useContext } from "react";
 import { createGlobalStyle, ThemeProps, ThemeProvider } from "styled-components";
-import { useLocalStorage, UseLocalStorageReturn } from "@/unit/hooks/useLocalStorage";
+import { useLocalStorage, UseLocalStorageReturn } from "@/unit/hooks/local-storage";
 import { keyFactory } from "@/services/localStorage";
 import { SmallTextInline, borderRadiusStyle, edgePaddingValue } from './common';
 import { styled } from './styled';
@@ -114,8 +114,6 @@ const getKey = keyFactory('tidy');
 const themeIndexKey = getKey('themeIndex');
 
 export const LocalStorageThemeProvider: React.FC = (props) => {
-
-	console.log('HELLO?!');
 	const localStorageReturn = useLocalStorage(themeIndexKey, 0);
 	const [themeIndex] = localStorageReturn;
 	const theme = themes[themeIndex];

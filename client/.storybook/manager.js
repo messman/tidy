@@ -5,7 +5,7 @@ import { addons } from '@storybook/addons';
 // 	theme: themes.dark,
 // });
 
-import yourTheme from './customTheme';
+import yourTheme from './custom-theme';
 addons.setConfig({
 	theme: yourTheme,
 });

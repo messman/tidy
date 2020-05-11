@@ -1,34 +1,21 @@
 import * as React from "react";
 import { styled } from "@/styles/styled";
-import { WindowDimensions } from "@/unit/hooks/useWindowDimensions";
+import { WindowDimensions } from "@/unit/hooks/layout/window-dimensions";
 import { FlexColumn, FlexRow } from "@/unit/components/flex";
+import { LayoutBreakpoint } from '@/unit/hooks/layout/responsive-layout';
 
-
-export enum ResponsiveLayoutType {
-	compact = 0,
-	regular = 500,
-	wide = 1200
-}
-
-const layoutKeys = Object.keys(ResponsiveLayoutType).filter(function (key) {
+const layoutKeys = Object.keys(LayoutBreakpoint).filter(function (key) {
 	return isNaN(parseInt(key, 10));
 }).reverse();
 
 export function pickLayout(dimensions: WindowDimensions): number {
-	return ResponsiveLayoutType[layoutKeys.find(function (key) {
-		return dimensions.width > ResponsiveLayoutType[key as keyof typeof ResponsiveLayoutType];
-	}) as keyof typeof ResponsiveLayoutType];
-}
-
-export function getLayoutRange(layoutType: ResponsiveLayoutType): [number, number | null] {
-	const index = layoutKeys.findIndex(function (key) {
-		return ResponsiveLayoutType[key as keyof typeof ResponsiveLayoutType] === layoutType;
-	});
-	return [ResponsiveLayoutType[layoutKeys[index] as keyof typeof ResponsiveLayoutType], index === 0 ? null : ResponsiveLayoutType[layoutKeys[index - 1] as keyof typeof ResponsiveLayoutType]]
+	return LayoutBreakpoint[layoutKeys.find(function (key) {
+		return dimensions.width > LayoutBreakpoint[key as keyof typeof LayoutBreakpoint];
+	}) as keyof typeof LayoutBreakpoint];
 }
 
 interface ResponsiveLayoutProps {
-	layout: ResponsiveLayoutType,
+	layout: LayoutBreakpoint,
 	fillWithSidebar: boolean,
 	fillWithOverlay: boolean,
 
@@ -49,7 +36,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	else if (props.fillWithSidebar) {
 		layoutElements = sidebar;
 	}
-	else if (props.layout === ResponsiveLayoutType.compact || props.layout === ResponsiveLayoutType.regular) {
+	else if (props.layout === LayoutBreakpoint.compact || props.layout === LayoutBreakpoint.regular) {
 		layoutElements = (
 			<>
 				{header}
@@ -57,7 +44,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 			</>
 		);
 	}
-	else if (props.layout === ResponsiveLayoutType.wide) {
+	else if (props.layout === LayoutBreakpoint.wide) {
 		layoutElements = (
 			<FlexRow>
 				<StrongFlexColumn flex={1.8} >

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { decorate } from './decorate';
+import { decorate } from '../../storybook/decorate';
 import { Text } from '@/styles/common';
 import { iconTypes, Icon } from '@/unit/components/icon';
 
-export default { title: 'UI' };
+export default { title: 'Unit/Components/Icon' };
 
 export const Icons = decorate(() => {
 

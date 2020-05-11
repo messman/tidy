@@ -1,11 +1,11 @@
 import * as React from "react";
 import { FlexRow, FlexColumn } from "@/unit/components/flex";
 import { styled } from "@/styles/styled";
-import { ResponsiveLayoutType } from "../responsiveLayout";
 import { CurrentConditions } from "./currentConditions";
 import { Wave, WaveAnimationOptions } from "./wave/wave";
 import { UpperTimeline } from "./upperTimeline";
 import { MainChart } from "./mainChart/mainChart";
+import { LayoutBreakpoint } from '@/unit/hooks/layout/responsive-layout';
 
 interface TimelineProps {
 }
@@ -59,7 +59,7 @@ const Container = styled(FlexColumn)`
 
 const One = styled(FlexColumn)`
 	width: 100vw;
-	max-width: ${ResponsiveLayoutType.regular}px;
+	max-width: ${LayoutBreakpoint.regular}px;
 	flex: none;
 	position: relative;
 `;

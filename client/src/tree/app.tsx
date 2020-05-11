@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { useResponsiveLayoutContext } from "@/unit/hooks/useResponsiveLayout";
-import { ResponsiveLayout, ResponsiveLayoutType } from "./responsiveLayout";
+import { useResponsiveLayout, LayoutBreakpoint, Layout } from "@/unit/hooks/layout/responsive-layout";
+import { ResponsiveLayout } from "./layout/responsive-layout";
 import { Footer } from "./footer/footer";
 import { FooterToggleState } from "./footer/footerToggle";
 import { BackgroundFill } from "./backgroundFill";
@@ -21,9 +21,9 @@ interface DualToggleState {
 	overlay: FooterToggleState
 }
 
-function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggleState, layout: ResponsiveLayoutType): DualToggleState {
+function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggleState, layout: Layout): DualToggleState {
 	const state: DualToggleState = { sidebar, overlay };
-	if (layout === ResponsiveLayoutType.wide) {
+	if (layout.widthBreakpoint === LayoutBreakpoint.wide) {
 		state.sidebar = FooterToggleState.hidden;
 		if (state.overlay === FooterToggleState.hidden) {
 			state.overlay = FooterToggleState.visible;
@@ -36,7 +36,7 @@ function decideDualToggleState(sidebar: FooterToggleState, overlay: FooterToggle
 }
 
 export const App: React.FC<AppProps> = () => {
-	const layout = useResponsiveLayoutContext();
+	const layout = useResponsiveLayout();
 
 	const [dualToggleState, setDualToggleState] = useState<DualToggleState>(decideDualToggleState(FooterToggleState.visible, FooterToggleState.visible, layout));
 
@@ -72,7 +72,7 @@ export const App: React.FC<AppProps> = () => {
 				overlayCss={aboutBackgroundColor}
 			>
 				<ResponsiveLayout
-					layout={layout}
+					layout={layout.widthBreakpoint}
 					fillWithSidebar={fillWithSidebar}
 					fillWithOverlay={fillWithOverlay}
 
