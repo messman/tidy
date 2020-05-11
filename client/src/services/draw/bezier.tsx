@@ -1,5 +1,5 @@
-import * as React from "react";
-import { StyledFC } from "@/styles/styled";
+import * as React from 'react';
+import { StyledFC } from '@/core/style/styled';
 
 function roundVal(num: number): number {
 	return Math.round(num * 100) / 100;
@@ -20,9 +20,9 @@ export function getPath(totalWidth: number, totalHeight: number, topPadding: num
 	// Bezier is relative to start point of the bezier, not absolute
 	// c (first control point) (second control point) (how far to actually go)
 	const singleWaveBezier = `c ${cp1Length} -${amplitude} ${cp2Length} -${amplitude} ${bezierLength} 0 c${cp1Length} ${amplitude} ${cp2Length} ${amplitude} ${bezierLength} 0`;
-	let waveBezier = "";
+	let waveBezier = '';
 	for (let i = 0; i < freq; i++)
-		waveBezier += singleWaveBezier + " ";
+		waveBezier += singleWaveBezier + ' ';
 	/*
 		One wave:
 			 ____
@@ -35,8 +35,8 @@ export function getPath(totalWidth: number, totalHeight: number, topPadding: num
 
 	// Make 2 waves (first of which covers the whole viewbox - second of which is completely offscreen) so we are 2X the viewbox width
 	// Coordinate system is from top left
-	// "m0 (Y amount for percent) (bezier) (bezier) v(total - Y amount for percent) h-(2 * total width) v-(total - y amount for percent) z"
-	return `M0 ${y} ${waveBezier} ${waveBezier} v${totalHeight - y} h-${totalWidth * 2} v-${totalHeight - y} z`
+	// 'm0 (Y amount for percent) (bezier) (bezier) v(total - Y amount for percent) h-(2 * total width) v-(total - y amount for percent) z'
+	return `M0 ${y} ${waveBezier} ${waveBezier} v${totalHeight - y} h-${totalWidth * 2} v-${totalHeight - y} z`;
 	// M0,${p} c13,0 20.3,-${r} 33.3,-${r} c13,0 20.3,${r} 33.3,${r} c13,0 20.3,-${r} 33.3,-${r} v100 h-100 v-${100 - p} z
 }
 
@@ -134,7 +134,7 @@ export const SVGPath: StyledFC<SVGPathProps> = (props) => {
 	const width = right - left;
 	const height = top - bottom;
 	return (
-		<svg className={props.className} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox={`${left} ${bottom} ${width} ${height}`}>
+		<svg className={props.className} version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox={`${left} ${bottom} ${width} ${height}`}>
 			<path d={path}></path>
 		</svg>
 	);

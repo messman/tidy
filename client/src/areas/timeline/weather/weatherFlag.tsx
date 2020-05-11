@@ -1,9 +1,9 @@
-import * as React from "react";
-import { FlexColumn } from "@/unit/components/flex";
-import { styled, StyledFC } from "@/styles/styled";
-import { SmallText } from "@/styles/common";
-import { timeToPixels, createPrettyHour } from "@/services/time";
-import { WeatherStatus } from "tidy-shared";
+import * as React from 'react';
+import { FlexColumn } from '@/core/layout/flex';
+import { styled, StyledFC } from '@/core/style/styled';
+import { SmallText } from '@/core/symbol/common';
+import { timeToPixels, createPrettyHour } from '@/services/time';
+import { WeatherStatus } from 'tidy-shared';
 
 interface WeatherFlagProps {
 	startTime: Date,

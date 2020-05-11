@@ -1,9 +1,9 @@
-import * as React from "react";
-import { styled, StyledFC } from "@/styles/styled";
-import { useAppDataContext } from "@/tree/appData";
-import { DayRange } from "./dayRange";
-import { EventMarkers } from "./eventMarkers/eventMarkers";
-import { SunEvent } from "tidy-shared";
+import * as React from 'react';
+import { styled, StyledFC } from '@/core/style/styled';
+import { useAppDataContext } from '@/services/data/appData';
+import { DayRange } from './dayRange';
+import { EventMarkers } from './eventMarkers/eventMarkers';
+import { SunEvent } from 'tidy-shared';
 
 // IMPORTANT ASSUMPTION - there is always a sunrise for a sunset in the returned data.
 

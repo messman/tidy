@@ -1,4 +1,4 @@
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect } from 'react';
 
 export interface ElementSize {
 	isSizing: boolean,
@@ -38,14 +38,14 @@ export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObjec
 
 		handleChange();
 
-		window.addEventListener("resize", handleChange, { capture: true });
-		window.addEventListener("orientationchange", handleChange, { capture: true });
-		window.addEventListener("visibilitychange", handleChange, { capture: true });
+		window.addEventListener('resize', handleChange, { capture: true });
+		window.addEventListener('orientationchange', handleChange, { capture: true });
+		window.addEventListener('visibilitychange', handleChange, { capture: true });
 
 		return function () {
-			window.removeEventListener("resize", handleChange, { capture: true });
-			window.removeEventListener("orientationchange", handleChange, { capture: true });
-			window.removeEventListener("visibilitychange", handleChange, { capture: true });
+			window.removeEventListener('resize', handleChange, { capture: true });
+			window.removeEventListener('orientationchange', handleChange, { capture: true });
+			window.removeEventListener('visibilitychange', handleChange, { capture: true });
 		}
 	}, [ref.current]);
 

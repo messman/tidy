@@ -1,7 +1,7 @@
-import * as React from "react";
-import { styled, StyledFC } from "@/styles/styled";
-import { pixelsPerDay, isSameDay, timeToPixels } from "@/services/time";
-import { FullDay } from "./fullDay";
+import * as React from 'react';
+import { styled, StyledFC } from '@/core/style/styled';
+import { pixelsPerDay, isSameDay, timeToPixels } from '@/services/time';
+import { FullDay } from './fullDay';
 
 interface DayRangeProps {
 	startTime: Date,

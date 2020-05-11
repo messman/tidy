@@ -1,8 +1,8 @@
-import * as React from "react";
-import { styled, StyledFC } from "@/styles/styled";
+import * as React from 'react';
+import { styled, StyledFC } from '@/core/style/styled';
 
 export interface FlexProps {
-	flex?: number | "none";
+	flex?: number | 'none';
 }
 
 export const Flex = styled.div<FlexProps>`
@@ -16,9 +16,9 @@ Flex.defaultProps = {
 
 interface FlexContainerProps extends FlexProps {
 	/** Row: how items act vertically. Column: how items act horizontally. */
-	alignItems?: "stretch" | "center";
+	alignItems?: 'stretch' | 'center';
 	/** How items work along the direction of row/column. Default: flex-start. */
-	justifyContent?: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly";
+	justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
 }
 
 const _FlexColumn: StyledFC<FlexContainerProps> = (props) => {
@@ -37,8 +37,8 @@ export const FlexColumn = styled(_FlexColumn)`
 `;
 
 FlexColumn.defaultProps = {
-	alignItems: "stretch",
-	justifyContent: "flex-start"
+	alignItems: 'stretch',
+	justifyContent: 'flex-start'
 };
 
 const _FlexRow: StyledFC<FlexContainerProps> = (props) => {
@@ -57,6 +57,6 @@ export const FlexRow = styled(_FlexRow)`
 `;
 
 FlexRow.defaultProps = {
-	alignItems: "stretch",
-	justifyContent: "flex-start"
+	alignItems: 'stretch',
+	justifyContent: 'flex-start'
 };

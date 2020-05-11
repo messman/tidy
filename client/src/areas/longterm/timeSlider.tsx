@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Flex, FlexRow } from "@/unit/components/flex";
-import { styled } from "@/styles/styled";
-import { SmallText } from "@/styles/common";
+import * as React from 'react';
+import { Flex, FlexRow } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
+import { SmallText } from '@/core/symbol/common';
 
 interface TimeSliderProps {
 	minHour: number,

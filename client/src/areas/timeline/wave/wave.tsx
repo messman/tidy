@@ -1,11 +1,11 @@
-import * as React from "react";
-import { Flex, FlexColumn } from "@/unit/components/flex";
-import { styled, StyledFC } from "@/styles/styled";
-import { useRef } from "react";
-import { useElementSize } from "@/unit/hooks/layout/element-size";
-import { useAppDataContext } from "@/tree/appData";
-import * as Bezier from "@/services/bezier";
-import { PercentView } from "./percentView";
+import * as React from 'react';
+import { Flex, FlexColumn } from '@/core/layout/flex';
+import { styled, StyledFC } from '@/core/style/styled';
+import { useRef } from 'react';
+import { useElementSize } from '@/services/layout/element-size';
+import { useAppDataContext } from '@/services/data/appData';
+import * as Bezier from '@/services/draw/bezier';
+import { PercentView } from './percentView';
 
 interface WaveProps {
 	animationOptions: WaveAnimationOptions
@@ -154,16 +154,16 @@ export const _SVGWave: StyledFC<SVGWaveProps> = (props) => {
 
 		const name = `wave_${index}`;
 
-		const from = a.isForward ? -width : "0";
-		const to = a.isForward ? "0" : -width;
+		const from = a.isForward ? -width : '0';
+		const to = a.isForward ? '0' : -width;
 
 		wave = (
-			<svg className={props.className} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
+			<svg className={props.className} version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox={`0 0 ${width} ${height}`} preserveAspectRatio='none'>
 				<defs>
 					<path id={name} d={path}></path>
 				</defs>
-				<use xlinkHref={`#${name}`} x="0" y="0">
-					<animate attributeName="x" from={from} to={to} dur={`${totalDurationSeconds}s`} begin={a.timeOffsetSeconds} repeatCount="indefinite" />
+				<use xlinkHref={`#${name}`} x='0' y='0'>
+					<animate attributeName='x' from={from} to={to} dur={`${totalDurationSeconds}s`} begin={a.timeOffsetSeconds} repeatCount='indefinite' />
 				</use>
 			</svg>
 		);

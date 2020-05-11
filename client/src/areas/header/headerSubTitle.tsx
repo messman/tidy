@@ -1,8 +1,8 @@
-import * as React from "react";
-import { Subtitle } from "@/styles/common";
-import { TextPlaceholder } from "@/styles/placeholder";
-import { createPrettyTimespan } from "@/services/time";
-import { useAppDataContext } from "../appData";
+import * as React from 'react';
+import { Subtitle } from '@/core/symbol/common';
+import { TextPlaceholder } from '@/core/loading/placeholder';
+import { createPrettyTimespan } from '@/services/time';
+import { useAppDataContext } from '@/services/data/appData';
 
 interface HeaderSubTitleProps {
 }
@@ -11,8 +11,8 @@ export const HeaderSubTitle: React.FC<HeaderSubTitleProps> = () => {
 
 	const { isLoading, success } = useAppDataContext();
 
-	let nextText = "";
-	let previousText = "";
+	let nextText = '';
+	let previousText = '';
 	if (!isLoading && success && success.data) {
 		const { next, previous } = success.data.current.tides;
 
@@ -20,11 +20,11 @@ export const HeaderSubTitle: React.FC<HeaderSubTitleProps> = () => {
 
 		const percent = .5;
 		if (percent >= .1 || percent <= .9) {
-			nextText += ",";
+			nextText += ',';
 			previousText = `and ${previous.isLow ? 'low' : 'high'} tide was ${createPrettyTimespan(previous.time.getTime() - success.info.referenceTime.getTime())}.`;
 		}
 		else {
-			nextText += ".";
+			nextText += '.';
 		}
 	}
 

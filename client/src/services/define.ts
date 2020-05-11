@@ -14,4 +14,4 @@ export const DEFINE = {
 };
 
 // Make these public on the window for us to easily check
-(window as any)["DEFINE"] = DEFINE;
+(window as any)['DEFINE'] = DEFINE;

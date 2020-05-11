@@ -1,8 +1,8 @@
-import * as React from "react";
-import { Flex, FlexRow } from "@/unit/components/flex";
-import { FooterToggleState, FooterToggle } from "./footerToggle";
-import { Subtitle } from "@/styles/common";
-import { styled } from "@/styles/styled";
+import * as React from 'react';
+import { Flex, FlexRow } from '@/core/layout/flex';
+import { FooterToggleState, FooterToggle } from './footerToggle';
+import { Subtitle } from '@/core/symbol/common';
+import { styled } from '@/core/style/styled';
 
 interface FooterProps {
 	longTermToggleState: FooterToggleState,
@@ -26,11 +26,11 @@ export const Footer: React.FC<FooterProps> = (props) => {
 	}
 
 	return (
-		<FlexRow flex={0} alignItems="center">
+		<FlexRow flex={0} alignItems='center'>
 			<Flex>
 				<FooterToggle
 					svg={longTermSvg}
-					title="See Tides Schedule"
+					title='See Tides Schedule'
 					state={props.longTermToggleState}
 					onToggle={props.longTermOnToggle}
 				/>
@@ -39,7 +39,7 @@ export const Footer: React.FC<FooterProps> = (props) => {
 			<Flex>
 				<RightSVGToggle
 					svg={aboutSvg}
-					title="About"
+					title='About'
 					state={props.aboutToggleState}
 					onToggle={props.aboutOnToggle}
 				/>

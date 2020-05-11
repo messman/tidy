@@ -1,5 +1,5 @@
-import * as React from "react";
-import { styled, StyledFC } from "@/styles/styled";
+import * as React from 'react';
+import { styled, StyledFC } from '@/core/style/styled';
 
 export enum FooterToggleState {
 	hidden,

@@ -1,6 +1,6 @@
-import { styled, css } from "./styled";
+import { styled, css } from '@/core/style/styled';
+import { Theme } from '@/core/style/theme';
 import { StyledComponent } from 'styled-components';
-import { Theme } from './theme';
 
 const commonTextStyle = css`
 	vertical-align: top;

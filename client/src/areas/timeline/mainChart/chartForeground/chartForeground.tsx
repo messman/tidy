@@ -1,11 +1,11 @@
-import * as React from "react";
-import { Flex } from "@/unit/components/flex";
-import { styled, StyledFC } from "@/styles/styled";
-import { useAppDataContext } from "@/tree/appData";
-import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from "@/services/bezier";
-import { useRef } from "react";
-import { useElementSize } from "@/unit/hooks/layout/element-size";
-import { ExtremeCards } from "./extremeCards";
+import * as React from 'react';
+import { Flex } from '@/core/layout/flex';
+import { styled, StyledFC } from '@/core/style/styled';
+import { useAppDataContext } from '@/services/data/appData';
+import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from '@/services/draw/bezier';
+import { useRef } from 'react';
+import { useElementSize } from '@/services/layout/element-size';
+import { ExtremeCards } from './extremeCards';
 
 interface ChartForegroundProps {
 }

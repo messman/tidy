@@ -1,6 +1,6 @@
-import * as React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
-import { useWindowDimensions, WindowDimensions } from "./window-dimensions";
+import * as React from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { useWindowDimensions, WindowDimensions } from './window-dimensions';
 
 export enum LayoutBreakpoint {
 	compact = 0,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@/styles/styled';
+import { styled } from '@/core/style/styled';
 
 export type SVGIconType = React.FC<React.SVGAttributes<SVGElement>>;
 

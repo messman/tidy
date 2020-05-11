@@ -1,6 +1,6 @@
-import * as React from "react";
-import { css, ThemedCSS } from "@/styles/styled";
-import { Title, Subtitle, Text } from "@/styles/common";
+import * as React from 'react';
+import { css, ThemedCSS } from '@/core/style/styled';
+import { Title, Subtitle, Text } from '@/core/symbol/common';
 
 export const aboutBackgroundColor: ThemedCSS = css`
 	background-image: linear-gradient(91deg, ${props => props.theme.color.background} 0%, ${props => props.theme.color.backgroundLighter} 99%);

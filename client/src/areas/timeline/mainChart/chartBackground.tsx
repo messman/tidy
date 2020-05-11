@@ -1,7 +1,7 @@
-import * as React from "react";
-import { styled, StyledFC } from "@/styles/styled";
-import { useAppDataContext } from "@/tree/appData";
-import { timeToPixels } from "@/services/time";
+import * as React from 'react';
+import { styled, StyledFC } from '@/core/style/styled';
+import { useAppDataContext } from '@/services/data/appData';
+import { timeToPixels } from '@/services/time';
 
 interface ChartBackgroundProps {
 }

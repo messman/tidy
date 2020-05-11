@@ -1,8 +1,8 @@
-import * as React from "react";
-import { usePromise, PromiseState } from "@/unit/hooks/promise";
-import { createContext, useContext } from "react";
-import { getData } from "@/services/data";
-import { AllResponse } from "tidy-shared";
+import * as React from 'react';
+import { createContext, useContext } from 'react';
+import { usePromise, PromiseState } from '@/services/promise';
+import { getData } from '@/services/data/data';
+import { AllResponse } from 'tidy-shared';
 
 const AppDataContext = createContext<PromiseState<AllResponse>>(null!);
 

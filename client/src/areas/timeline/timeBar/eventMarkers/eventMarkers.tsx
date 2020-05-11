@@ -1,9 +1,9 @@
-import * as React from "react";
-import { styled, StyledFC } from "@/styles/styled";
-import { useAppDataContext } from "@/tree/appData";
-import { timeToPixels, isSameDay } from "@/services/time";
-import { WeatherEventMarker, DayEventMarker, TideEventMarker } from "./eventMarker";
-import { filterWeatherEvents } from "../../upperTimeline";
+import * as React from 'react';
+import { styled, StyledFC } from '@/core/style/styled';
+import { useAppDataContext } from '@/services/data/appData';
+import { timeToPixels, isSameDay } from '@/services/time';
+import { WeatherEventMarker, DayEventMarker, TideEventMarker } from './eventMarker';
+import { filterWeatherEvents } from '../../upperTimeline';
 
 interface EventMarkersProps {
 }

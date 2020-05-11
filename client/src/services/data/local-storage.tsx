@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 /** Using a wrapper object allows us to store falsy values. */
 interface Wrapper<T> {
 	v: T

@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { Wrapper } from "@/tree/wrapper";
-import { styled } from '@/styles/styled';
-import { ThemePicker } from '@/styles/theme';
+import { Wrapper } from '@/entry/wrapper';
+import { styled } from '@/core/style/styled';
+import { ThemePicker } from '@/core/style/theme';
 
 const Decorator = (Story: React.FC) => {
 	return (

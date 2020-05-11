@@ -1,7 +1,7 @@
-import * as React from "react";
-import { styled, css, StyledFC } from "@/styles/styled";
-import { SmallText } from "@/styles/common";
-import { pixelsPerDay, timeToPixels, createPrettyTime, createPrettyDate } from "@/services/time";
+import * as React from 'react';
+import { styled, css, StyledFC } from '@/core/style/styled';
+import { SmallText } from '@/core/symbol/common';
+import { pixelsPerDay, timeToPixels, createPrettyTime, createPrettyDate } from '@/services/time';
 
 interface FullDayProps {
 	timeInDay: Date,

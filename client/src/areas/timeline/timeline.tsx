@@ -1,11 +1,11 @@
-import * as React from "react";
-import { FlexRow, FlexColumn } from "@/unit/components/flex";
-import { styled } from "@/styles/styled";
-import { CurrentConditions } from "./currentConditions";
-import { Wave, WaveAnimationOptions } from "./wave/wave";
-import { UpperTimeline } from "./upperTimeline";
-import { MainChart } from "./mainChart/mainChart";
-import { LayoutBreakpoint } from '@/unit/hooks/layout/responsive-layout';
+import * as React from 'react';
+import { FlexRow, FlexColumn } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
+import { CurrentConditions } from './currentConditions';
+import { Wave, WaveAnimationOptions } from './wave/wave';
+import { UpperTimeline } from './upperTimeline';
+import { MainChart } from './mainChart/mainChart';
+import { LayoutBreakpoint } from '@/services/layout/responsive-layout';
 
 interface TimelineProps {
 }
@@ -25,7 +25,7 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 
 	return (
 		<Container>
-			<Upper flex={"none"}>
+			<Upper flex={'none'}>
 				<One>
 					<CurrentConditions {...props} />
 				</One>

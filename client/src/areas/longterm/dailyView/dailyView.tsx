@@ -1,10 +1,10 @@
-import * as React from "react";
-import { Flex, FlexRow } from "@/unit/components/flex";
-import { styled, css } from "@/styles/styled";
-import { SmallText } from "@/styles/common";
+import * as React from 'react';
+import { Flex, FlexRow } from '@/core/layout/flex';
+import { styled, css } from '@/core/style/styled';
+import { SmallText } from '@/core/symbol/common';
 import { TideEvent, AllDailyDay } from 'tidy-shared';
-import { createPrettyTime, isSameDay, createPrettyDateDay } from "@/services/time";
-import { DailyChart } from "./dailyChart";
+import { createPrettyTime, isSameDay, createPrettyDateDay } from '@/services/time';
+import { DailyChart } from './dailyChart';
 
 export interface DailyViewProps {
 	isToday: boolean,
@@ -134,7 +134,7 @@ const NoShrinkFlex = styled(Flex)`
 const TideText: React.FC<TideTextProps> = (props) => {
 	return (
 		<NoShrinkFlex>
-			<LongText>{props.event.isLow ? "Low" : "High"}</LongText>
+			<LongText>{props.event.isLow ? 'Low' : 'High'}</LongText>
 			<LongText>{createPrettyTime(props.event.time)} {props.event.height}ft</LongText>
 		</NoShrinkFlex>
 	);

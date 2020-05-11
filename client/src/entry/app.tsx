@@ -1,16 +1,15 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-import { useResponsiveLayout, LayoutBreakpoint, Layout } from "@/unit/hooks/layout/responsive-layout";
-import { ResponsiveLayout } from "./layout/responsive-layout";
-import { Footer } from "./footer/footer";
-import { FooterToggleState } from "./footer/footerToggle";
-import { BackgroundFill } from "./backgroundFill";
-import { FlexColumn } from "@/unit/components/flex";
-import { styled } from "@/styles/styled";
-import { About, aboutBackgroundColor } from "./about/about";
-import { LongTerm } from "./longterm/longterm";
-import { Header } from "./header/header";
-import { Timeline } from "./timeline/timeline";
+import * as React from 'react';
+import { useState, useEffect } from 'react';
+import { useResponsiveLayout, LayoutBreakpoint, Layout } from '@/services/layout/responsive-layout';
+import { ResponsiveLayout } from '@/areas/layout/responsive-layout';
+import { Footer } from '@/areas/footer/footer';
+import { FooterToggleState } from '@/areas/footer/footerToggle';
+import { FlexColumn } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
+import { About, aboutBackgroundColor } from '@/areas/about/about';
+import { LongTerm } from '@/areas/longterm/longterm';
+import { Header } from '@/areas/header/header';
+import { Timeline } from '@/areas/timeline/timeline';
 
 
 interface AppProps {
@@ -65,33 +64,26 @@ export const App: React.FC<AppProps> = () => {
 
 	return (
 		<Root>
-			<BackgroundFill
+			<ResponsiveLayout
+				layout={layout.widthBreakpoint}
 				fillWithSidebar={fillWithSidebar}
-				sidebarCss={null!}
 				fillWithOverlay={fillWithOverlay}
-				overlayCss={aboutBackgroundColor}
-			>
-				<ResponsiveLayout
-					layout={layout.widthBreakpoint}
-					fillWithSidebar={fillWithSidebar}
-					fillWithOverlay={fillWithOverlay}
 
-					header={<Header />}
-					timeline={<Timeline />}
+				header={<Header />}
+				timeline={<Timeline />}
 
-					overlay={<About />}
-					sidebar={<LongTerm />}
+				overlay={<About />}
+				sidebar={<LongTerm />}
 
-					footer={
-						<Footer
-							longTermToggleState={dualToggleState.sidebar}
-							longTermOnToggle={sidebarOnToggle}
-							aboutToggleState={dualToggleState.overlay}
-							aboutOnToggle={overlayOnToggle}
-						/>
-					}
-				/>
-			</BackgroundFill>
+				footer={
+					<Footer
+						longTermToggleState={dualToggleState.sidebar}
+						longTermOnToggle={sidebarOnToggle}
+						aboutToggleState={dualToggleState.overlay}
+						aboutOnToggle={overlayOnToggle}
+					/>
+				}
+			/>
 		</Root>
 	);
 }

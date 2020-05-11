@@ -1,10 +1,10 @@
-import * as React from "react";
-import { FlexColumn } from "@/unit/components/flex";
-import { styled, StyledFC } from "@/styles/styled";
-import { useAppDataContext } from "@/tree/appData";
-import { timeToPixels } from "@/services/time";
-import { ChartBackground } from "./chartBackground";
-import { ChartForeground } from "./chartForeground/chartForeground";
+import * as React from 'react';
+import { FlexColumn } from '@/core/layout/flex';
+import { styled, StyledFC } from '@/core/style/styled';
+import { useAppDataContext } from '@/services/data/appData';
+import { timeToPixels } from '@/services/time';
+import { ChartBackground } from './chartBackground';
+import { ChartForeground } from './chartForeground/chartForeground';
 
 interface MainChartProps {
 }

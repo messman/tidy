@@ -1,6 +1,6 @@
-import baseStyled, { css as baseCss, ThemedStyledInterface, BaseThemedCssFunction, ThemeProps, FlattenInterpolation } from "styled-components";
-import { Theme } from "./theme";
-export { ThemeProvider, keyframes } from "styled-components";
+import baseStyled, { css as baseCss, ThemedStyledInterface, BaseThemedCssFunction, ThemeProps, FlattenInterpolation } from 'styled-components';
+import { Theme } from './theme';
+export { ThemeProvider, keyframes } from 'styled-components';
 
 // Export wrapped styled
 export const styled = baseStyled as ThemedStyledInterface<Theme>;

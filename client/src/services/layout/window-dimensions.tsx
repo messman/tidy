@@ -24,14 +24,14 @@ export function useWindowDimensions() {
 			}
 		}
 
-		window.addEventListener("resize", handleChange, { capture: true });
-		window.addEventListener("orientationchange", handleChange, { capture: true });
-		window.addEventListener("visibilitychange", handleChange, { capture: true });
+		window.addEventListener('resize', handleChange, { capture: true });
+		window.addEventListener('orientationchange', handleChange, { capture: true });
+		window.addEventListener('visibilitychange', handleChange, { capture: true });
 
 		return function () {
-			window.removeEventListener("resize", handleChange, { capture: true });
-			window.removeEventListener("orientationchange", handleChange, { capture: true });
-			window.removeEventListener("visibilitychange", handleChange, { capture: true });
+			window.removeEventListener('resize', handleChange, { capture: true });
+			window.removeEventListener('orientationchange', handleChange, { capture: true });
+			window.removeEventListener('visibilitychange', handleChange, { capture: true });
 		}
 	}, []);
 

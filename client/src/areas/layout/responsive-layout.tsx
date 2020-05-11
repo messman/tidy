@@ -1,8 +1,8 @@
-import * as React from "react";
-import { styled } from "@/styles/styled";
-import { WindowDimensions } from "@/unit/hooks/layout/window-dimensions";
-import { FlexColumn, FlexRow } from "@/unit/components/flex";
-import { LayoutBreakpoint } from '@/unit/hooks/layout/responsive-layout';
+import * as React from 'react';
+import { FlexColumn, FlexRow } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
+import { WindowDimensions } from '@/services/layout/window-dimensions';
+import { LayoutBreakpoint } from '@/services/layout/responsive-layout';
 
 const layoutKeys = Object.keys(LayoutBreakpoint).filter(function (key) {
 	return isNaN(parseInt(key, 10));

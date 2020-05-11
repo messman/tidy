@@ -1,9 +1,9 @@
-import * as React from "react";
-import { styled, StyledFC } from "@/styles/styled";
-import { SmallText } from "@/styles/common";
-import { useAppDataContext } from "@/tree/appData";
-import { timeToPixels, createPrettyTime } from "@/services/time";
-import { TideEvent } from "tidy-shared";
+import * as React from 'react';
+import { styled, StyledFC } from '@/core/style/styled';
+import { SmallText } from '@/core/symbol/common';
+import { useAppDataContext } from '@/services/data/appData';
+import { timeToPixels, createPrettyTime } from '@/services/time';
+import { TideEvent } from 'tidy-shared';
 
 interface ExtremeCardsProps {
 	heightInPixels: number;
@@ -66,7 +66,7 @@ interface ExtremeCardProps {
 }
 
 const _ExtremeCard: StyledFC<ExtremeCardProps> = (props) => {
-	const lowHighText = props.tideEvent.isLow ? "Low" : "High";
+	const lowHighText = props.tideEvent.isLow ? 'Low' : 'High';
 	const timeText = createPrettyTime(props.tideEvent.time);
 	const heightText = `${props.tideEvent.height} ft`;
 

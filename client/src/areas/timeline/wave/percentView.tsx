@@ -1,5 +1,5 @@
-import * as React from "react";
-import { styled } from "@/styles/styled";
+import * as React from 'react';
+import { styled } from '@/core/style/styled';
 
 interface PercentViewProps {
 	visualHeightPercent: number,

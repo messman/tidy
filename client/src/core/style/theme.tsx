@@ -1,9 +1,8 @@
-import * as React from "react";
-import { createContext, useContext } from "react";
-import { createGlobalStyle, ThemeProps, ThemeProvider } from "styled-components";
-import { useLocalStorage, UseLocalStorageReturn } from "@/unit/hooks/local-storage";
-import { keyFactory } from "@/services/localStorage";
-import { SmallTextInline, borderRadiusStyle, edgePaddingValue } from './common';
+import * as React from 'react';
+import { createContext, useContext } from 'react';
+import { createGlobalStyle, ThemeProps, ThemeProvider } from 'styled-components';
+import { useLocalStorage, UseLocalStorageReturn, keyFactory } from '@/services/data/local-storage';
+import { SmallTextInline, borderRadiusStyle, edgePaddingValue } from '@/core/symbol/common';
 import { styled } from './styled';
 
 /** Custom application theme type. */

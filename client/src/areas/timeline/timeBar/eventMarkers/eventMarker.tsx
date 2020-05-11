@@ -1,4 +1,4 @@
-import { styled, css } from "@/styles/styled";
+import { styled, css } from '@/core/style/styled';
 
 const sharedMarkerStyles = css`
 	position: absolute;

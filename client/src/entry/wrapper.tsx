@@ -1,7 +1,7 @@
-import * as React from "react";
-import { AppDataProvider } from "@/tree/appData";
-import { LocalStorageThemeProvider } from "@/styles/theme";
-import { ResponsiveLayoutProvider, defaultLowerBreakpoints } from '@/unit/hooks/layout/responsive-layout';
+import * as React from 'react';
+import { AppDataProvider } from '@/services/data/appData';
+import { LocalStorageThemeProvider } from '@/core/style/theme';
+import { ResponsiveLayoutProvider, defaultLowerBreakpoints } from '@/services/layout/responsive-layout';
 
 export const Wrapper: React.FC = (props) => {
 	return (

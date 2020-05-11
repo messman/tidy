@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { decorate } from '@/storybook/decorate';
-import { Subtitle } from '@/styles/common';
+import { decorate } from '@/test/storybook/decorate';
+import { Subtitle } from '@/core/symbol/common';
+import { styled } from '@/core/style/styled';
 import { useResponsiveLayout, LayoutBreakpoint, LayoutMode, isInvalidLayoutForApplication } from './responsive-layout';
-import { styled } from '@/styles/styled';
 
 export default { title: 'Tree/Layout/Responsive' };
 

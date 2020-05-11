@@ -21,12 +21,12 @@ export async function getData(minTimeMs: number): Promise<AllResponse> {
 					})
 					.catch((err: Error) => {
 						console.error(err);
-						throw new Error("There was a problem deserializing the API response");
+						throw new Error('There was a problem deserializing the API response');
 					});
 			}
 			else {
 				if (res.status === 404) {
-					throw new Error("The application could not connect to the API (404)");
+					throw new Error('The application could not connect to the API (404)');
 				}
 				throw new Error(`The API experienced an error (${res.status})`);
 			}

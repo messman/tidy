@@ -1,8 +1,8 @@
-import * as React from "react";
-import { styled, StyledFC } from "@/styles/styled";
-import { useAppDataContext } from "@/tree/appData";
-import { WeatherFlag } from "./weatherFlag";
-import { filterWeatherEvents } from "../upperTimeline";
+import * as React from 'react';
+import { styled, StyledFC } from '@/core/style/styled';
+import { useAppDataContext } from '@/services/data/appData';
+import { WeatherFlag } from './weatherFlag';
+import { filterWeatherEvents } from '../upperTimeline';
 
 interface WeatherProps {
 }

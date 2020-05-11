@@ -1,11 +1,11 @@
-import * as React from "react";
-import { Flex, FlexColumn } from "@/unit/components/flex";
-import { styled } from "@/styles/styled";
-import { Title } from "@/styles/common";
-import { useAppDataContext } from "../appData";
-import { DailyView } from "./dailyView/dailyView";
-import { createPrettyHour } from "@/services/time";
-import { TimeSlider } from "./timeSlider";
+import * as React from 'react';
+import { Flex, FlexColumn } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
+import { Title } from '@/core/symbol/common';
+import { useAppDataContext } from '@/services/data/appData';
+import { DailyView } from './dailyView/dailyView';
+import { createPrettyHour } from '@/services/time';
+import { TimeSlider } from './timeSlider';
 
 interface LongTermProps {
 }
