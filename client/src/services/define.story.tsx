@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DEFINE } from '@/services/define';
-import { decorate } from './decorate';
+import { decorate } from '@/test/storybook/decorate';
 import { TextPara } from '@/core/symbol/text';
 
 export default { title: 'Base/Build' };

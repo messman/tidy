@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { decorate } from './decorate';
+import { decorate } from '@/test/storybook/decorate';
 import { Title, Subtitle, Text, TextInline, SmallText, SubText } from '@/core/symbol/text';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
