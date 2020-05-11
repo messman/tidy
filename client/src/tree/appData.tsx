@@ -1,5 +1,5 @@
 import * as React from "react";
-import { usePromise, PromiseState } from "@/unit/hooks/usePromise";
+import { usePromise, PromiseState } from "@/unit/hooks/promise";
 import { createContext, useContext } from "react";
 import { getData } from "@/services/data";
 import { AllResponse } from "tidy-shared";
