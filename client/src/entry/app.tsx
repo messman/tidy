@@ -6,7 +6,7 @@ import { Footer } from '@/areas/footer/footer';
 import { FooterToggleState } from '@/areas/footer/footerToggle';
 import { FlexColumn } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
-import { About, aboutBackgroundColor } from '@/areas/about/about';
+import { About } from '@/areas/about/about';
 import { LongTerm } from '@/areas/longterm/longterm';
 import { Header } from '@/areas/header/header';
 import { Timeline } from '@/areas/timeline/timeline';
