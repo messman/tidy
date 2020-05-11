@@ -27,20 +27,19 @@ export function isInvalidLayoutForApplication(layout: Layout): boolean {
 
 function getLayout(dimensions: WindowDimensions, lowerBreakpoints: number[]): Layout {
 
-	let newWidthBreakpoint = -1;
-	let newHeightBreakpoint = -1;
+	const lowest = lowerBreakpoints[0];
+	let newWidthBreakpoint = lowest;
+	let newHeightBreakpoint = lowest;
 	// Loop through breakpoints from largest to smallest looking for the largest match
 	for (let i = lowerBreakpoints.length - 1; i >= 0; i--) {
 		const breakpoint = lowerBreakpoints[i];
-		if (newWidthBreakpoint === -1 && dimensions.width > breakpoint) {
+		if (newWidthBreakpoint === lowest && dimensions.width > breakpoint) {
 			newWidthBreakpoint = breakpoint;
 		}
-		if (newHeightBreakpoint === -1 && dimensions.height > breakpoint) {
+		if (newHeightBreakpoint === lowest && dimensions.height > breakpoint) {
 			newHeightBreakpoint = breakpoint;
 		}
 	}
-	newWidthBreakpoint = newWidthBreakpoint || lowerBreakpoints[0];
-	newHeightBreakpoint = newHeightBreakpoint || lowerBreakpoints[0];
 
 	const newMode = dimensions.width > dimensions.height ? LayoutMode.landscape : (dimensions.height > dimensions.width ? LayoutMode.portrait : LayoutMode.square);
 
