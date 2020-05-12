@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { createContext, useContext, useState, useEffect } from 'react';
 import { useWindowDimensions, WindowDimensions } from './window-dimensions';
 
 export enum LayoutBreakpoint {
@@ -15,17 +14,17 @@ export enum LayoutMode {
 	square
 }
 
-export interface Layout {
+export interface ResponsiveLayout {
 	widthBreakpoint: number,
 	heightBreakpoint: number,
 	mode: LayoutMode
 }
 
-export function isInvalidLayoutForApplication(layout: Layout): boolean {
+export function isInvalidLayoutForApplication(layout: ResponsiveLayout): boolean {
 	return layout.heightBreakpoint < LayoutBreakpoint.regular;
 }
 
-function getLayout(dimensions: WindowDimensions, lowerBreakpoints: number[]): Layout {
+function getLayout(dimensions: WindowDimensions, lowerBreakpoints: number[]): ResponsiveLayout {
 
 	const lowest = lowerBreakpoints[0];
 	let newWidthBreakpoint = lowest;
@@ -50,35 +49,29 @@ function getLayout(dimensions: WindowDimensions, lowerBreakpoints: number[]): La
 	}
 }
 
-function useLayout(lowerBreakpoints: number[]): Layout {
-
-	const dimensions = useWindowDimensions();
-	const [layout, setLayout] = useState<Layout>(() => {
-		return getLayout(dimensions, lowerBreakpoints);
-	});
-
-	useEffect(() => {
-		const newLayout = getLayout(dimensions, lowerBreakpoints);
-		if (newLayout.widthBreakpoint !== layout.widthBreakpoint || newLayout.heightBreakpoint !== layout.heightBreakpoint || newLayout.mode !== layout.mode) {
-			setLayout(newLayout);
-		}
-	}, [dimensions.width, dimensions.height]);
-
-	return layout;
-}
-
-const ResponsiveLayoutContext = createContext<Layout>(null!);
-export const useResponsiveLayout = () => useContext<Layout>(ResponsiveLayoutContext);
+const ResponsiveLayoutContext = React.createContext<ResponsiveLayout>(null!);
+export const useResponsiveLayout = () => React.useContext(ResponsiveLayoutContext);
 
 export interface ResponsiveLayoutProviderProps {
 	lowerBreakpoints: number[]
 }
 
 export const ResponsiveLayoutProvider: React.FC<ResponsiveLayoutProviderProps> = (props) => {
-	const responsiveLayout = useLayout(props.lowerBreakpoints);
+
+	const dimensions = useWindowDimensions();
+	const [layout, setLayout] = React.useState<ResponsiveLayout>(() => {
+		return getLayout(dimensions, props.lowerBreakpoints);
+	});
+
+	React.useEffect(() => {
+		const newLayout = getLayout(dimensions, props.lowerBreakpoints);
+		if (newLayout.widthBreakpoint !== layout.widthBreakpoint || newLayout.heightBreakpoint !== layout.heightBreakpoint || newLayout.mode !== layout.mode) {
+			setLayout(newLayout);
+		}
+	}, [dimensions.width, dimensions.height]);
 
 	return (
-		<ResponsiveLayoutContext.Provider value={responsiveLayout}>
+		<ResponsiveLayoutContext.Provider value={layout}>
 			{props.children}
 		</ResponsiveLayoutContext.Provider>
 	)

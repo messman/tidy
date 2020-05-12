@@ -1,20 +1,11 @@
 import * as React from 'react';
 import { FlexColumn, FlexRow } from '@/core/layout/flex';
-import { styled, StyledFC, css } from '@/core/style/styled';
+import { styled, css } from '@/core/style/styled';
 import { LayoutBreakpoint, LayoutMode, useResponsiveLayout } from '@/services/layout/responsive-layout';
-import { Icon, SVGIconType, iconTypes } from '@/core/symbol/icon';
-import { flowPaddingValue } from '@/core/style/common';
-import { useCurrentTheme } from '@/core/style/theme';
-
-export interface MenuBarProps {
-	forecastOnClick: () => void,
-
-	clipboardIsDisabledSuccess: boolean,
-	clipboardIsDisabledFailure: boolean,
-	clipboardOnClick: () => void,
-
-	settingsOnClick: () => void
-}
+import { iconTypes } from '@/core/symbol/icon';
+import { useComponentLayout } from '../layout/responsive-layout';
+import { MenuBarIcon } from './menu-bar-icon';
+import { AllResponseClipboardIcon } from './clipboard';
 
 const wrapperStyles = css`
 	background-color: ${p => p.theme.color.backgroundLighter};
@@ -26,16 +17,16 @@ const MenuBarLeftWrapper = styled(FlexColumn)`
 	${wrapperStyles};
 `;
 
-export const MenuBar: React.FC<MenuBarProps> = (props) => {
+export const MenuBar: React.FC = (props) => {
 
-	const layout = useResponsiveLayout();
-	const isBottomMenuBar = layout.widthBreakpoint === LayoutBreakpoint.compact || layout.mode === LayoutMode.portrait;
+	const responsiveLayout = useResponsiveLayout();
+
+	const isCompact = responsiveLayout.widthBreakpoint === LayoutBreakpoint.compact;
+	const justifyContent = isCompact ? 'space-evenly' : 'center';
 
 	const bar = <MenuBarInner {...props} />
 
-	const isFullEvenSpacing = layout.widthBreakpoint === LayoutBreakpoint.compact;
-	const justifyContent = isFullEvenSpacing ? 'space-evenly' : 'center';
-
+	const isBottomMenuBar = isCompact || responsiveLayout.mode === LayoutMode.portrait;
 	if (isBottomMenuBar) {
 		return (
 			<FlexColumn>
@@ -58,65 +49,66 @@ export const MenuBar: React.FC<MenuBarProps> = (props) => {
 	}
 }
 
-const MenuBarInner: React.FC<MenuBarProps> = (props) => {
+const MenuBarInner: React.FC = () => {
 
-	const clipboardIconType = props.clipboardIsDisabledSuccess ? iconTypes.clipboardCheck : iconTypes.clipboard;
-	const clipboardTitle = props.clipboardIsDisabledSuccess ? 'Copied to clipboard' : 'Copy to clipboard';
-	const isClipboardDisabled = props.clipboardIsDisabledSuccess || props.clipboardIsDisabledFailure;
+	const responsiveLayout = useResponsiveLayout();
+	const [componentLayout, setComponentLayout] = useComponentLayout();
+
+	const isCompact = responsiveLayout.widthBreakpoint === LayoutBreakpoint.compact;
+
+	if (isCompact && componentLayout.isCompactForecastView || componentLayout.isCompactSettingsView) {
+
+		function onBackClick(): void {
+			setComponentLayout({
+				isCompactForecastView: false,
+				isCompactSettingsView: false
+			});
+		}
+
+		return (
+			<MenuBarIcon
+				type={iconTypes.chevronLeft}
+				title='Back'
+				isDisabled={false}
+				onClick={onBackClick}
+			/>
+		);
+	}
+
+	if (!isCompact) {
+		return <AllResponseClipboardIcon />;
+	}
+
+	function onForecastClick(): void {
+		setComponentLayout({
+			isCompactForecastView: true,
+			isCompactSettingsView: false
+		});
+	}
+
+	function onSettingsClick(): void {
+		setComponentLayout({
+			isCompactForecastView: false,
+			isCompactSettingsView: true
+		});
+	}
 
 
 	return (
 		<>
+			<AllResponseClipboardIcon />
 			<MenuBarIcon
 				type={iconTypes.calendar}
 				title='Forecast'
 				isDisabled={false}
-				onClick={props.forecastOnClick}
-			/>
-			<MenuBarIcon
-				type={clipboardIconType}
-				title={clipboardTitle}
-				isDisabled={isClipboardDisabled}
-				onClick={props.clipboardOnClick}
+				onClick={onForecastClick}
 			/>
 			<MenuBarIcon
 				type={iconTypes.gear}
 				title='Settings'
 				isDisabled={false}
-				onClick={props.settingsOnClick}
+				onClick={onSettingsClick}
 			/>
 		</>
 	);
 }
-
-interface MenuBarIconProps {
-	type: SVGIconType,
-	title: string,
-	isDisabled: boolean,
-	onClick: () => void
-}
-
-export const MenuBarIcon: StyledFC<MenuBarIconProps> = (props) => {
-
-	const theme = useCurrentTheme();
-	const fillColor = props.isDisabled ? theme.color.disabled : theme.color.textAndIcon;
-
-	return (
-		<IconPadding>
-			<Clickable onClick={props.onClick} title={props.title} disabled={props.isDisabled}>
-				<Icon type={props.type} fill={fillColor} />
-			</Clickable>
-		</IconPadding>
-	);
-};
-
-const Clickable = styled.button`
-	border: 0;
-	background-color: transparent;
-	cursor: ${p => p.disabled ? 'not-allowed' : 'pointer'};
-`;
-
-const IconPadding = styled.span`
-	display: inline-block;
-	padding: ${flowPaddingValue};
-`;

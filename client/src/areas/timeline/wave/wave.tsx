@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Flex, FlexColumn } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useRef } from 'react';
 import { useElementSize } from '@/services/layout/element-size';
 import { useAppDataContext } from '@/services/data/appData';
 import * as Bezier from '@/services/draw/bezier';
@@ -25,7 +24,7 @@ export interface WaveAnimationOptions {
 export const Wave: React.FC<WaveProps> = (props) => {
 	const { isLoading, success } = useAppDataContext();
 
-	const ref = useRef<HTMLDivElement>(null!);
+	const ref = React.useRef<HTMLDivElement>(null!);
 	const size = useElementSize(ref, 300);
 
 	let animationOptions0: SVGWaveAnimationOptions | null = null;

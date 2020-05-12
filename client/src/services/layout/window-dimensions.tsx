@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { createContext, useContext, useState, useEffect } from 'react';
 
 export interface WindowDimensions {
 	width: number,
@@ -7,12 +6,12 @@ export interface WindowDimensions {
 }
 
 export function useWindowDimensions() {
-	const [dimensions, setDimensions] = useState<WindowDimensions>({
+	const [dimensions, setDimensions] = React.useState<WindowDimensions>({
 		width: window.innerWidth,
 		height: window.innerHeight,
 	});
 
-	useEffect(() => {
+	React.useEffect(() => {
 		function handleChange(): void {
 			const newInnerWidth = window.innerWidth;
 			const newInnerHeight = window.innerHeight;
@@ -38,8 +37,8 @@ export function useWindowDimensions() {
 	return dimensions;
 }
 
-const WindowDimensionsContext = createContext<WindowDimensions>(null!);
-export const useWindowDimensionsContext = () => useContext(WindowDimensionsContext);
+const WindowDimensionsContext = React.createContext<WindowDimensions>(null!);
+export const useWindowDimensionsContext = () => React.useContext(WindowDimensionsContext);
 
 export const WindowDimensionsProvider: React.FC = (props: React.ComponentProps<any>) => {
 	const dimensions = useWindowDimensions();

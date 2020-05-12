@@ -75,14 +75,20 @@ export const iconTypes = {
 
 export interface IconProps {
 	type: SVGIconType,
-	fill?: string;
+	fill?: string,
+	width?: string | number,
+	height?: string | number
 }
 
 export const Icon: React.FC<IconProps> = (props) => {
-	const SVGIcon = props.type;
+
+	// Get the width and height props separately. If we use spread, 
+	const { type, fill, ...widthAndHeightProps } = props;
+	const SVGIcon = type;
+
 	return (
-		<SVGWrapper fill={props.fill}>
-			<SVGIcon />
+		<SVGWrapper fill={fill}>
+			<SVGIcon {...widthAndHeightProps} />
 		</SVGWrapper>
 	);
 }

@@ -13,7 +13,7 @@ export const Icons = decorate(() => {
 		return (
 			<div key={iconName}>
 				<Text>{iconName}</Text>
-				<Icon type={icon} />
+				<Icon type={icon} height='2rem' />
 			</div>
 		);
 	});

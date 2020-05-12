@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { createContext, useContext } from 'react';
 import { usePromise, PromiseState } from '@/services/promise';
 import { getData } from '@/services/data/data';
 import { AllResponse } from 'tidy-shared';
 
-const AppDataContext = createContext<PromiseState<AllResponse>>(null!);
+const AppDataContext = React.createContext<PromiseState<AllResponse>>(null!);
 
 export const AppDataProvider: React.FC = (props) => {
 	const promiseState = usePromise(() => getData(650));
@@ -16,4 +15,4 @@ export const AppDataProvider: React.FC = (props) => {
 	);
 }
 
-export const useAppDataContext = () => useContext(AppDataContext);
+export const useAppDataContext = () => React.useContext(AppDataContext);

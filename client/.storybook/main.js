@@ -8,7 +8,7 @@ module.exports = {
 
 	stories: ['../src/**/*.story.tsx'],
 
-	addons: ['@storybook/addon-viewport/register'],
+	addons: ['@storybook/addon-viewport/register', '@storybook/addon-knobs/register'],
 
 	webpackFinal: async function (config) {
 
@@ -31,7 +31,15 @@ module.exports = {
 				test: /\.svg$/,
 				use: [
 					{
-						loader: '@svgr/webpack'
+						loader: '@svgr/webpack',
+						options: {
+							dimensions: false,
+							svgoConfig: {
+								plugins: {
+									removeViewBox: false
+								}
+							}
+						}
 					}
 				]
 			});

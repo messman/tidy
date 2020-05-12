@@ -1,8 +1,8 @@
 import * as React from 'react';
-
 import { Wrapper } from '@/entry/wrapper';
 import { styled } from '@/core/style/styled';
 import { ThemePicker } from '@/core/style/theme';
+import { withKnobs } from "@storybook/addon-knobs";
 
 export interface StoryComponent {
 	(): JSX.Element,
@@ -11,7 +11,16 @@ export interface StoryComponent {
 	}
 }
 
-const Decorator = (Story: React.FC) => {
+export function decorateWith(component: () => JSX.Element, decorators: any[]): StoryComponent {
+	const storyComponent = component as StoryComponent;
+	storyComponent.story = {
+		decorators: [...decorators, withKnobs]
+	};
+	return storyComponent;
+};
+
+/** Uses some padding and shows the theme picker. */
+const DefaultDecorator = (Story: React.FC) => {
 	return (
 		<Wrapper>
 			<StoryPadding>
@@ -33,14 +42,10 @@ const PickerPadding = styled.div`
 `;
 
 export function decorate(component: () => JSX.Element): StoryComponent {
-	const storyComponent = component as StoryComponent;
-	storyComponent.story = {
-		decorators: [Decorator]
-	};
-	return storyComponent;
+	return decorateWith(component, [DefaultDecorator]);
 };
 
-// Relies on global app styles, which also set a rule for #root (which is storybook's root)
+/** Relies on global app styles, which also set a rule for #root (which is storybook's root) */
 const FullScreenDecorator = (Story: React.FC) => {
 	return (
 		<Wrapper>
@@ -52,9 +57,5 @@ const FullScreenDecorator = (Story: React.FC) => {
 }
 
 export function decorateFullScreen(component: () => JSX.Element): StoryComponent {
-	const storyComponent = component as StoryComponent;
-	storyComponent.story = {
-		decorators: [FullScreenDecorator]
-	};
-	return storyComponent;
+	return decorateWith(component, [FullScreenDecorator]);
 };

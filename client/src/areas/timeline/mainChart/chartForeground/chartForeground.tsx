@@ -3,7 +3,6 @@ import { Flex } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useAppDataContext } from '@/services/data/appData';
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from '@/services/draw/bezier';
-import { useRef } from 'react';
 import { useElementSize } from '@/services/layout/element-size';
 import { ExtremeCards } from './extremeCards';
 
@@ -12,7 +11,7 @@ interface ChartForegroundProps {
 
 export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 	const { isLoading, success } = useAppDataContext();
-	const ref = useRef<HTMLDivElement>(null!);
+	const ref = React.useRef<HTMLDivElement>(null!);
 	const size = useElementSize(ref, 300);
 
 	if (isLoading || !success) {

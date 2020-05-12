@@ -14,7 +14,7 @@ interface AppProps {
 
 
 export const App: React.FC<AppProps> = () => {
-	const layout = useResponsiveLayout();
+	const responsiveLayout = useResponsiveLayout();
 
 
 	// function sidebarOnToggle(isOn: boolean) {
@@ -35,7 +35,7 @@ export const App: React.FC<AppProps> = () => {
 	return (
 		<RootColumn>
 			<ResponsiveLayout
-				layout={layout.widthBreakpoint}
+				layout={responsiveLayout.widthBreakpoint}
 				fillWithSidebar={null!}
 				fillWithOverlay={null!}
 

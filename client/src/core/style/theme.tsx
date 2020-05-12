@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { createContext, useContext } from 'react';
 import { createGlobalStyle, ThemeProps, ThemeProvider } from 'styled-components';
 import { useLocalStorage, UseLocalStorageReturn, keyFactory } from '@/services/data/local-storage';
 import { SmallTextInline } from '@/core/symbol/text';
@@ -114,7 +113,7 @@ export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 	}
 `;
 
-const LocalStorageThemeContext = createContext<UseLocalStorageReturn<number>>(null!);
+const LocalStorageThemeContext = React.createContext<UseLocalStorageReturn<number>>(null!);
 
 const getKey = keyFactory('tidy');
 const themeIndexKey = getKey('themeIndex');
@@ -136,9 +135,9 @@ export const LocalStorageThemeProvider: React.FC = (props) => {
 	);
 }
 
-export const useLocalStorageTheme = () => useContext(LocalStorageThemeContext);
+export const useLocalStorageTheme = () => React.useContext(LocalStorageThemeContext);
 export const useCurrentTheme = () => {
-	const [themeIndex] = useContext(LocalStorageThemeContext);
+	const [themeIndex] = React.useContext(LocalStorageThemeContext);
 	return themes[themeIndex];
 }
 
