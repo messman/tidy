@@ -20,6 +20,9 @@ export interface Theme {
 		/** All our text and icons that aren't superseded by another color. */
 		textAndIcon: string,
 
+		/** Color of text or icons or other components that are disabled. */
+		disabled: string,
+
 		/** Color used for tide information. */
 		tide: string,
 
@@ -52,6 +55,7 @@ const darkTheme: Theme = {
 		backgroundLighter: '#1B1B1B',
 		backgroundLightest: '#2B2B2B',
 		textAndIcon: '#D8D8D8',
+		disabled: '#6B6B6B',
 		tide: '#145C9E',
 		sun: '#EAC435',
 		weather: '#1282A2',
@@ -75,6 +79,7 @@ const lightTheme: Theme = {
 		backgroundLighter: '#F0F0F0',
 		backgroundLightest: '#DDDDDD',
 		textAndIcon: '#1B1B1B',
+		disabled: '#737373',
 		backgroundTimelineDay: '#F8F8F8',
 	}
 };
@@ -83,6 +88,7 @@ const lightTheme: Theme = {
 export const themes: Theme[] = [darkTheme, lightTheme];
 
 // For some reason, VS Code is not happy to colorize the CSS in this block when `createGlobalStyle` is used with a type.
+// Note: '#root' is for storybook
 export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 	html {
 		font-family: ${p => p.theme.fontFamily};
@@ -94,7 +100,7 @@ export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 		color: ${p => p.theme.color.textAndIcon};
 	}
 
-	html, body, #react-root {
+	html, body, #react-root, #root {
 		margin: 0;
 		padding: 0;
 		height: 100%;

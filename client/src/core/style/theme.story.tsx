@@ -5,7 +5,7 @@ import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 
-export default { title: 'Base/Theme' };
+export default { title: 'core/style' };
 
 export const Theme = decorate(() => {
 

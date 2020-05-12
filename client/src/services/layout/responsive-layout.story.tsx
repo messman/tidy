@@ -4,7 +4,7 @@ import { Subtitle } from '@/core/symbol/text';
 import { styled } from '@/core/style/styled';
 import { useResponsiveLayout, LayoutBreakpoint, LayoutMode, isInvalidLayoutForApplication } from './responsive-layout';
 
-export default { title: 'Tree/Layout/Responsive' };
+export default { title: 'services/layout' };
 
 export const Responsive = decorate(() => {
 

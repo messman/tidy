@@ -3,7 +3,7 @@ import { decorate } from '@/test/storybook/decorate';
 import { Text } from '@/core/symbol/text';
 import { iconTypes, Icon } from '@/core/symbol/icon';
 
-export default { title: 'Unit/Components/Icon' };
+export default { title: 'core/symbol' };
 
 export const Icons = decorate(() => {
 

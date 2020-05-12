@@ -75,20 +75,24 @@ export const iconTypes = {
 
 export interface IconProps {
 	type: SVGIconType,
+	fill?: string;
 }
 
 export const Icon: React.FC<IconProps> = (props) => {
 	const SVGIcon = props.type;
 	return (
-		<SVGWrapper>
+		<SVGWrapper fill={props.fill}>
 			<SVGIcon />
 		</SVGWrapper>
 	);
 }
 
-const SVGWrapper = styled.span`
+interface SVGWrapperProps {
+	fill?: string
+}
+
+const SVGWrapper = styled.span<SVGWrapperProps>`
 	svg, svg path {
-		fill: ${p => p.theme.color.textAndIcon};
-		
+		fill: ${p => (p.fill || p.theme.color.textAndIcon)};
 	}
 `;

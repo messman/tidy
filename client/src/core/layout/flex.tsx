@@ -60,3 +60,13 @@ FlexRow.defaultProps = {
 	alignItems: 'stretch',
 	justifyContent: 'flex-start'
 };
+
+export const RootColumn = styled(FlexColumn)`
+	height: 100%;
+	width: 100%;
+`;
+
+export const RootRow = styled(FlexRow)`
+	height: 100%;
+	width: 100%;
+`;
