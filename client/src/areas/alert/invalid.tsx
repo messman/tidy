@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RootRow, Flex } from '@/core/layout/flex';
+import { Flex, FlexRow } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { useResponsiveLayout, isInvalidLayoutForApplication } from '@/services/layout/responsive-layout';
 import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
@@ -73,7 +73,7 @@ const InvalidCenter: React.FC<InvalidCenterProps> = (props) => {
 	);
 }
 
-const InvalidCenterWrapper = styled(RootRow)`
+const InvalidCenterWrapper = styled(FlexRow)`
 	padding: calc(${edgePaddingValue} * 3);
 	text-align: center;
 `;

@@ -6,6 +6,7 @@ import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/la
 import { decorateWith } from '@/test/storybook/decorate';
 import { boolean, text } from '@storybook/addon-knobs';
 import { InvalidCheck } from './invalid';
+import { FlexRoot } from '@/core/layout/flex';
 
 export default { title: 'areas/alert' };
 
@@ -15,9 +16,9 @@ const WrapperDecorator = (Story: React.FC) => {
 		<LocalStorageThemeProvider>
 			<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
 				<AppDataProvider>
-					<div id='react-root'>
+					<FlexRoot>
 						<Story />
-					</div>
+					</FlexRoot>
 				</AppDataProvider>
 			</ResponsiveLayoutProvider>
 		</LocalStorageThemeProvider>

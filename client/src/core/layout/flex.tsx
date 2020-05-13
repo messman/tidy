@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
 
 export interface FlexProps {
-	flex?: number | 'none';
+	flex?: number | string;
 }
 
 export const Flex = styled.div<FlexProps>`
@@ -14,59 +14,45 @@ Flex.defaultProps = {
 	flex: 1
 }
 
-interface FlexContainerProps extends FlexProps {
-	/** Row: how items act vertically. Column: how items act horizontally. */
+interface FlexParentProps extends FlexProps {
+	/**
+	 * Default: row
+	 */
+	flexDirection?: 'row' | 'column';
+	/**
+	 * Row: how items act vertically. Column: how items act horizontally.
+	 * Default: stretch
+	 */
 	alignItems?: 'stretch' | 'center';
-	/** How items work along the direction of row/column. Default: flex-start. */
+	/**
+	 * How items work along the direction of row/column. Default: flex-start.
+	 * Default: flex-start
+	 * */
 	justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
 }
 
-const _FlexColumn: StyledFC<FlexContainerProps> = (props) => {
-	return (
-		<Flex className={props.className} flex={props.flex}>
-			{props.children}
-		</Flex>
-	);
-}
-
-export const FlexColumn = styled(_FlexColumn)`
+export const FlexParent = styled(Flex) <FlexParentProps>`
 	display: flex;
-	flex-direction: column;
+	flex-direction: ${p => p.flexDirection};
 	align-items: ${p => p.alignItems};
 	justify-content: ${p => p.justifyContent};
 `;
 
-FlexColumn.defaultProps = {
+FlexParent.defaultProps = {
+	flexDirection: 'row',
 	alignItems: 'stretch',
 	justifyContent: 'flex-start'
 };
 
-const _FlexRow: StyledFC<FlexContainerProps> = (props) => {
-	return (
-		<Flex className={props.className} flex={props.flex}>
-			{props.children}
-		</Flex>
-	);
+export const FlexRoot = styled(FlexParent)`
+	height: 100%;
+	width: 100%;
+`;
+
+export const FlexColumn: StyledFC<FlexParentProps> = (props) => {
+	return <FlexParent {...props} flexDirection='column' />
 }
 
-export const FlexRow = styled(_FlexRow)`
-	display: flex;
-	flex-direction: row;
-	align-items: ${p => p.alignItems};
-	justify-content: ${p => p.justifyContent};
-`;
-
-FlexRow.defaultProps = {
-	alignItems: 'stretch',
-	justifyContent: 'flex-start'
-};
-
-export const RootColumn = styled(FlexColumn)`
-	height: 100%;
-	width: 100%;
-`;
-
-export const RootRow = styled(FlexRow)`
-	height: 100%;
-	width: 100%;
-`;
+export const FlexRow: StyledFC<FlexParentProps> = (props) => {
+	return <FlexParent {...props} flexDirection='row' />
+}

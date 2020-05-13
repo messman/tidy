@@ -30,11 +30,8 @@ interface MainChartContainerProps {
 	totalWidth: number
 }
 
-const _MainChartContainer: StyledFC<MainChartContainerProps> = (props) => {
-	return <FlexColumn className={props.className}>{props.children}</FlexColumn>
-}
 
-const MainChartContainer = styled(_MainChartContainer)`
+const MainChartContainer = styled(FlexColumn) <MainChartContainerProps>`
 	width: ${p => p.totalWidth}px;
 	overflow: hidden;
 `;

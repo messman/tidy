@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { FlexColumn, FlexRow } from '@/core/layout/flex';
-import { styled, css } from '@/core/style/styled';
+import { FlexParent, FlexColumn, FlexRow } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
 import { LayoutBreakpoint, LayoutMode, useResponsiveLayout } from '@/services/layout/responsive-layout';
 import { iconTypes } from '@/core/symbol/icon';
-import { useComponentLayout } from '../layout/responsive-layout';
+import { useComponentLayout } from '@/areas/layout/component-layout';
 import { MenuBarIcon } from './menu-bar-icon';
 import { AllResponseClipboardIcon } from './clipboard';
 
-const wrapperStyles = css`
+const MenuBarContent = styled(FlexParent)`
 	background-color: ${p => p.theme.color.backgroundLighter};
 `;
-const MenuBarBottomWrapper = styled(FlexRow)`
-	${wrapperStyles};
+
+const MenuBarBottomContainer = styled(FlexColumn)`
+	width: 100vw;
 `;
-const MenuBarLeftWrapper = styled(FlexColumn)`
-	${wrapperStyles};
+const MenuBarLeftContainer = styled(FlexRow)`
+	height: 100vh;
 `;
 
 export const MenuBar: React.FC = (props) => {
@@ -29,22 +30,22 @@ export const MenuBar: React.FC = (props) => {
 	const isBottomMenuBar = isCompact || responsiveLayout.mode === LayoutMode.portrait;
 	if (isBottomMenuBar) {
 		return (
-			<FlexColumn>
+			<MenuBarBottomContainer>
 				{props.children}
-				<MenuBarBottomWrapper flex={0} justifyContent={justifyContent}>
+				<MenuBarContent flexDirection='row' flex={0} justifyContent={justifyContent}>
 					{bar}
-				</MenuBarBottomWrapper>
-			</FlexColumn>
+				</MenuBarContent>
+			</MenuBarBottomContainer>
 		);
 	}
 	else {
 		return (
-			<FlexRow>
-				<MenuBarLeftWrapper flex={0} justifyContent={justifyContent}>
+			<MenuBarLeftContainer>
+				<MenuBarContent flexDirection='column' flex={0} justifyContent={justifyContent}>
 					{bar}
-				</MenuBarLeftWrapper>
+				</MenuBarContent>
 				{props.children}
-			</FlexRow>
+			</MenuBarLeftContainer>
 		);
 	}
 }

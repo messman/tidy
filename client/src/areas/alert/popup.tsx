@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { RootRow, Flex, RootColumn } from '@/core/layout/flex';
+import { Flex, FlexColumn } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { Icon, iconTypes } from '@/core/symbol/icon';
 import { Subtitle, Text, SmallText } from '@/core/symbol/text';
 import { useCurrentTheme } from '@/core/style/theme';
 import { flowPaddingValue, borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
+import { Overlay } from '@/core/layout/overlay';
 
 export enum PopupType {
 	warning,
@@ -25,30 +26,26 @@ export const Popup: React.FC = (props) => {
 	const [popupData, setPopupData] = usePopup();
 	const theme = useCurrentTheme();
 
-	if (!popupData) {
-		return <>{props.children}</>;
-	}
+	let popupBody: JSX.Element | null = null;
 
-	const { type, title, text, forcePageReload, forceDataRefresh } = popupData;
+	if (!!popupData) {
+		const { type, title, text, forcePageReload, forceDataRefresh } = popupData;
 
-	const alertColor = type === PopupType.error ? theme.color.error : theme.color.warning;
+		const alertColor = type === PopupType.error ? theme.color.error : theme.color.warning;
 
-	const buttonText = `Click/tap to  ${(forcePageReload ? 'reload page' : (forceDataRefresh ? 'refresh' : 'dismiss'))}.`;
-	function onClick() {
-		setPopupData(null);
-		if (forcePageReload) {
-			window.location.reload();
+		const buttonText = `Click/tap to  ${(forcePageReload ? 'reload page' : (forceDataRefresh ? 'refresh' : 'dismiss'))}.`;
+		function onClick() {
+			setPopupData(null);
+			if (forcePageReload) {
+				window.location.reload();
+			}
+			else if (forceDataRefresh) {
+				// TODO - reload the data here.
+			}
 		}
-		else if (forceDataRefresh) {
-			// TODO - reload the data here.
-		}
-	}
 
-	return (
-		<RelativeContainer>
-			{props.children}
-			<AbsoluteBackdrop />
-			<AbsolutePopupContainer alignItems='center' justifyContent='space-evenly'>
+		popupBody = (
+			<FlexColumn alignItems='center' justifyContent='space-evenly'>
 				<PopupBody flex={0} onClick={onClick}>
 					<Icon type={iconTypes.alert} fill={alertColor} height='3rem' />
 					<CenterPadding>
@@ -60,28 +57,16 @@ export const Popup: React.FC = (props) => {
 					<SmallText>{buttonText}</SmallText>
 				</PopupBody>
 				<Flex flex={0} />
-			</AbsolutePopupContainer>
-		</RelativeContainer>
+			</FlexColumn>
+		);
+	}
+
+	return (
+		<Overlay isActive={!!popupData} backdropOpacity={.4} component={popupBody}>
+			{props.children}
+		</Overlay>
 	);
 }
-
-const RelativeContainer = styled(RootRow)`
-	position: relative;
-`;
-
-const AbsoluteBackdrop = styled(RootRow)`
-	position: absolute;
-	top: 0;
-	left: 0;
-	background-color: ${p => p.theme.color.background};
-	opacity: .4;
-`;
-
-const AbsolutePopupContainer = styled(RootColumn)`
-	position: absolute;
-	top: 0;
-	left: 0;
-`;
 
 const CenterPadding = styled.div`
 	margin: ${flowPaddingValue};

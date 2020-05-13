@@ -49,9 +49,7 @@ export function decorate(component: () => JSX.Element): StoryComponent {
 const FullScreenDecorator = (Story: React.FC) => {
 	return (
 		<Wrapper>
-			<div id='react-root'>
-				<Story />
-			</div>
+			<Story />
 		</Wrapper>
 	);
 }

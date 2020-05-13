@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { App } from './app';
 import { Wrapper } from './wrapper';
+import { ApplicationResponsiveLayout } from '@/areas/layout/layout';
 
 ReactDOM.render(
 	<Wrapper>
-		<App />
+		<ApplicationResponsiveLayout />
 	</Wrapper>,
 	document.getElementById('react-root')
 );

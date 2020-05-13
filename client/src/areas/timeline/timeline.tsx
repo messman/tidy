@@ -7,7 +7,7 @@ import { UpperTimeline } from './upperTimeline';
 import { MainChart } from './mainChart/mainChart';
 import { LayoutBreakpoint } from '@/services/layout/responsive-layout';
 
-interface TimelineProps {
+export interface TimelineProps {
 }
 
 export const Timeline: React.FC<TimelineProps> = (props) => {
