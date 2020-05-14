@@ -9,7 +9,6 @@ declare let __DEFINE__: { [key: string]: any };
 export const DEFINE = {
 	buildVersion: __DEFINE__.buildVersion as string,
 	buildTime: __DEFINE__.buildTime as number,
-	alertMessages: __DEFINE__.alertMessages as string[] | null,
 	localTestData: __DEFINE__.localTestData as AllResponse | null,
 	fetchUrl: __DEFINE__.fetchUrl as string
 };

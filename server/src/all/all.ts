@@ -65,14 +65,14 @@ async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, 
 		return {
 			info: info,
 			error: errors,
-			data: null
+			all: null
 		};
 	}
 
 	return {
 		info: info,
 		error: null,
-		data: {
+		all: {
 			warning: warnings,
 			current: {
 				sun: {

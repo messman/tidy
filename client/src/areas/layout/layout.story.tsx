@@ -26,7 +26,7 @@ export const Layout = decorateFullScreen(() => {
 	);
 });
 
-const MockSummary: React.FC<SummaryProps> = (props) => {
+export const MockSummary: React.FC<SummaryProps> = (props) => {
 	return (
 		<Area color='red'>
 			<Text>Summary {props.isCompactVertical ? 'Vertical' : 'Horizontal'}</Text>
@@ -34,7 +34,7 @@ const MockSummary: React.FC<SummaryProps> = (props) => {
 	);
 }
 
-const MockTimeline: React.FC<TimelineProps> = () => {
+export const MockTimeline: React.FC<TimelineProps> = () => {
 	return (
 		<Area color='rebeccapurple'>
 			<Text>Timeline</Text>
@@ -42,7 +42,7 @@ const MockTimeline: React.FC<TimelineProps> = () => {
 	);
 }
 
-const MockForecast: React.FC<ForecastProps> = () => {
+export const MockForecast: React.FC<ForecastProps> = () => {
 	return (
 		<Area color='deepskyblue'>
 			<Text>Forecast</Text>
@@ -50,7 +50,7 @@ const MockForecast: React.FC<ForecastProps> = () => {
 	);
 }
 
-const MockSettings: React.FC<SettingsProps> = () => {
+export const MockSettings: React.FC<SettingsProps> = () => {
 	return (
 		<Area color='orange'>
 			<Text>Settings</Text>

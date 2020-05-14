@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Flex, FlexColumn } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { Title } from '@/core/symbol/text';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { DailyView } from './dailyView/dailyView';
 import { createPrettyHour } from '@/services/time';
 import { TimeSlider } from './timeSlider';
@@ -56,13 +56,12 @@ interface LongTermDailyViewListProps {
 }
 
 export const LongTermDailyViewList: React.FC<LongTermDailyViewListProps> = () => {
-	const { isLoading, success } = useAppDataContext();
-
-	if (isLoading || !success) {
+	const allResponsePromise = useAllResponse();
+	if (!hasAllResponseData(allResponsePromise)) {
 		return null;
 	}
 
-	const daily = success.data!.daily;
+	const daily = allResponsePromise.data!.all!.daily;
 
 	const list = daily.days.map(function (day, index) {
 		return <DailyView

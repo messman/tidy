@@ -10,7 +10,7 @@ export interface AllResponse {
 	/** Error information about the request. Null if no errors. */
 	error: Errors | null,
 	/** Success information - the response data. Null if errors.  */
-	data: AllResponseData | null
+	all: AllResponseData | null
 }
 
 export interface AllResponseData {

@@ -5,12 +5,12 @@ import { useResponsiveLayout, isInvalidLayoutForApplication } from '@/services/l
 import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { Icon, iconTypes } from '@/core/symbol/icon';
 import { Text, Subtitle } from '@/core/symbol/text';
-import { DEFINE } from '@/services/define';
+import { CONSTANT } from '@/services/constant';
 import { useCurrentTheme } from '@/core/style/theme';
 
 interface InvalidCheckProps {
 	/** Used for testing. */
-	forceBuildAlertMessages?: string[],
+	forceAlertMessages?: string[],
 	/** Used for testing. */
 	isForceInternetExplorer?: boolean,
 	/** Used for testing. */
@@ -23,9 +23,9 @@ export const InvalidCheck: React.FC<InvalidCheckProps> = (props) => {
 
 	let invalidMessages: string[] = [];
 
-	const forceAlertMessages = props.forceBuildAlertMessages || [];
-	const defineAlertMessages = DEFINE.alertMessages || [];
-	const alertMessages = forceAlertMessages.length ? forceAlertMessages : defineAlertMessages;
+	const forceAlertMessages = props.forceAlertMessages || [];
+	const constantAlertMessages = CONSTANT.alertMessages || [];
+	const alertMessages = forceAlertMessages.length ? forceAlertMessages : constantAlertMessages;
 	if (alertMessages.length) {
 		invalidMessages = alertMessages;
 	}

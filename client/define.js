@@ -16,12 +16,9 @@ module.exports = async function (isDevelopment, forceLocalTestData) {
 		buildVersion: JSON.stringify(buildVersion),
 		buildTime: JSON.stringify(buildTime),
 
-		// Used to basically block the application.
-		alertMessages: JSON.stringify(null),
-
 		// Overwritten by dev/prod builds
 		localTestData: JSON.stringify(null),
-		fetchUrl: JSON.stringify(null)
+		fetchUrl: JSON.stringify(null),
 	};
 
 	if (isDevelopment) {

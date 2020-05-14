@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { styled, StyledFC } from '@/core/style/styled';
+import { styled } from '@/core/style/styled';
 
-export interface FlexProps {
+export interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
 	flex?: number | string;
 }
 
@@ -49,10 +49,12 @@ export const FlexRoot = styled(FlexParent)`
 	width: 100%;
 `;
 
-export const FlexColumn: StyledFC<FlexParentProps> = (props) => {
-	return <FlexParent {...props} flexDirection='column' />
-}
+export const FlexColumn = styled(FlexParent)``;
+FlexColumn.defaultProps = {
+	flexDirection: 'column'
+};
 
-export const FlexRow: StyledFC<FlexParentProps> = (props) => {
-	return <FlexParent {...props} flexDirection='row' />
-}
+export const FlexRow = styled(FlexParent)``;
+FlexRow.defaultProps = {
+	flexDirection: 'row'
+};

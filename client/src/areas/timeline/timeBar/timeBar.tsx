@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { DayRange } from './dayRange';
 import { EventMarkers } from './eventMarkers/eventMarkers';
 import { SunEvent } from 'tidy-shared';
@@ -13,31 +13,32 @@ interface TimeBarProps {
 
 
 export const TimeBar: StyledFC<TimeBarProps> = () => {
-
-	const { isLoading, success } = useAppDataContext();
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
+		return null;
+	}
+	const { all, info } = allResponseState.data!;
 
 	let days: JSX.Element | null = null;
-	if (!isLoading && success && success.data) {
-		const startTime = success.info.referenceTime;
-		const events = success.data!.predictions.sun;
+	const startTime = info.referenceTime;
+	const events = all.predictions.sun;
 
-		const dayEvents = groupByDays(events);
+	const dayEvents = groupByDays(events);
 
-		days = (
-			<>
-				{
-					dayEvents.map((eventGroup) => {
-						return <DayRange
-							key={eventGroup.sunrise.getTime()}
-							startTime={startTime}
-							sunrise={eventGroup.sunrise}
-							sunset={eventGroup.sunset}
-						/>
-					})
-				}
-			</>
-		);
-	}
+	days = (
+		<>
+			{
+				dayEvents.map((eventGroup) => {
+					return <DayRange
+						key={eventGroup.sunrise.getTime()}
+						startTime={startTime}
+						sunrise={eventGroup.sunrise}
+						sunset={eventGroup.sunset}
+					/>
+				})
+			}
+		</>
+	);
 
 	return (
 		<DayContainer>

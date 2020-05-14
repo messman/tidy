@@ -1,4 +1,4 @@
-import { useState, useRef, useLayoutEffect } from 'react';
+import * as React from 'react';
 
 export interface ElementSize {
 	isSizing: boolean,
@@ -6,10 +6,15 @@ export interface ElementSize {
 	height: number
 }
 
-const initialState: ElementSize = { width: -1, height: -1, isSizing: true };
 export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObject<T>, throttleTimeoutMs?: number): ElementSize {
-	const [size, setSize] = useState<ElementSize>({ width: -1, height: -1, isSizing: true });
-	const throttleTimeoutId = useRef(-1);
+	const [size, setSize] = React.useState<ElementSize>(() => {
+		return {
+			width: -1,
+			height: -1,
+			isSizing: true
+		}
+	});
+	const throttleTimeoutId = React.useRef(-1);
 	const timeout = (isNaN(throttleTimeoutMs!) || throttleTimeoutMs! < 10) ? 10 : throttleTimeoutMs;
 
 	function handleChange() {
@@ -26,12 +31,18 @@ export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObjec
 				}
 			}, timeout);
 
-			// While in progress, don
-			setSize(initialState);
+			// While in progress, don't continuously update.
+			setSize((previous) => {
+				return {
+					width: previous.width,
+					height: previous.height,
+					isSizing: true
+				}
+			});
 		}
 	}
 
-	useLayoutEffect(function () {
+	React.useLayoutEffect(function () {
 		if (!ref.current) {
 			return;
 		}

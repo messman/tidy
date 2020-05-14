@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from '@/services/draw/bezier';
 import { useElementSize } from '@/services/layout/element-size';
 import { ExtremeCards } from './extremeCards';
@@ -10,11 +10,11 @@ interface ChartForegroundProps {
 }
 
 export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
-	const { isLoading, success } = useAppDataContext();
+	const allResponseState = useAllResponse();
 	const ref = React.useRef<HTMLDivElement>(null!);
 	const size = useElementSize(ref, 300);
 
-	if (isLoading || !success) {
+	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
 
@@ -23,12 +23,13 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 
 	if (size.width > 1 && size.height > 1) {
 
-		const startTime = success.info.referenceTime;
-		const endTime = success.data!.predictions.cutoffDate;
+		const data = allResponseState.data!;
+		const startTime = data.info.referenceTime;
+		const endTime = data.all.predictions.cutoffDate;
 
 
-		const previous = success.data!.current.tides.previous;
-		const tidePredictions = success.data!.predictions.tides;
+		const previous = data.all.current.tides.previous;
+		const tidePredictions = data.all.predictions.tides;
 		const allTides = [previous, ...tidePredictions.events];
 		const points: Point[] = allTides.map(function (t) {
 			return {

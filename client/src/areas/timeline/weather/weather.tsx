@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { WeatherFlag } from './weatherFlag';
 import { filterWeatherEvents } from '../upperTimeline';
 
@@ -8,23 +8,25 @@ interface WeatherProps {
 }
 
 export const Weather: StyledFC<WeatherProps> = () => {
-	const { isLoading, success } = useAppDataContext();
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
+		return null;
+	}
+	const { all, info } = allResponseState.data!;
 
 	let weatherEvents: JSX.Element | null = null;
-	if (!isLoading && success && success.data) {
-		const startTime = success.info.referenceTime;
-		const events = filterWeatherEvents(success.data!.predictions.weather, success.data!.predictions.cutoffDate);
+	const startTime = info.referenceTime;
+	const events = filterWeatherEvents(all.predictions.weather, all.predictions.cutoffDate);
 
-		weatherEvents = (
-			<>
-				{
-					events.map((event) => {
-						return <WeatherFlag key={event.time.getTime()} startTime={startTime} event={event} />
-					})
-				}
-			</>
-		);
-	}
+	weatherEvents = (
+		<>
+			{
+				events.map((event) => {
+					return <WeatherFlag key={event.time.getTime()} startTime={startTime} event={event} />
+				})
+			}
+		</>
+	);
 
 	return (
 		<WeatherContainer>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppDataProvider } from '@/services/data/appData';
+import { AllResponseProvider } from '@/services/data/data';
 import { LocalStorageThemeProvider } from '@/core/style/theme';
 import { ResponsiveLayoutProvider, defaultLowerBreakpoints } from '@/services/layout/responsive-layout';
 import { InvalidCheck } from '@/areas/alert/invalid';
@@ -22,11 +22,11 @@ const Providers: React.FC = (props) => {
 		<LocalStorageThemeProvider>
 			<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
 				<ComponentLayoutProvider>
-					<AppDataProvider>
+					<AllResponseProvider>
 						<PopupProvider>
 							{props.children}
 						</PopupProvider>
-					</AppDataProvider>
+					</AllResponseProvider>
 				</ComponentLayoutProvider>
 			</ResponsiveLayoutProvider>
 		</LocalStorageThemeProvider>

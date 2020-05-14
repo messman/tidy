@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
 import { SmallText } from '@/core/symbol/text';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { timeToPixels, createPrettyTime } from '@/services/time';
 import { TideEvent } from 'tidy-shared';
 
@@ -10,14 +10,13 @@ interface ExtremeCardsProps {
 }
 
 export const ExtremeCards: StyledFC<ExtremeCardsProps> = (props) => {
-	const { isLoading, success } = useAppDataContext();
-
-	if (isLoading || !success || props.heightInPixels < 1) {
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState) || props.heightInPixels < 1) {
 		return null;
 	}
 
-	const startTime = success.info.referenceTime;
-	const tides = success.data!.predictions.tides;
+	const startTime = allResponseState.data!.info.referenceTime;
+	const tides = allResponseState.data!.all.predictions.tides;
 	const tideEvents = tides.events;
 	const maxHeight = tides.highest.height;
 	const minHeight = tides.lowest.height;

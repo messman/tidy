@@ -5,6 +5,13 @@ export const borderRadiusStyle = css`
 	border-radius: .5rem;
 `;
 
+export const noTouchStyle = css`
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+`;
+
 /** Smaller padding value, for edges against the screen. .625rem / 10px. */
 export const edgePaddingValue: string = '.625rem';
 /** Larger padding value, for vertical flow. 1rem / 16px. */

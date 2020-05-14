@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LocalStorageThemeProvider } from '@/core/style/theme';
 import { Text } from '@/core/symbol/text';
-import { AppDataProvider } from '@/services/data/appData';
+import { AllResponseProvider } from '@/services/data/data';
 import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/layout/responsive-layout';
 import { decorateWith } from '@/test/storybook/decorate';
 import { boolean, text } from '@storybook/addon-knobs';
@@ -15,11 +15,11 @@ const WrapperDecorator = (Story: React.FC) => {
 	return (
 		<LocalStorageThemeProvider>
 			<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
-				<AppDataProvider>
+				<AllResponseProvider>
 					<FlexRoot>
 						<Story />
 					</FlexRoot>
-				</AppDataProvider>
+				</AllResponseProvider>
 			</ResponsiveLayoutProvider>
 		</LocalStorageThemeProvider>
 	);
@@ -27,15 +27,15 @@ const WrapperDecorator = (Story: React.FC) => {
 
 export const Invalid = decorateWith(() => {
 
-	const isForceBuildAlertMessages = boolean('Force Build Alert Messages', false, 'Build Alert');
-	const firstBuildAlertMessage = text('First Build Alert Message', 'Houston, we have a problem.', 'Build Alert');
-	const secondBuildAlertMessage = text('Second Build Alert Message', 'but we probably do not know what that problem is.', 'Build Alert');
+	const isForceAlertMessages = boolean('Force Alert Messages', false, 'Build Alert');
+	const firstAlertMessage = text('First Alert Message', 'Houston, we have a problem.', 'Build Alert');
+	const secondForceAlertMessage = text('Second Alert Message', 'but we probably do not know what that problem is.', 'Build Alert');
 
 	const alertMessages = [];
-	if (isForceBuildAlertMessages && firstBuildAlertMessage) {
-		alertMessages.push(firstBuildAlertMessage);
-		if (secondBuildAlertMessage) {
-			alertMessages.push(secondBuildAlertMessage);
+	if (isForceAlertMessages && firstAlertMessage) {
+		alertMessages.push(firstAlertMessage);
+		if (secondForceAlertMessage) {
+			alertMessages.push(secondForceAlertMessage);
 		}
 	}
 
@@ -46,7 +46,7 @@ export const Invalid = decorateWith(() => {
 	// Child within must be a flex item.
 	return (
 		<InvalidCheck
-			forceBuildAlertMessages={alertMessages}
+			forceAlertMessages={alertMessages}
 			isForceInternetExplorer={isForceInternetExplorer}
 			isForceInvalidLayout={isForceInvalidLayout}
 		>

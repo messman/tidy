@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { timeToPixels, isSameDay } from '@/services/time';
 import { WeatherEventMarker, DayEventMarker, TideEventMarker } from './eventMarker';
 import { filterWeatherEvents } from '../../upperTimeline';
@@ -9,21 +9,22 @@ interface EventMarkersProps {
 }
 
 export const EventMarkers: StyledFC<EventMarkersProps> = () => {
-	const { isLoading, success } = useAppDataContext();
-	if (isLoading || !success) {
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
+	const { all, info } = allResponseState.data!;
 
 	const markers: JSX.Element[] = [];
-	const startTime = success.info.referenceTime;
+	const startTime = info.referenceTime;
 
-	const weatherEvents = filterWeatherEvents(success.data!.predictions.weather, success.data!.predictions.cutoffDate);
+	const weatherEvents = filterWeatherEvents(all.predictions.weather, all.predictions.cutoffDate);
 	weatherEvents.forEach(function (ev) {
 		const key = `w_${ev.time.getTime()}`;
 		markers.push(<WeatherEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 	});
 
-	success.data!.predictions.sun.forEach(function (ev) {
+	all.predictions.sun.forEach(function (ev) {
 		const key = `d_${ev.time.getTime()}`;
 		markers.push(<DayEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 		if (ev.isSunrise && isSameDay(startTime, ev.time)) {
@@ -40,7 +41,7 @@ export const EventMarkers: StyledFC<EventMarkersProps> = () => {
 		}
 	});
 
-	success.data!.predictions.tides.events.forEach(function (ev) {
+	all.predictions.tides.events.forEach(function (ev) {
 		const key = `t_${ev.time.getTime()}`;
 		markers.push(<TideEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 	});

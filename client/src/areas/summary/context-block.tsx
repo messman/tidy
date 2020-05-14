@@ -1,0 +1,57 @@
+import * as React from 'react';
+import { FlexRow } from '@/core/layout/flex';
+import { borderRadiusStyle } from '@/core/style/common';
+import { styled } from '@/core/style/styled';
+import { useElementSize } from '@/services/layout/element-size';
+
+
+export interface ContextBlockProps {
+	Primary: React.FC,
+	Secondary: React.FC
+}
+
+export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
+	const { Primary, Secondary } = props;
+
+	const [isShowingPrimary, setIsShowingPrimary] = React.useState(true);
+	const ref = React.useRef<HTMLDivElement>(null!);
+	const primaryPanelSize = useElementSize(ref, 300);
+	const primaryPanelHeight = primaryPanelSize.height > 0 ? primaryPanelSize.height : 0;
+
+	function onClick(): void {
+		setIsShowingPrimary((previous) => {
+			return !previous;
+		});
+	}
+
+	return (
+		<ContextBlockRoot flex={0} onClick={onClick}>
+			<ContextBlockPanel ref={ref} isActive={isShowingPrimary}>
+				<Primary />
+			</ContextBlockPanel>
+			<ContextBlockDependentPanel heightInPixels={primaryPanelHeight} isActive={!isShowingPrimary}>
+				<Secondary />
+			</ContextBlockDependentPanel>
+		</ContextBlockRoot>
+	);
+};
+
+const ContextBlockRoot = styled(FlexRow)`
+	background-color: ${p => p.theme.color.backgroundLighter};
+	${borderRadiusStyle};
+	overflow: hidden;
+	cursor: pointer;
+`;
+
+interface ContextBlockPanelProps {
+	isActive: boolean,
+	heightInPixels?: number
+}
+
+const ContextBlockPanel = styled(FlexRow) <ContextBlockPanelProps>`
+	display: ${p => p.isActive ? 'flex' : 'none'};
+`;
+
+const ContextBlockDependentPanel = styled(ContextBlockPanel)`
+	height: ${p => p.heightInPixels}px;
+`;

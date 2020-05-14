@@ -2,58 +2,50 @@ import * as React from 'react';
 import { Flex } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { Text } from '@/core/symbol/text';
-import { TextPlaceholder } from '@/core/loading/placeholder';
 import { createPrettyTimespan } from '@/services/time';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 
 interface CurrentConditionsProps {
 }
 
 export const CurrentConditions: React.FC<CurrentConditionsProps> = () => {
 
-	const { isLoading, success } = useAppDataContext();
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
+		return null;
+	}
 
 	let tempText = '';
 	let weatherText = '';
 	let sunText = '';
 	let windText = '';
-	if (!isLoading && success && success.data) {
-		const { weather, sun } = success.data!.current;
+	const { weather, sun } = allResponseState.data!.all.current;
 
-		tempText = `${weather.temp} F`;
-		weatherText = weather.status.toString();
-		if (weatherText !== 'raining') {
-			weatherText += `, ${weather.chanceRain.entity! * 100}% chance for rain`;
-		}
-
-		sunText = `${sun.next.isSunrise ? 'Sunrise' : 'Sunset'} ${createPrettyTimespan(sun.next.time.getTime() - success.info.referenceTime.getTime())}`
-
-		windText = `${weather.wind} mph winds, ${weather.windDirection}`;
+	tempText = `${weather.temp} F`;
+	weatherText = weather.status.toString();
+	if (weatherText !== 'raining') {
+		weatherText += `, ${weather.chanceRain.entity! * 100}% chance for rain`;
 	}
+
+	sunText = `${sun.next.isSunrise ? 'Sunrise' : 'Sunset'} ${createPrettyTimespan(sun.next.time.getTime() - allResponseState.data!.info.referenceTime.getTime())}`
+
+	windText = `${weather.wind} mph winds, ${weather.windDirection}`;
 
 	return (
 		<>
 			<Flex />
 			<Padding>
 				<Text>
-					<TextPlaceholder show={isLoading} length={6}>
-						{tempText}
-					</TextPlaceholder>
+					{tempText}
 				</Text>
 				<Text>
-					<TextPlaceholder show={isLoading} length={16}>
-						{weatherText}
-					</TextPlaceholder>
+					{weatherText}
 				</Text>
 				<Text>
-					<TextPlaceholder show={isLoading} length={10}>
-						{sunText}
-					</TextPlaceholder>
+					{sunText}
 				</Text>
 				<Text>
-					<TextPlaceholder show={isLoading} length={11}>
-						{windText}
-					</TextPlaceholder>
+					{windText}
 				</Text>
 			</Padding>
 		</>

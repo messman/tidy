@@ -1,20 +1,19 @@
 import * as React from 'react';
 import { iconTypes } from '@/core/symbol/icon';
 import { MenuBarIcon } from './menu-bar-icon';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { usePopup, PopupType } from '../alert/popup';
 
 
 export const AllResponseClipboardIcon: React.FC = () => {
+	const allResponseState = useAllResponse();
 
-	const { isLoading, success } = useAppDataContext();
-
-	let text = '';
 	let isDisabled = true;
+	let text = '';
 
-	if (!isLoading && success) {
-		text = success.info.referenceTime.toISOString();
+	if (hasAllResponseData(allResponseState)) {
 		isDisabled = false;
+		text = allResponseState.data!.info.referenceTime.toISOString();
 	}
 
 	return (

@@ -5,9 +5,9 @@ import { Summary, SummaryProps } from '@/areas/summary/summary';
 import { Timeline, TimelineProps } from '@/areas/timeline/timeline';
 import { FlexRow, FlexColumn } from '@/core/layout/flex';
 import { Overlay } from '@/core/layout/overlay';
-import { styled } from '@/core/style/styled';
 import { useResponsiveLayout, LayoutBreakpoint } from '@/services/layout/responsive-layout';
 import { useComponentLayout } from './component-layout';
+import { OverflowAutoFlexRow, ScreenWidthFlexColumn } from '@/core/layout/common';
 
 export const ApplicationResponsiveLayout: React.FC = () => {
 	return (
@@ -38,13 +38,12 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	if (isCompact) {
 		return (
 			<FlexRow>
-
 				<Overlay isActive={componentLayout.isCompactForecastView} component={<Forecast />} >
 					<Overlay isActive={componentLayout.isCompactSettingsView} component={<Settings />}>
 						<OverflowAutoFlexRow>
-							<ScreenWidth flex='none'>
+							<ScreenWidthFlexColumn flex='none'>
 								<Summary isCompactVertical={true} />
-							</ScreenWidth>
+							</ScreenWidthFlexColumn>
 							<Timeline />
 						</OverflowAutoFlexRow>
 					</Overlay>
@@ -65,11 +64,3 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	);
 }
 
-const ScreenWidth = styled(FlexColumn)`
-	width: 100vw;
-	max-width: ${LayoutBreakpoint.regular}px;
-`;
-
-const OverflowAutoFlexRow = styled(FlexRow)`
-	overflow-x: auto;
-`;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Flex, FlexColumn } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useElementSize } from '@/services/layout/element-size';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import * as Bezier from '@/services/draw/bezier';
 import { PercentView } from './percentView';
 
@@ -22,7 +22,11 @@ export interface WaveAnimationOptions {
 }
 
 export const Wave: React.FC<WaveProps> = (props) => {
-	const { isLoading, success } = useAppDataContext();
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
+		return null;
+	}
+	const { all } = allResponseState.data!;
 
 	const ref = React.useRef<HTMLDivElement>(null!);
 	const size = useElementSize(ref, 300);
@@ -37,9 +41,9 @@ export const Wave: React.FC<WaveProps> = (props) => {
 	// The numbers we display will match so nbd.
 	let visualHeightPercent = -1;
 
-	if (!isLoading && success && success.data && !size.isSizing) {
-		const tides = success.data!.current.tides;
-		const predictTides = success.data!.predictions.tides;
+	if (!size.isSizing) {
+		const tides = all.current.tides;
+		const predictTides = all.predictions.tides;
 
 		visualHeightPercent = (tides.height - predictTides.lowest.height) / (predictTides.highest.height - predictTides.lowest.height);
 		// Turn into a rough sine wave

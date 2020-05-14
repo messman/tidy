@@ -1,32 +1,30 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 
 interface ChartBackgroundProps {
 }
 
 export const ChartBackground: StyledFC<ChartBackgroundProps> = () => {
-	const { isLoading, success } = useAppDataContext();
-	if (isLoading || !success) {
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
 
 	let eventLines: JSX.Element[] = [];
-	if (!isLoading && success && success.data) {
-		const startTime = success.info.referenceTime;
-		const sunEvents = success.data!.predictions.sun;
-		sunEvents.forEach(function (ev) {
-			const key = `d_${ev.time.getTime()}`;
-			eventLines.push(<SunEventLine key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
-			if (!ev.isSunrise) {
-				const endOfDay = new Date(ev.time);
-				endOfDay.setHours(24, 0, 0, 0);
-				const endKey = `d_${endOfDay.getTime()}`;
-				eventLines.push(<MidnightEventLine key={endKey} positionLeft={timeToPixels(startTime, endOfDay)} />);
-			}
-		});
-	}
+	const startTime = allResponseState.data!.info.referenceTime;
+	const sunEvents = allResponseState.data!.all.predictions.sun;
+	sunEvents.forEach(function (ev) {
+		const key = `d_${ev.time.getTime()}`;
+		eventLines.push(<SunEventLine key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
+		if (!ev.isSunrise) {
+			const endOfDay = new Date(ev.time);
+			endOfDay.setHours(24, 0, 0, 0);
+			const endKey = `d_${endOfDay.getTime()}`;
+			eventLines.push(<MidnightEventLine key={endKey} positionLeft={timeToPixels(startTime, endOfDay)} />);
+		}
+	});
 
 	return (
 		<>

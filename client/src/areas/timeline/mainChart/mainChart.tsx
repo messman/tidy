@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FlexColumn } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useAppDataContext } from '@/services/data/appData';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 import { ChartBackground } from './chartBackground';
 import { ChartForeground } from './chartForeground/chartForeground';
@@ -10,12 +10,12 @@ interface MainChartProps {
 }
 
 export const MainChart: StyledFC<MainChartProps> = () => {
-	const { isLoading, success } = useAppDataContext();
-	if (isLoading || !success) {
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
 
-	const totalWidth = timeToPixels(success.info.referenceTime, success.data!.predictions.cutoffDate);
+	const totalWidth = timeToPixels(allResponseState.data!.info.referenceTime, allResponseState.data!.all.predictions.cutoffDate);
 	return (
 		<FlexColumn>
 			<MainChartContainer totalWidth={totalWidth}>

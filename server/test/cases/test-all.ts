@@ -7,11 +7,16 @@ export async function run(): Promise<void> {
 	const isTest = false;
 
 	let response: AllResponse = null!;
-	if (isTest) {
-		response = await getAllTestForConfiguration(configuration, null);
+	try {
+		if (isTest) {
+			response = await getAllTestForConfiguration(configuration, null);
+		}
+		else {
+			response = await getAllForConfiguration(configuration);
+		}
 	}
-	else {
-		response = await getAllForConfiguration(configuration);
+	catch (e) {
+		console.error(e);
 	}
 	console.dir(response, { depth: null });
 }
