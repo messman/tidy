@@ -1,9 +1,14 @@
 import * as React from 'react';
+import { CONSTANT } from '../constant';
 
 export interface ElementSize {
 	isSizing: boolean,
 	width: number,
 	height: number
+}
+
+export function useElementSizeWithDefault<T extends HTMLElement>(ref: React.MutableRefObject<T>): ElementSize {
+	return useElementSize(ref, CONSTANT.elementSizeThrottleTimeout);
 }
 
 export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObject<T>, throttleTimeoutMs?: number): ElementSize {

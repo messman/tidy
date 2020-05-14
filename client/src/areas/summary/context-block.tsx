@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FlexRow } from '@/core/layout/flex';
 import { borderRadiusStyle } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
-import { useElementSize } from '@/services/layout/element-size';
+import { useElementSizeWithDefault } from '@/services/layout/element-size';
 
 
 export interface ContextBlockProps {
@@ -15,7 +15,7 @@ export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 
 	const [isShowingPrimary, setIsShowingPrimary] = React.useState(true);
 	const ref = React.useRef<HTMLDivElement>(null!);
-	const primaryPanelSize = useElementSize(ref, 300);
+	const primaryPanelSize = useElementSizeWithDefault(ref);
 	const primaryPanelHeight = primaryPanelSize.height > 0 ? primaryPanelSize.height : 0;
 
 	function onClick(): void {

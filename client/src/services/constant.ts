@@ -10,7 +10,9 @@ export const CONSTANT = {
 	/** Minimum time to wait for local data fetch response. */
 	localTestDataMinTimeout: seconds(0),
 	/** Expiration timeout for a success. */
-	cacheExpirationTimeout: minutes(4)
+	cacheExpirationTimeout: minutes(4),
+
+	elementSizeThrottleTimeout: seconds(.3),
 };
 
 function seconds(seconds: number): number {

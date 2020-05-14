@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled, StyledFC, css } from '@/core/style/styled';
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from '@/services/draw/bezier';
-import { useElementSize } from '@/services/layout/element-size';
+import { useElementSizeWithDefault } from '@/services/layout/element-size';
 import { AllDailyDay } from 'tidy-shared';
 
 interface DailyChartProps {
@@ -14,7 +14,7 @@ interface DailyChartProps {
 
 export const DailyChart: StyledFC<DailyChartProps> = (props) => {
 	const ref = React.useRef<HTMLDivElement>(null!);
-	const size = useElementSize(ref, 300);
+	const size = useElementSizeWithDefault(ref);
 
 	let fillSVG: JSX.Element | null = null;
 	let strokeSVG: JSX.Element | null = null;
