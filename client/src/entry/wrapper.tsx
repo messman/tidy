@@ -6,6 +6,7 @@ import { InvalidCheck } from '@/areas/alert/invalid';
 import { PopupProvider, Popup } from '@/areas/alert/popup';
 import { ComponentLayoutProvider } from '@/areas/layout/component-layout';
 import { FlexRoot } from '@/core/layout/flex';
+import { LocalDataPhraseProvider } from '@/services/data/data-local';
 
 export const Wrapper: React.FC = (props) => {
 	return (
@@ -22,11 +23,13 @@ const Providers: React.FC = (props) => {
 		<LocalStorageThemeProvider>
 			<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
 				<ComponentLayoutProvider>
-					<AllResponseProvider>
-						<PopupProvider>
-							{props.children}
-						</PopupProvider>
-					</AllResponseProvider>
+					<LocalDataPhraseProvider>
+						<AllResponseProvider>
+							<PopupProvider>
+								{props.children}
+							</PopupProvider>
+						</AllResponseProvider>
+					</LocalDataPhraseProvider>
 				</ComponentLayoutProvider>
 			</ResponsiveLayoutProvider>
 		</LocalStorageThemeProvider>

@@ -27,7 +27,7 @@ export const ComponentLayoutProvider: React.FC = (props) => {
 	const [componentLayout, setComponentLayout] = layoutState;
 	React.useEffect(() => {
 		if (responsiveLayout.widthBreakpoint !== LayoutBreakpoint.compact && (componentLayout.isCompactForecastView || componentLayout.isCompactSettingsView)) {
-			setComponentLayout(getDefaultComponentLayout);
+			setComponentLayout(getDefaultComponentLayout());
 		}
 	}, [responsiveLayout.widthBreakpoint === LayoutBreakpoint.compact]);
 

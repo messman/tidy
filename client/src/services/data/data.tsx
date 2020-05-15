@@ -3,6 +3,7 @@ import { deserialize, AllResponse, Info, AllResponseData } from 'tidy-shared';
 import { DEFINE } from '@/services/define';
 import { PromiseState, usePromise, clampPromise } from '../promise';
 import { CONSTANT } from '../constant';
+import { useLocalDataPhrase } from './data-local';
 
 export interface AllResponseSuccess extends AllResponse {
 	/** Info about the request. */
@@ -17,12 +18,49 @@ const AllResponseContext = React.createContext<PromiseState<AllResponseSuccess>>
 
 export const AllResponseProvider: React.FC = (props) => {
 
+	const [localDataPhrase] = useLocalDataPhrase();
+	const firstLocalDataPhrase = React.useRef(localDataPhrase);
+
+
+	const runImmediately = true;
+	const promiseState = usePromise(() => {
+
+		const promiseFunc = createPromiseFunc(localDataPhrase);
+
+		return {
+			promiseFunc: promiseFunc,
+			runImmediately: runImmediately
+		}
+	});
+
+	React.useEffect(() => {
+		// When local data phrase changes, retrieve new data.
+		if (localDataPhrase !== firstLocalDataPhrase.current) {
+			firstLocalDataPhrase.current = localDataPhrase;
+
+			const promiseFunc = createPromiseFunc(localDataPhrase);
+
+			promiseState.reset({
+				promiseFunc: promiseFunc,
+				runImmediately: runImmediately
+			}, CONSTANT.clearDataOnNewFetch);
+		}
+	}, [localDataPhrase]);
+
+	return (
+		<AllResponseContext.Provider value={promiseState}>
+			{props.children}
+		</AllResponseContext.Provider>
+	);
+}
+
+function createPromiseFunc(localDataPhrase: string | null): () => Promise<AllResponseSuccess> {
 	let promiseFunc: () => Promise<AllResponse> = fetchAllResponse;
 	let minTimeout: number = CONSTANT.fetchMinTimeout;
 
-	// Check whether we will be getting local data or fetch data.
-	if (DEFINE.localTestData) {
-		promiseFunc = async () => { return DEFINE.localTestData!; };
+	if (localDataPhrase) {
+		const localData = DEFINE.localTestData![localDataPhrase];
+		promiseFunc = async () => { return localData; };
 		minTimeout = CONSTANT.localTestDataMinTimeout;
 	}
 
@@ -46,20 +84,9 @@ export const AllResponseProvider: React.FC = (props) => {
 		}
 	}
 
-	const clampedPromiseFunc = () => {
+	return () => {
 		return clampPromise(errorWrappedPromiseFunc(), minTimeout, CONSTANT.fetchMaxTimeout);
 	}
-
-	const promiseState = usePromise({
-		promiseFunc: clampedPromiseFunc,
-		runImmediately: true
-	});
-
-	return (
-		<AllResponseContext.Provider value={promiseState}>
-			{props.children}
-		</AllResponseContext.Provider>
-	);
 }
 
 export const useAllResponse = () => React.useContext(AllResponseContext);

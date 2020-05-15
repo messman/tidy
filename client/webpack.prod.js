@@ -6,7 +6,7 @@ const getDefine = require('./define');
 
 module.exports = async () => {
 
-	const DEFINE = await getDefine(false, false);
+	const DEFINE = await getDefine(false);
 
 	return merge(base.base, {
 		mode: 'production',

@@ -30,27 +30,18 @@ export const Promises = decorate(() => {
 	const clear = boolean('Clear', true);
 
 	button('Stop', () => {
-		console.log('Clicked Stop');
 		promiseState.stop(clear);
 	});
 
 	button('Run', () => {
-		console.log('Clicked Run');
 		promiseState.run(clear);
 	});
 
-	console.log('Rendering Promise Component', promiseState);
 
 	const random = promiseState.data?.random.toString() || '';
 	const increment = promiseState.data?.increment.toString() || '';
 	const error = promiseState.error?.message || '';
 	const isErrorFromMaximum = error === clampPromiseMaximumTimeoutReason;
-
-	React.useEffect(() => {
-		return () => {
-			console.log('Leaving Top Component')
-		}
-	}, []);
 
 	return (
 		<>
@@ -73,7 +64,6 @@ interface TestInfo {
 async function getTestInfo(timeout: number): Promise<TestInfo> {
 	return new Promise((res) => {
 		window.setTimeout(() => {
-			console.log('Returning Test Info');
 			res({
 				random: Math.round(Math.random() * 10),
 				increment: globalIncrement++

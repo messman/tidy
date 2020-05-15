@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Wrapper } from '@/entry/wrapper';
 import { useLocalStorageTheme, themes } from '@/core/style/theme';
 import { select, withKnobs } from "@storybook/addon-knobs";
+import { useLocalDataPhrase } from '@/services/data/data-local';
+import { DEFINE } from '@/services/define';
 
 export interface StoryComponent {
 	(): JSX.Element,
@@ -55,6 +57,8 @@ export function decorate(Component: React.FC) {
 
 const CommonKnobsWrapper: React.FC = (props) => {
 
+	// THEME
+
 	const themeOptions: { [key: string]: number } = {};
 	themes.forEach((theme, index) => {
 		themeOptions[theme.name] = index;
@@ -62,11 +66,35 @@ const CommonKnobsWrapper: React.FC = (props) => {
 
 	const [themeIndex, setThemeIndex] = useLocalStorageTheme();
 
-	const selectedThemeIndex = select('Theme', themeOptions, themeIndex);
+	const selectedThemeIndex = select('Theme', themeOptions, themeIndex, 'Global');
 
 	React.useEffect(() => {
-		setThemeIndex(selectedThemeIndex);
+		if (themeIndex !== selectedThemeIndex) {
+			setThemeIndex(selectedThemeIndex);
+		}
 	}, [selectedThemeIndex]);
+
+	// LOCAL DATA
+
+	const [localDataPhrase, setLocalDataPhrase] = useLocalDataPhrase();
+	const notUsingLocalDataPhrase = 'REAL';
+
+	const localDataOptions: { [key: string]: string | null } = {
+		[notUsingLocalDataPhrase]: null,
+	};
+	if (DEFINE.localTestData) {
+		Object.keys(DEFINE.localTestData).forEach((phrase) => {
+			localDataOptions[phrase] = phrase;
+		});
+	}
+
+	const selectedLocalDataPhrase = select('Data', localDataOptions, localDataPhrase || notUsingLocalDataPhrase, 'Global');
+
+	React.useEffect(() => {
+		if (selectedLocalDataPhrase !== localDataPhrase) {
+			setLocalDataPhrase(selectedLocalDataPhrase);
+		}
+	}, [selectedLocalDataPhrase]);
 
 	return (
 		<>

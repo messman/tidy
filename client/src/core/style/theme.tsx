@@ -119,7 +119,9 @@ const getKey = keyFactory('tidy');
 const themeIndexKey = getKey('themeIndex');
 
 export const LocalStorageThemeProvider: React.FC = (props) => {
-	const localStorageReturn = useLocalStorage(themeIndexKey, 0);
+	const localStorageReturn = useLocalStorage(themeIndexKey, 0, (value) => {
+		return !!themes[value];
+	});
 	const [themeIndex] = localStorageReturn;
 	const theme = themes[themeIndex];
 

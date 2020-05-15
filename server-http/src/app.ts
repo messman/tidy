@@ -29,7 +29,7 @@ export function configureApp(app: Application): void {
 		https://github.com/expressjs/express/pull/2422
 
 		There is a way to set a custom stringify replacer, but for all endpoints, not just one.
-		If you want to do just, one, you have to use send instead of json and serialize yourself.
+		If you want to do just one, you have to use send instead of json and serialize yourself.
 		This isn't impossible - source code is here:
 		https://github.com/expressjs/express/blob/master/lib/response.js#L239
 		and also mentioned in Medium article above.

@@ -51,14 +51,17 @@ export type UseLocalStorageReturn<T> = [T, (value: T) => void];
  * Creates a state variable that also saves to LocalStorage.
  * Breaks when undefined is used as the value.
 */
-export function useLocalStorage<T>(key: string, initialValue: T): UseLocalStorageReturn<T> {
+export function useLocalStorage<T>(key: string, initialValue: T | (() => T), isValid: (value: T) => boolean): UseLocalStorageReturn<T> {
 	const [storedValue, setStoredValue] = React.useState(() => {
-		const value = get<T>(key);
-		if (value !== undefined) {
-			return value;
+		let value: T = get<T>(key)!;
+		if (value === undefined || (isValid && !isValid(value))) {
+			value = initialValue instanceof Function ? initialValue() : initialValue;
 		}
-		return initialValue;
+		return value;
 	});
+
+	// Set right away to LocalStorage, in case this was our initial value.
+	set(key, storedValue);
 
 	function setValue(value: T): void {
 		if (!Object.is(value, storedValue)) {

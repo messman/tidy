@@ -52,7 +52,7 @@ function createTestWarnings(): Warnings {
 /** Creates random tide data. Uses a seeded randomizer. */
 export function createTideData(configContext: APIConfigurationContext, testSeed: TestSeed): IntermediateTideValues {
 
-	const tideRandomizer = randomizer(combineSeed(combineSeed('_tide_', testSeed), testSeed));
+	const tideRandomizer = randomizer(combineSeed('_tide_', testSeed));
 
 	// Get our time between highs and lows.
 	// Between 5.8 hours and 6.3 hours

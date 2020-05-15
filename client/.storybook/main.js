@@ -12,7 +12,7 @@ module.exports = {
 
 	webpackFinal: async function (config) {
 
-		const DEFINE = await getDefine(true, true);
+		const DEFINE = await getDefine(true);
 
 		config.module.rules = [];
 		config.module.rules.push(

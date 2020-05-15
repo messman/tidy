@@ -2,14 +2,17 @@ import * as React from 'react';
 import { DEFINE } from '@/services/define';
 import { decorate } from '@/test/storybook/decorate';
 import { TextPara } from '@/core/symbol/text';
+import { useAllResponse } from './data/data';
 
 export default { title: 'services' };
 
 export const Define = decorate(() => {
 
-	let referenceTime: string = 'not provided';
-	if (DEFINE.localTestData) {
-		referenceTime = DEFINE.localTestData.info.referenceTime.toISOString();
+	const allResponseState = useAllResponse();
+
+	let referenceTime: string = '...';
+	if (allResponseState.data) {
+		referenceTime = allResponseState.data.info.referenceTime.toISOString();
 	}
 
 	return (

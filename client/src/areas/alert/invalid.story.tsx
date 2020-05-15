@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { LocalStorageThemeProvider, ThemePicker } from '@/core/style/theme';
-import { AllResponseProvider } from '@/services/data/data';
 import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/layout/responsive-layout';
 import { decorateWith } from '@/test/storybook/decorate';
 import { boolean, text } from '@storybook/addon-knobs';
@@ -10,15 +9,13 @@ import { FlexRoot } from '@/core/layout/flex';
 export default { title: 'areas/alert' };
 
 // Use a custom wrapper, so that we can customize the component we are testing
-const WrapperDecorator = (Story: React.FC) => {
+const WrapperDecorator = (story: () => JSX.Element) => {
 	return (
 		<LocalStorageThemeProvider>
 			<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
-				<AllResponseProvider>
-					<FlexRoot>
-						<Story />
-					</FlexRoot>
-				</AllResponseProvider>
+				<FlexRoot>
+					{story()}
+				</FlexRoot>
 			</ResponsiveLayoutProvider>
 		</LocalStorageThemeProvider>
 	);

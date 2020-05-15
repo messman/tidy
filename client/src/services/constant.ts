@@ -13,6 +13,8 @@ export const CONSTANT = {
 	cacheExpirationTimeout: minutes(4),
 
 	elementSizeThrottleTimeout: seconds(.3),
+
+	clearDataOnNewFetch: false,
 };
 
 function seconds(seconds: number): number {
