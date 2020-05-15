@@ -1,75 +1,5 @@
 import * as React from 'react';
 
-// export interface PromiseState<T> {
-// 	isStarted: boolean,
-// 	success: T,
-// 	error: Error
-// }
-
-// export function usePromise1<T>(promiseFunc: () => Promise<T>): PromiseState<T> {
-// 	const [state, setState] = useState<PromiseState<T>>({
-// 		isLoading: true,
-// 		success: null!,
-// 		error: null!
-// 	});
-
-// 	const isFirstRun = useRef(true);
-
-// 	if (isFirstRun.current) {
-// 		isFirstRun.current = false;
-// 		promiseFunc()
-// 			.then((resp) => {
-// 				setState({
-// 					isLoading: false,
-// 					success: resp,
-// 					error: null!,
-// 				});
-// 			})
-// 			.catch((err: Error) => {
-// 				setState({
-// 					isLoading: false,
-// 					success: null!,
-// 					error: err
-// 				});
-// 			});
-// 	}
-// 	return state;
-// }
-
-// function timeoutPromise<S>(val: S, pass: boolean, timeout: number): Promise<S> {
-// 	return new Promise((res, rej) => {
-// 		setTimeout(() => {
-// 			if (pass)
-// 				res(val);
-// 			else
-// 				rej(val);
-// 		}, timeout);
-// 	});
-// }
-
-// // Delays a promise, including its error.
-// export function wrapPromise<T>(promise: Promise<T>, time: number): Promise<T> {
-// 	const now = Date.now();
-// 	function on(pass
-
-
-// 	return promise
-// 		.then((val) => {
-// 			const diff = Date.now() - now;
-// 			if (diff < time)
-// 				return timeoutPromise(val, true, time - diff);
-// 			else
-// 				return val;
-// 		})
-// 		.catch((err) => {
-// 			const diff = Date.now() - now;
-// 			if (diff < time)
-// 				return timeoutPromise(err, false, time - diff);
-// 			else
-// 				return err;
-// 		});
-// }
-
 export interface PromiseInput<T> {
 	promiseFunc: () => Promise<T>,
 	runImmediately: boolean
@@ -95,28 +25,41 @@ export interface PromiseOutput<T> extends PromiseState<T> {
 
 /** Wraps a promise call with a minimum timeout for smooth user experience. */
 export function usePromise<T>(input: PromiseInput<T>): PromiseOutput<T> {
-	const [state, setState] = React.useState<PromiseState<T>>({
-		isRunning: input.runImmediately,
-		data: null,
-		error: null
+	const [state, setState] = React.useState<PromiseState<T>>(() => {
+		console.log('Initial Args', input);
+		return {
+			isRunning: input.runImmediately,
+			data: null,
+			error: null
+		}
 	});
 
 	// Hold our current promise as a way to guard against older promises that complete for newer promises.
 	const currentPromise = React.useRef<Promise<T> | null>(null);
 
+	React.useEffect(() => {
+		return () => {
+			console.log('Cleaning Up');
+			currentPromise.current = null;
+		}
+	}, []);
+
 	function runPromise(): void {
-		function wrapFinish(success: T | null, error: Error | null): void {
+		function wrapFinish(data: T | null, error: Error | null): void {
+			console.log('Finishing Promise');
 			// If this is from an old promise, disregard.
 			if (currentPromise.current !== promise) {
+				console.log('Mismatch Promise');
 				return;
 			}
 			setState({
 				isRunning: false,
-				data: success,
+				data: data,
 				error: error
 			});
 		}
 
+		console.log('Running promise');
 		const promise = input.promiseFunc();
 		currentPromise.current = promise;
 		promise
@@ -128,17 +71,22 @@ export function usePromise<T>(input: PromiseInput<T>): PromiseOutput<T> {
 			});
 	}
 
-	function updateState(isRunning: boolean, clear: boolean): void {
+	function updateState(newIsRunning: boolean, clear: boolean): void {
 		// If we are clearing, clear the data and error.
 		// Else, just set the running state.
 		if (clear) {
+			// If we are clearing, we will always discard a currently-running promise.
 			currentPromise.current = null;
+
 			setState((p) => {
-				if (p.isRunning === isRunning && !p.data && !p.error) {
+				// If we are already running or not running and have no data, nothing has changed.
+				if (p.isRunning === newIsRunning && !p.data && !p.error) {
 					return p;
 				}
+
+				// Else, set the new state object.
 				return {
-					isRunning: isRunning,
+					isRunning: newIsRunning,
 					data: null,
 					error: null,
 				}
@@ -146,12 +94,19 @@ export function usePromise<T>(input: PromiseInput<T>): PromiseOutput<T> {
 		}
 		else {
 			setState((p) => {
-				if (p.isRunning === isRunning) {
+				// If we're still supposed to be running/not running, nothing has changed.
+				if (p.isRunning === newIsRunning) {
 					return p;
 				}
+
+				// Else, clear our currently-running promise.
+				currentPromise.current = null;
+
+				// Keep whatever data we had before.
 				return {
-					...p,
-					isRunning: isRunning
+					isRunning: newIsRunning,
+					data: p.data,
+					error: p.error,
 				}
 			});
 		}
@@ -181,32 +136,6 @@ export function usePromise<T>(input: PromiseInput<T>): PromiseOutput<T> {
 		run: run
 	};
 }
-
-
-// /** Times out a promise. */
-// export function promiseMaximum<T>(promise: Promise<T>, maxMilliseconds: number): Promise<T> {
-// 	return new Promise<T>((resolve, reject) => {
-// 		let didTimeOut = false;
-// 		const timeoutId = setTimeout(() => {
-// 			didTimeOut = true;
-// 			reject(new Error("timed out at maximum"));
-// 		}, maxMilliseconds);
-// 		promise.then(
-// 			(res) => {
-// 				if (!didTimeOut) {
-// 					clearTimeout(timeoutId);
-// 					resolve(res);
-// 				}
-// 			},
-// 			(err) => {
-// 				if (!didTimeOut) {
-// 					clearTimeout(timeoutId);
-// 					reject(err);
-// 				}
-// 			}
-// 		);
-// 	})
-// }
 
 export const clampPromiseMaximumTimeoutReason = '__promise-timed-out__';
 

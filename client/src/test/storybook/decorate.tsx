@@ -11,8 +11,28 @@ export interface StoryComponent {
 	}
 }
 
-export function decorateWith(component: () => JSX.Element, decorators: any[]): StoryComponent {
-	const storyComponent = component as StoryComponent;
+export function decorateWith(Component: React.FC, decorators: any[]) {
+
+	/*
+		Some funky stuff is required here.
+		Never forget, you spent like 4 hours on this.
+
+		See the issues below - it all comes down to how stories are exported with decorators.
+		The first made me believe that I should use <Story /> in decorators. That would solve the issue where
+		decorators (which supply the contexts) were not being applied.
+		But that ends up causing the stories to unmount themselves every time a Knob is clicked, which broke the async promise story testing.
+		Solution: wrap each story in another component to create that 'indirect' scenario. Move on with life.
+
+		https://github.com/storybookjs/storybook/issues/10296
+		https://github.com/storybookjs/storybook/issues/4059
+	*/
+	const story: React.FC = () => {
+		return (
+			<Component />
+		);
+	};
+
+	const storyComponent = story as StoryComponent;
 	storyComponent.story = {
 		decorators: [...decorators, withKnobs]
 	};
@@ -20,14 +40,14 @@ export function decorateWith(component: () => JSX.Element, decorators: any[]): S
 };
 
 /** Uses some padding and shows the theme picker. */
-const DefaultDecorator = (Story: React.FC) => {
+const DefaultDecorator = (story: () => JSX.Element) => {
 	return (
 		<Wrapper>
 			<StoryPadding>
 				<PickerPadding>
 					<ThemePicker />
 				</PickerPadding>
-				<Story />
+				{story()}
 			</StoryPadding>
 		</Wrapper>
 	);
@@ -42,19 +62,19 @@ const PickerPadding = styled.div`
 	margin-bottom: 1rem;
 `;
 
-export function decorate(component: () => JSX.Element): StoryComponent {
-	return decorateWith(component, [DefaultDecorator]);
+export function decorate(Component: React.FC) {
+	return decorateWith(Component, [DefaultDecorator]);
 };
 
 /** Relies on global app styles, which also set a rule for #root (which is storybook's root) */
-const FullScreenDecorator = (Story: React.FC) => {
+const FullScreenDecorator = (story: () => JSX.Element) => {
 	return (
 		<Wrapper>
-			<Story />
+			{story()}
 		</Wrapper>
 	);
 }
 
-export function decorateFullScreen(component: () => JSX.Element): StoryComponent {
-	return decorateWith(component, [FullScreenDecorator]);
+export function decorateFullScreen(Component: React.FC) {
+	return decorateWith(Component, [FullScreenDecorator]);
 };
