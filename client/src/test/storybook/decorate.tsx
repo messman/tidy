@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Wrapper } from '@/entry/wrapper';
-import { styled } from '@/core/style/styled';
-import { ThemePicker } from '@/core/style/theme';
-import { withKnobs } from "@storybook/addon-knobs";
+import { useLocalStorageTheme, themes } from '@/core/style/theme';
+import { select, withKnobs } from "@storybook/addon-knobs";
 
 export interface StoryComponent {
 	(): JSX.Element,
@@ -39,42 +38,39 @@ export function decorateWith(Component: React.FC, decorators: any[]) {
 	return storyComponent;
 };
 
-/** Uses some padding and shows the theme picker. */
+/** Relies on global app styles, which also set a rule for #root (which is storybook's root) */
 const DefaultDecorator = (story: () => JSX.Element) => {
 	return (
 		<Wrapper>
-			<StoryPadding>
-				<PickerPadding>
-					<ThemePicker />
-				</PickerPadding>
+			<CommonKnobsWrapper>
 				{story()}
-			</StoryPadding>
+			</CommonKnobsWrapper>
 		</Wrapper>
 	);
 }
-
-const StoryPadding = styled.div`
-	padding: 1rem;
-	width: 100%;
-`;
-
-const PickerPadding = styled.div`
-	margin-bottom: 1rem;
-`;
 
 export function decorate(Component: React.FC) {
 	return decorateWith(Component, [DefaultDecorator]);
 };
 
-/** Relies on global app styles, which also set a rule for #root (which is storybook's root) */
-const FullScreenDecorator = (story: () => JSX.Element) => {
-	return (
-		<Wrapper>
-			{story()}
-		</Wrapper>
-	);
-}
+const CommonKnobsWrapper: React.FC = (props) => {
 
-export function decorateFullScreen(Component: React.FC) {
-	return decorateWith(Component, [FullScreenDecorator]);
+	const themeOptions: { [key: string]: number } = {};
+	themes.forEach((theme, index) => {
+		themeOptions[theme.name] = index;
+	});
+
+	const [themeIndex, setThemeIndex] = useLocalStorageTheme();
+
+	const selectedThemeIndex = select('Theme', themeOptions, themeIndex);
+
+	React.useEffect(() => {
+		setThemeIndex(selectedThemeIndex);
+	}, [selectedThemeIndex]);
+
+	return (
+		<>
+			{props.children}
+		</>
+	);
 };

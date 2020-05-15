@@ -11,13 +11,17 @@ export const Clipboard = decorate(() => {
 	const isForceFailure = boolean('Force Failure', false);
 
 	return (
-		<ClipboardIcon text={clipboardText} isDisabled={false} isForceFailure={isForceFailure} />
+		<div>
+			<ClipboardIcon text={clipboardText} isDisabled={false} isForceFailure={isForceFailure} />
+		</div>
 	);
 });
 
 export const AllResponseClipboard = decorate(() => {
 
 	return (
-		<AllResponseClipboardIcon />
+		<div>
+			<AllResponseClipboardIcon />
+		</div>
 	);
 });

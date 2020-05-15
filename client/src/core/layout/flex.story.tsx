@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { decorateFullScreen } from '@/test/storybook/decorate';
+import { decorate } from '@/test/storybook/decorate';
 import { Text } from '@/core/symbol/text';
 import { FlexColumn, FlexRow, Flex } from './flex';
 import { styled } from '../style/styled';
@@ -12,7 +12,7 @@ const FlexBorder = styled(Flex)`
 
 // 'Root' components use 100% width/height with flex
 
-export const FlexColumns = decorateFullScreen(() => {
+export const FlexColumns = decorate(() => {
 	return (
 		<FlexColumn>
 			<FlexBorder flex={2}>
@@ -28,7 +28,7 @@ export const FlexColumns = decorateFullScreen(() => {
 	);
 });
 
-export const FlexRows = decorateFullScreen(() => {
+export const FlexRows = decorate(() => {
 	return (
 		<FlexRow>
 			<FlexBorder flex={2}>

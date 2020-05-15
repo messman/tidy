@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { LocalStorageThemeProvider } from '@/core/style/theme';
-import { Text } from '@/core/symbol/text';
+import { LocalStorageThemeProvider, ThemePicker } from '@/core/style/theme';
 import { AllResponseProvider } from '@/services/data/data';
 import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/layout/responsive-layout';
 import { decorateWith } from '@/test/storybook/decorate';
@@ -42,15 +41,15 @@ export const Invalid = decorateWith(() => {
 	const isForceInternetExplorer = boolean('Force Internet Explorer', false);
 	const isForceInvalidLayout = boolean('Force Invalid Layout', false);
 
-	// Root can be row or column.
-	// Child within must be a flex item.
 	return (
 		<InvalidCheck
 			forceAlertMessages={alertMessages}
 			isForceInternetExplorer={isForceInternetExplorer}
 			isForceInvalidLayout={isForceInvalidLayout}
 		>
-			<Text>Everything is okay!</Text>
+			<div>
+				<ThemePicker />
+			</div>
 		</InvalidCheck>
 	);
 }, [WrapperDecorator]);

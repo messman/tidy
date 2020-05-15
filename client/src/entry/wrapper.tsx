@@ -35,7 +35,7 @@ const Providers: React.FC = (props) => {
 
 const UI: React.FC = (props) => {
 	return (
-		<FlexRoot>
+		<FlexRoot flexDirection='column'>
 			<InvalidCheck>
 				<Popup>
 					{props.children}
