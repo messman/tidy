@@ -25,7 +25,7 @@ export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 	}
 
 	return (
-		<ContextBlockRoot flex={0} onClick={onClick}>
+		<ContextBlockRoot flex='none' onClick={onClick}>
 			<ContextBlockPanel ref={ref} isActive={isShowingPrimary}>
 				<Primary />
 			</ContextBlockPanel>

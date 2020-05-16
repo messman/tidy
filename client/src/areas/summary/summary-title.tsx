@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { SubtitleInline, subTitleHeight } from '@/core/symbol/text';
+import { SubtitleInline, subtitleHeight } from '@/core/symbol/text';
 import { Icon, iconTypes, SVGIconType } from '@/core/symbol/icon';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { useCurrentTheme } from '@/core/style/theme';
+import { styled } from '@/core/style/styled';
+import { edgePaddingValue } from '@/core/style/common';
 
 export const SummaryTitle: React.FC = () => {
 
@@ -43,12 +45,18 @@ export const SummaryTitle: React.FC = () => {
 		iconType = next.isLow ? iconTypes.arrowDown : iconTypes.arrowUp;
 	}
 
-	const icon = iconType ? <Icon type={iconType} fill={theme.color.tide} height={subTitleHeight} /> : null;
+	const icon = iconType ? <SpacedIcon type={iconType} fill={theme.color.tide} height={subtitleHeight} /> : null;
 
 	return (
 		<>
-			<SubtitleInline>{text}</SubtitleInline>
-			{icon}
+			<SubtitleInline>
+				{text}
+				{icon}
+			</SubtitleInline>
 		</>
 	);
 };
+
+const SpacedIcon = styled(Icon)`
+	margin-left: ${edgePaddingValue};
+`;

@@ -63,6 +63,10 @@ export function createTideData(configContext: APIConfigurationContext, testSeed:
 	let startDateTime = configContext.context.tides.minimumTidesDataFetch;
 	const endDateTime = configContext.context.maxLongTermDataFetch;
 
+	// Unlike with weather and sun, tide data shifts around all the time - it's not a predictable number of events each day or hour.
+	// So we should shift the start of our events randomly as well.
+	const initialMinutesPassed = tideRandomizer.randomInt(0, maxTimeBetweenHighLowMinutes, true);
+	startDateTime = startDateTime.plus({ minutes: initialMinutesPassed });
 	const eventTimes: DateTime[] = [startDateTime];
 	while (startDateTime < endDateTime) {
 		const minutesPassed = tideRandomizer.randomInt(minTimeBetweenHighLowMinutes, maxTimeBetweenHighLowMinutes, true);

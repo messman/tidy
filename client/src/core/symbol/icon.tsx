@@ -98,6 +98,8 @@ interface SVGWrapperProps {
 }
 
 const SVGWrapper = styled.span<SVGWrapperProps>`
+	display: inline-block;
+
 	svg, svg path {
 		fill: ${p => (p.fill || p.theme.color.textAndIcon)};
 	}

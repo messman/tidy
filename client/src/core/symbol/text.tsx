@@ -4,6 +4,11 @@ import { StyledComponent } from 'styled-components';
 
 const commonTextStyle = css`
 	vertical-align: top;
+
+	/* EM value May be font-specific! */
+	svg {
+		margin-top: .1em;
+	}
 `;
 
 // Default 1rem = 16px
@@ -15,11 +20,11 @@ export const Title = styled.div`
 `;
 export const TitleInline = createInlineVersion(Title);
 
-export const subTitleHeight = '1.5rem';
+export const subtitleHeight = '1.5rem';
 /** Subtitle. 1.5rem / 24px. */
 export const Subtitle = styled.div`
 	${commonTextStyle}
-	font-size: ${subTitleHeight};
+	font-size: ${subtitleHeight};
 `;
 export const SubtitleInline = createInlineVersion(Subtitle);
 
