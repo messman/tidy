@@ -14,17 +14,12 @@
 		"resolutionStrategy": "fewer-dependencies"
 	},
 	"nodeSupportedVersionRange": ">=12.4.0 <13.0.0",
+	"suppressNodeLtsWarning": true,
 	"ensureConsistentVersions": true,
 	"projects": [
 		{
-			"packageName": "my-controls",
-			"projectFolder": "libraries/my-controls",
-			"reviewCategory": "production"
-		},
-		{
-			"packageName": "my-toolchain",
-			"projectFolder": "tools/my-toolchain",
-			"reviewCategory": "tools"
+			"packageName": "tidy-shared",
+			"projectFolder": "projects/shared"
 		}
 	]
 }

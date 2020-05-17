@@ -1,0 +1,39 @@
+dependencies:
+  '@rush-temp/tidy-shared': 'file:projects/tidy-shared.tgz'
+  '@types/luxon': 1.24.0
+  luxon: 1.24.1
+  typescript: 3.9.2
+lockfileVersion: 5.1
+packages:
+  /@types/luxon/1.24.0:
+    dev: false
+    resolution:
+      integrity: sha512-OCTdVRQf/ge2ULlGqVKRI/HwyWoKpLV3ppLt6H27yzK/qdYNJ60Sz5tUxy3Jt1RD9K4Iz1tcDWPFJArBFZNAWQ==
+  /luxon/1.24.1:
+    dev: false
+    resolution:
+      integrity: sha512-CgnIMKAWT0ghcuWFfCWBnWGOddM0zu6c4wZAWmD0NN7MZTnro0+833DF6tJep+xlxRPg4KtsYEHYLfTMBQKwYg==
+  /typescript/3.9.2:
+    dev: false
+    engines:
+      node: '>=4.2.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-q2ktq4n/uLuNNShyayit+DTobV2ApPEo/6so68JaD5ojvc/6GClBipedB9zNWYxRSAlZXAe405Rlijzl6qDiSw==
+  'file:projects/tidy-shared.tgz':
+    dependencies:
+      '@types/luxon': 1.24.0
+      luxon: 1.24.1
+      typescript: 3.9.2
+    dev: false
+    name: '@rush-temp/tidy-shared'
+    resolution:
+      integrity: sha512-N7oqLi9syOj8sb9eD68T3DBCdj8VxU+ZiqGQ7bVvU5tnmv7UtJFM3EGO91a4rgHD5WhHbkOAbI49aCCiVpt92Q==
+      tarball: 'file:projects/tidy-shared.tgz'
+    version: 0.0.0
+registry: ''
+specifiers:
+  '@rush-temp/tidy-shared': 'file:./projects/tidy-shared.tgz'
+  '@types/luxon': ^1.24.0
+  luxon: ^1.24.1
+  typescript: ^3.8.3
