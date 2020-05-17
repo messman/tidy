@@ -12,7 +12,7 @@ export const Define = decorate(() => {
 
 	let referenceTime: string = '...';
 	if (allResponseState.data) {
-		referenceTime = allResponseState.data.info.referenceTime.toISOString();
+		referenceTime = allResponseState.data.info.referenceTime.toISO();
 	}
 
 	return (

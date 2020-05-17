@@ -3,77 +3,78 @@ import { Info } from "./info";
 import { SunEvent } from "../astro/astro-event";
 import { TideEvent, TideEventRange, TideExtremes } from "../tide/tide-event";
 import { WeatherStatus, DailyWeather } from "../weather/weather-status";
+import { DateTime } from 'luxon';
 
-export interface AllResponse {
+export interface AllResponse<TDate = DateTime> {
 	/** Info about the request. */
-	info: Info,
+	info: Info<TDate>,
 	/** Error information about the request. Null if no errors. */
 	error: Errors | null,
 	/** Success information - the response data. Null if errors.  */
-	all: AllResponseData | null
+	all: AllResponseData<TDate> | null
 }
 
-export interface AllResponseData {
+export interface AllResponseData<TDate = DateTime> {
 	/** Warnings. Null if no warnings. */
 	warning: Warnings | null,
 	/** Information about the current state of the location. */
-	current: AllCurrent,
+	current: AllCurrent<TDate>,
 	/** Prediction data for the location. */
-	predictions: AllPredictions,
+	predictions: AllPredictions<TDate>,
 	/** Daily-view information for the location. */
-	daily: AllDaily
+	daily: AllDaily<TDate>
 }
 
-export interface AllCurrent {
+export interface AllCurrent<TDate = DateTime> {
 	/** Current data about the tides. */
-	tides: AllCurrentTides,
+	tides: AllCurrentTides<TDate>,
 	/** Current data about the sunrise/sunset. */
 	sun: {
 		/** The previous astro sun event relative to now. */
-		previous: SunEvent,
+		previous: SunEvent<TDate>,
 		/** The next astro sun event relative to now. */
-		next: SunEvent
+		next: SunEvent<TDate>
 	},
 	/** The current weather information. */
-	weather: WeatherStatus
+	weather: WeatherStatus<TDate>
 }
 
-export interface AllCurrentTides {
+export interface AllCurrentTides<TDate = DateTime> {
 	/** The height, in feet. */
 	height: number,
 	/** The previous tide event, which may also be the current tide event. */
-	previous: TideEvent,
+	previous: TideEvent<TDate>,
 	/** The next tide event. */
-	next: TideEvent
+	next: TideEvent<TDate>
 }
 
-export interface AllPredictions {
+export interface AllPredictions<TDate = DateTime> {
 	/** The cutoff date for all events in this area. Data may go past this point; implementations should check. Date will be an exact time. */
-	cutoffDate: Date,
+	cutoffDate: TDate,
 	/** Predictions for tides. */
-	tides: TideEventRange
+	tides: TideEventRange<TDate>
 	/** Predictions for sun events.  */
-	sun: SunEvent[],
+	sun: SunEvent<TDate>[],
 	/** Predictions for weather events. */
-	weather: WeatherStatus[]
+	weather: WeatherStatus<TDate>[]
 }
 
-export interface AllDaily {
+export interface AllDaily<TDate = DateTime> {
 	/** The cutoff date for all events in this area. Data may go past this point; implementations should check. Date will be an exact time.  */
-	cutoffDate: Date,
+	cutoffDate: TDate,
 	/** Metadata for tides provided in 'today' and 'future'. */
-	tideExtremes: TideExtremes,
+	tideExtremes: TideExtremes<TDate>,
 	/** Information for each day from our reference time day to our cutoff date. */
-	days: AllDailyDay[]
+	days: AllDailyDay<TDate>[]
 }
 
-export interface AllDailyDay {
+export interface AllDailyDay<TDate = DateTime> {
 	/** The date. A day, but not a specific time. */
-	date: Date,
+	date: TDate,
 	/** The weather event to describe the day. */
-	weather: DailyWeather,
+	weather: DailyWeather<TDate>,
 	/** Tide events for the day - includes events on the day before and the day after for continuity. */
-	tides: TideEventRange,
+	tides: TideEventRange<TDate>,
 	/** Sun events specific to the day. */
-	sun: SunEvent[]
+	sun: SunEvent<TDate>[]
 }

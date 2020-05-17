@@ -40,7 +40,7 @@ export function interpretAstro(configurationContext: APIConfigurationContext, in
 
 	intermediateAstro.sunEvents.forEach((s) => {
 		// Get the time in our time zone in a DateTime object.
-		const eventTime = configurationContext.action.parseDateForZone(s.time);
+		const eventTime = s.time;
 		// Figure out if it's an event adjacent to our reference time.
 		if (eventTime < referenceTime) {
 			previousEvent = s;

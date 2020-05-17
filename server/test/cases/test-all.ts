@@ -4,7 +4,7 @@ import { AllResponse } from 'tidy-shared';
 export async function run(): Promise<void> {
 	const configuration = createWellsConfiguration();
 
-	const isTest = false;
+	const isTest = true;
 
 	let response: AllResponse = null!;
 	try {

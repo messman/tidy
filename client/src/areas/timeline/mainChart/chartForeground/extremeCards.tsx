@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
 import { SmallText } from '@/core/symbol/text';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { timeToPixels, createPrettyTime } from '@/services/time';
+import { timeToPixels, getTimeTwelveHour } from '@/services/time';
 import { TideEvent } from 'tidy-shared';
 
 interface ExtremeCardsProps {
@@ -36,7 +36,7 @@ export const ExtremeCards: StyledFC<ExtremeCardsProps> = (props) => {
 		if (tideEvent.isLow) {
 			return (
 				<BottomExtremeCard
-					key={tideEvent.time.getTime()}
+					key={tideEvent.time.valueOf()}
 					tideEvent={tideEvent}
 					left={left}
 					bottom={percent}
@@ -46,7 +46,7 @@ export const ExtremeCards: StyledFC<ExtremeCardsProps> = (props) => {
 		else {
 			return (
 				<TopExtremeCard
-					key={tideEvent.time.getTime()}
+					key={tideEvent.time.valueOf()}
 					tideEvent={tideEvent}
 					left={left}
 					top={(100 - percent)}
@@ -66,7 +66,7 @@ interface ExtremeCardProps {
 
 const _ExtremeCard: StyledFC<ExtremeCardProps> = (props) => {
 	const lowHighText = props.tideEvent.isLow ? 'Low' : 'High';
-	const timeText = createPrettyTime(props.tideEvent.time);
+	const timeText = getTimeTwelveHour(props.tideEvent.time).time;
 	const heightText = `${props.tideEvent.height} ft`;
 
 	const inner = (

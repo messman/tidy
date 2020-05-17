@@ -50,6 +50,8 @@ module.exports = {
 
 		config.plugins.push(new webpack.DefinePlugin({ __DEFINE__: DEFINE }));
 
+		//console.dir(config, { depth: null });
+
 		return config;
 	}
 };

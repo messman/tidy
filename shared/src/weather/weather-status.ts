@@ -1,8 +1,9 @@
 import { WeatherStatusType } from "./weather-status-type";
+import { DateTime } from 'luxon';
 
-export interface WeatherStatus {
+export interface WeatherStatus<TDate = DateTime> {
 	/** Time of the weather status. */
-	time: Date,
+	time: TDate,
 	/** The description of the weather at the time. */
 	status: WeatherStatusType,
 	/** The temperature, in degrees fahrenheit. */
@@ -23,9 +24,9 @@ export interface WeatherStatus {
 	visibility: Measurement
 }
 
-export interface DailyWeather {
+export interface DailyWeather<TDate = DateTime> {
 	/** The date of the weather status. */
-	day: Date,
+	day: TDate,
 	/** The description of the weather on the day. */
 	status: WeatherStatusType,
 	/** Minimum expected temperature. */

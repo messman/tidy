@@ -86,7 +86,7 @@ export function createTideData(configContext: APIConfigurationContext, testSeed:
 		const height = isLow ? tideRandomizer.randomFloat(0, 2.5, tideHeightPrecision, true) : tideRandomizer.randomFloat(6, 9, tideHeightPrecision, true);
 
 		const event: TideEvent = {
-			time: time.toJSDate(),
+			time: time,
 			isLow: isLow,
 			height: height
 		};
@@ -101,9 +101,9 @@ export function createTideData(configContext: APIConfigurationContext, testSeed:
 
 	// Do an estimation of the current height based on previous and next.
 	const previousEvent = previousEvents[previousEvents.length - 1];
-	const timeOfPrevious = configContext.action.parseDateForZone(previousEvent.time);
+	const timeOfPrevious = previousEvent.time;
 	const nextEvent = futureEvents[0];
-	const timeOfNext = configContext.action.parseDateForZone(nextEvent.time);
+	const timeOfNext = nextEvent.time;
 	const minutesBetweenReferenceAndPrevious = Math.max(0, referenceTime.diff(timeOfPrevious, 'minutes').minutes);
 	const minutesBetweenNextAndPrevious = timeOfNext.diff(timeOfPrevious, 'minutes').minutes;
 
@@ -112,7 +112,7 @@ export function createTideData(configContext: APIConfigurationContext, testSeed:
 	const heightWithPrecision = parseFloat(height.toFixed(tideHeightPrecision));
 
 	const currentStatus: TideStatus = {
-		time: referenceTime.toJSDate(),
+		time: referenceTime,
 		height: heightWithPrecision
 	};
 
@@ -163,11 +163,11 @@ export function createAstroData(configContext: APIConfigurationContext, testSeed
 	for (let i = 0; i < daysBetween; i++) {
 		const day = startDateTime.plus({ days: i });
 		sunEvents.push({
-			time: day.plus({ minutes: sunriseMinutes[i] }).toJSDate(),
+			time: day.plus({ minutes: sunriseMinutes[i] }),
 			isSunrise: true,
 		});
 		sunEvents.push({
-			time: day.plus({ minutes: sunsetMinutes[i] }).toJSDate(),
+			time: day.plus({ minutes: sunsetMinutes[i] }),
 			isSunrise: false,
 		});
 	}
@@ -246,8 +246,8 @@ function quadraticShakeData(randomizer: Randomizer, startDateTime: DateTime, end
 		const shakenValue = randomizer.shake(minY, maxY, precision, value, shake, inclusive);
 		iterables.push({
 			span: {
-				begin: startDateTime.plus({ hours: hours }).toJSDate(),
-				end: startDateTime.plus({ hours: hours + hoursGap }).toJSDate()
+				begin: startDateTime.plus({ hours: hours }),
+				end: startDateTime.plus({ hours: hours + hoursGap })
 			},
 			value: shakenValue
 		});

@@ -52,7 +52,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 	};
 
 	const currentHour = referenceHour.plus({ hours: 1 });
-	const currentWeather = getWeatherStatusFromTime(currentHour.toJSDate(), iterators);
+	const currentWeather = getWeatherStatusFromTime(currentHour, iterators);
 
 	const hoursGapBetweenWeatherData = configurationContext.configuration.weather.hoursGapBetweenWeatherData;
 	const shortTermLimit = configurationContext.context.maxShortTermDataFetch;
@@ -66,7 +66,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 
 	for (let i = 0; i < nShortTermIterations; i++) {
 		const dateTime = startHour.plus({ hours: i * hoursGapBetweenWeatherData });
-		shortTermWeather.push(getWeatherStatusFromTime(dateTime.toJSDate(), iterators));
+		shortTermWeather.push(getWeatherStatusFromTime(dateTime, iterators));
 	}
 
 	resetIterators(iterators);
@@ -77,7 +77,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 
 	for (let i = 0; i < longHoursBetween; i++) {
 		const dateTime = startHour.plus({ hours: i });
-		longTermWeatherStatuses.push(getWeatherStatusFromTime(dateTime.toJSDate(), iterators));
+		longTermWeatherStatuses.push(getWeatherStatusFromTime(dateTime, iterators));
 	}
 
 	const longTermWeatherStatusesByDay: WeatherStatus[][] = [];
@@ -85,20 +85,18 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 	let currentEventsOfDay: WeatherStatus[] | null = null;
 
 	longTermWeatherStatuses.forEach((t) => {
-		// Tide events are already in the time zone we care about.
-		const eventDateTime = configurationContext.action.parseDateForZone(t.time);
-		if (previousEventDateTime && previousEventDateTime.hasSame(eventDateTime, 'day')) {
+		if (previousEventDateTime && previousEventDateTime.hasSame(t.time, 'day')) {
 			currentEventsOfDay!.push(t);
 		}
 		else {
-			previousEventDateTime = eventDateTime;
+			previousEventDateTime = t.time;
 			currentEventsOfDay = [t];
 			longTermWeatherStatusesByDay.push(currentEventsOfDay);
 		}
 	});
 
 	const longTermWeather: DailyWeather[] = longTermWeatherStatusesByDay.map((statuses) => {
-		const day = configurationContext.action.parseDateForZone(statuses[0].time).startOf('day');
+		const day = statuses[0].time.startOf('day');
 
 		const status = getDailyStatus(statuses.map((s) => {
 			return s.status;
@@ -125,7 +123,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 		});
 
 		return {
-			day: day.toJSDate(),
+			day: day,
 			status: status,
 			minTemp: minTemp,
 			maxTemp: maxTemp,
@@ -142,7 +140,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 	};
 }
 
-function getWeatherStatusFromTime(time: Date, iterators: Iterators): WeatherStatus {
+function getWeatherStatusFromTime(time: DateTime, iterators: Iterators): WeatherStatus {
 	return {
 		time: time,
 		temp: iterators.temperature.next(time)!,

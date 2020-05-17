@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Flex } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { Text } from '@/core/symbol/text';
-import { createPrettyTimespan } from '@/services/time';
+import { getHumanTime } from '@/services/time';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 
 interface CurrentConditionsProps {
@@ -27,7 +27,7 @@ export const CurrentConditions: React.FC<CurrentConditionsProps> = () => {
 		weatherText += `, ${weather.chanceRain.entity! * 100}% chance for rain`;
 	}
 
-	sunText = `${sun.next.isSunrise ? 'Sunrise' : 'Sunset'} ${createPrettyTimespan(sun.next.time.getTime() - allResponseState.data!.info.referenceTime.getTime())}`
+	sunText = `${sun.next.isSunrise ? 'Sunrise' : 'Sunset'} ${getHumanTime(sun.next.time.diff(allResponseState.data!.info.referenceTime, 'millisecond').milliseconds)}`
 
 	windText = `${weather.wind} mph winds, ${weather.windDirection}`;
 

@@ -41,10 +41,10 @@ function getSunEventsForDay(day: DateTime, latitude: number, longitude: number):
 	const timezoneOffset = day.offset / 60; // To get hours
 
 	const rise = getSunriseSunset(true, julianDay, latitude, longitude, timezoneOffset);
-	const sunriseEvent: SunEvent = createSunEventFromOutput(true, day, julianDay, rise);
+	const sunriseEvent = createSunEventFromOutput(true, day, julianDay, rise);
 
 	const set = getSunriseSunset(false, julianDay, latitude, longitude, timezoneOffset);
-	const sunsetEvent: SunEvent = createSunEventFromOutput(false, day, julianDay, set);
+	const sunsetEvent = createSunEventFromOutput(false, day, julianDay, set);
 
 	return [sunriseEvent, sunsetEvent];
 }
@@ -53,7 +53,7 @@ function createSunEventFromOutput(isSunrise: boolean, day: DateTime, julianDay: 
 	const dayOffset = output.julianDay - julianDay;
 	return {
 		isSunrise: isSunrise,
-		time: day.plus({ days: dayOffset, minutes: output.localMinutes }).toJSDate()
+		time: day.plus({ days: dayOffset, minutes: output.localMinutes })
 	};
 }
 

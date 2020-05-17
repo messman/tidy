@@ -1,11 +1,13 @@
-export interface PrettyTime {
+import { DateTime } from 'luxon';
+
+export interface TwelveHourTime {
 	time: string // like '1:34'
 	ampm: 'AM' | 'PM'
 }
 
-export function createOldPrettyTime(date: Date): PrettyTime {
-	let hours = date.getHours();
-	let minutes = date.getMinutes();
+export function getTimeTwelveHour(date: DateTime): TwelveHourTime {
+	let hours = date.hour;
+	let minutes = date.minute;
 	let ampm: 'PM' | 'AM' = hours >= 12 ? 'PM' : 'AM';
 	hours = hours % 12;
 	hours = hours ? hours : 12; // the hour '0' should be '12'
@@ -16,45 +18,16 @@ export function createOldPrettyTime(date: Date): PrettyTime {
 	}
 }
 
-export function createPrettyDate(date: Date): string {
-	return `${date.getMonth() + 1}/${date.getDate()}`;
+export function getDate(date: DateTime): string {
+	return `${date.month}/${date.day}`;
 }
 
-const daysOfWeek = [
-	'Sun',
-	'Mon',
-	'Tue',
-	'Wed',
-	'Thu',
-	'Fri',
-	'Sat'
-];
-
-export function createPrettyDateDay(date: Date): string {
-	const dayOfWeek = daysOfWeek[date.getDay()];
-	return `${dayOfWeek} ${createPrettyDate(date)}`;
+export function getDateDayOfWeek(date: DateTime): string {
+	return `${date.weekdayShort} ${getDate(date)}`;
 }
 
-export function createPrettyTime(date: Date): string {
-	let hours = date.getHours();
-	let minutes = date.getMinutes();
-	let ampm = hours >= 12 ? 'pm' : 'am';
-	hours = hours % 12;
-	hours = hours ? hours : 12; // the hour '0' should be '12'
-	const minutesString = minutes.toString().padStart(2, '0');
-	return `${hours}:${minutesString}${ampm}`;
-}
-
-export function createPrettyHour(date: Date): string {
-	let hours = date.getHours();
-	let ampm = hours >= 12 ? 'pm' : 'am';
-	hours = hours % 12;
-	hours = hours ? hours : 12; // the hour '0' should be '12'
-	return `${hours}${ampm}`
-}
-
-export function createPrettyTimespan(time: number): string {
-	let minutes = Math.ceil(time / 1000 / 60);
+export function getHumanTime(spanMilliseconds: number): string {
+	let minutes = Math.ceil(spanMilliseconds / 1000 / 60);
 	if (minutes > 0) {
 		if (minutes <= 1)
 			return 'right about now';
@@ -79,24 +52,14 @@ export function createPrettyTimespan(time: number): string {
 }
 
 
-const _pixelsPerHour = 40;
+const _pixelsPerHour = 50;
 export const pixelsPerDay = 24 * _pixelsPerHour;
 
-export function timeToPixels(startDate: Date, endDate: Date): number {
+export function timeToPixels(startDate: DateTime, endDate: DateTime): number {
 	return timeToPixelsWithConstant(startDate, endDate, _pixelsPerHour);
 }
 
-function timeToPixelsWithConstant(startDate: Date, endDate: Date, pixelsPerHour: number): number {
-	const hours = (endDate.getTime() - startDate.getTime()) / 1000 / 60 / 60;
+function timeToPixelsWithConstant(startDate: DateTime, endDate: DateTime, pixelsPerHour: number): number {
+	const hours = endDate.diff(startDate, 'millisecond').milliseconds / 1000 / 60 / 60;
 	return hours * pixelsPerHour;
-}
-
-export function isSameDay(a: Date, b: Date): boolean {
-	return !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-}
-
-export function beginOfDay(date: Date): Date {
-	var begin = new Date(date.getTime());
-	begin.setHours(0, 0, 0, 0);
-	return begin;
 }

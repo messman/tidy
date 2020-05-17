@@ -288,8 +288,8 @@ function timeSpanFromString(timeString: string, timeZone: string): TimeSpan {
 	const luxonEnd = luxonTime.plus(duration);
 
 	return {
-		begin: luxonTime.toJSDate(),
-		end: luxonEnd.toJSDate()
+		begin: luxonTime,
+		end: luxonEnd
 	}
 }
 
@@ -299,8 +299,8 @@ function timeSpanFromTimes(startTimeString: string, endTimeString: string, timeZ
 	const luxonStartTime = DateTime.fromISO(startTimeString, { zone: timeZone });
 	const luxonEndTime = DateTime.fromISO(endTimeString, { zone: timeZone });
 	return {
-		begin: luxonStartTime.toJSDate(),
-		end: luxonEndTime.toJSDate()
+		begin: luxonStartTime,
+		end: luxonEndTime
 	}
 }
 

@@ -74,7 +74,7 @@ function interpretCurrent(pastEvents: TideEvent[], current: TideStatus, futureEv
 function interpretShortTerm(configurationContext: APIConfigurationContext, previousEvent: TideEvent, futureEvents: TideEvent[]): TideEventRange {
 
 	// Get the "predictions", a.k.a. the short-term tides information.
-	const shortTermLimitDate = configurationContext.context.maxShortTermDataFetch.toJSDate();
+	const shortTermLimitDate = configurationContext.context.maxShortTermDataFetch;
 
 	// Go one past so it looks continuous.
 	let outsideNextEvent: TideEvent | null = null;
@@ -112,12 +112,11 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 
 	allEvents.forEach((t) => {
 		// Tide events are already in the time zone we care about.
-		const eventDateTime = configurationContext.action.parseDateForZone(t.time);
-		if (previousEventDateTime && previousEventDateTime.hasSame(eventDateTime, 'day')) {
+		if (previousEventDateTime && previousEventDateTime.hasSame(t.time, 'day')) {
 			currentEventsOfDay.push(t);
 		}
 		else {
-			previousEventDateTime = eventDateTime;
+			previousEventDateTime = t.time;
 			currentEventsOfDay = [t];
 			eventsByDay.push(currentEventsOfDay);
 		}
@@ -129,7 +128,7 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 	const referenceDay = configurationContext.context.referenceTimeInZone.startOf('day');
 
 	eventsByDay.forEach((events, index) => {
-		const dayOfEvents = configurationContext.action.parseDateForZone(events[0].time).startOf('day');
+		const dayOfEvents = events[0].time.startOf('day');
 		if (dayOfEvents < referenceDay) {
 			// Prior to our first day. Ignore.
 		}

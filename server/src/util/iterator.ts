@@ -1,15 +1,16 @@
 import { Change, Measurement } from "tidy-shared";
+import { DateTime } from 'luxon';
 
 /** Weather data is a span of time - usually the time given plus a number of hours. */
 export interface TimeSpan {
-	begin: Date,
-	end: Date
+	begin: DateTime,
+	end: DateTime
 }
 
 /** An instance. */
 export interface TimeIterator<B> {
 	/** Iterates forward to the given Date. */
-	next: (time: Date) => B | null,
+	next: (time: DateTime) => B | null,
 	/** Resets the iterator. */
 	reset: () => void
 }
@@ -48,7 +49,7 @@ function createBaseTimeIterator<A, B>(data: IterableTimeData<A>[], createOutput:
 	}
 	reset();
 
-	function next(newTime: Date): B | null {
+	function next(newTime: DateTime): B | null {
 		// Once complete, get out.
 		if (isComplete) {
 			return null;
@@ -115,7 +116,7 @@ function createOutput<T>(_: IterableTimeData<T> | null, next: IterableTimeData<T
 	return next.value;
 }
 
-function isInTimespan(timespan: TimeSpan, time: Date): boolean {
+function isInTimespan(timespan: TimeSpan, time: DateTime): boolean {
 	const value = time.valueOf();
 	return value >= timespan.begin.valueOf() && value < timespan.end.valueOf();
 }

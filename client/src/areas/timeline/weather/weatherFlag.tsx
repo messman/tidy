@@ -2,11 +2,12 @@ import * as React from 'react';
 import { FlexColumn } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
 import { SmallText } from '@/core/symbol/text';
-import { timeToPixels, createPrettyHour } from '@/services/time';
+import { timeToPixels, getTimeTwelveHour } from '@/services/time';
 import { WeatherStatus } from 'tidy-shared';
+import { DateTime } from 'luxon';
 
 interface WeatherFlagProps {
-	startTime: Date,
+	startTime: DateTime,
 	event: WeatherStatus,
 }
 
@@ -15,7 +16,7 @@ export const WeatherFlag: StyledFC<WeatherFlagProps> = (props) => {
 
 	const left = timeToPixels(startTime, event.time);
 
-	const time = createPrettyHour(event.time);
+	const time = getTimeTwelveHour(event.time).time;
 	const temp = `${event.temp} F`;
 	const percentRain = `${event.chanceRain.entity! * 100}%`;
 

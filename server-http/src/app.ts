@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express';
+import { Application, Request, Response, NextFunction } from 'express';
 import { createWellsConfiguration, getAllForConfiguration } from 'tidy-server';
 import { AllResponse, createReplacer } from 'tidy-shared';
 
@@ -38,7 +38,7 @@ export function configureApp(app: Application): void {
 	*/
 	app.set('json replacer', createReplacer());
 
-	app.get('/latest', async (_: Request, response: Response<AllResponse>) => {
+	app.get('/latest', async (_: Request, response: Response<AllResponse>, next: NextFunction) => {
 		stats.totalHits++;
 
 		if (isCaching) {
@@ -58,7 +58,13 @@ export function configureApp(app: Application): void {
 			}
 		}
 
-		last = await getResponse();
+		try {
+			last = await getResponse();
+		}
+		catch (e) {
+			console.error(e);
+			return next(new Error('Error retrieving data.'));
+		}
 		cacheExpirationTime = Date.now() + cacheExpirationMilliseconds;
 
 		log(`Latest - caching for ${cacheExpirationMilliseconds}ms`);

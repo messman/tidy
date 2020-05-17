@@ -22,7 +22,7 @@ export const Weather: StyledFC<WeatherProps> = () => {
 		<>
 			{
 				events.map((event) => {
-					return <WeatherFlag key={event.time.getTime()} startTime={startTime} event={event} />
+					return <WeatherFlag key={event.time.valueOf()} startTime={startTime} event={event} />
 				})
 			}
 		</>

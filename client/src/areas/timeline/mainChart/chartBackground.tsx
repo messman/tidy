@@ -16,12 +16,11 @@ export const ChartBackground: StyledFC<ChartBackgroundProps> = () => {
 	const startTime = allResponseState.data!.info.referenceTime;
 	const sunEvents = allResponseState.data!.all.predictions.sun;
 	sunEvents.forEach(function (ev) {
-		const key = `d_${ev.time.getTime()}`;
+		const key = `d_${ev.time.valueOf()}`;
 		eventLines.push(<SunEventLine key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 		if (!ev.isSunrise) {
-			const endOfDay = new Date(ev.time);
-			endOfDay.setHours(24, 0, 0, 0);
-			const endKey = `d_${endOfDay.getTime()}`;
+			const endOfDay = ev.time.endOf('day');
+			const endKey = `d_${endOfDay.valueOf()}`;
 			eventLines.push(<MidnightEventLine key={endKey} positionLeft={timeToPixels(startTime, endOfDay)} />);
 		}
 	});

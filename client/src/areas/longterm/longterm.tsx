@@ -4,7 +4,6 @@ import { styled } from '@/core/style/styled';
 import { Title } from '@/core/symbol/text';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { DailyView } from './dailyView/dailyView';
-import { createPrettyHour } from '@/services/time';
 import { TimeSlider } from './timeSlider';
 
 interface LongTermProps {
@@ -15,10 +14,10 @@ const maxHour = 22;
 
 const minHourDate = new Date();
 minHourDate.setHours(minHour);
-const minHourText = createPrettyHour(minHourDate);
+const minHourText = '';
 const maxHourDate = new Date();
 maxHourDate.setHours(maxHour);
-const maxHourText = createPrettyHour(maxHourDate);
+const maxHourText = '';
 
 export const LongTerm: React.FC<LongTermProps> = () => {
 	return (
@@ -65,7 +64,7 @@ export const LongTermDailyViewList: React.FC<LongTermDailyViewListProps> = () =>
 
 	const list = daily.days.map(function (day, index) {
 		return <DailyView
-			key={day.date.getTime()}
+			key={day.date.valueOf()}
 			dailyEvent={day}
 			isToday={index === 0}
 			minHour={minHour}

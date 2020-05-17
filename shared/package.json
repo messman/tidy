@@ -5,12 +5,16 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"start": "ts-webpack-builder"
+		"start": "ts-webpack-builder",
+		"start-client": "ts-webpack-builder --isNode=false --excludeNodeModules=false"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",
-	"dependencies": {},
+	"peerDependencies": {
+		"luxon": "^1.24.1"
+	},
 	"devDependencies": {
+		"@types/luxon": "^1.24.0",
 		"typescript": "^3.8.3"
 	}
 }

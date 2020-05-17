@@ -33,7 +33,7 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 		const allTides = [previous, ...tidePredictions.events];
 		const points: Point[] = allTides.map(function (t) {
 			return {
-				x: t.time.getTime(),
+				x: t.time.valueOf(),
 				y: t.height
 			};
 		});
@@ -44,7 +44,7 @@ export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 		const chartLineInput: ChartLineInput = {
 			points: points,
 			closePath: true,
-			sourceRect: makeRect(startTime.getTime(), min, endTime.getTime(), max),
+			sourceRect: makeRect(startTime.valueOf(), min, endTime.valueOf(), max),
 			destRect: makeRect(0, 0, size.width, size.height),
 		};
 

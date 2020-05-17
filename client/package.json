@@ -30,6 +30,7 @@
 	},
 	"homepage": "https://github.com/messman/tidy#readme",
 	"dependencies": {
+		"luxon": "^1.24.1",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",
 		"styled-components": "^5.1.0"
@@ -42,6 +43,7 @@
 		"@storybook/addon-viewport": "^5.3.18",
 		"@storybook/react": "^5.3.18",
 		"@svgr/webpack": "^5.4.0",
+		"@types/luxon": "^1.22.0",
 		"@types/react": "^16.8.19",
 		"@types/react-dom": "^16.8.4",
 		"@types/styled-components": "^5.1.0",

@@ -1,5 +1,5 @@
 const tidyServer = require('tidy-server');
-const jsStringify = require('javascript-stringify');
+const tidyShared = require('tidy-shared');
 
 module.exports = async function getDefine(isDevelopment) {
 
@@ -39,10 +39,10 @@ module.exports = async function getDefine(isDevelopment) {
 		const localTestDataMap = {};
 		for (let i = 0; i < localTestDataPhrases.length; i++) {
 			const phrase = localTestDataPhrases[i];
-			localTestDataMap[phrase] = await createLocalTestData(phrase);
+			localTestDataMap[phrase] = tidyShared.serialize(await createLocalTestData(phrase));
 		}
 		// Stringify to JS code, which prevents issues with Date objects (see shared code).
-		DEFINE.localTestData = jsStringify.stringify(localTestDataMap);
+		DEFINE.localTestData = JSON.stringify(localTestDataMap);
 		console.log(`Done adding local test data`);
 	}
 	else {

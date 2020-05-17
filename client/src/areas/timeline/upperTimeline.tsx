@@ -3,6 +3,7 @@ import { styled, StyledFC } from '@/core/style/styled';
 import { Weather } from './weather/weather';
 import { TimeBar } from './timeBar/timeBar';
 import { WeatherStatus } from 'tidy-shared';
+import { DateTime } from 'luxon';
 
 interface UpperTimelineProps {
 }
@@ -28,9 +29,8 @@ const SeparatorBar = styled.div`
  * Check here for wether flags that might go past the cutoff date when rendered in this app. 
  */
 const cutoffHoursBefore = 3; // 3 hours before cutoff date (3 hours itself is okay)
-export function filterWeatherEvents(events: WeatherStatus[], cutoffDate: Date): WeatherStatus[] {
-	const cutoff = new Date(cutoffDate);
-	cutoff.setHours(cutoff.getHours() - cutoffHoursBefore);
+export function filterWeatherEvents(events: WeatherStatus[], cutoffDate: DateTime): WeatherStatus[] {
+	const cutoff = cutoffDate.minus({ hour: cutoffHoursBefore });
 	return events.filter(function (event) {
 		return event.time <= cutoff;
 	});

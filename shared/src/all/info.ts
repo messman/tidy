@@ -1,8 +1,12 @@
-export interface Info {
+import { DateTime } from 'luxon';
+
+export interface Info<TDate = DateTime> {
 	/** Time the request was processed on the server. */
-	processingTime: Date,
+	processingTime: TDate,
 	/** Matches to the configuration reference time. */
-	referenceTime: Date,
+	referenceTime: TDate,
+	/** Time zone of all dates. */
+	timeZone: string,
 	/** Digits after the decimal for tide height. */
 	tideHeightPrecision: number,
 }

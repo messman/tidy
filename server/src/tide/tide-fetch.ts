@@ -20,7 +20,7 @@ export async function fetchTides(configContext: APIConfigurationContext): Promis
 	const maxTime = configContext.context.maxLongTermDataFetch.plus({ days: 1 });
 	const pastTime = configContext.context.tides.minimumTidesDataFetch;
 
-	const startDateAsString = formatDateForRequest(pastTime.toJSDate());
+	const startDateAsString = formatDateForRequest(pastTime);
 	const hoursBetween = Math.ceil(maxTime.diff(pastTime, 'hours').hours);
 
 	const predictionInput: NOAAPredictionInput = Object.assign({}, defaultNOAAInput, ({
@@ -61,7 +61,7 @@ export async function fetchTides(configContext: APIConfigurationContext): Promis
 
 	const currentLevelData = currentLevelResponse.result!.data[0];
 	const current: TideStatus = {
-		time: DateTimeFromNOAAString(currentLevelData.t, configContext.configuration.location.timeZoneLabel).toJSDate(),
+		time: DateTimeFromNOAAString(currentLevelData.t, configContext.configuration.location.timeZoneLabel),
 		height: parseFloat(parseFloat(currentLevelData.v).toFixed(configContext.configuration.tides.tideHeightPrecision))
 	}
 
@@ -73,7 +73,7 @@ export async function fetchTides(configContext: APIConfigurationContext): Promis
 
 		const eventTime = DateTimeFromNOAAString(p.t, configContext.configuration.location.timeZoneLabel);
 		const event: TideEvent = {
-			time: eventTime.toJSDate(),
+			time: eventTime,
 			height: parseFloat(parseFloat(p.v).toFixed(configContext.configuration.tides.tideHeightPrecision)),
 			isLow: p.type.toUpperCase() !== "H"
 		};
@@ -190,11 +190,11 @@ function createRequestUrl(params: { [key: string]: any }): string {
 }
 
 // Return a formatted date minus X hours
-function formatDateForRequest(d: Date): string {
+function formatDateForRequest(d: DateTime): string {
 	//yyyyMMdd HH:mm
-	let twosNum = [d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes()];
+	let twosNum = [d.month, d.day, d.hour, d.minute];
 	const twos = twosNum.map(function (num) {
 		return num.toString().padStart(2, "0");
 	});
-	return `${d.getFullYear()}${twos[0]}${twos[1]} ${twos[2]}:${twos[3]}`;
+	return `${d.year}${twos[0]}${twos[1]} ${twos[2]}:${twos[3]}`;
 }

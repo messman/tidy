@@ -4,6 +4,7 @@ import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { DayRange } from './dayRange';
 import { EventMarkers } from './eventMarkers/eventMarkers';
 import { SunEvent } from 'tidy-shared';
+import { DateTime } from 'luxon';
 
 // IMPORTANT ASSUMPTION - there is always a sunrise for a sunset in the returned data.
 
@@ -30,7 +31,7 @@ export const TimeBar: StyledFC<TimeBarProps> = () => {
 			{
 				dayEvents.map((eventGroup) => {
 					return <DayRange
-						key={eventGroup.sunrise.getTime()}
+						key={eventGroup.sunrise.valueOf()}
 						startTime={startTime}
 						sunrise={eventGroup.sunrise}
 						sunset={eventGroup.sunset}
@@ -58,15 +59,15 @@ const DayContainer = styled.div`
 `;
 
 interface SunEventGroup {
-	sunrise: Date,
-	sunset: Date,
+	sunrise: DateTime,
+	sunset: DateTime,
 }
 
 function groupByDays(sunEvents: SunEvent[]): SunEventGroup[] {
 	const days: { [day: string]: SunEventGroup } = {};
 	sunEvents.forEach(function (event) {
 		const time = event.time;
-		const dayKey = `${time.getMonth()}_${time.getDate()}`;
+		const dayKey = `${time.month}_${time.day}`;
 		if (!days[dayKey]) {
 			days[dayKey] = {
 				sunrise: null!,
@@ -82,6 +83,6 @@ function groupByDays(sunEvents: SunEvent[]): SunEventGroup[] {
 	});
 	const groups = Object.values(days);
 	return groups.sort(function (a, b) {
-		return a.sunrise.getTime() - b.sunrise.getTime();
+		return a.sunrise.valueOf() - b.sunrise.valueOf();
 	});
 }

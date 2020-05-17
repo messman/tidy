@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { timeToPixels, isSameDay } from '@/services/time';
+import { timeToPixels } from '@/services/time';
 import { WeatherEventMarker, DayEventMarker, TideEventMarker } from './eventMarker';
 import { filterWeatherEvents } from '../../upperTimeline';
 
@@ -20,29 +20,27 @@ export const EventMarkers: StyledFC<EventMarkersProps> = () => {
 
 	const weatherEvents = filterWeatherEvents(all.predictions.weather, all.predictions.cutoffDate);
 	weatherEvents.forEach(function (ev) {
-		const key = `w_${ev.time.getTime()}`;
+		const key = `w_${ev.time.valueOf()}`;
 		markers.push(<WeatherEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 	});
 
 	all.predictions.sun.forEach(function (ev) {
-		const key = `d_${ev.time.getTime()}`;
+		const key = `d_${ev.time.valueOf()}`;
 		markers.push(<DayEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
-		if (ev.isSunrise && isSameDay(startTime, ev.time)) {
-			const startOfDay = new Date(ev.time);
-			startOfDay.setHours(0, 0, 0, 0);
-			const startKey = `d_${startOfDay.getTime()}`;
+		if (ev.isSunrise && startTime.hasSame(ev.time, 'day')) {
+			const startOfDay = ev.time.startOf('day');
+			const startKey = `d_${startOfDay.valueOf()}`;
 			markers.push(<DayEventMarker key={startKey} positionLeft={timeToPixels(startTime, startOfDay)} />);
 		}
 		if (!ev.isSunrise) {
-			const endOfDay = new Date(ev.time);
-			endOfDay.setHours(24, 0, 0, 0);
-			const endKey = `d_${endOfDay.getTime()}`;
+			const endOfDay = ev.time.endOf('day');
+			const endKey = `d_${endOfDay.valueOf()}`;
 			markers.push(<DayEventMarker key={endKey} positionLeft={timeToPixels(startTime, endOfDay)} />);
 		}
 	});
 
 	all.predictions.tides.events.forEach(function (ev) {
-		const key = `t_${ev.time.getTime()}`;
+		const key = `t_${ev.time.valueOf()}`;
 		markers.push(<TideEventMarker key={key} positionLeft={timeToPixels(startTime, ev.time)} />);
 	});
 

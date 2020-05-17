@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
-import { pixelsPerDay, isSameDay, timeToPixels } from '@/services/time';
+import { pixelsPerDay, timeToPixels } from '@/services/time';
 import { FullDay } from './fullDay';
+import { DateTime } from 'luxon';
 
 interface DayRangeProps {
-	startTime: Date,
-	sunrise: Date,
-	sunset: Date
+	startTime: DateTime,
+	sunrise: DateTime,
+	sunset: DateTime
 }
 
 
@@ -15,11 +16,10 @@ export const DayRange: StyledFC<DayRangeProps> = (props) => {
 	const { startTime, sunrise, sunset } = props;
 
 	let width = pixelsPerDay;
-	let timeInDay: Date = null!;
-	if (isSameDay(startTime, sunrise)) {
+	let timeInDay: DateTime = null!;
+	if (startTime.hasSame(sunrise, 'day')) {
 		timeInDay = startTime;
-		const nextDay = new Date(startTime.getTime());
-		nextDay.setHours(24, 0, 0, 0);
+		const nextDay = startTime.endOf('day');
 		width = timeToPixels(startTime, nextDay);
 	}
 

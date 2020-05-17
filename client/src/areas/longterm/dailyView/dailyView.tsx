@@ -3,7 +3,7 @@ import { Flex, FlexRow } from '@/core/layout/flex';
 import { styled, css } from '@/core/style/styled';
 import { SmallText } from '@/core/symbol/text';
 import { TideEvent, AllDailyDay } from 'tidy-shared';
-import { createPrettyTime, isSameDay, createPrettyDateDay } from '@/services/time';
+import { getTimeTwelveHour, getDateDayOfWeek } from '@/services/time';
 import { DailyChart } from './dailyChart';
 
 export interface DailyViewProps {
@@ -18,16 +18,13 @@ export interface DailyViewProps {
 export const DailyView: React.FC<DailyViewProps> = (props) => {
 	const daily = props.dailyEvent;
 
-	const minHour = new Date(daily.date);
-	minHour.setHours(props.minHour, 0, 0, 0);
-
-	const maxHour = new Date(daily.date);
-	maxHour.setHours(props.maxHour, 0, 0, 0);
+	const minHour = daily.date.set({ hour: props.minHour });
+	const maxHour = daily.date.set({ hour: props.maxHour });
 
 	let qualifiedTideEvents = daily.tides.events
 		.filter(function (tide) {
 			// between 
-			return isSameDay(tide.time, daily.date) && tide.time >= minHour && tide.time <= maxHour;
+			return tide.time.hasSame(daily.date, 'day') && tide.time >= minHour && tide.time <= maxHour;
 		});
 
 	// Either 2 or 3 for the max/min value that we currently have.
@@ -57,7 +54,7 @@ export const DailyView: React.FC<DailyViewProps> = (props) => {
 		);
 	}
 
-	const dateText = props.isToday ? 'Today' : createPrettyDateDay(daily.date);
+	const dateText = props.isToday ? 'Today' : getDateDayOfWeek(daily.date);
 
 	return (
 		<Center>
@@ -135,7 +132,7 @@ const TideText: React.FC<TideTextProps> = (props) => {
 	return (
 		<NoShrinkFlex>
 			<LongText>{props.event.isLow ? 'Low' : 'High'}</LongText>
-			<LongText>{createPrettyTime(props.event.time)} {props.event.height}ft</LongText>
+			<LongText>{getTimeTwelveHour(props.event.time).time} {props.event.height}ft</LongText>
 		</NoShrinkFlex>
 	);
 }

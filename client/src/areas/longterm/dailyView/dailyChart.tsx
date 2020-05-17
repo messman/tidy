@@ -25,23 +25,21 @@ export const DailyChart: StyledFC<DailyChartProps> = (props) => {
 		const tides = props.dailyEvent.tides;
 		const day = props.dailyEvent.date;
 
-		const startTime = new Date(day);
-		startTime.setHours(props.minHour, 0, 0, 0);
-
-		const endTime = new Date(day);
-		endTime.setHours(props.maxHour, 0, 0, 0);
+		const startTime = day.set({ hour: props.minHour });
+		const endTime = day.set({ hour: props.maxHour });
 
 		const points: Point[] = tides.events.map(function (tide) {
 			return {
-				x: tide.time.getTime(),
+				x: tide.time.valueOf(),
 				y: tide.height
 			}
 		});
 
+
 		const chartLineInput: ChartLineInput = {
 			points: points,
 			closePath: true,
-			sourceRect: makeRect(startTime.getTime(), props.minTideHeight, endTime.getTime(), props.maxTideHeight),
+			sourceRect: makeRect(startTime.valueOf(), props.minTideHeight, endTime.valueOf(), props.maxTideHeight),
 			destRect: makeRect(0, 0, size.width, size.height),
 		};
 		const fill = createChartLine(chartLineInput);

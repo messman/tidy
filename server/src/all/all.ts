@@ -15,7 +15,7 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 			time: {
 				referenceTime: time,
 				shortTermDataFetchDays: 3,
-				longTermDataFetchDays: 7,
+				longTermDataFetchDays: 6,
 			},
 			tides: {
 				station: station,
@@ -56,9 +56,10 @@ async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, 
 	const { errors, warnings, interpretedTides, interpretedAstro, interpretedWeather } = await mergeFunc(configContext, testSeed);
 
 	const info: Info = {
-		referenceTime: configContext.configuration.time.referenceTime,
-		processingTime: new Date(),
-		tideHeightPrecision: configContext.configuration.tides.tideHeightPrecision
+		referenceTime: configContext.context.referenceTimeInZone,
+		processingTime: configContext.action.parseDateForZone(new Date()),
+		tideHeightPrecision: configContext.configuration.tides.tideHeightPrecision,
+		timeZone: configContext.configuration.location.timeZoneLabel
 	}
 
 	if (errors) {
@@ -83,13 +84,13 @@ async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, 
 				tides: interpretedTides.currentTides
 			},
 			predictions: {
-				cutoffDate: configContext.context.maxShortTermDataFetch.toJSDate(),
+				cutoffDate: configContext.context.maxShortTermDataFetch,
 				sun: interpretedAstro.shortTermEvents,
 				weather: interpretedWeather.shortTermWeather,
 				tides: interpretedTides.shortTermTides
 			},
 			daily: {
-				cutoffDate: configContext.context.maxLongTermDataFetch.toJSDate(),
+				cutoffDate: configContext.context.maxLongTermDataFetch,
 				tideExtremes: interpretedTides.longTermTideExtremes,
 				days: mergeForLongTerm(configContext, interpretedTides.longTermTides, interpretedAstro.longTermEvents, interpretedWeather.longTermWeather)
 			}

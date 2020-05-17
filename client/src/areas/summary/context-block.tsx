@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FlexRow } from '@/core/layout/flex';
-import { borderRadiusStyle } from '@/core/style/common';
+import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useElementSizeWithDefault } from '@/services/layout/element-size';
 
@@ -39,6 +39,7 @@ export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 const ContextBlockRoot = styled(FlexRow)`
 	background-color: ${p => p.theme.color.backgroundLighter};
 	${borderRadiusStyle};
+	padding: ${edgePaddingValue};
 	overflow: hidden;
 	cursor: pointer;
 `;

@@ -112,6 +112,7 @@ export function createContext(apiConfiguration: APIConfiguration): APIConfigurat
 	const configurationContext = apiConfiguration as APIConfigurationContext;
 
 	function parseDateForZone(date: Date): DateTime {
+		// https://moment.github.io/luxon/docs/manual/zones.html
 		return DateTime.fromJSDate(date).setZone(configuration.location.timeZoneLabel);
 	}
 

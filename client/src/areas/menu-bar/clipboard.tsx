@@ -13,7 +13,7 @@ export const AllResponseClipboardIcon: React.FC = () => {
 
 	if (hasAllResponseData(allResponseState)) {
 		isDisabled = false;
-		text = allResponseState.data!.info.referenceTime.toISOString();
+		text = allResponseState.data!.info.referenceTime.toISO();
 	}
 
 	return (

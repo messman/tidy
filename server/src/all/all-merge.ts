@@ -87,7 +87,7 @@ export function mergeForLongTerm(configContext: APIConfigurationContext, tides: 
 	tides.forEach((t) => {
 		const day = referenceDay.plus({ days: t.day });
 		dayMap.set(t.day, {
-			date: day.toJSDate(),
+			date: day,
 			sun: null!,
 			weather: null!,
 			tides: t.entity
@@ -100,7 +100,7 @@ export function mergeForLongTerm(configContext: APIConfigurationContext, tides: 
 		}
 	});
 	weatherEvents.forEach((w) => {
-		const day = configContext.action.parseDateForZone(w.day).startOf('day').diff(referenceDay, 'days').days;
+		const day = w.day.startOf('day').diff(referenceDay, 'days').days;
 		const record = dayMap.get(day);
 		if (record) {
 			record.weather = w;

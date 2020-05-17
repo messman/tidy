@@ -1,37 +1,37 @@
 import * as React from 'react';
 import { styled, css, StyledFC } from '@/core/style/styled';
 import { SmallText } from '@/core/symbol/text';
-import { pixelsPerDay, timeToPixels, createPrettyTime, createPrettyDate } from '@/services/time';
+import { pixelsPerDay, timeToPixels, getTimeTwelveHour, getDateDayOfWeek } from '@/services/time';
+import { DateTime } from 'luxon';
 
 interface FullDayProps {
-	timeInDay: Date,
-	sunrise: Date,
-	sunset: Date
+	timeInDay: DateTime,
+	sunrise: DateTime,
+	sunset: DateTime
 }
 
 export const FullDay: React.FC<FullDayProps> = (props) => {
 	const { timeInDay, sunrise, sunset } = props;
 
-	const startOfDay = new Date(sunrise);
-	startOfDay.setHours(0, 0, 0, 0);
+	const startOfDay = sunrise.startOf('day');
 
 	const sunrisePx = timeToPixels(startOfDay, sunrise);
 	const sunsetPx = timeToPixels(startOfDay, sunset);
 
 	const startBar = !!timeInDay ? null : <FullDayStartBar />;
 	const endBar = <FullDayEndBar />;
-	const dayName = createPrettyDate(sunrise);
+	const dayName = getDateDayOfWeek(sunrise);
 	const startDayName = !!timeInDay ? null : <DayNameStartText>{dayName}</DayNameStartText>;
 	const endDayName = <DayNameEndText>{dayName}</DayNameEndText>;
 
 	let sunriseTime: JSX.Element | null = null;
 	if (!timeInDay || timeToPixels(timeInDay, sunrise) > 100) {
-		sunriseTime = <SunEventText leftOffset={sunrisePx}>Sunrise {createPrettyTime(sunrise)}</SunEventText>
+		sunriseTime = <SunEventText leftOffset={sunrisePx}>Sunrise {getTimeTwelveHour(sunrise).time}</SunEventText>
 	}
 
 	let sunsetTime: JSX.Element | null = null;
 	if (!timeInDay || timeToPixels(timeInDay, sunset) > 100) {
-		sunsetTime = <SunEventText leftOffset={sunsetPx}>Sunset {createPrettyTime(sunset)}</SunEventText>
+		sunsetTime = <SunEventText leftOffset={sunsetPx}>Sunset {getTimeTwelveHour(sunset).time}</SunEventText>
 	}
 
 	return (
