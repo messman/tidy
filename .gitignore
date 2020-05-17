@@ -11,3 +11,13 @@ npm-debug.log
 **/test/**/*.js.map
 
 **/ts-build
+
+# Output of 'npm pack'
+*.tgz
+
+# OS X temporary files
+.DS_Store
+
+# Rush temporary files
+common/temp/
+**/.rush/temp/
