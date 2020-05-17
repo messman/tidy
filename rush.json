@@ -1,0 +1,30 @@
+/**
+ * This project uses Rush as a monorepo organization tool.
+ * See full config at https://rushjs.io/pages/configs/rush_json/
+ * For full documentation, please see https://rushjs.io
+ */
+{
+	"$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+	"rushVersion": "5.23.3",
+	// Use PNPM.
+	"pnpmVersion": "4.14.2",
+	"pnpmOptions": {
+		"pnpmStore": "local",
+		"strictPeerDependencies": true,
+		"resolutionStrategy": "fewer-dependencies"
+	},
+	"nodeSupportedVersionRange": ">=12.4.0 <13.0.0",
+	"ensureConsistentVersions": true,
+	"projects": [
+		{
+			"packageName": "my-controls",
+			"projectFolder": "libraries/my-controls",
+			"reviewCategory": "production"
+		},
+		{
+			"packageName": "my-toolchain",
+			"projectFolder": "tools/my-toolchain",
+			"reviewCategory": "tools"
+		}
+	]
+}
