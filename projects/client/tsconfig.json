@@ -5,7 +5,7 @@
 		"declarationMap": false,
 		"lib": [
 			"DOM",
-			"ES2015"
+			"ES2017"
 		],
 		"target": "ES2015",
 		"jsx": "react",

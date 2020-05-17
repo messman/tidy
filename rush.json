@@ -20,6 +20,18 @@
 		{
 			"packageName": "tidy-shared",
 			"projectFolder": "projects/shared"
+		},
+		{
+			"packageName": "tidy-server",
+			"projectFolder": "projects/server"
+		},
+		{
+			"packageName": "tidy-server-http",
+			"projectFolder": "projects/server-http"
+		},
+		{
+			"packageName": "tidy-client",
+			"projectFolder": "projects/client"
 		}
 	]
 }
