@@ -2,17 +2,23 @@ import * as React from 'react';
 import { decorate } from '@/test/storybook/decorate';
 import { iconTypes, Icon } from '@/core/symbol/icon';
 import { flowPaddingValue } from '../style/common';
-import { TextUnit } from './text-unit';
+import { TextUnit, TimeTextUnit } from './text-unit';
 import { Text, textHeight } from './text';
 import { styled } from '../style/styled';
+import { DateTime } from 'luxon';
 
 export default { title: 'core/symbol' };
+
+const dateTime = DateTime.local();
 
 export const TextUnits = decorate(() => {
 	return (
 		<>
 			<Padding>
 				<TextUnit text='9:45' unit='AM' />
+			</Padding>
+			<Padding>
+				<TimeTextUnit dateTime={dateTime} />
 			</Padding>
 			<Padding>
 				<Text>
