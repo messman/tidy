@@ -199,8 +199,8 @@ export function createWeatherData(configContext: APIConfigurationContext, testSe
 		return quadraticShakeData(weatherRandomizer, startDateTime, endDateTime, hoursGap, minY, maxY, precision, inclusive, shake);
 	}
 
-	const nWindDirection = Object.keys(WindDirection).filter((k) => !isNaN(k as unknown as number)).length;
-	const nWeatherStatusType = Object.keys(WeatherStatusType).filter((k) => !isNaN(k as unknown as number)).length;
+	const nWindDirection = Object.keys(WindDirection).filter((k) => !isNaN(k as unknown as number)).length - 1;
+	const nWeatherStatusType = Object.keys(WeatherStatusType).filter((k) => !isNaN(k as unknown as number)).length - 1;
 
 	return {
 		errors: null,

@@ -1,26 +1,34 @@
 import * as React from 'react';
-import { TextInline, SubTextInline } from './text';
+import { TextInline, SmallTextInline } from './text';
 import { styled } from '../style/styled';
 import { DateTime } from 'luxon';
 import { getTimeTwelveHour } from '@/services/time';
 
 export interface TextUnitProps {
 	text: string,
-	unit: string
+	unit: string,
+	space?: number
 }
 
 export const TextUnit: React.FC<TextUnitProps> = (props) => {
+
+	const space = (props.space || 1) / 10;
+
 	return (
 		<TextInline>
 			{props.text}
-			<Unit>{props.unit}</Unit>
+			<Unit space={space}>{props.unit}</Unit>
 		</TextInline>
 	);
 }
 
-const Unit = styled(SubTextInline)`
+interface UnitProps {
+	space: number
+}
+
+const Unit = styled(SmallTextInline) <UnitProps>`
 	vertical-align: baseline;
-	margin-left: .1rem;
+	margin-left: ${p => p.space}rem;
 `;
 
 export interface TimeTextUnitProps {
@@ -30,6 +38,6 @@ export interface TimeTextUnitProps {
 export const TimeTextUnit: React.FC<TimeTextUnitProps> = (props) => {
 	const twelveHour = getTimeTwelveHour(props.dateTime);
 	return (
-		<TextUnit text={twelveHour.time} unit={twelveHour.ampm} />
+		<TextUnit text={twelveHour.time} unit={twelveHour.ampm} space={2} />
 	);
 }

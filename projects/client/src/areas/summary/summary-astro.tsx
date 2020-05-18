@@ -101,14 +101,22 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 		const hypotenuse2 = adjacent2 / Math.cos(thetaRad1);
 
 		const circleRadius = hypotenuse2;
+
+		// We can't use 180 degrees as our available rotational area. We need to compute the angles we have
+		const hypotenuse3 = circleRadius;
+		const adjacent3 = width / 2;
+		const thetaRad3 = Math.acos(adjacent3 / hypotenuse3);
+		const lostAngleOneSide = (thetaRad3 / Math.PI) * 180;
+		const totalAngle = 180 - (lostAngleOneSide * 2);
+
 		const top = 0;
 		// Use actual size here.
 		const left = (size.width / 2) - circleRadius;
 
 		// Path border starts at 135 degree angle based on how CSS works for this solution.
-		const pathRotationDegree = Math.round(props.percent / 100 * 180) - 135;
+		const pathRotationDegree = Math.round((props.percent / 100) * totalAngle) - 135 + lostAngleOneSide;
 		// Sun is ::after, and starts at the very top.
-		const sunRotationDegree = Math.round(props.percent / 100 * 180) - 90;
+		const sunRotationDegree = Math.round((props.percent / 100) * totalAngle) - 90 + lostAngleOneSide;
 		sunSVG = (
 			<>
 				<AbsoluteMask>
