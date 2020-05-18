@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextInline, SmallTextInline } from './text';
+import { TextInline, SubTextInline } from './text';
 import { styled } from '../style/styled';
 import { DateTime } from 'luxon';
 import { getTimeTwelveHour } from '@/services/time';
@@ -18,7 +18,7 @@ export const TextUnit: React.FC<TextUnitProps> = (props) => {
 	);
 }
 
-const Unit = styled(SmallTextInline)`
+const Unit = styled(SubTextInline)`
 	vertical-align: baseline;
 	margin-left: .1rem;
 `;

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Flex, FlexColumn } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useElementSizeWithDefault } from '@/services/layout/element-size';
+import { useElementSize } from '@/services/layout/element-size';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import * as Bezier from '@/services/draw/bezier';
 import { PercentView } from './percentView';
+import { CONSTANT } from '@/services/constant';
 
 interface WaveProps {
 	animationOptions: WaveAnimationOptions
@@ -29,7 +30,7 @@ export const Wave: React.FC<WaveProps> = (props) => {
 	const { all } = allResponseState.data!;
 
 	const ref = React.useRef<HTMLDivElement>(null!);
-	const size = useElementSizeWithDefault(ref);
+	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout);
 
 	let animationOptions0: SVGWaveAnimationOptions | null = null;
 	let animationOptions1: SVGWaveAnimationOptions | null = null;

@@ -20,8 +20,8 @@
 	"dependencies": {
 		"express": "^4.17.1",
 		"luxon": "^1.24.0",
-		"tidy-shared": "*",
-		"tidy-server": "*"
+		"tidy-server": "file:../server",
+		"tidy-shared": "file:../shared"
 	},
 	"devDependencies": {
 		"@types/luxon": "^1.24.0",

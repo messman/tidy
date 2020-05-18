@@ -3,8 +3,9 @@ import { Flex } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from '@/services/draw/bezier';
-import { useElementSizeWithDefault } from '@/services/layout/element-size';
+import { useElementSize } from '@/services/layout/element-size';
 import { ExtremeCards } from './extremeCards';
+import { CONSTANT } from '@/services/constant';
 
 interface ChartForegroundProps {
 }
@@ -12,7 +13,7 @@ interface ChartForegroundProps {
 export const ChartForeground: StyledFC<ChartForegroundProps> = () => {
 	const allResponseState = useAllResponse();
 	const ref = React.useRef<HTMLDivElement>(null!);
-	const size = useElementSizeWithDefault(ref);
+	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout);
 
 	if (!hasAllResponseData(allResponseState)) {
 		return null;

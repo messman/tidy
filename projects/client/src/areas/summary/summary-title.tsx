@@ -13,36 +13,33 @@ export const SummaryTitle: React.FC = () => {
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
-	const { all } = allResponseState.data!;
+	const { all, info } = allResponseState.data!;
+	const { tides } = all.current;
 
-	const { previous, next, height } = all.current.tides;
+	// Value is like 0, 10, 20, 30, etc; 
+	const timePercent = Math.round((info.referenceTime.valueOf() - tides.previous.time.valueOf()) / (tides.next.time.valueOf() - tides.previous.time.valueOf()) * 100);
 
-	const high = next.isLow ? previous : next;
-	const low = next.isLow ? next : previous;
-	const safeHeight = Math.max(height, low.height);
-
-	const percent = (safeHeight - low.height) / (high.height - low.height);
+	const previousTideName = tides.previous.isLow ? 'low' : 'high';
+	const nextTideName = tides.next.isLow ? 'low' : 'high';
+	const nextTideIconType = tides.next.isLow ? iconTypes.arrowDown : iconTypes.arrowUp;
 
 	let text = '';
 	let iconType: SVGIconType | null = null;
 
-	if (percent > .9) {
-		text = `It's high tide.`
+	if (timePercent <= 10) {
+		text = `It's ${previousTideName} tide.`;
 	}
-	else if (percent > .8) {
-		text = `It's almost high tide.`;
-		iconType = iconTypes.arrowUp;
+	else if (timePercent <= 80) {
+		const tideActionName = tides.previous.isLow ? 'rising' : 'falling';
+		text = `The tide is ${tideActionName}.`
+		iconType = nextTideIconType;
 	}
-	else if (percent < .1) {
-		text = `It's low tide.`
-	}
-	else if (percent < .2) {
-		text = `It's almost low tide.`
-		iconType = iconTypes.arrowDown;
+	else if (timePercent <= 90) {
+		text = `It's almost ${nextTideName} tide.`;
+		iconType = nextTideIconType;
 	}
 	else {
-		text = `The tide is ${next.isLow ? 'falling' : 'rising'}.`;
-		iconType = next.isLow ? iconTypes.arrowDown : iconTypes.arrowUp;
+		text = `It's ${nextTideName} tide.`;
 	}
 
 	const icon = iconType ? <SpacedIcon type={iconType} fill={theme.color.tide} height={subtitleHeight} /> : null;

@@ -4,6 +4,7 @@ import { styled } from '@/core/style/styled';
 import { SummaryTitle } from './summary-title';
 import { SummaryTide } from './summary-tide';
 import { Flex } from '@/core/layout/flex';
+import { SummaryAstro } from './summary-astro';
 
 export interface SummaryProps {
 	isCompactVertical: boolean
@@ -17,6 +18,9 @@ export const Summary: React.FC<SummaryProps> = () => {
 			</SummaryPadding>
 			<SummaryPadding>
 				<SummaryTide />
+			</SummaryPadding>
+			<SummaryPadding>
+				<SummaryAstro />
 			</SummaryPadding>
 		</Flex>
 	);

@@ -14,8 +14,8 @@
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"peerDependencies": {
-		"luxon": "^1.24.0",
-		"tidy-shared": "*"
+		"luxon": "^1.24.1",
+		"tidy-shared": "file:../shared"
 	},
 	"dependencies": {
 		"node-fetch": "^2.6.0",
@@ -23,9 +23,11 @@
 	},
 	"devDependencies": {
 		"@types/luxon": "^1.24.0",
-		"@types/node-fetch": "^2.5.6",
 		"@types/node": "^12.4.0",
+		"@types/node-fetch": "^2.5.6",
 		"@types/seedrandom": "^2.4.28",
+		"luxon": "^1.24.1",
+		"tidy-shared": "file:../shared",
 		"typescript": "^3.8.3"
 	}
 }
