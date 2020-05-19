@@ -71,7 +71,7 @@ export interface TimelineDotEntryProps extends Omit<TimelineEntryProps, 'top'> {
 	isTimeHidden?: boolean
 }
 
-const dotEntryTop = `${(barDotDiameter + barLineThickness) / 2}px`;
+export const dotEntryTop = `${(barDotDiameter + barLineThickness) / 2}px`;
 
 export const TimelineDotEntry: React.FC<TimelineDotEntryProps> = (props) => {
 	const timeTextUnit = props.isTimeHidden ? null : <TimeTextUnit dateTime={props.dateTime} />;

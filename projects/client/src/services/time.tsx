@@ -23,7 +23,7 @@ export function getDate(date: DateTime): string {
 }
 
 export function getDateDayOfWeek(date: DateTime): string {
-	return `${date.weekdayShort} ${getDate(date)}`;
+	return `${date.weekdayLong} ${getDate(date)}`;
 }
 
 export function getHumanTime(spanMilliseconds: number): string {
