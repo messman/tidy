@@ -15,12 +15,16 @@ export const TextUnit: React.FC<TextUnitProps> = (props) => {
 	const space = (props.space || 1) / 10;
 
 	return (
-		<TextInline>
+		<NonBreakingTextInline>
 			{props.text}
 			<Unit space={space}>{props.unit}</Unit>
-		</TextInline>
+		</NonBreakingTextInline>
 	);
 }
+
+const NonBreakingTextInline = styled(TextInline)`
+	white-space: nowrap;
+`;
 
 interface UnitProps {
 	space: number
