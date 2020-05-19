@@ -7,8 +7,10 @@ import { FlexColumn } from '@/core/layout/flex';
 
 export const TimelineBar: React.FC = () => {
 
+	// Use flex 1 0 0, meaning, "I can take up more space (vertically), but I won't shrink".
+	// And when growing, center the content within.
 	return (
-		<FlexColumn flex='none'>
+		<FlexColumn flex='1 0 0' justifyContent='center'>
 
 			<BarPadding>
 				<TimelineBarWeather />

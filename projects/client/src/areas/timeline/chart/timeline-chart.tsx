@@ -45,8 +45,6 @@ export const TimelineChart: React.FC<TimelineChartProps> = () => {
 		const width = timeToPixels(info.referenceTime, cutoffDate);
 		const height = size.height;
 
-		console.log(info.referenceTime.valueOf(), cutoffDate.valueOf(), points);
-
 		const sourceRect = makeRect(info.referenceTime.valueOf(), min, cutoffDate.valueOf(), max);
 		const destRect = makeRect(0, 0, width, height);
 		const bottomPaddingFactor = .1;
@@ -57,10 +55,10 @@ export const TimelineChart: React.FC<TimelineChartProps> = () => {
 		strokeSVG = <StrokeSVG path={output.strokePath} destRect={destRect} />
 	}
 
-
+	// Use flex 2 1 0, which means "grow 2x as much as siblings, and allow me to shrink too"
 	return (
 		<>
-			<ResizeContainer ref={ref}>
+			<ResizeContainer ref={ref} flex='2 1 0'>
 				{fillSVG}
 				{strokeSVG}
 			</ResizeContainer>
