@@ -52,7 +52,7 @@ export function getHumanTime(spanMilliseconds: number): string {
 }
 
 
-const _pixelsPerHour = 50;
+const _pixelsPerHour = 40;
 export const pixelsPerDay = 24 * _pixelsPerHour;
 
 export function timeToPixels(startDate: DateTime, endDate: DateTime): number {

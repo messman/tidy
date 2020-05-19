@@ -8,9 +8,18 @@ import { Flex } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 
 export const MockSummary: React.FC<SummaryProps> = (props) => {
+
+	if (props.isCompactVertical) {
+		return (
+			<Area color='red' >
+				<Text>Summary Compact Vertical</Text>
+			</Area>
+		);
+	}
+
 	return (
-		<Area color='red'>
-			<Text>Summary {props.isCompactVertical ? 'Vertical' : 'Horizontal'}</Text>
+		<Area color='red' maxHeight={250}>
+			<Text>Summary Horizontal</Text>
 		</Area>
 	);
 }
@@ -41,10 +50,23 @@ export const MockSettings: React.FC<SettingsProps> = () => {
 
 interface AreaProps {
 	color: string
+	minWidth?: number,
+	maxWidth?: number,
+	minHeight?: number,
+	maxHeight?: number
 }
 
 const Area = styled(Flex) <AreaProps>`
 	color: ${p => p.color};
 	border: 1px solid ${p => p.color};
 	padding: 1rem;
+
+	min-width: ${p => makeCSSValue(p.minWidth)};
+	max-width: ${p => makeCSSValue(p.maxWidth)};
+	min-height: ${p => makeCSSValue(p.minHeight)};
+	max-height: ${p => makeCSSValue(p.maxHeight)};
 `;
+
+function makeCSSValue(value: number | undefined): string {
+	return value ? `${value}px` : 'unset';
+}

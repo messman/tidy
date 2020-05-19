@@ -3,6 +3,7 @@ import * as seedrandom from 'seedrandom';
 type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
 
 export interface Randomizer {
+	getSeed: () => number | string | null | undefined,
 	random: () => number,
 	randomFloat: OmitFirstArg<typeof randomFloat>,
 	randomFloatSet: OmitFirstArg<typeof randomFloatSet>,
@@ -33,6 +34,7 @@ export function randomizer(seed?: number | string): Randomizer {
 	 */
 	const randomFunc = seed ? seedrandom(`${seed}`) : seedrandom();
 	return {
+		getSeed: () => seed,
 		random: randomFunc,
 		randomFloat: randomFloat.bind(null, randomFunc),
 		randomFloatSet: randomFloatSet.bind(null, randomFunc),
@@ -70,13 +72,15 @@ function randomInt(randomFunc: RandomFunc, min: number, max: number, inclusive: 
 }
 const randomIntSet = makeFunctionSet(randomInt);
 
-function shake(randomFunc: RandomFunc, min: number, max: number, precision: number, value: number, shake: number, inclusive: boolean): number {
-	shake = Math.max(shake, Math.min(shake, 1), 0);
-	if (shake === 0) {
+function shake(randomFunc: RandomFunc, min: number, max: number, precision: number, value: number, shakeRange: number, inclusive: boolean): number {
+	shakeRange = Math.max(shakeRange, Math.min(shakeRange, 1), 0);
+	if (shakeRange === 0) {
 		return value;
 	}
-	const shakenMin = Math.max(min, value - ((max - min) * shake));
-	const shakenMax = Math.min(max, value + ((max - min) * shake));
+	// Divide by two so that a shakeRange of 1 potentially covers the entire range, while .5 means .5 of the total range (.25 each direction).
+	const shake = ((max - min) * shakeRange) / 2;
+	const shakenMin = Math.min(max, Math.max(min, value - shake));
+	const shakenMax = Math.max(min, Math.min(max, value + shake));
 	return randomFloat(randomFunc, shakenMin, shakenMax, precision, inclusive);
 }
 const shakeSet = makeFunctionSet(shake);

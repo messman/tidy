@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, StyledFC, css } from '@/core/style/styled';
-import { Point, createChartLine, ChartLineInput, makeRect, SVGPath } from '@/services/draw/bezier';
+import { Point, createChartLine, makeRect, SVGPath } from '@/services/draw/bezier';
 import { useElementSize } from '@/services/layout/element-size';
 import { AllDailyDay } from 'tidy-shared';
 import { CONSTANT } from '@/services/constant';
@@ -36,19 +36,12 @@ export const DailyChart: StyledFC<DailyChartProps> = (props) => {
 			}
 		});
 
+		const sourceRect = makeRect(startTime.valueOf(), props.minTideHeight, endTime.valueOf(), props.maxTideHeight);
+		const destRect = makeRect(0, 0, size.width, size.height);
 
-		const chartLineInput: ChartLineInput = {
-			points: points,
-			closePath: true,
-			sourceRect: makeRect(startTime.valueOf(), props.minTideHeight, endTime.valueOf(), props.maxTideHeight),
-			destRect: makeRect(0, 0, size.width, size.height),
-		};
-		const fill = createChartLine(chartLineInput);
-		fillSVG = <FillSVG path={fill.path} destRect={chartLineInput.destRect} />
-
-		chartLineInput.closePath = false;
-		const stroke = createChartLine(chartLineInput);
-		strokeSVG = <StrokeSVG path={stroke.path} destRect={chartLineInput.destRect} />
+		const output = createChartLine(points, sourceRect, destRect, .1, .1);
+		fillSVG = <FillSVG path={output.fillPath} destRect={destRect} />
+		strokeSVG = <StrokeSVG path={output.strokePath} destRect={destRect} />
 	}
 
 

@@ -205,25 +205,25 @@ export function createWeatherData(configContext: APIConfigurationContext, testSe
 	return {
 		errors: null,
 		warnings: createTestWarnings(),
-		temp: weatherData(2, 40, 60, temperaturePrecision, true, .1),
-		tempFeelsLike: weatherData(2, 40, 60, temperaturePrecision, true, .1),
-		chanceRain: weatherData(2, 0, 1, defaultPrecision + 2, true, .1),
-		wind: weatherData(3, 0, 15, defaultPrecision, true, .1),
-		windDirection: weatherData(4, 0, nWindDirection, 0, false, .1).map((data) => {
+		temp: weatherData(2, 40, 60, temperaturePrecision, true, .2),
+		tempFeelsLike: weatherData(2, 40, 60, temperaturePrecision, true, .2),
+		chanceRain: weatherData(2, 0, 1, defaultPrecision + 2, true, .2),
+		wind: weatherData(3, 0, 15, defaultPrecision, true, .2),
+		windDirection: weatherData(4, 0, nWindDirection, 0, false, .2).map((data) => {
 			return {
 				span: data.span,
 				value: data.value as WindDirection
 			}
 		}),
-		dewPoint: weatherData(2, 20, 40, temperaturePrecision, true, .1),
-		cloudCover: weatherData(2, 0, 1, defaultPrecision + 2, true, .1),
+		dewPoint: weatherData(2, 20, 40, temperaturePrecision, true, .2),
+		cloudCover: weatherData(2, 0, 1, defaultPrecision + 2, true, .2),
 		status: weatherData(4, 0, nWeatherStatusType, 0, false, .1).map((data) => {
 			return {
 				span: data.span,
 				value: data.value as WeatherStatusType
 			}
 		}),
-		visibility: weatherData(12, 2, 20, defaultPrecision, true, .1)
+		visibility: weatherData(12, 2, 20, defaultPrecision, true, .2)
 	}
 }
 

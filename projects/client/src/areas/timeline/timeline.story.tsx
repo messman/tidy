@@ -7,7 +7,7 @@ import { Timeline } from './timeline';
 
 export default { title: 'areas/timeline' };
 
-export const Summaries = decorate(() => {
+export const Timelines = decorate(() => {
 
 	return (
 		<MenuBar>

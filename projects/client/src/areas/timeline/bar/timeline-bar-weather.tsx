@@ -26,7 +26,6 @@ export const TimelineBarWeather: React.FC = () => {
 	const lastEventTime = lastEvent.time.plus({ hours: 2 });
 	const widthPixels = timeToPixels(info.referenceTime, lastEventTime);
 
-	// TODO - exclude any entries past the cutoff or too close to our reference time
 	const weatherEntries = validWeatherStatuses.map((weatherStatus) => {
 		return (
 			<TimelineDotEntry

@@ -1,98 +1,136 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
+import { useAllResponse, hasAllResponseData } from '@/services/data/data';
+import { useCurrentTheme } from '@/core/style/theme';
+import { cutoffHoursFromReference, TimelineEntryProps, TimelineEntry } from '../bar/timeline-bar-common';
+import { Flex, FlexRow, FlexColumn } from '@/core/layout/flex';
+import { WeatherStatus, SunEvent } from 'tidy-shared';
+import { Icon, iconTypes } from '@/core/symbol/icon';
+import { subtitleHeight, Text, titleHeight } from '@/core/symbol/text';
+import { processWeatherForDisplay } from '@/services/weather/weather-process';
+import { TextUnit } from '@/core/symbol/text-unit';
+
 
 interface TimelineWeatherProps {
 }
 
 export const TimelineWeather: StyledFC<TimelineWeatherProps> = () => {
 
+	const allResponseState = useAllResponse();
+	const theme = useCurrentTheme();
+	const color = theme.color.weather;
+	if (!hasAllResponseData(allResponseState)) {
+		return null;
+	}
+	const { all, info } = allResponseState.data!;
+	const { weather, cutoffDate, sun } = all.predictions;
+
+	// Filter out status if it's too close to our reference time or after our cutoff.
+	const referenceTimePlusCutoff = info.referenceTime.plus({ hours: cutoffHoursFromReference });
+	const validWeatherStatuses = weather.filter((weatherStatus) => {
+		return (weatherStatus.time > referenceTimePlusCutoff) && (weatherStatus.time < cutoffDate);
+	});
+
+	// We need to know when the sunrise and sunset is for each of the weather statuses!
+	// Since everything is in order already, we will iterate as we map the weather statuses.
+	let sunEventIndex = 0;
+
+	const weatherEntries = validWeatherStatuses.map((weatherStatus) => {
+
+		let nextSunEvent: SunEvent = sun[sunEventIndex];
+		// Get the next sun event after this weather status
+		while (nextSunEvent && nextSunEvent.time < weatherStatus.time) {
+			sunEventIndex++;
+			nextSunEvent = sun[sunEventIndex];
+		}
+
+		// By default, don't use the day icon (to cover our end case - where there are no more sun events but there are still weather statuses).
+		let useDayIcon = !!nextSunEvent ? !nextSunEvent.isSunrise : false;
+
+		return (
+			<TimelineWeatherEntry
+				key={weatherStatus.time.valueOf()}
+				referenceTime={info.referenceTime}
+				dateTime={weatherStatus.time}
+				weatherStatus={weatherStatus}
+				iconColor={color}
+				useDayIcon={useDayIcon}
+			/>
+		)
+	});
+
 	return (
-		<MockTimelineWeather>
-			Weather
-		</MockTimelineWeather>
+		<TimelineWeatherContainer flex='none'>
+			{weatherEntries}
+		</TimelineWeatherContainer>
 	);
-
-	// const allResponseState = useAllResponse();
-	// if (!hasAllResponseData(allResponseState)) {
-	// 	return null;
-	// }
-	// const { all, info } = allResponseState.data!;
-
-	// let weatherEvents: JSX.Element | null = null;
-	// const startTime = info.referenceTime;
-	// const events = filterWeatherEvents(all.predictions.weather, all.predictions.cutoffDate);
-
-	// weatherEvents = (
-	// 	<>
-	// 		{
-	// 			events.map((event) => {
-	// 				return <WeatherFlag key={event.time.valueOf()} startTime={startTime} event={event} />
-	// 			})
-	// 		}
-	// 	</>
-	// );
-
-	// return (
-	// 	<WeatherContainer>
-	// 		{weatherEvents}
-	// 	</WeatherContainer>
-	// );
 }
 
-const MockTimelineWeather = styled.div`
-	height: 10rem;
-	min-width: 10rem;
-	border: 1px solid red;
+const weatherContainerHeight = '9rem';
+const weatherEntriesHeight = '8rem'
+
+const TimelineWeatherContainer = styled(Flex)`
+	height: ${weatherContainerHeight};
 `;
 
-// const WeatherContainer = styled.div`
-// 	position: relative;
-// 	height: calc(15vh + 15px);
-// 	/* to provide space for the flag content */
-// 	min-height: 135px;
-// `;
+interface TimelineWeatherEntryProps extends Omit<TimelineEntryProps, 'top'> {
+	weatherStatus: WeatherStatus
+	iconColor: string,
+	useDayIcon: boolean
+}
 
-// interface WeatherFlagProps {
-// 	startTime: DateTime,
-// 	event: WeatherStatus,
-// }
+const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 
-// export const WeatherFlag: StyledFC<WeatherFlagProps> = (props) => {
-// 	const { startTime, event } = props;
+	const iconHeight = subtitleHeight;
+	const { iconColor, useDayIcon } = props;
+	const { tempText, windText, icon, chanceRainText } = processWeatherForDisplay(props.weatherStatus, useDayIcon);
 
-// 	const left = timeToPixels(startTime, event.time);
+	return (
+		<TimelineEntry referenceTime={props.referenceTime} dateTime={props.dateTime} top={weatherEntriesHeight}>
+			<FlexColumn>
 
-// 	const time = getTimeTwelveHour(event.time).time;
-// 	const temp = `${event.temp} F`;
-// 	const percentRain = `${event.chanceRain.entity! * 100}%`;
+				<NonBreakingPadding>
+					<Center>
+						<SpacedIcon type={icon} fill={iconColor} height={titleHeight} />
+					</Center>
+				</NonBreakingPadding>
+				<NonBreakingPadding>
+					<Text>
+						<FlexRow alignItems='center'>
+							<SpacedIcon type={iconTypes.temperature} fill={props.iconColor} height={iconHeight} />
+							{tempText}&deg;
+				</FlexRow>
+					</Text>
+				</NonBreakingPadding>
+				<NonBreakingPadding>
+					<Text>
+						<FlexRow alignItems='center'>
+							<SpacedIcon type={iconTypes.rain} fill={iconColor} height={iconHeight} />
+							{chanceRainText}
+						</FlexRow>
+					</Text>
+				</NonBreakingPadding>
+				<NonBreakingPadding>
+					<Text>
+						<FlexRow alignItems='center'>
+							<SpacedIcon type={iconTypes.wind} fill={iconColor} height={iconHeight} />
+							<TextUnit text={windText} unit='mph' />
+						</FlexRow>
+					</Text>
+				</NonBreakingPadding>
+			</FlexColumn>
+		</TimelineEntry>
+	);
+}
 
-// 	const windText = `${event.wind} mph ${event.windDirection}`;
+const Center = styled.div`
+	text-align: center;
+`;
 
-// 	return (
-// 		<Flag left={left}>
-// 			<SmallText>{time}</SmallText>
-// 			<SmallText>{temp}</SmallText>
-// 			<SmallText>{event.status}</SmallText>
-// 			<SmallText>{percentRain}</SmallText>
-// 			<SmallText>{windText}</SmallText>
-// 		</Flag>
-// 	);
-// }
+const SpacedIcon = styled(Icon)`
+	margin-right: .4rem;
+`;
 
-// interface FlagProps {
-// 	left: number,
-// }
-
-// const _Flag: StyledFC<FlagProps> = (props) => {
-// 	return <FlexColumn className={props.className}>{props.children}</FlexColumn>;
-// };
-
-// const Flag = styled(_Flag)`
-// 	position: absolute;
-// 	top: 0;
-// 	bottom: 0;
-// 	left: ${p => p.left - 1}px;
-// 	padding-left: .3rem;
-
-// 	border-left: 2px solid ${p => p.theme.color.background};
-// `;
+const NonBreakingPadding = styled(Flex)`
+	white-space: nowrap;
+`;

@@ -18,5 +18,5 @@ export async function run(): Promise<void> {
 	catch (e) {
 		console.error(e);
 	}
-	console.dir(response, { depth: null });
+	console.dir(response, { depth: 3 });
 }

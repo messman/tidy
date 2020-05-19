@@ -8,7 +8,7 @@ import { FlexColumn } from '@/core/layout/flex';
 export const TimelineBar: React.FC = () => {
 
 	return (
-		<FlexColumn>
+		<FlexColumn flex='none'>
 
 			<BarPadding>
 				<TimelineBarWeather />
@@ -24,6 +24,6 @@ export const TimelineBar: React.FC = () => {
 };
 
 const BarPadding = styled.div`
-	margin-top: 2rem;
-	margin-bottom: 1rem;
+	margin-top: 2.5rem;
+	margin-bottom: rem;
 `;

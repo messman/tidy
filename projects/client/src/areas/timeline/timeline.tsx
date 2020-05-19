@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Flex } from '@/core/layout/flex';
+import { FlexColumn } from '@/core/layout/flex';
 import { useElementSize } from '@/services/layout/element-size';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { TimelineBar } from './bar/timeline-bar';
 import { TimelineWeather } from './weather/timeline-weather';
 import { TimelineBackground } from './timeline-background';
+import { TimelineChart } from './chart/timeline-chart';
 
 export interface TimelineProps {
 }
@@ -24,10 +25,12 @@ export const Timeline: React.FC<TimelineProps> = () => {
 	}
 
 	return (
-		<Flex ref={ref}>
+		<FlexColumn ref={ref}>
 			<TimelineBackground barWidth={size.width} />
 			<TimelineWeather />
 			<TimelineBar />
-		</Flex>
+			<TimelineChart />
+		</FlexColumn>
+
 	);
 }

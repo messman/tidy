@@ -5,6 +5,7 @@ import { TimelineBarLine, TimelineEntry, cutoffHoursFromReference, TimelineEntry
 import { useCurrentTheme } from '@/core/style/theme';
 import { SmallText } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
+import { styled } from '@/core/style/styled';
 
 export const TimelineBarTide: React.FC = () => {
 
@@ -29,35 +30,44 @@ export const TimelineBarTide: React.FC = () => {
 	const widthPixels = timeToPixels(info.referenceTime, lastEventTime);
 
 	// TODO - exclude any entries past the cutoff or too close to our reference time
-	const tideEntries = validTideEvents.map((tideEvent) => {
+	const tideDotEntries: JSX.Element[] = [];
+	const tideDataEntries: JSX.Element[] = [];
+	validTideEvents.forEach((tideEvent) => {
 		const timeKey = `time_${tideEvent.time.valueOf()}`;
-		const dataKey = `data_${tideEvent.time.valueOf()}`;
+		tideDotEntries.push(
+			<TimelineDotEntry
+				key={timeKey}
+				referenceTime={info.referenceTime}
+				dateTime={tideEvent.time}
+				backgroundColor={color}
+			/>
+		);
 
-		return (
-			<>
-				<TimelineDotEntry
-					key={timeKey}
-					referenceTime={info.referenceTime}
-					dateTime={tideEvent.time}
-					backgroundColor={color}
-				/>
-				<TimelineTideDataEntry
-					key={dataKey}
-					referenceTime={info.referenceTime}
-					dateTime={tideEvent.time}
-					isLow={tideEvent.isLow}
-					heightString={tideEvent.height.toFixed(info.tideHeightPrecision)}
-				/>
-			</>
-		)
+
+		const dataKey = `data_${tideEvent.time.valueOf()}`;
+		tideDataEntries.push(
+			<TimelineTideDataEntry
+				key={dataKey}
+				referenceTime={info.referenceTime}
+				dateTime={tideEvent.time}
+				isLow={tideEvent.isLow}
+				heightString={tideEvent.height.toFixed(info.tideHeightPrecision)}
+			/>
+		);
 	});
 
 	return (
-		<TimelineBarLine lineWidth={widthPixels}>
-			{tideEntries}
-		</TimelineBarLine>
+		<PaddedTimelineBarLine lineWidth={widthPixels}>
+			{tideDotEntries}
+			{tideDataEntries}
+		</PaddedTimelineBarLine>
 	);
 };
+
+const PaddedTimelineBarLine = styled(TimelineBarLine)`
+	margin-bottom: 4rem;
+
+`;
 
 export interface TimelineTideDataEntryProps extends Omit<TimelineEntryProps, 'top'> {
 	isLow: boolean,

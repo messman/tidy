@@ -4,11 +4,11 @@ import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { ContextBlock } from './context-block';
 import { FlexRow, Flex } from '@/core/layout/flex';
 import { TextUnit } from '@/core/symbol/text-unit';
-import { WindDirection, weatherStatusTypeDescription, WeatherStatusType } from 'tidy-shared';
 import { useCurrentTheme } from '@/core/style/theme';
-import { Icon, iconTypes, weatherStatusTypeIcon } from '@/core/symbol/icon';
+import { Icon, iconTypes } from '@/core/symbol/icon';
 import styled from 'styled-components';
 import { edgePaddingValue } from '@/core/style/common';
+import { processWeatherForDisplay } from '@/services/weather/weather-process';
 
 export const SummaryWeather: React.FC = () => {
 	return (
@@ -30,17 +30,9 @@ const SummaryWeatherPrimary: React.FC = () => {
 		return null;
 	}
 	const { all } = allResponseState.data!;
-	const { temp, status, wind, windDirection, chanceRain } = all.current.weather;
 
-	const roundedWind = Math.round(wind.entity!).toString();
-	const windDirectionUnit = `mph ${WindDirection[windDirection]}`;
-	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
-	const weatherStatusIcon = weatherStatusTypeIcon[weatherStatusKey];
-	const weatherStatusIconForTime = all.current.sun.next.isSunrise ? weatherStatusIcon.night : weatherStatusIcon.day;
-	const weatherStatus = weatherStatusTypeDescription[weatherStatusKey].short;
-
-	const chanceRainPercent = Math.round(chanceRain.entity! * 100);
-	const chanceRainPercentString = `${chanceRainPercent}%`;
+	const useDayIcon = !all.current.sun.next.isSunrise;
+	const { tempText, windText, windDirectionUnit, icon, shortStatusText, chanceRainText } = processWeatherForDisplay(all.current.weather, useDayIcon);
 
 	return (
 		<FlexRow>
@@ -48,13 +40,13 @@ const SummaryWeatherPrimary: React.FC = () => {
 				<Text>
 					<PaddedFlexRow alignItems='center'>
 						<SpacedIcon type={iconTypes.temperature} fill={iconColor} height={iconHeight} />
-						{temp.entity!.toString()}&deg;
+						{tempText}&deg;
 					</PaddedFlexRow>
 				</Text>
 				<PushedDownText>
 					<PaddedFlexRow alignItems='center'>
-						<SpacedIcon type={weatherStatusIconForTime} fill={iconColor} height={iconHeight} />
-						{weatherStatus}
+						<SpacedIcon type={icon} fill={iconColor} height={iconHeight} />
+						{shortStatusText}
 					</PaddedFlexRow>
 				</PushedDownText>
 			</Flex>
@@ -62,13 +54,13 @@ const SummaryWeatherPrimary: React.FC = () => {
 				<Text>
 					<FlexRow alignItems='center'>
 						<SpacedIcon type={iconTypes.wind} fill={iconColor} height={iconHeight} />
-						<TextUnit text={roundedWind} unit={windDirectionUnit} />
+						<TextUnit text={windText} unit={windDirectionUnit} />
 					</FlexRow>
 				</Text>
 				<PushedDownText>
 					<FlexRow alignItems='center'>
 						<SpacedIcon type={iconTypes.rain} fill={iconColor} height={iconHeight} />
-						<TextUnit text={chanceRainPercentString} unit='chance' space={3} />
+						<TextUnit text={chanceRainText} unit='chance' space={3} />
 					</FlexRow>
 				</PushedDownText>
 			</Flex>
