@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, SmallText } from '@/core/symbol/text';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { ContextBlock } from './context-block';
+import { ContextBlock } from '@/core/layout/context-block';
 import { Flex } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { TimeTextUnit, TextUnit } from '@/core/symbol/text-unit';
@@ -12,8 +12,9 @@ import { CONSTANT } from '@/services/constant';
 export const SummaryAstro: React.FC = () => {
 	return (
 		<ContextBlock
-			Primary={SummaryAstroPrimary}
-			Secondary={SummaryAstroSecondary}
+			primary={<SummaryAstroPrimary />}
+			secondary={<SummaryAstroSecondary />}
+			isPadded={true}
 		/>
 	);
 };
@@ -129,9 +130,9 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 
 	return (
 		<SunBarContainer ref={ref}>
-			{sunSVG}
 			<SunBarStart />
 			<SunBarEnd />
+			{sunSVG}
 		</SunBarContainer>
 	)
 };

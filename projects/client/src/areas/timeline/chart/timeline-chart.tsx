@@ -2,10 +2,11 @@ import * as React from 'react';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { useElementSize } from '@/services/layout/element-size';
 import { CONSTANT } from '@/services/constant';
-import { css, styled } from '@/core/style/styled';
-import { SVGPath, createChartLine as createChart, makeRect, Point } from '@/services/draw/bezier';
+import { styled } from '@/core/style/styled';
+import { createChartLine as createChart, makeRect, Point } from '@/services/draw/bezier';
 import { Flex } from '@/core/layout/flex';
 import { timeToPixels } from '@/services/time';
+import { FillSVG, StrokeSVG } from '@/core/tide/tide-common';
 
 export interface TimelineChartProps {
 }
@@ -65,31 +66,6 @@ export const TimelineChart: React.FC<TimelineChartProps> = () => {
 		</>
 	);
 }
-
-const svgStyle = css`
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	overflow: unset;
-`;
-
-const FillSVG = styled(SVGPath)`
-	${svgStyle}
-
-	width: ${p => p.destRect.right - p.destRect.left}px;
-	fill: ${p => p.theme.color.tide};
-	opacity: .1;
-`;
-
-const StrokeSVG = styled(SVGPath)`
-	${svgStyle}
-
-	width: ${p => p.destRect.right - p.destRect.left}px;
-	stroke: ${p => p.theme.color.tide};
-	stroke-width: 4px;
-	fill: transparent;
-`;
 
 const ResizeContainer = styled(Flex)`
 	overflow: hidden;

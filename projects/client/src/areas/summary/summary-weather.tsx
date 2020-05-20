@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, subtitleHeight } from '@/core/symbol/text';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { ContextBlock } from './context-block';
+import { ContextBlock } from '@/core/layout/context-block';
 import { FlexRow, Flex } from '@/core/layout/flex';
 import { TextUnit } from '@/core/symbol/text-unit';
 import { useCurrentTheme } from '@/core/style/theme';
@@ -13,8 +13,9 @@ import { processWeatherForDisplay } from '@/services/weather/weather-process';
 export const SummaryWeather: React.FC = () => {
 	return (
 		<ContextBlock
-			Primary={SummaryWeatherPrimary}
-			Secondary={SummaryWeatherSecondary}
+			primary={<SummaryWeatherPrimary />}
+			secondary={<SummaryWeatherSecondary />}
+			isPadded={true}
 		/>
 	);
 };

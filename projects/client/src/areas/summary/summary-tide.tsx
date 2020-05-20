@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, SmallText } from '@/core/symbol/text';
 import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { ContextBlock } from './context-block';
+import { ContextBlock } from '@/core/layout/context-block';
 import { FlexRow, Flex } from '@/core/layout/flex';
 import { styled, css } from '@/core/style/styled';
 import { TimeTextUnit, TextUnit } from '@/core/symbol/text-unit';
@@ -10,8 +10,9 @@ import { flowPaddingValue } from '@/core/style/common';
 export const SummaryTide: React.FC = () => {
 	return (
 		<ContextBlock
-			Primary={SummaryTidePrimary}
-			Secondary={SummaryTideSecondary}
+			primary={<SummaryTidePrimary />}
+			secondary={<SummaryTideSecondary />}
+			isPadded={true}
 		/>
 	);
 };

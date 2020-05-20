@@ -7,12 +7,12 @@ import { CONSTANT } from '@/services/constant';
 
 
 export interface ContextBlockProps {
-	Primary: React.FC,
-	Secondary: React.FC
+	primary: JSX.Element,
+	secondary: JSX.Element
+	isPadded: boolean
 }
 
 export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
-	const { Primary, Secondary } = props;
 
 	const [isShowingPrimary, setIsShowingPrimary] = React.useState(true);
 	const ref = React.useRef<HTMLDivElement>(null!);
@@ -26,21 +26,25 @@ export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 	}
 
 	return (
-		<ContextBlockRoot flex='none' onClick={onClick}>
+		<ContextBlockRoot flex='none' onClick={onClick} isPadded={props.isPadded}>
 			<ContextBlockPanel ref={ref} isActive={isShowingPrimary}>
-				<Primary />
+				{props.primary}
 			</ContextBlockPanel>
 			<ContextBlockDependentPanel heightInPixels={primaryPanelHeight} isActive={!isShowingPrimary}>
-				<Secondary />
+				{props.secondary}
 			</ContextBlockDependentPanel>
 		</ContextBlockRoot>
 	);
 };
 
-const ContextBlockRoot = styled(FlexRow)`
+interface ContextBlockRootProps {
+	isPadded: boolean
+}
+
+const ContextBlockRoot = styled(FlexRow) <ContextBlockRootProps>`
 	background-color: ${p => p.theme.color.backgroundLighter};
 	${borderRadiusStyle};
-	padding: ${edgePaddingValue};
+	padding: ${p => p.isPadded ? edgePaddingValue : 0};
 	overflow: hidden;
 	cursor: pointer;
 `;

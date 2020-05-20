@@ -1,4 +1,4 @@
-import { WeatherStatus, WeatherStatusType, WindDirection, weatherStatusTypeDescription } from 'tidy-shared';
+import { WeatherStatus, WeatherStatusType, WindDirection, weatherStatusTypeDescription, DailyWeather } from 'tidy-shared';
 import { SVGIconType, iconTypes } from '@/core/symbol/icon';
 
 export interface WeatherDisplay {
@@ -34,6 +34,35 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 	};
 
 	return weatherDisplay;
+}
+
+export interface DailyWeatherDisplay {
+	minTempText: string,
+	maxTempText: string,
+	icon: SVGIconType
+	chanceRainText: string
+}
+
+export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): DailyWeatherDisplay {
+
+	const { minTemp, maxTemp, maxChanceRain, status } = dailyWeather;
+
+	// Get the key, like 'unknown'.
+	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
+	// Use that key to get the icons (day and night).
+	const weatherStatusIcon = weatherStatusTypeIcon[weatherStatusKey];
+	// FOr the day, always use the day icon.
+	const weatherStatusIconForTime = weatherStatusIcon.day;
+
+	const chanceRainPercent = Math.round(maxChanceRain * 100);
+	const chanceRainPercentString = `${chanceRainPercent}%`;
+
+	return {
+		minTempText: Math.round(minTemp).toString(),
+		maxTempText: Math.round(maxTemp).toString(),
+		icon: weatherStatusIconForTime,
+		chanceRainText: chanceRainPercentString
+	};
 }
 
 export interface WeatherStatusIcon {

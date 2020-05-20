@@ -6,13 +6,15 @@ export interface ElementSize {
 	height: number
 }
 
+const defaultElementSize: ElementSize = {
+	width: -1,
+	height: -1,
+	isSizing: true
+};
+
 export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObject<T | null>, throttleTimeoutMs?: number): ElementSize {
 	const [size, setSize] = React.useState<ElementSize>(() => {
-		return {
-			width: -1,
-			height: -1,
-			isSizing: true
-		}
+		return defaultElementSize;
 	});
 	const throttleTimeoutId = React.useRef(-1);
 	const timeout = (isNaN(throttleTimeoutMs!) || throttleTimeoutMs! < 10) ? 10 : throttleTimeoutMs;
@@ -31,6 +33,11 @@ export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObjec
 				}
 			}, timeout);
 
+			if (size === defaultElementSize) {
+				// This is our first run, disregard.
+				return;
+			}
+
 			// While in progress, don't continuously update.
 			setSize((previous) => {
 				return {
@@ -43,10 +50,6 @@ export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObjec
 	}
 
 	React.useLayoutEffect(function () {
-		if (!ref.current) {
-			return;
-		}
-
 		handleChange();
 
 		window.addEventListener('resize', handleChange, { capture: true });

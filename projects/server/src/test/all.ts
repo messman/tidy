@@ -55,9 +55,9 @@ export function createTideData(configContext: APIConfigurationContext, testSeed:
 	const tideRandomizer = randomizer(combineSeed('_tide_', testSeed));
 
 	// Get our time between highs and lows.
-	// Between 5.8 hours and 6.3 hours
-	const minTimeBetweenHighLowMinutes = 5.8 * 60;
-	const maxTimeBetweenHighLowMinutes = 6.3 * 60;
+	// This is typically 6 hours 12 minutes and some change, but we'll make it a little random and pretend it's because of the sun.
+	const minTimeBetweenHighLowMinutes = (6 * 60) + 3;
+	const maxTimeBetweenHighLowMinutes = (6 * 60) + 21;
 	const tideHeightPrecision = configContext.configuration.tides.tideHeightPrecision;
 
 	let startDateTime = configContext.context.tides.minimumTidesDataFetch;
@@ -81,9 +81,9 @@ export function createTideData(configContext: APIConfigurationContext, testSeed:
 	eventTimes.forEach((time, index) => {
 
 		const isLow = (index + startHighOrLowOffset) % 2 === 0;
-		// Low: [0, 2.5]
-		// High: [6, 9]
-		const height = isLow ? tideRandomizer.randomFloat(0, 2.5, tideHeightPrecision, true) : tideRandomizer.randomFloat(6, 9, tideHeightPrecision, true);
+		// Low: [0, 2]
+		// High: [7, 9]
+		const height = isLow ? tideRandomizer.randomFloat(0, 2, tideHeightPrecision, true) : tideRandomizer.randomFloat(7, 9, tideHeightPrecision, true);
 
 		const event: TideEvent = {
 			time: time,

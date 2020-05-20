@@ -9,8 +9,9 @@ export default { title: 'areas/summary' };
 export const ContextBlocks = decorate(() => {
 	return (
 		<ContextBlock
-			Primary={MockPrimary}
-			Secondary={MockSecondary}
+			primary={<MockPrimary />}
+			secondary={<MockSecondary />}
+			isPadded={true}
 		/>
 	);
 });

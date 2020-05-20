@@ -7,7 +7,7 @@ import { FlexRow, FlexColumn } from '@/core/layout/flex';
 import { Overlay } from '@/core/layout/overlay';
 import { useResponsiveLayout, LayoutBreakpoint } from '@/services/layout/responsive-layout';
 import { useComponentLayout } from './component-layout';
-import { OverflowAutoFlexRow, ScreenWidthFlexColumn } from '@/core/layout/common';
+import { OverflowAutoFlexRow, ScreenWidthFlexColumn, RegularWidthFlexColumn } from '@/core/layout/common';
 
 export const ApplicationResponsiveLayout: React.FC = () => {
 	return (
@@ -58,8 +58,12 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 				<Summary isCompactVertical={false} />
 				<Timeline />
 			</FlexColumn>
-			<Forecast />
-			<Settings />
+			<RegularWidthFlexColumn flex='none'>
+				<Forecast />
+			</RegularWidthFlexColumn>
+			<RegularWidthFlexColumn flex='none'>
+				<Settings />
+			</RegularWidthFlexColumn>
 		</OverflowAutoFlexRow>
 	);
 }
