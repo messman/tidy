@@ -75,7 +75,7 @@ const Center = styled.div`
 `;
 
 interface SummaryAstroSunBarProps {
-	percent: number
+	percent: number;
 }
 
 const sunRadius = 8;
@@ -84,7 +84,7 @@ const sunPathThickness = 4;
 const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 
 	const ref = React.useRef<HTMLDivElement>(null);
-	const size = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout);
+	const size = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout, null);
 
 	let sunSVG: JSX.Element | null = null;
 	if (!size.isSizing && size.width > 1 && size.height > 1) {
@@ -125,7 +125,7 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 				</AbsoluteMask>
 				<HiddenSunPath top={top} left={left} circleRadius={circleRadius} rotationDegree={sunRotationDegree} />
 			</>
-		)
+		);
 	}
 
 	return (
@@ -134,7 +134,7 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 			<SunBarEnd />
 			{sunSVG}
 		</SunBarContainer>
-	)
+	);
 };
 
 const SunBarContainer = styled.div`
@@ -169,7 +169,7 @@ interface SunPathProps {
 	top: number,
 	left: number,
 	circleRadius: number,
-	rotationDegree: number
+	rotationDegree: number;
 }
 
 const AbsoluteMask = styled.div`

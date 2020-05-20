@@ -7,7 +7,7 @@ function roundVal(num: number): number {
 
 export interface Rect {
 	left: number,
-	bottom: number
+	bottom: number;
 	right: number,
 	top: number,
 }
@@ -17,12 +17,12 @@ export function makeRect(left: number, bottom: number, right: number, top: numbe
 
 export interface Point {
 	x: number,
-	y: number
+	y: number;
 }
 
 export interface ChartLineOutput {
 	fillPath: string,
-	strokePath: string
+	strokePath: string;
 }
 
 
@@ -62,12 +62,12 @@ export function createChartLine(points: Point[], sourceRect: Rect, destRect: Rec
 
 	// Move horizontally not by the destRect bounds, but rather by the total width since we end outside of the rect.
 	// Move up (down visually) to the destRect.top, which should be your max value. Then across, then back up to the start. 
-	const fillPath = `${bezier} v${destRect.top - pLast.y} h${-totalWidth} v${-destRect.top - p1.y} z`
+	const fillPath = `${bezier} v${destRect.top - pLast.y} h${-totalWidth} v${-destRect.top - p1.y} z`;
 
 	return {
 		strokePath: strokePath,
 		fillPath: fillPath
-	}
+	};
 }
 
 function addToBezier(cp: Point, ep: Point): string {
@@ -81,13 +81,13 @@ function getTransform(source: Rect, dest: Rect): (p: Point) => Point {
 		return {
 			x: roundVal(((point.x - source.left) * xScale) + dest.left),
 			y: roundVal(((point.y - source.bottom) * yScale) + dest.bottom),
-		}
-	}
+		};
+	};
 }
 
 export interface SVGPathProps {
 	destRect: Rect,
-	path: string
+	path: string;
 }
 
 export const SVGPath: StyledFC<SVGPathProps> = (props) => {
@@ -100,4 +100,4 @@ export const SVGPath: StyledFC<SVGPathProps> = (props) => {
 			<path d={path}></path>
 		</svg>
 	);
-}
+};

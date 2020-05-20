@@ -1,4 +1,6 @@
 import { styled, css } from '@/core/style/styled';
+import { StyledComponent } from 'styled-components';
+import { Theme } from './theme';
 
 /** Border-radius style. .5rem / 8px. */
 export const borderRadiusStyle = css`
@@ -17,8 +19,23 @@ export const edgePaddingValue: string = '.625rem';
 /** Larger padding value, for vertical flow. 1rem / 16px. */
 export const flowPaddingValue: string = '1rem';
 
-///////////// OLD
+/** Returns a new component that has the specified padding value. */
+export function addPadding<T extends StyledComponent<any, Theme, {}, never>>(component: T, padding: string) {
+	return styled(component)`
+		padding: ${padding};
+	`;
+}
 
-export const TimelinePadding = styled.div`
-	height: 5vh;
-`;
+/** Returns a new component that has the specified margin value. */
+export function addMargin<T extends StyledComponent<any, Theme, {}, never>>(component: T, margin: string) {
+	return styled(component)`
+		margin: ${margin};
+	`;
+}
+
+/** Returns a new component that has display: inline-block. */
+export function addInlineBlock<T extends StyledComponent<any, Theme, {}, never>>(component: T) {
+	return styled(component)`
+		display: inline-block;
+	`;
+}

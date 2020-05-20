@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { deserialize, AllResponse, Info, AllResponseData } from 'tidy-shared';
 import { DEFINE } from '@/services/define';
-import { PromiseState, usePromise, clampPromise } from '../promise';
+import { usePromise, clampPromise, PromiseOutput } from '../promise';
 import { CONSTANT } from '../constant';
 import { useLocalDataPhrase } from './data-local';
 
@@ -11,10 +11,10 @@ export interface AllResponseSuccess extends AllResponse {
 	/** Error information about the request. Null if no errors. */
 	error: null,
 	/** Success information - the response data. Null if errors.  */
-	all: AllResponseData
+	all: AllResponseData;
 }
 
-const AllResponseContext = React.createContext<PromiseState<AllResponseSuccess>>(null!);
+const AllResponseContext = React.createContext<PromiseOutput<AllResponseSuccess>>(null!);
 
 export const AllResponseProvider: React.FC = (props) => {
 
@@ -30,7 +30,7 @@ export const AllResponseProvider: React.FC = (props) => {
 		return {
 			promiseFunc: promiseFunc,
 			runImmediately: runImmediately
-		}
+		};
 	});
 
 	React.useEffect(() => {
@@ -52,7 +52,7 @@ export const AllResponseProvider: React.FC = (props) => {
 			{props.children}
 		</AllResponseContext.Provider>
 	);
-}
+};
 
 function createPromiseFunc(localDataPhrase: string | null): () => Promise<AllResponseSuccess> {
 	let promiseFunc: () => Promise<AllResponse> = fetchAllResponse;
@@ -82,16 +82,16 @@ function createPromiseFunc(localDataPhrase: string | null): () => Promise<AllRes
 			console.error(e);
 			throw e;
 		}
-	}
+	};
 
 	return () => {
 		return clampPromise(errorWrappedPromiseFunc(), minTimeout, CONSTANT.fetchMaxTimeout);
-	}
+	};
 }
 
 export const useAllResponse = () => React.useContext(AllResponseContext);
 
-export function hasAllResponseData(allResponsePromise: PromiseState<AllResponse>): boolean {
+export function hasAllResponseData(allResponsePromise: PromiseOutput<AllResponseSuccess>): boolean {
 	return !!allResponsePromise?.data?.all;
 }
 

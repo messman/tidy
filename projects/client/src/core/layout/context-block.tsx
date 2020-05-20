@@ -8,15 +8,15 @@ import { CONSTANT } from '@/services/constant';
 
 export interface ContextBlockProps {
 	primary: JSX.Element,
-	secondary: JSX.Element
-	isPadded: boolean
+	secondary: JSX.Element;
+	isPadded: boolean;
 }
 
 export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 
 	const [isShowingPrimary, setIsShowingPrimary] = React.useState(true);
 	const ref = React.useRef<HTMLDivElement>(null!);
-	const primaryPanelSize = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout);
+	const primaryPanelSize = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout, null);
 	const primaryPanelHeight = primaryPanelSize.height > 0 ? primaryPanelSize.height : 0;
 
 	function onClick(): void {
@@ -38,7 +38,7 @@ export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 };
 
 interface ContextBlockRootProps {
-	isPadded: boolean
+	isPadded: boolean;
 }
 
 const ContextBlockRoot = styled(FlexRow) <ContextBlockRootProps>`
@@ -51,7 +51,7 @@ const ContextBlockRoot = styled(FlexRow) <ContextBlockRootProps>`
 
 interface ContextBlockPanelProps {
 	isActive: boolean,
-	heightInPixels?: number
+	heightInPixels?: number;
 }
 
 const ContextBlockPanel = styled(FlexRow) <ContextBlockPanelProps>`

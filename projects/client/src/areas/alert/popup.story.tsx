@@ -1,21 +1,24 @@
 import * as React from 'react';
 import { Text } from '@/core/symbol/text';
 import { decorate } from '@/test/storybook/decorate';
-import { text, button, select, boolean } from '@storybook/addon-knobs';
-import { usePopup, PopupType } from './popup';
+import { boolean, button, select, text } from '@storybook/addon-knobs';
+import { PopupType, usePopup } from './popup';
 
 export default { title: 'areas/alert' };
 
-export const Popups = decorate(() => {
+export const TestPopup = decorate(() => {
 
+	// Just get the setter.
 	const setPopupData = usePopup()[1];
+
+	// Add knobs.
 
 	const options = {
 		warning: PopupType.warning,
 		error: PopupType.error
 	};
-
 	const popupType = select('Type', options, PopupType.warning);
+
 	const title = text('Title', 'Uh-oh, dude.');
 	const popupText = text('Text', 'There was a problem while trying to do the thing.');
 	const forcePageReload = boolean('Page Reload', false);

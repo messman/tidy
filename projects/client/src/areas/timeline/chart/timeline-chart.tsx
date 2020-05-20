@@ -1,72 +1,55 @@
 import * as React from 'react';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { useElementSize } from '@/services/layout/element-size';
 import { CONSTANT } from '@/services/constant';
 import { styled } from '@/core/style/styled';
-import { createChartLine as createChart, makeRect, Point } from '@/services/draw/bezier';
 import { Flex } from '@/core/layout/flex';
 import { timeToPixels } from '@/services/time';
-import { FillSVG, StrokeSVG } from '@/core/tide/tide-common';
+import { useTideChart } from '@/core/tide/tide-chart';
+import { AllResponseData, Info } from 'tidy-shared';
 
 export interface TimelineChartProps {
+	/** Required to exist. */
+	all: AllResponseData,
+	/** Required to exist. */
+	info: Info;
 }
 
-export const TimelineChart: React.FC<TimelineChartProps> = () => {
-
-	const allResponseState = useAllResponse();
+/** Creates a timeline chart specific to the timeline area - flexes its space and maintains the pixel-per-hour ratio. */
+export const TimelineChart: React.FC<TimelineChartProps> = (props) => {
 
 	const ref = React.useRef<HTMLDivElement>(null!);
-	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout);
+	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, null);
 
-	if (!hasAllResponseData(allResponseState)) {
-		return null;
-	}
+	const { all, info } = props;
+	const { tides, cutoffDate } = all.predictions;
 
-	let fillSVG: JSX.Element | null = null;
-	let strokeSVG: JSX.Element | null = null;
+	// Instead of using size.width (which varies based on flex properties), use the cutoff date.
+	// We want our width to stay equal to our pixelsPerHour ratio.
+	// The chart line we create goes outside its own bounds to cover extra space, so we shouldn't have an issue.
+	const width = timeToPixels(info.referenceTime, cutoffDate);
 
-	if (size.width > 1 && size.height > 1) {
+	const tideChart = useTideChart({
+		tideEventRange: tides,
+		startTime: info.referenceTime,
+		endTime: cutoffDate,
+		outputWidth: width,
+		outputHeight: size.height,
+		outputPaddingTop: 30,
+		outputPaddingBottom: 30
+	});
 
-		const { all, info } = allResponseState.data!;
-		const { tides, cutoffDate } = all.predictions;
-
-		const allTides = [tides.outsidePrevious, ...tides.events, tides.outsideNext];
-		const points: Point[] = allTides.map(function (t) {
-			return {
-				x: t!.time.valueOf(),
-				y: t!.height
-			};
-		});
-
-		let min = tides.lowest.height;
-		let max = tides.highest.height;
-
-		// instead of using size.width (which varies based on flex properties), use the cutoff date.
-		// The chart line we create goes outside its own bounds to cover extra space!
-		const width = timeToPixels(info.referenceTime, cutoffDate);
-		const height = size.height;
-
-		const sourceRect = makeRect(info.referenceTime.valueOf(), min, cutoffDate.valueOf(), max);
-		const destRect = makeRect(0, 0, width, height);
-		const bottomPaddingFactor = .1;
-		const topPaddingFactor = .1;
-
-		const output = createChart(points, sourceRect, destRect, bottomPaddingFactor, topPaddingFactor);
-		fillSVG = <FillSVG path={output.fillPath} destRect={destRect} />
-		strokeSVG = <StrokeSVG path={output.strokePath} destRect={destRect} />
-	}
-
-	// Use flex 2 1 0, which means "grow 2x as much as siblings, and allow me to shrink too"
+	// Use flex 2 1 0, which means "grow 2x as much as siblings, and allow me to shrink too".
+	// Our ResizeContainer should size from the parent via Flex.
 	return (
 		<>
 			<ResizeContainer ref={ref} flex='2 1 0'>
-				{fillSVG}
-				{strokeSVG}
+				{tideChart}
 			</ResizeContainer>
 		</>
 	);
-}
+};
 
 const ResizeContainer = styled(Flex)`
+	/** Don't allow our chart lines to go outside this container. */
 	overflow: hidden;
 `;

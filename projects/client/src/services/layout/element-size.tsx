@@ -3,7 +3,7 @@ import * as React from 'react';
 export interface ElementSize {
 	isSizing: boolean,
 	width: number,
-	height: number
+	height: number;
 }
 
 const defaultElementSize: ElementSize = {
@@ -12,12 +12,12 @@ const defaultElementSize: ElementSize = {
 	isSizing: true
 };
 
-export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObject<T | null>, throttleTimeoutMs?: number): ElementSize {
+export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObject<T | null>, throttleMilliseconds: number | null, additionalDependencies: any[] | null): ElementSize {
 	const [size, setSize] = React.useState<ElementSize>(() => {
 		return defaultElementSize;
 	});
 	const throttleTimeoutId = React.useRef(-1);
-	const timeout = (isNaN(throttleTimeoutMs!) || throttleTimeoutMs! < 10) ? 10 : throttleTimeoutMs;
+	const timeout = (isNaN(throttleMilliseconds!) || throttleMilliseconds! < 10) ? 10 : throttleMilliseconds;
 
 	function handleChange() {
 		if (throttleTimeoutId.current === -1) {
@@ -44,7 +44,7 @@ export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObjec
 					width: previous.width,
 					height: previous.height,
 					isSizing: true
-				}
+				};
 			});
 		}
 	}
@@ -60,8 +60,8 @@ export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObjec
 			window.removeEventListener('resize', handleChange, { capture: true });
 			window.removeEventListener('orientationchange', handleChange, { capture: true });
 			window.removeEventListener('visibilitychange', handleChange, { capture: true });
-		}
-	}, [ref.current]);
+		};
+	}, [ref.current, ...(additionalDependencies || [])]);
 
 	return size;
 }

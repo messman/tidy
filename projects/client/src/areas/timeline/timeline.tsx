@@ -6,6 +6,7 @@ import { TimelineBar } from './bar/timeline-bar';
 import { TimelineWeather } from './weather/timeline-weather';
 import { TimelineBackground } from './timeline-background';
 import { TimelineChart } from './chart/timeline-chart';
+import { CONSTANT } from '@/services/constant';
 
 export interface TimelineProps {
 }
@@ -18,19 +19,17 @@ export const Timeline: React.FC<TimelineProps> = () => {
 	}
 
 	const ref = React.useRef<HTMLDivElement>(null);
-	const size = useElementSize(ref);
+	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, null);
 
-	if (size.width > 1 && size.height > 1) {
-
-	}
+	const { all, info } = allResponseState.data!;
 
 	return (
 		<FlexColumn ref={ref}>
 			<TimelineBackground barWidth={size.width} />
 			<TimelineWeather />
 			<TimelineBar />
-			<TimelineChart />
+			<TimelineChart all={all} info={info} />
 		</FlexColumn>
 
 	);
-}
+};
