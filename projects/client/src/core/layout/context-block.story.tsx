@@ -6,7 +6,7 @@ import { Flex } from '@/core/layout/flex';
 
 export default { title: 'areas/summary' };
 
-export const ContextBlocks = decorate(() => {
+export const TestContextBlock = decorate(() => {
 	return (
 		<ContextBlock
 			primary={<MockPrimary />}
@@ -24,7 +24,7 @@ const MockPrimary: React.FC = () => {
 			<Text>Primary</Text>
 			<Text>Primary</Text>
 		</Flex>
-	)
+	);
 };
 
 const MockSecondary: React.FC = () => {
@@ -33,5 +33,5 @@ const MockSecondary: React.FC = () => {
 			<Text>Secondary</Text>
 			<Text>Secondary</Text>
 		</Flex>
-	)
+	);
 };

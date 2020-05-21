@@ -6,7 +6,7 @@ import { clampPromise, usePromise, clampPromiseMaximumTimeoutReason } from './pr
 
 export default { title: 'services' };
 
-export const Promises = decorate(() => {
+export const TestPromise = decorate(() => {
 
 	const useMinimum = boolean('Use Minimum', true);
 	const inputMinimum = number('Minimum', 500);
@@ -20,7 +20,7 @@ export const Promises = decorate(() => {
 
 	const clampedPromiseFunc = () => {
 		return clampPromise(getTestInfo(actual), minimum, maximum);
-	}
+	};
 
 	const promiseState = usePromise({
 		promiseFunc: clampedPromiseFunc,
@@ -58,7 +58,7 @@ let globalIncrement: number = 0;
 
 interface TestInfo {
 	random: number,
-	increment: number
+	increment: number;
 }
 
 async function getTestInfo(timeout: number): Promise<TestInfo> {

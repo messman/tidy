@@ -7,7 +7,7 @@ import { flowPaddingValue } from '../style/common';
 
 export default { title: 'core/symbol' };
 
-export const TextWithIcons = decorate(() => {
+export const TestTextWithIcons = decorate(() => {
 
 	const iconType = iconTypes.calendar;
 

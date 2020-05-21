@@ -12,7 +12,7 @@ const FlexBorder = styled(Flex)`
 
 // 'Root' components use 100% width/height with flex
 
-export const FlexColumns = decorate(() => {
+export const TestFlexColumn = decorate(() => {
 	return (
 		<FlexColumn>
 			<FlexBorder flex={2}>
@@ -28,7 +28,7 @@ export const FlexColumns = decorate(() => {
 	);
 });
 
-export const FlexRows = decorate(() => {
+export const TestFlexRow = decorate(() => {
 	return (
 		<FlexRow>
 			<FlexBorder flex={2}>

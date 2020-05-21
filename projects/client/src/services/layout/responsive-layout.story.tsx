@@ -6,12 +6,12 @@ import { useResponsiveLayout, LayoutBreakpoint, LayoutMode, isInvalidLayoutForAp
 
 export default { title: 'services/layout' };
 
-export const Responsive = decorate(() => {
+export const TestResponsive = decorate(() => {
 
 	const responsiveLayout = useResponsiveLayout();
 	let invalidSubtitle: JSX.Element | null = null;
 	if (isInvalidLayoutForApplication(responsiveLayout)) {
-		invalidSubtitle = <InvalidSubtitle>Invalid Layout</InvalidSubtitle>
+		invalidSubtitle = <InvalidSubtitle>Invalid Layout</InvalidSubtitle>;
 	}
 
 	return (

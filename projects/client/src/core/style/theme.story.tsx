@@ -7,7 +7,7 @@ import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 
 export default { title: 'core/style' };
 
-export const Theme = decorate(() => {
+export const TestTheme = decorate(() => {
 
 	const theme = useCurrentTheme();
 
@@ -52,7 +52,7 @@ const TextSizesColorBox: React.FC<ColorBoxProps> = (props) => {
 			<SubText>Sub Text</SubText>
 		</ColorBox>
 	);
-}
+};
 
 const LongColorBox = styled.div<ColorBoxProps>`
 	display: inline-block;
@@ -72,4 +72,4 @@ const TextColorBox: React.FC<ColorBoxProps> = (props) => {
 			<TextInline>{props.children}</TextInline>
 		</div>
 	);
-}
+};

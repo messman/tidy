@@ -6,7 +6,7 @@ import { MenuBar } from './menu-bar';
 
 export default { title: 'areas/menu-bar' };
 
-export const MenuBars = decorate(() => {
+export const TestMenuBar = decorate(() => {
 	return (
 		<MenuBar>
 			<Flex>

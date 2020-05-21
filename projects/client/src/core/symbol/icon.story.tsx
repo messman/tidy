@@ -5,7 +5,7 @@ import { iconTypes, Icon } from '@/core/symbol/icon';
 
 export default { title: 'core/symbol' };
 
-export const Icons = decorate(() => {
+export const TestIcon = decorate(() => {
 
 	const iconList = Object.keys(iconTypes).map((iconName) => {
 		const icon = iconTypes[iconName as keyof typeof iconTypes];

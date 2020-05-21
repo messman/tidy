@@ -6,7 +6,7 @@ import { useAllResponse } from './data/data';
 
 export default { title: 'services' };
 
-export const Define = decorate(() => {
+export const TestDefine = decorate(() => {
 
 	const allResponseState = useAllResponse();
 

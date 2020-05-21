@@ -7,7 +7,7 @@ import { Summary } from './summary';
 
 export default { title: 'areas/summary' };
 
-export const Summaries = decorate(() => {
+export const TestSummary = decorate(() => {
 
 	return (
 		<MenuBar>

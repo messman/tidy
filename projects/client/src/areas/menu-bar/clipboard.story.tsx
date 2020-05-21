@@ -5,7 +5,7 @@ import { AllResponseClipboardIcon, ClipboardIcon } from './clipboard';
 
 export default { title: 'areas/menu-bar' };
 
-export const Clipboard = decorate(() => {
+export const TestClipboard = decorate(() => {
 
 	const clipboardText = text('Clipboard Text', 'Copy me!');
 	const isForceFailure = boolean('Force Failure', false);
@@ -17,7 +17,7 @@ export const Clipboard = decorate(() => {
 	);
 });
 
-export const AllResponseClipboard = decorate(() => {
+export const TestAllResponseClipboard = decorate(() => {
 
 	return (
 		<div>

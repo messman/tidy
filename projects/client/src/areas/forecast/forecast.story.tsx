@@ -7,7 +7,7 @@ import { Forecast } from './forecast';
 
 export default { title: 'areas/forecast' };
 
-export const Forecasts = decorate(() => {
+export const TestForecast = decorate(() => {
 
 	return (
 		<MenuBar>

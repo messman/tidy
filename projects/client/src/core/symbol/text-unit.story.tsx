@@ -11,7 +11,7 @@ export default { title: 'core/symbol' };
 
 const localDateTime = DateTime.local();
 
-export const TextUnits = decorate(() => {
+export const TestTextUnit = decorate(() => {
 
 	const minutesOnlyFromLocal = localDateTime.plus({ minutes: 28 });
 	const hoursOnlyFromLocal = localDateTime.plus({ hours: 7 });

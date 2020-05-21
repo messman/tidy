@@ -6,7 +6,7 @@ import { MockForecast, MockSettings, MockSummary, MockTimeline } from './layout-
 
 export default { title: 'areas/layout' };
 
-export const Layout = decorate(() => {
+export const TestLayout = decorate(() => {
 
 	return (
 		<MenuBar>
