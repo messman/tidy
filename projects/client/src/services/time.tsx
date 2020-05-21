@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 
 export interface TwelveHourTime {
-	time: string // like '1:34'
-	ampm: 'AM' | 'PM'
+	time: string; // like '1:34'
+	ampm: 'AM' | 'PM';
 }
 
 export function getTimeTwelveHour(date: DateTime): TwelveHourTime {
@@ -15,7 +15,12 @@ export function getTimeTwelveHour(date: DateTime): TwelveHourTime {
 	return {
 		time: `${hours}:${minutesString}`,
 		ampm
-	}
+	};
+}
+
+export function getTimeTwelveHourString(date: DateTime): string {
+	const { time, ampm } = getTimeTwelveHour(date);
+	return `${time} ${ampm}`;
 }
 
 export function getDate(date: DateTime): string {
@@ -26,31 +31,12 @@ export function getDateDayOfWeek(date: DateTime): string {
 	return `${date.weekdayLong} ${getDate(date)}`;
 }
 
-export function getHumanTime(spanMilliseconds: number): string {
-	let minutes = Math.ceil(spanMilliseconds / 1000 / 60);
-	if (minutes > 0) {
-		if (minutes <= 1)
-			return 'right about now';
-		if (minutes < 100)
-			return `in ${minutes} min`;
-		const hours = Math.round(minutes / 60);
-		if (hours === 1)
-			return 'in an hour';
-		return `in ${hours} hours`;
-	}
-	else {
-		minutes = Math.abs(minutes);
-		if (minutes <= 1)
-			return 'moments ago';
-		if (minutes < 100)
-			return `${minutes} min ago`;
-		const hours = Math.round(minutes / 60);
-		if (hours === 1)
-			return 'about an hour ago';
-		return `${hours} hours ago`;
-	}
+/** Returns a value [0-100] */
+export function percentTimeBetween(referenceTime: DateTime, startTime: DateTime, endTime: DateTime): number {
+	const startTimeValue = startTime.valueOf();
+	const percent = ((referenceTime.valueOf() - startTimeValue) / (endTime.valueOf() - startTimeValue)) * 100;
+	return Math.min(100, Math.max(0, Math.round(percent)));
 }
-
 
 const _pixelsPerHour = 40;
 export const pixelsPerDay = 24 * _pixelsPerHour;

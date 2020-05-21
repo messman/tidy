@@ -1,19 +1,50 @@
 import * as React from 'react';
 import { iconTypes } from '@/core/symbol/icon';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { getTimeTwelveHourString } from '@/services/time';
+import { PopupType, usePopup } from '../alert/popup';
 import { MenuBarIcon } from './menu-bar-icon';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { usePopup, PopupType } from '../alert/popup';
 
-
+/** Connects directly to the data store to create text to describe the data. Copied to clipboard when clicked. */
 export const AllResponseClipboardIcon: React.FC = () => {
 	const allResponseState = useAllResponse();
 
-	let isDisabled = true;
+	let isDisabled = false;
 	let text = '';
 
 	if (hasAllResponseData(allResponseState)) {
 		isDisabled = false;
-		text = allResponseState.data!.info.referenceTime.toISO();
+		const { all, info } = allResponseState.data!;
+		const { tides } = all.current;
+
+
+		const referenceTimeString = getTimeTwelveHourString(info.referenceTime);
+		const tideActionText = tides.next.isLow ? 'falling' : 'rising';
+		const nextTideText = tides.next.isLow ? 'Low' : 'High';
+		const nextTideTimeString = getTimeTwelveHourString(tides.next.time);
+
+		/*
+			TODO - figure out what else we want to put in.
+			Will data be scoped by the day, or by the next X hours?
+			Should we even include the reference time (knowing it could be 0-10 minutes off due to caching?)
+		*/
+
+		// const allDayTides = all.daily.days[0].tides;
+		// const dayTidesText = allDayTides.events.map((tideEvent) => {
+		// 	const tideText = tideEvent.isLow ? 'low' : 'high';
+		// 	const tideTimeString = getTimeTwelveHourString(tideEvent.time);
+		// 	return `${tideText}, ${tideTimeString}`;
+		// }).join('; ');
+
+		// const sunEventText = sun.next.isSunrise ? 'Sunrise' : 'Sunset';
+		// const sunEventTimeString = getTimeTwelveHourString(sun.next.time);
+
+		text = [
+			[`It's ${referenceTimeString}. The tide is ${tideActionText}.`],
+			[`${nextTideText} tide is at ${nextTideTimeString}.`],
+			[``],
+			[`https://tidy.andrewmessier.com`],
+		].join('\n');
 	}
 
 	return (
@@ -22,17 +53,22 @@ export const AllResponseClipboardIcon: React.FC = () => {
 };
 
 interface ClipboardIconProps {
+	/** Text that will be copied to clipboard. */
 	text: string,
+	/** Whether or not the clipboard icon is disabled. */
 	isDisabled: boolean,
-	isForceFailure?: boolean
+	/** Used for testing. */
+	isForceFailure?: boolean;
 }
 
+// Used to disable the clipboard to prevent spam clicking.
 const clipboardTimeout = 5000;
 
 export const ClipboardIcon: React.FC<ClipboardIconProps> = (props) => {
 
 	const setPopupData = usePopup()[1];
 
+	// Use two booleans to track the 3 states - success, failure, not clicked
 	const [isSuccess, setIsSuccess] = React.useState(false);
 	const [isFailure, setIsFailure] = React.useState(false);
 

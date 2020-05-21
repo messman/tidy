@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { SubtitleInline, subtitleHeight } from '@/core/symbol/text';
-import { Icon, iconTypes, SVGIconType } from '@/core/symbol/icon';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { useCurrentTheme } from '@/core/style/theme';
-import { styled } from '@/core/style/styled';
 import { edgePaddingValue } from '@/core/style/common';
+import { styled } from '@/core/style/styled';
+import { useCurrentTheme } from '@/core/style/theme';
+import { Icon, iconTypes, SVGIconType } from '@/core/symbol/icon';
+import { subtitleHeight, SubtitleInline } from '@/core/symbol/text';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { percentTimeBetween } from '@/services/time';
 
 export const SummaryTitle: React.FC = () => {
 
@@ -16,8 +17,8 @@ export const SummaryTitle: React.FC = () => {
 	const { all, info } = allResponseState.data!;
 	const { tides } = all.current;
 
-	// Value is like 0, 10, 20, 30, etc; 
-	const timePercent = Math.round((info.referenceTime.valueOf() - tides.previous.time.valueOf()) / (tides.next.time.valueOf() - tides.previous.time.valueOf()) * 100);
+	// [0-100]
+	const timePercent = percentTimeBetween(info.referenceTime, tides.previous.time, tides.next.time);
 
 	const previousTideName = tides.previous.isLow ? 'low' : 'high';
 	const nextTideName = tides.next.isLow ? 'low' : 'high';
@@ -27,18 +28,22 @@ export const SummaryTitle: React.FC = () => {
 	let iconType: SVGIconType | null = null;
 
 	if (timePercent <= 10) {
+		// [0-10]
 		text = `It's ${previousTideName} tide.`;
 	}
 	else if (timePercent <= 80) {
+		// (10-80]
 		const tideActionName = tides.previous.isLow ? 'rising' : 'falling';
-		text = `The tide is ${tideActionName}.`
+		text = `The tide is ${tideActionName}.`;
 		iconType = nextTideIconType;
 	}
 	else if (timePercent <= 90) {
+		// (80-90]
 		text = `It's almost ${nextTideName} tide.`;
 		iconType = nextTideIconType;
 	}
 	else {
+		// (90-100]
 		text = `It's ${nextTideName} tide.`;
 	}
 

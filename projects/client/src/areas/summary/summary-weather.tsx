@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Text, subtitleHeight } from '@/core/symbol/text';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { ContextBlock } from '@/core/layout/context-block';
-import { FlexRow, Flex } from '@/core/layout/flex';
-import { TextUnit } from '@/core/symbol/text-unit';
+import { Flex, FlexRow } from '@/core/layout/flex';
+import { edgePaddingValue } from '@/core/style/common';
+import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, iconTypes } from '@/core/symbol/icon';
-import styled from 'styled-components';
-import { edgePaddingValue } from '@/core/style/common';
+import { subtitleHeight, Text } from '@/core/symbol/text';
+import { TextUnit } from '@/core/symbol/text-unit';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';
 
 export const SummaryWeather: React.FC = () => {
@@ -24,13 +24,13 @@ const SummaryWeatherPrimary: React.FC = () => {
 
 	const allResponseState = useAllResponse();
 	const theme = useCurrentTheme();
-	const iconColor = theme.color.weather;
-	const iconHeight = subtitleHeight;
 
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
 	const { all } = allResponseState.data!;
+	const iconColor = theme.color.weather;
+	const iconHeight = subtitleHeight;
 
 	const useDayIcon = !all.current.sun.next.isSunrise;
 	const { tempText, windText, windDirectionUnit, icon, shortStatusText, chanceRainText } = processWeatherForDisplay(all.current.weather, useDayIcon);
@@ -80,7 +80,6 @@ const PushedDownText = styled(Text)`
 const SpacedIcon = styled(Icon)`
 	margin-right: .3rem;
 `;
-
 
 const SummaryWeatherSecondary: React.FC = () => {
 

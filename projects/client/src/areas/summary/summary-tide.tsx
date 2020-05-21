@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Text, SmallText } from '@/core/symbol/text';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { ContextBlock } from '@/core/layout/context-block';
-import { FlexRow, Flex } from '@/core/layout/flex';
-import { styled, css } from '@/core/style/styled';
-import { TimeTextUnit, TextUnit } from '@/core/symbol/text-unit';
+import { Flex, FlexRow } from '@/core/layout/flex';
 import { flowPaddingValue } from '@/core/style/common';
+import { css, styled } from '@/core/style/styled';
+import { SmallText, Text } from '@/core/symbol/text';
+import { TextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { percentTimeBetween } from '@/services/time';
 
 export const SummaryTide: React.FC = () => {
 	return (
@@ -26,7 +27,7 @@ const SummaryTidePrimary: React.FC = () => {
 	const { all, info } = allResponseState.data!;
 	const tides = all.current.tides;
 
-	const timePercent = Math.round((info.referenceTime.valueOf() - tides.previous.time.valueOf()) / (tides.next.time.valueOf() - tides.previous.time.valueOf()) * 100);
+	const timePercent = percentTimeBetween(info.referenceTime, tides.previous.time, tides.next.time);
 	const timePercentString = timePercent.toString();
 
 	return (
@@ -81,7 +82,7 @@ const FlexCenter = styled(Flex)`
 `;
 
 interface SummaryTideBarProps {
-	percent: number
+	percent: number;
 }
 
 const SummaryTideBar: React.FC<SummaryTideBarProps> = (props) => {
@@ -95,7 +96,7 @@ const SummaryTideBar: React.FC<SummaryTideBarProps> = (props) => {
 			<NextCircle />
 		</>
 	);
-}
+};
 
 const CenterLinePadding = styled.div`
 	display: block;

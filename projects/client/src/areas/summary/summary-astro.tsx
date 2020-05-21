@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Text, SmallText } from '@/core/symbol/text';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { ContextBlock } from '@/core/layout/context-block';
 import { Flex } from '@/core/layout/flex';
-import { styled } from '@/core/style/styled';
-import { TimeTextUnit, TextUnit } from '@/core/symbol/text-unit';
-import { flowPaddingValue, edgePaddingValue } from '@/core/style/common';
-import { useElementSize } from '@/services/layout/element-size';
+import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
+import { css, styled } from '@/core/style/styled';
+import { SmallText, Text } from '@/core/symbol/text';
+import { TextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
 import { CONSTANT } from '@/services/constant';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { useElementSize } from '@/services/layout/element-size';
+import { percentTimeBetween } from '@/services/time';
 
 export const SummaryAstro: React.FC = () => {
 	return (
@@ -26,10 +27,11 @@ const SummaryAstroPrimary: React.FC = () => {
 		return null;
 	}
 	const { all, info } = allResponseState.data!;
+	// Instead of using the current info, which is relative to the reference time, use the current day.
 	const [sunrise, sunset] = all.daily.days[0].sun;
 
 	const duration = sunset.time.diff(sunrise.time, ['hours', 'minutes']);
-	const timePercent = Math.max(0, Math.min(100, Math.round((info.referenceTime.valueOf() - sunrise.time.valueOf()) / (sunset.time.valueOf() - sunrise.time.valueOf()) * 100)));
+	const timePercent = percentTimeBetween(info.referenceTime, sunrise.time, sunset.time);
 
 	return (
 		<Flex>
@@ -93,6 +95,13 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 		const width = size.width + sunPathThickness;
 		const height = size.height;
 
+		/*
+			Below code is all about recreating the curve of the sun overhead. Basically, an arc in the sky with a sun that follows it.
+			Our inputs are 3 points: the lower-left edge of our bounds, the lower-right edge of our bounds, and the top center of the bounds.
+			These 3 points act as points in an overall circle that represents the path of the sun.
+			All 3 points are equidistant from the center of the circle. Our goal is to find that radius by using the distance and angles between these points.
+		*/
+
 		// Do some trig to figure out the radius of our circle. SOHCAHTOA!
 		const opposite1 = width / 2;
 		const adjacent1 = height;
@@ -103,7 +112,7 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 
 		const circleRadius = hypotenuse2;
 
-		// We can't use 180 degrees as our available rotational area. We need to compute the angles we have
+		// We can't use 180 degrees as our available rotational area. We need to compute the angles we have.
 		const hypotenuse3 = circleRadius;
 		const adjacent3 = width / 2;
 		const thetaRad3 = Math.acos(adjacent3 / hypotenuse3);
@@ -111,7 +120,7 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 		const totalAngle = 180 - (lostAngleOneSide * 2);
 
 		const top = 0;
-		// Use actual size here.
+		// Use actual size here because we are offsetting relative to the bounds box, not the width of a circle.
 		const left = (size.width / 2) - circleRadius;
 
 		// Path border starts at 135 degree angle based on how CSS works for this solution.
@@ -128,6 +137,12 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 		);
 	}
 
+	/*
+		Structure:
+		- Top container is an everyday div with margin to bring it off the edges. Explicit height.
+			- Inside, show the start and end dots that go outside of the top container.
+			- Layer the SVG over that, with a masking box.
+	*/
 	return (
 		<SunBarContainer ref={ref}>
 			<SunBarStart />
@@ -139,30 +154,32 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 
 const SunBarContainer = styled.div`
 	position: relative;
+	/* Brings the content inside away from the edge of the context block. */
 	margin: calc(${edgePaddingValue} / 2) calc(${flowPaddingValue} * 3);
+	/* This is just what looked good. */
 	height: 4rem;
 `;
 
-const startEndCircleRadius = 10;
-
-const SunBarStart = styled.div`
+const startEndCircleRadius = 5;
+// Position in the bottom corners of our bounds as circles.
+const sunBarStartEndStyle = css`
 	position: absolute;
-	bottom: -${startEndCircleRadius / 2}px;
-	left: -${startEndCircleRadius / 2}px;
-	width: ${startEndCircleRadius}px;
-	height: ${startEndCircleRadius}px;
-	background-color: ${p => p.theme.color.sun};
+	bottom: -${startEndCircleRadius}px;
+	width: ${startEndCircleRadius * 2}px;
+	height: ${startEndCircleRadius * 2}px;
 	border-radius: 50%;
 `;
 
+const SunBarStart = styled.div`
+	${sunBarStartEndStyle}
+	left: -${startEndCircleRadius}px;
+	background-color: ${p => p.theme.color.sun};
+`;
+
 const SunBarEnd = styled.div`
-	position: absolute;
-	bottom: -${startEndCircleRadius / 2}px;
-	right: -${startEndCircleRadius / 2}px;
-	width: ${startEndCircleRadius}px;
-	height: ${startEndCircleRadius}px;
+	${sunBarStartEndStyle}
+	right: -${startEndCircleRadius}px;
 	background-color: ${p => p.theme.color.backgroundLightest};
-	border-radius: 50%;
 `;
 
 interface SunPathProps {
@@ -212,6 +229,7 @@ const HiddenSunPath = styled.div<SunPathProps>`
 	border-color: transparent;
 
 	::after {
+		/* This is the actual sun circle inside. */
 		content: '';
 		display: block;
 		position: absolute;
@@ -225,7 +243,6 @@ const HiddenSunPath = styled.div<SunPathProps>`
 `;
 
 const SummaryAstroSecondary: React.FC = () => {
-
 	const allResponseState = useAllResponse();
 	if (!hasAllResponseData(allResponseState)) {
 		return null;

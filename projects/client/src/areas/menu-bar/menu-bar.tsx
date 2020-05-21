@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { FlexParent, FlexColumn, FlexRow } from '@/core/layout/flex';
-import { styled } from '@/core/style/styled';
-import { LayoutBreakpoint, LayoutMode, useResponsiveLayout } from '@/services/layout/responsive-layout';
-import { iconTypes } from '@/core/symbol/icon';
 import { useComponentLayout } from '@/areas/layout/component-layout';
-import { MenuBarIcon } from './menu-bar-icon';
+import { FlexColumn, FlexParent, FlexRow } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
+import { iconTypes } from '@/core/symbol/icon';
+import { LayoutBreakpoint, LayoutMode, useResponsiveLayout } from '@/services/layout/responsive-layout';
 import { AllResponseClipboardIcon } from './clipboard';
+import { MenuBarIcon } from './menu-bar-icon';
 
 const MenuBarContent = styled(FlexParent)`
 	background-color: ${p => p.theme.color.backgroundLighter};
@@ -13,19 +13,26 @@ const MenuBarContent = styled(FlexParent)`
 
 const MenuBarBottomContainer = styled(FlexColumn)`
 	width: 100vw;
+	/* Used to prevent MenuBar scrolling. */
+	overflow: hidden;
 `;
 const MenuBarLeftContainer = styled(FlexRow)`
 	height: 100vh;
+	/* Used to prevent MenuBar scrolling. */
+	overflow: hidden;
 `;
 
+/** MenuBar that wraps the other components of the application. */
 export const MenuBar: React.FC = (props) => {
 
 	const responsiveLayout = useResponsiveLayout();
 
+	// If in the compact view, spread out the icons to take up all the horizontal space.
+	// Otherwise, concentrate the icons together. (Code not currently used because only one icon is visible.)
 	const isCompact = responsiveLayout.widthBreakpoint === LayoutBreakpoint.compact;
 	const justifyContent = isCompact ? 'space-evenly' : 'center';
 
-	const bar = <MenuBarInner {...props} />
+	const bar = <MenuBarInner {...props} />;
 
 	const isBottomMenuBar = isCompact || responsiveLayout.mode === LayoutMode.portrait;
 	if (isBottomMenuBar) {
@@ -48,7 +55,7 @@ export const MenuBar: React.FC = (props) => {
 			</MenuBarLeftContainer>
 		);
 	}
-}
+};
 
 const MenuBarInner: React.FC = () => {
 
@@ -94,7 +101,6 @@ const MenuBarInner: React.FC = () => {
 		});
 	}
 
-
 	return (
 		<>
 			<AllResponseClipboardIcon />
@@ -112,4 +118,4 @@ const MenuBarInner: React.FC = () => {
 			/>
 		</>
 	);
-}
+};

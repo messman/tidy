@@ -3,11 +3,11 @@ import { Forecast, ForecastProps } from '@/areas/forecast/forecast';
 import { Settings, SettingsProps } from '@/areas/settings/settings';
 import { Summary, SummaryProps } from '@/areas/summary/summary';
 import { Timeline, TimelineProps } from '@/areas/timeline/timeline';
-import { FlexRow, FlexColumn } from '@/core/layout/flex';
+import { OverflowAutoFlexRow, RegularWidthFlexColumn, ScreenWidthFlexColumn } from '@/core/layout/common';
+import { FlexColumn, FlexRow } from '@/core/layout/flex';
 import { Overlay } from '@/core/layout/overlay';
-import { useResponsiveLayout, LayoutBreakpoint } from '@/services/layout/responsive-layout';
+import { LayoutBreakpoint, useResponsiveLayout } from '@/services/layout/responsive-layout';
 import { useComponentLayout } from './component-layout';
-import { OverflowAutoFlexRow, ScreenWidthFlexColumn, RegularWidthFlexColumn } from '@/core/layout/common';
 
 export const ApplicationResponsiveLayout: React.FC = () => {
 	return (
@@ -18,8 +18,9 @@ export const ApplicationResponsiveLayout: React.FC = () => {
 			Settings={Settings}
 		/>
 	);
-}
+};
 
+// Each component is passed as a component instead of an element so it's rendered further down the tree.
 interface ResponsiveLayoutProps {
 	Summary: React.FC<SummaryProps>,
 	Timeline: React.FC<TimelineProps>,
@@ -36,6 +37,14 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	// TODO - When moving from compact to non-compact, React tree is destroyed.
 	const isCompact = responsiveLayout.widthBreakpoint === LayoutBreakpoint.compact;
 	if (isCompact) {
+
+		/*
+			Structure:
+			- FlexRow at the top, just to create Flex for the children.
+				- Two overlay components, which just attach absolute-positioned overlays.
+				- OverflowAuto FlexRow to prevent the MenuBar from scrolling.
+				- ScreenWidth FlexColumn to control the size of the summary view front-and-center.
+		*/
 		return (
 			<FlexRow>
 				<Overlay isActive={componentLayout.isCompactForecastView} component={<Forecast />} >
@@ -52,6 +61,11 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 		);
 	}
 
+	/*
+		Structure:
+		- OverflowAuto FlexRow to prevent the MenuBar from scrolling.
+			- Individual pieces in a row.
+	*/
 	return (
 		<OverflowAutoFlexRow>
 			<FlexColumn>
@@ -66,5 +80,5 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 			</RegularWidthFlexColumn>
 		</OverflowAutoFlexRow>
 	);
-}
+};
 

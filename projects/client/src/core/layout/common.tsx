@@ -13,7 +13,7 @@ export const RegularWidthFlexColumn = styled(FlexColumn)`
 	width: ${LayoutBreakpoint.regular}px;
 `;
 
-/** A Flex Row that has overflow-x: auto, so it scrolls if its width is greater than its parent. */
+/** A Flex Row that has overflow: auto, so it scrolls if its width is greater than its parent. */
 export const OverflowAutoFlexRow = styled(FlexRow)`
-	overflow-x: auto;
+	overflow: auto;
 `;
