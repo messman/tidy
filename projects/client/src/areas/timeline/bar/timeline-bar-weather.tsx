@@ -33,6 +33,7 @@ export const TimelineBarWeather: React.FC = () => {
 				referenceTime={info.referenceTime}
 				dateTime={weatherStatus.time}
 				backgroundColor={color}
+				isHourOnly={true}
 			/>
 		);
 	});

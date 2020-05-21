@@ -3,7 +3,7 @@ import { SunEvent, WeatherStatus } from 'tidy-shared';
 import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { iconTypes } from '@/core/symbol/icon';
+import { Icon, iconTypes } from '@/core/symbol/icon';
 import { subtitleHeight, Text, titleHeight } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
 import { SpacedIcon } from '@/core/weather/weather-common';
@@ -91,16 +91,15 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 
 				<NonBreakingPadding>
 					<Center>
-						<SpacedIcon type={icon} fill={iconColor} height={titleHeight} />
+						<Icon type={icon} fill={iconColor} height={titleHeight} />
 					</Center>
 				</NonBreakingPadding>
 				<NonBreakingPadding>
-					<Text>
-						<FlexRow alignItems='center'>
-							<SpacedIcon type={iconTypes.temperature} fill={props.iconColor} height={iconHeight} />
+					<Center>
+						<Text>
 							{tempText}&deg;
-				</FlexRow>
 					</Text>
+					</Center>
 				</NonBreakingPadding>
 				<NonBreakingPadding>
 					<Text>

@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 
 export interface TwelveHourTime {
+	hour: string;
 	time: string; // like '1:34'
 	ampm: 'AM' | 'PM';
 }
@@ -13,6 +14,7 @@ export function getTimeTwelveHour(date: DateTime): TwelveHourTime {
 	hours = hours ? hours : 12; // the hour '0' should be '12'
 	const minutesString = minutes.toString().padStart(2, '0');
 	return {
+		hour: hours.toString(),
 		time: `${hours}:${minutesString}`,
 		ampm
 	};
@@ -38,7 +40,7 @@ export function percentTimeBetween(referenceTime: DateTime, startTime: DateTime,
 	return Math.min(100, Math.max(0, Math.round(percent)));
 }
 
-const _pixelsPerHour = 40;
+const _pixelsPerHour = 60;
 export const pixelsPerDay = 24 * _pixelsPerHour;
 
 export function timeToPixels(startDate: DateTime, endDate: DateTime): number {

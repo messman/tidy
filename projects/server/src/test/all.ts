@@ -1,16 +1,16 @@
-import { TideEvent, TideStatus, SunEvent, WindDirection, WeatherStatusType, warningIssue, Warnings } from 'tidy-shared';
-import { APIConfigurationContext } from '../all/context';
-import { interpretTides } from '../tide/tide-interpret';
-import { randomizer, Randomizer } from './randomize';
 import { DateTime } from 'luxon';
-import { linearFromPoints, quadraticFromPoints } from './equation';
+import { SunEvent, TideEvent, TideStatus, warningIssue, Warnings, WeatherStatusType, WindDirection } from 'tidy-shared';
+import { AllMergeFunc, mergeWarnings } from '../all/all-merge';
+import { APIConfigurationContext } from '../all/context';
+import { IntermediateAstroValues } from '../astro/astro-intermediate';
 import { interpretAstro } from '../astro/astro-interpret';
+import { IntermediateTideValues } from '../tide/tide-intermediate';
+import { interpretTides } from '../tide/tide-interpret';
+import { IterableTimeData } from '../util/iterator';
 import { IntermediateWeatherValues } from '../weather/weather-intermediate';
 import { interpretWeather } from '../weather/weather-interpret';
-import { IterableTimeData } from '../util/iterator';
-import { AllMergeFunc, mergeWarnings } from '../all/all-merge';
-import { IntermediateTideValues } from '../tide/tide-intermediate';
-import { IntermediateAstroValues } from '../astro/astro-intermediate';
+import { linearFromPoints, quadraticFromPoints } from './equation';
+import { randomizer, Randomizer } from './randomize';
 
 /** A seed value to use to get unique test data. Any falsy value will return the default random data; truthy data will make the data unique based on the truthy value. */
 export type TestSeed = number | string | null;
@@ -29,7 +29,7 @@ export const allTestMerge: AllMergeFunc = async (configContext: APIConfiguration
 	//const astroData = await fetchAstro(configContext);
 	const interpretedAstro = interpretAstro(configContext, astroData);
 
-	const weatherData = createWeatherData(configContext, testSeed)
+	const weatherData = createWeatherData(configContext, testSeed);
 	//const weatherData = await fetchWeather(configContext);
 	const interpretedWeather = interpretWeather(configContext, weatherData);
 
@@ -39,14 +39,14 @@ export const allTestMerge: AllMergeFunc = async (configContext: APIConfiguration
 		interpretedTides: interpretedTides,
 		interpretedAstro: interpretedAstro,
 		interpretedWeather: interpretedWeather
-	}
-}
+	};
+};
 
 /** Creates fake warnings to test the warnings pattern. */
 function createTestWarnings(): Warnings {
 	return {
 		warnings: [warningIssue('This is test data.', 'This is test data.')]
-	}
+	};
 }
 
 /** Creates random tide data. Uses a seeded randomizer. */
@@ -183,7 +183,7 @@ export function createAstroData(configContext: APIConfigurationContext, testSeed
 export function createWeatherData(configContext: APIConfigurationContext, testSeed: TestSeed): IntermediateWeatherValues {
 	const weatherRandomizer = randomizer(combineSeed('_weather_', testSeed));
 
-	const startDateTime = configContext.context.referenceTimeInZone.startOf('hour');
+	const startDateTime = configContext.context.referenceTimeInZone.startOf('hour').minus({ hours: 1 });
 	const endDateTime = configContext.context.maxLongTermDataFetch;
 	const temperaturePrecision = configContext.configuration.weather.temperaturePrecision;
 	const defaultPrecision = configContext.configuration.weather.defaultPrecision;
@@ -213,7 +213,7 @@ export function createWeatherData(configContext: APIConfigurationContext, testSe
 			return {
 				span: data.span,
 				value: data.value as WindDirection
-			}
+			};
 		}),
 		dewPoint: weatherData(2, 20, 40, temperaturePrecision, true, .2),
 		cloudCover: weatherData(2, 0, 1, defaultPrecision + 2, true, .2),
@@ -221,10 +221,10 @@ export function createWeatherData(configContext: APIConfigurationContext, testSe
 			return {
 				span: data.span,
 				value: data.value as WeatherStatusType
-			}
+			};
 		}),
 		visibility: weatherData(12, 2, 20, defaultPrecision, true, .2)
-	}
+	};
 }
 
 function quadraticShakeData(randomizer: Randomizer, startDateTime: DateTime, endDateTime: DateTime, hoursGap: number, minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {

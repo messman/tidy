@@ -5,7 +5,7 @@ import { styled } from '@/core/style/styled';
 import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { timeToPixels } from '@/services/time';
 
-export const cutoffHoursFromReference = 1.5;
+export const cutoffHoursFromReference = 1.2;
 
 interface TimelineBarLineProps {
 	lineWidth: number;
@@ -31,6 +31,7 @@ export const TimelineBarDot = styled.div<TimelineBarDotProps>`
 	display: block;
 	width: ${barDotDiameter}px;
 	height: ${barDotDiameter}px;
+	margin-top: .3rem;
 	border-radius: 50%;
 	background-color: ${p => p.backgroundColor};
 	flex: none;
@@ -68,12 +69,13 @@ export const TimelineEntry: React.FC<TimelineEntryProps> = (props) => {
 export interface TimelineDotEntryProps extends Omit<TimelineEntryProps, 'top'> {
 	backgroundColor: string,
 	isTimeHidden?: boolean;
+	isHourOnly?: boolean;
 }
 
 export const dotEntryTop = `${(barDotDiameter + barLineThickness) / 2}px`;
 
 export const TimelineDotEntry: React.FC<TimelineDotEntryProps> = (props) => {
-	const timeTextUnit = props.isTimeHidden ? null : <TimeTextUnit dateTime={props.dateTime} />;
+	const timeTextUnit = props.isTimeHidden ? null : <TimeTextUnit dateTime={props.dateTime} isHourOnly={props.isHourOnly} />;
 
 	return (
 		<TimelineEntry referenceTime={props.referenceTime} dateTime={props.dateTime} top={dotEntryTop}>

@@ -14,12 +14,12 @@ export interface TimelineProps {
 export const Timeline: React.FC<TimelineProps> = () => {
 
 	const allResponseState = useAllResponse();
+	const ref = React.useRef<HTMLDivElement>(null);
+	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, null);
+
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
-
-	const ref = React.useRef<HTMLDivElement>(null);
-	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, null);
 
 	const { all, info } = allResponseState.data!;
 

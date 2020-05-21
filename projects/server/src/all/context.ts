@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 export interface APIConfiguration {
 	configuration: {
@@ -12,7 +12,7 @@ export interface APIConfiguration {
 			 * it will be America/New_York. 
 			 * Implementations should take care of DST offsets.
 			 */
-			timeZoneLabel: string
+			timeZoneLabel: string;
 		},
 
 		time: {
@@ -32,8 +32,8 @@ export interface APIConfiguration {
 			 * So if 7, adds 7 days and goes to end of that day.
 			 * Should be longer than short-term date.
 			 */
-			longTermDataFetchDays: number
-		}
+			longTermDataFetchDays: number;
+		};
 
 		tides: {
 			/**
@@ -62,12 +62,14 @@ export interface APIConfiguration {
 		weather: {
 			/** The gap in hours between weather data - so we aren't grabbing more data than we need from the API to send down to a client that can't show it. */
 			hoursGapBetweenWeatherData: number,
+			/** Whether or not to include changes from one datum to another. */
+			includeChanges: boolean,
 			/** Digits after the decimal to include in temperature measurements. */
 			temperaturePrecision: number,
 			/** Digits after the decimal to include in other non-temperature measurements. */
 			defaultPrecision: number,
-		}
-	}
+		};
+	};
 }
 
 export interface APIConfigurationContext extends APIConfiguration {
@@ -85,7 +87,7 @@ export interface APIConfigurationContext extends APIConfiguration {
 			 * The minimum date to get tides data for. Should be in the past, at least one day, at the beginning of that day.
 			 * Based on configuration and time of request.
 			 */
-			minimumTidesDataFetch: DateTime
+			minimumTidesDataFetch: DateTime;
 		},
 
 		astro: {
@@ -93,12 +95,12 @@ export interface APIConfigurationContext extends APIConfiguration {
 			 * The minimum date to get sunrise/sunset data for. Should be in the past, at least one day, at the beginning of that day.
 			 * Based on configuration and time of request.
 			 */
-			minimumSunDataFetch: DateTime
-		}
+			minimumSunDataFetch: DateTime;
+		};
 	},
 	action: {
-		parseDateForZone(date: Date): DateTime
-	}
+		parseDateForZone(date: Date): DateTime;
+	};
 }
 
 /**
@@ -136,7 +138,7 @@ export function createContext(apiConfiguration: APIConfiguration): APIConfigurat
 	};
 	configurationContext.action = {
 		parseDateForZone: parseDateForZone
-	}
+	};
 
 	return configurationContext;
 };

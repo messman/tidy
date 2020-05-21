@@ -1,14 +1,14 @@
-import { WeatherStatus, DailyWeather, Measurement, WeatherStatusType, WindDirection } from 'tidy-shared';
-import { APIConfigurationContext } from '../all/context';
-import { IntermediateWeatherValues } from './weather-intermediate';
-import { createTimeChangeIterator, createTimeIterator, TimeIterator } from '../util/iterator';
 import { DateTime } from 'luxon';
+import { DailyWeather, Measurement, WeatherStatus, WeatherStatusType, WindDirection } from 'tidy-shared';
 import { AllIssue } from '../all/all-merge';
+import { APIConfigurationContext } from '../all/context';
+import { createTimeChangeIterator, createTimeIterator, TimeIterator } from '../util/iterator';
+import { IntermediateWeatherValues } from './weather-intermediate';
 
 export interface InterpretedWeather extends AllIssue {
 	currentWeather: WeatherStatus,
 	shortTermWeather: WeatherStatus[],
-	longTermWeather: DailyWeather[]
+	longTermWeather: DailyWeather[];
 }
 
 interface Iterators {
@@ -32,34 +32,38 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 			currentWeather: null!,
 			shortTermWeather: null!,
 			longTermWeather: null!
-		}
+		};
 	}
 
 	const referenceTime = configurationContext.context.referenceTimeInZone;
-	const referenceHour = referenceTime.startOf("hour");
+	const includeChange = configurationContext.configuration.weather.includeChanges;
 
 	// Create iterators for each of the root values, stored independently
 	const iterators: Iterators = {
-		temperature: createTimeChangeIterator(intermediateWeather.temp),
-		feelsLike: createTimeChangeIterator(intermediateWeather.tempFeelsLike),
-		chanceRain: createTimeChangeIterator(intermediateWeather.chanceRain),
+		temperature: createTimeChangeIterator(intermediateWeather.temp, includeChange),
+		feelsLike: createTimeChangeIterator(intermediateWeather.tempFeelsLike, includeChange),
+		chanceRain: createTimeChangeIterator(intermediateWeather.chanceRain, includeChange),
 		windDirection: createTimeIterator(intermediateWeather.windDirection),
-		wind: createTimeChangeIterator(intermediateWeather.wind),
-		dewPoint: createTimeChangeIterator(intermediateWeather.dewPoint),
-		cloudCover: createTimeChangeIterator(intermediateWeather.cloudCover),
-		visibility: createTimeChangeIterator(intermediateWeather.visibility),
+		wind: createTimeChangeIterator(intermediateWeather.wind, includeChange),
+		dewPoint: createTimeChangeIterator(intermediateWeather.dewPoint, includeChange),
+		cloudCover: createTimeChangeIterator(intermediateWeather.cloudCover, includeChange),
+		visibility: createTimeChangeIterator(intermediateWeather.visibility, includeChange),
 		status: createTimeIterator(intermediateWeather.status)
 	};
 
-	const currentHour = referenceHour.plus({ hours: 1 });
+	// Current weather comes from this hour.
+	const currentHour = referenceTime.startOf("hour");
 	const currentWeather = getWeatherStatusFromTime(currentHour, iterators);
 
 	const hoursGapBetweenWeatherData = configurationContext.configuration.weather.hoursGapBetweenWeatherData;
 	const shortTermLimit = configurationContext.context.maxShortTermDataFetch;
 	const shortTermWeather: WeatherStatus[] = [];
 
-	// Current weather comes from the next hour, but all hourly data starts with current hour.
-	const startHour = referenceHour.plus({ hours: hoursGapBetweenWeatherData });
+	// Current weather comes from the closest even hour (moving forward).
+	let startHour = currentHour;
+	if (startHour.hour % 2 === 1) {
+		startHour = startHour.plus({ hours: 1 });
+	}
 	// Get the hours between our start hour and our short-term limit
 	const shortHoursBetween = shortTermLimit.diff(startHour, "hours").hours;
 	const nShortTermIterations = Math.ceil(shortHoursBetween / hoursGapBetweenWeatherData);
@@ -128,7 +132,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 			minTemp: minTemp,
 			maxTemp: maxTemp,
 			maxChanceRain: maxChanceRain
-		}
+		};
 	});
 
 	return {
@@ -152,7 +156,7 @@ function getWeatherStatusFromTime(time: DateTime, iterators: Iterators): Weather
 		cloudCover: iterators.cloudCover.next(time)!,
 		visibility: iterators.visibility.next(time)!,
 		status: iterators.status.next(time)!,
-	}
+	};
 }
 
 function resetIterators(iterators: Iterators): void {
@@ -166,7 +170,7 @@ function resetIterators(iterators: Iterators): void {
 function getDailyStatus(statuses: WeatherStatusType[]): WeatherStatusType {
 	// For now, we can just do the mode. In teh future, maybe a more rare status type will supersede.
 
-	const weatherStatusCounts: { [key: number]: number } = {};
+	const weatherStatusCounts: { [key: number]: number; } = {};
 
 	statuses.forEach((key) => {
 		if (!weatherStatusCounts[key]) {

@@ -1,7 +1,7 @@
-import { APIConfiguration, createContext } from "./context";
-import { AllResponse, Info } from "tidy-shared";
-import { allTestMerge, TestSeed } from "../test/all";
-import { AllMergeFunc, allMerge, mergeForLongTerm } from "./all-merge";
+import { AllResponse, Info } from 'tidy-shared';
+import { allTestMerge, TestSeed } from '../test/all';
+import { allMerge, AllMergeFunc, mergeForLongTerm } from './all-merge';
+import { APIConfiguration, createContext } from './context';
 
 /** Creates a default configuration, requiring the location / time information for the area of interest. */
 export function createConfigurationFor(time: Date, timeZoneLabel: string, station: number, latitude: number, longitude: number): APIConfiguration {
@@ -14,24 +14,25 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 			},
 			time: {
 				referenceTime: time,
-				shortTermDataFetchDays: 3,
+				shortTermDataFetchDays: 2,
 				longTermDataFetchDays: 6,
 			},
 			tides: {
 				station: station,
 				daysInPastToFetchTides: 1,
-				tideHeightPrecision: 2
+				tideHeightPrecision: 1
 			},
 			astro: {
 				daysInPastToFetchSun: 1,
 			},
 			weather: {
-				hoursGapBetweenWeatherData: 3,
+				hoursGapBetweenWeatherData: 2,
+				includeChanges: false,
 				temperaturePrecision: 1,
-				defaultPrecision: 2
+				defaultPrecision: 1
 			}
 		}
-	}
+	};
 }
 
 /** Creates a configuration for Wells, Maine, which is the target location for this application. */
@@ -60,7 +61,7 @@ async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, 
 		processingTime: configContext.action.parseDateForZone(new Date()),
 		tideHeightPrecision: configContext.configuration.tides.tideHeightPrecision,
 		timeZone: configContext.configuration.location.timeZoneLabel
-	}
+	};
 
 	if (errors) {
 		return {
@@ -95,12 +96,12 @@ async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, 
 				days: mergeForLongTerm(configContext, interpretedTides.longTermTides, interpretedAstro.longTermEvents, interpretedWeather.longTermWeather)
 			}
 		}
-	}
+	};
 
 }
 
 /** Intermediate interface used when merging API data. Holds data for a specific day. */
 export interface ForDay<T> {
-	day: number
-	entity: T
+	day: number;
+	entity: T;
 }

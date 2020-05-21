@@ -1,5 +1,5 @@
-import { WeatherStatusType } from "./weather-status-type";
 import { DateTime } from 'luxon';
+import { WeatherStatusType } from './weather-status-type';
 
 export interface WeatherStatus<TDate = DateTime> {
 	/** Time of the weather status. */
@@ -21,7 +21,7 @@ export interface WeatherStatus<TDate = DateTime> {
 	/** Percent cloud cover. */
 	cloudCover: Measurement,
 	/** Visibility in miles. */
-	visibility: Measurement
+	visibility: Measurement;
 }
 
 export interface DailyWeather<TDate = DateTime> {
@@ -40,7 +40,8 @@ export interface DailyWeather<TDate = DateTime> {
 /** The result data from the iterator call. */
 export interface Measurement {
 	entity: number | null,
-	change: Change,
+	/** May be undefined if API does not support returning change data. */
+	change: Change | undefined,
 }
 
 /** The change that occurred from the previous data point to this one. */

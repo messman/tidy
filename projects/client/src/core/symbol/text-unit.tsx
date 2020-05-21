@@ -37,12 +37,13 @@ const Unit = styled(SmallTextInline) <UnitProps>`
 
 export interface TimeTextUnitProps {
 	dateTime: DateTime;
+	isHourOnly?: boolean;
 }
 
 export const TimeTextUnit: React.FC<TimeTextUnitProps> = (props) => {
 	const twelveHour = getTimeTwelveHour(props.dateTime);
 	return (
-		<TextUnit text={twelveHour.time} unit={twelveHour.ampm} space={2} />
+		<TextUnit text={props.isHourOnly ? twelveHour.hour : twelveHour.time} unit={twelveHour.ampm} space={2} />
 	);
 };
 

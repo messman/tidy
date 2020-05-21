@@ -27,5 +27,5 @@ export const TimelineBar: React.FC = () => {
 
 const BarPadding = styled.div`
 	margin-top: 2.5rem;
-	margin-bottom: rem;
+	margin-bottom: 1rem;
 `;

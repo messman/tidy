@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Flex } from '@/core/layout/flex';
+import { RegularWidthFlexColumn } from '@/core/layout/common';
+import { Flex, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { SummaryAstro } from './summary-astro';
@@ -11,22 +12,46 @@ export interface SummaryProps {
 	isCompactVertical: boolean;
 }
 
-export const Summary: React.FC<SummaryProps> = () => {
+export const Summary: React.FC<SummaryProps> = (props) => {
+
+	if (props.isCompactVertical) {
+		return (
+			<Flex>
+				<SummaryPadding>
+					<SummaryTitle />
+				</SummaryPadding>
+				<SummaryPadding>
+					<SummaryTide />
+				</SummaryPadding>
+				<SummaryPadding>
+					<SummaryAstro />
+				</SummaryPadding>
+				<SummaryPadding>
+					<SummaryWeather />
+				</SummaryPadding>
+			</Flex>
+		);
+	}
+
 	return (
-		<Flex>
-			<SummaryPadding>
-				<SummaryTitle />
-			</SummaryPadding>
-			<SummaryPadding>
-				<SummaryTide />
-			</SummaryPadding>
-			<SummaryPadding>
-				<SummaryAstro />
-			</SummaryPadding>
-			<SummaryPadding>
-				<SummaryWeather />
-			</SummaryPadding>
-		</Flex>
+		<FlexRow flex='none'>
+			<RegularWidthFlexColumn>
+				<SummaryPadding>
+					<SummaryTitle />
+				</SummaryPadding>
+				<SummaryPadding>
+					<SummaryTide />
+				</SummaryPadding>
+			</RegularWidthFlexColumn>
+			<RegularWidthFlexColumn>
+				<SummaryPadding>
+					<SummaryAstro />
+				</SummaryPadding>
+				<SummaryPadding>
+					<SummaryWeather />
+				</SummaryPadding>
+			</RegularWidthFlexColumn>
+		</FlexRow>
 	);
 };
 

@@ -49,20 +49,15 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 
 
 	const tideExtrema = day.tides.events.map((tideStatus) => {
+		const key = `extreme_${tideStatus.time.valueOf()}`;
 		return (
-			<InlineCenter>
+			<InlineCenter key={key}>
 				<SmallText>{tideStatus.isLow ? 'LOW' : 'HIGH'}</SmallText>
 				<TimeTextUnit dateTime={tideStatus.time} />
 			</InlineCenter>
 		);
 	});
 
-	/*
-		Structure: basically create two layers.
-		- Outer component is a FlexColumn so that content can be flexed.
-			- Inner absolutely-positioned tide chart is in the background.
-			- Inner margin content uses the FlexColumn to handle display of data.
-	*/
 	return (
 		<FlexColumn>
 			<Margin>

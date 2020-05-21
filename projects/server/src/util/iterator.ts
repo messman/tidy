@@ -1,10 +1,10 @@
-import { Change, Measurement } from "tidy-shared";
 import { DateTime } from 'luxon';
+import { Change, Measurement } from 'tidy-shared';
 
 /** Weather data is a span of time - usually the time given plus a number of hours. */
 export interface TimeSpan {
 	begin: DateTime,
-	end: DateTime
+	end: DateTime;
 }
 
 /** An instance. */
@@ -12,7 +12,7 @@ export interface TimeIterator<B> {
 	/** Iterates forward to the given Date. */
 	next: (time: DateTime) => B | null,
 	/** Resets the iterator. */
-	reset: () => void
+	reset: () => void;
 }
 
 /** The value and the time span. */
@@ -21,8 +21,8 @@ export interface IterableTimeData<T> {
 	span: TimeSpan,
 }
 
-export function createTimeChangeIterator(data: IterableTimeData<number>[]): TimeIterator<Measurement> {
-	return createBaseTimeIterator(data, createMeasurementOutput);
+export function createTimeChangeIterator(data: IterableTimeData<number>[], includeChange: boolean): TimeIterator<Measurement> {
+	return createBaseTimeIterator(data, includeChange ? createMeasurementOutput : createChangelessMeasurementOutput);
 }
 
 export function createTimeIterator<T>(data: IterableTimeData<T>[]): TimeIterator<T> {
@@ -30,7 +30,7 @@ export function createTimeIterator<T>(data: IterableTimeData<T>[]): TimeIterator
 }
 
 export interface CreateOutputFunc<A, B> {
-	(previous: IterableTimeData<A> | null, next: IterableTimeData<A> | null): B | null
+	(previous: IterableTimeData<A> | null, next: IterableTimeData<A> | null): B | null;
 }
 
 function createBaseTimeIterator<A, B>(data: IterableTimeData<A>[], createOutput: CreateOutputFunc<A, B>): TimeIterator<B> {
@@ -85,7 +85,7 @@ function createBaseTimeIterator<A, B>(data: IterableTimeData<A>[], createOutput:
 	return {
 		next: next,
 		reset: reset
-	}
+	};
 }
 
 
@@ -106,6 +106,13 @@ function createMeasurementOutput(previous: IterableTimeData<number> | null, next
 	return {
 		entity: next.value,
 		change: (next.value > previous.value ? Change.higher : (next.value === previous.value ? Change.same : Change.lower))
+	};
+}
+
+function createChangelessMeasurementOutput(_: IterableTimeData<number> | null, next: IterableTimeData<number> | null): Measurement {
+	return {
+		entity: next ? next.value : null,
+		change: undefined
 	};
 }
 
