@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { decorate } from '@/test/storybook/decorate';
-import { ClipboardIcon, AllResponseClipboardIcon } from './clipboard';
-import { text, boolean } from '@storybook/addon-knobs'
+import { boolean, text } from '@storybook/addon-knobs';
+import { AllResponseClipboardIcon, ClipboardIcon } from './clipboard';
 
 export default { title: 'areas/menu-bar' };
 

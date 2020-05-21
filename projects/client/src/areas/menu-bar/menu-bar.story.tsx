@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { decorate } from '@/test/storybook/decorate';
-import { Text } from '@/core/symbol/text';
-import { MenuBar } from './menu-bar';
 import { Flex } from '@/core/layout/flex';
+import { Text } from '@/core/symbol/text';
+import { decorate } from '@/test/storybook/decorate';
+import { MenuBar } from './menu-bar';
 
 export default { title: 'areas/menu-bar' };
 

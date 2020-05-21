@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { FlexColumn } from '@/core/layout/flex';
-import { useElementSize } from '@/services/layout/element-size';
-import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { TimelineBar } from './bar/timeline-bar';
-import { TimelineWeather } from './weather/timeline-weather';
-import { TimelineBackground } from './timeline-background';
-import { TimelineChart } from './chart/timeline-chart';
 import { CONSTANT } from '@/services/constant';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { useElementSize } from '@/services/layout/element-size';
+import { TimelineBar } from './bar/timeline-bar';
+import { TimelineChart } from './chart/timeline-chart';
+import { TimelineBackground } from './timeline-background';
+import { TimelineWeather } from './weather/timeline-weather';
 
 export interface TimelineProps {
 }

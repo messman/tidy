@@ -1,15 +1,14 @@
-import * as React from 'react';
-import { styled } from '@/core/style/styled';
 import { DateTime } from 'luxon';
-import { timeToPixels } from '@/services/time';
+import * as React from 'react';
 import { FlexColumn } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
 import { TimeTextUnit } from '@/core/symbol/text-unit';
-
+import { timeToPixels } from '@/services/time';
 
 export const cutoffHoursFromReference = 1.5;
 
 interface TimelineBarLineProps {
-	lineWidth: number
+	lineWidth: number;
 }
 
 const barLineThickness = 4;
@@ -39,7 +38,7 @@ export const TimelineBarDot = styled.div<TimelineBarDotProps>`
 
 interface TimelineEntryContainer {
 	left: number,
-	top: string
+	top: string;
 }
 
 const TimelineEntryContainer = styled(FlexColumn) <TimelineEntryContainer>`
@@ -53,7 +52,7 @@ const TimelineEntryContainer = styled(FlexColumn) <TimelineEntryContainer>`
 export interface TimelineEntryProps {
 	referenceTime: DateTime,
 	dateTime: DateTime,
-	top: string
+	top: string;
 }
 
 export const TimelineEntry: React.FC<TimelineEntryProps> = (props) => {
@@ -64,11 +63,11 @@ export const TimelineEntry: React.FC<TimelineEntryProps> = (props) => {
 			{props.children}
 		</TimelineEntryContainer>
 	);
-}
+};
 
 export interface TimelineDotEntryProps extends Omit<TimelineEntryProps, 'top'> {
 	backgroundColor: string,
-	isTimeHidden?: boolean
+	isTimeHidden?: boolean;
 }
 
 export const dotEntryTop = `${(barDotDiameter + barLineThickness) / 2}px`;
@@ -82,4 +81,4 @@ export const TimelineDotEntry: React.FC<TimelineDotEntryProps> = (props) => {
 			<TimelineBarDot backgroundColor={props.backgroundColor} />
 		</TimelineEntry>
 	);
-}
+};

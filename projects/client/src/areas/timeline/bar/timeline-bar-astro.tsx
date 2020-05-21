@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { timeToPixels } from '@/services/time';
-import { TimelineBarLine, TimelineDotEntry, dotEntryTop, TimelineEntry, TimelineEntryProps, TimelineBarDot } from './timeline-bar-common';
-import { useCurrentTheme } from '@/core/style/theme';
 import { DateTime } from 'tidy-shared/node_modules/@types/luxon';
 import { styled } from '@/core/style/styled';
+import { useCurrentTheme } from '@/core/style/theme';
 import { Text } from '@/core/symbol/text';
-import { getDateDayOfWeek } from '@/services/time';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { getDateDayOfWeek, timeToPixels } from '@/services/time';
+import { dotEntryTop, TimelineBarDot, TimelineBarLine, TimelineDotEntry, TimelineEntry, TimelineEntryProps } from './timeline-bar-common';
 
 // Used instead of the hours value of other components so that we can still show the highlight bar.
 const customCutoffMinutesFromReference = 30;
@@ -55,7 +54,7 @@ export const TimelineBarAstro: React.FC = () => {
 				backgroundColor={color}
 				isTimeHidden={isTitleHidden}
 			/>
-		)
+		);
 	});
 
 	//
@@ -155,7 +154,7 @@ export const TimelineDayDotEntry: React.FC<TimelineDayDotEntryProps> = (props) =
 			<TimelineBarDot backgroundColor={props.backgroundColor} />
 		</TimelineEntry>
 	);
-}
+};
 
 const NonBreaking = styled.div`
 	white-space: nowrap;

@@ -3,9 +3,9 @@ import { ForecastProps } from '@/areas/forecast/forecast';
 import { SettingsProps } from '@/areas/settings/settings';
 import { SummaryProps } from '@/areas/summary/summary';
 import { TimelineProps } from '@/areas/timeline/timeline';
-import { Text } from '@/core/symbol/text';
 import { Flex } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
+import { Text } from '@/core/symbol/text';
 
 export const MockSummary: React.FC<SummaryProps> = (props) => {
 
@@ -22,7 +22,7 @@ export const MockSummary: React.FC<SummaryProps> = (props) => {
 			<Text>Summary Horizontal</Text>
 		</Area>
 	);
-}
+};
 
 export const MockTimeline: React.FC<TimelineProps> = () => {
 	return (
@@ -30,7 +30,7 @@ export const MockTimeline: React.FC<TimelineProps> = () => {
 			<Text>Timeline</Text>
 		</Area>
 	);
-}
+};
 
 export const MockForecast: React.FC<ForecastProps> = () => {
 	return (
@@ -38,7 +38,7 @@ export const MockForecast: React.FC<ForecastProps> = () => {
 			<Text>Forecast</Text>
 		</Area>
 	);
-}
+};
 
 export const MockSettings: React.FC<SettingsProps> = () => {
 	return (
@@ -46,14 +46,14 @@ export const MockSettings: React.FC<SettingsProps> = () => {
 			<Text>Settings</Text>
 		</Area>
 	);
-}
+};
 
 interface AreaProps {
-	color: string
+	color: string;
 	minWidth?: number,
 	maxWidth?: number,
 	minHeight?: number,
-	maxHeight?: number
+	maxHeight?: number;
 }
 
 const Area = styled(Flex) <AreaProps>`

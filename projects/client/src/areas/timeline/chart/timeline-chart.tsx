@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useElementSize } from '@/services/layout/element-size';
-import { CONSTANT } from '@/services/constant';
-import { styled } from '@/core/style/styled';
-import { Flex } from '@/core/layout/flex';
-import { timeToPixels } from '@/services/time';
-import { useTideChart } from '@/core/tide/tide-chart';
 import { AllResponseData, Info } from 'tidy-shared';
+import { Flex } from '@/core/layout/flex';
+import { styled } from '@/core/style/styled';
+import { useTideChart } from '@/core/tide/tide-chart';
+import { CONSTANT } from '@/services/constant';
+import { useElementSize } from '@/services/layout/element-size';
+import { timeToPixels } from '@/services/time';
 
 export interface TimelineChartProps {
 	/** Required to exist. */

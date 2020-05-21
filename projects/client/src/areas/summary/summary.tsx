@@ -1,14 +1,14 @@
 import * as React from 'react';
+import { Flex } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
-import { SummaryTitle } from './summary-title';
-import { SummaryTide } from './summary-tide';
-import { Flex } from '@/core/layout/flex';
 import { SummaryAstro } from './summary-astro';
+import { SummaryTide } from './summary-tide';
+import { SummaryTitle } from './summary-title';
 import { SummaryWeather } from './summary-weather';
 
 export interface SummaryProps {
-	isCompactVertical: boolean
+	isCompactVertical: boolean;
 }
 
 export const Summary: React.FC<SummaryProps> = () => {

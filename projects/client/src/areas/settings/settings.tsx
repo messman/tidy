@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Title, Subtitle, Text } from '@/core/symbol/text';
+import { Subtitle, Text, Title } from '@/core/symbol/text';
 
 export interface SettingsProps {
 
@@ -26,4 +26,4 @@ export const Settings: React.FC<SettingsProps> = () => {
 			<Text>[VERSION]</Text>
 		</>
 	);
-}
+};

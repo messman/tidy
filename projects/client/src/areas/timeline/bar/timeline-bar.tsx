@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { TimelineBarWeather } from './timeline-bar-weather';
+import { FlexColumn } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { TimelineBarAstro } from './timeline-bar-astro';
 import { TimelineBarTide } from './timeline-bar-tide';
-import { FlexColumn } from '@/core/layout/flex';
+import { TimelineBarWeather } from './timeline-bar-weather';
 
 export const TimelineBar: React.FC = () => {
 
@@ -22,7 +22,7 @@ export const TimelineBar: React.FC = () => {
 				<TimelineBarTide />
 			</BarPadding>
 		</FlexColumn>
-	)
+	);
 };
 
 const BarPadding = styled.div`

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { timeToPixels } from '@/services/time';
-import { TimelineBarLine, TimelineDotEntry, cutoffHoursFromReference } from './timeline-bar-common';
 import { useCurrentTheme } from '@/core/style/theme';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { timeToPixels } from '@/services/time';
+import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry } from './timeline-bar-common';
 
 export const TimelineBarWeather: React.FC = () => {
 
@@ -34,7 +34,7 @@ export const TimelineBarWeather: React.FC = () => {
 				dateTime={weatherStatus.time}
 				backgroundColor={color}
 			/>
-		)
+		);
 	});
 
 	return (

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { styled } from '@/core/style/styled';
-import { timeToPixels, pixelsPerDay } from '@/services/time';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { pixelsPerDay, timeToPixels } from '@/services/time';
 
 export interface TimelineBackgroundProps {
-	barWidth: number
+	barWidth: number;
 }
 
 export const TimelineBackground: React.FC<TimelineBackgroundProps> = (props) => {
@@ -56,7 +56,7 @@ export const TimelineBackground: React.FC<TimelineBackgroundProps> = (props) => 
 interface FlippingBackgroundProps {
 	left: number,
 	backgroundWidth: number,
-	isAlternate: boolean
+	isAlternate: boolean;
 }
 
 const FlippingBackground = styled.div<FlippingBackgroundProps>`

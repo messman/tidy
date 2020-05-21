@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
-import { timeToPixels } from '@/services/time';
-import { TimelineBarLine, TimelineEntry, cutoffHoursFromReference, TimelineEntryProps, TimelineDotEntry } from './timeline-bar-common';
+import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { SmallText } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
-import { styled } from '@/core/style/styled';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { timeToPixels } from '@/services/time';
+import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry, TimelineEntry, TimelineEntryProps } from './timeline-bar-common';
 
 export const TimelineBarTide: React.FC = () => {
 
@@ -83,4 +83,4 @@ export const TimelineTideDataEntry: React.FC<TimelineTideDataEntryProps> = (prop
 			<TextUnit text={props.heightString} unit='ft' space={2} />
 		</TimelineEntry>
 	);
-}
+};

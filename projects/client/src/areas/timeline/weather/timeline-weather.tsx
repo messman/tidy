@@ -1,15 +1,14 @@
 import * as React from 'react';
+import { SunEvent, WeatherStatus } from 'tidy-shared';
+import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
-import { useAllResponse, hasAllResponseData } from '@/services/data/data';
 import { useCurrentTheme } from '@/core/style/theme';
-import { cutoffHoursFromReference, TimelineEntryProps, TimelineEntry } from '../bar/timeline-bar-common';
-import { Flex, FlexRow, FlexColumn } from '@/core/layout/flex';
-import { WeatherStatus, SunEvent } from 'tidy-shared';
 import { Icon, iconTypes } from '@/core/symbol/icon';
 import { subtitleHeight, Text, titleHeight } from '@/core/symbol/text';
-import { processWeatherForDisplay } from '@/services/weather/weather-process';
 import { TextUnit } from '@/core/symbol/text-unit';
-
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { processWeatherForDisplay } from '@/services/weather/weather-process';
+import { cutoffHoursFromReference, TimelineEntry, TimelineEntryProps } from '../bar/timeline-bar-common';
 
 interface TimelineWeatherProps {
 }
@@ -56,7 +55,7 @@ export const TimelineWeather: StyledFC<TimelineWeatherProps> = () => {
 				iconColor={color}
 				useDayIcon={useDayIcon}
 			/>
-		)
+		);
 	});
 
 	return (
@@ -64,19 +63,19 @@ export const TimelineWeather: StyledFC<TimelineWeatherProps> = () => {
 			{weatherEntries}
 		</TimelineWeatherContainer>
 	);
-}
+};
 
 const weatherContainerHeight = '9rem';
-const weatherEntriesHeight = '8rem'
+const weatherEntriesHeight = '8rem';
 
 const TimelineWeatherContainer = styled(Flex)`
 	height: ${weatherContainerHeight};
 `;
 
 interface TimelineWeatherEntryProps extends Omit<TimelineEntryProps, 'top'> {
-	weatherStatus: WeatherStatus
+	weatherStatus: WeatherStatus;
 	iconColor: string,
-	useDayIcon: boolean
+	useDayIcon: boolean;
 }
 
 const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
@@ -121,7 +120,7 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 			</FlexColumn>
 		</TimelineEntry>
 	);
-}
+};
 
 const Center = styled.div`
 	text-align: center;
