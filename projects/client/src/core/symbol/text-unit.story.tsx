@@ -2,32 +2,44 @@ import * as React from 'react';
 import { decorate } from '@/test/storybook/decorate';
 import { iconTypes, Icon } from '@/core/symbol/icon';
 import { flowPaddingValue } from '../style/common';
-import { TextUnit, TimeTextUnit } from './text-unit';
+import { TextUnit, TimeTextUnit, TimeDurationTextUnit } from './text-unit';
 import { Text, textHeight } from './text';
 import { styled } from '../style/styled';
 import { DateTime } from 'luxon';
 
 export default { title: 'core/symbol' };
 
-const dateTime = DateTime.local();
+const localDateTime = DateTime.local();
 
 export const TextUnits = decorate(() => {
+
+	const minutesOnlyFromLocal = localDateTime.plus({ minutes: 28 });
+	const hoursOnlyFromLocal = localDateTime.plus({ hours: 7 });
+	const fromLocal = localDateTime.plus({ hours: 2, minutes: 28 });
+
+
 	return (
 		<>
 			<Padding>
 				<TextUnit text='9:45' unit='AM' />
 			</Padding>
 			<Padding>
-				<TimeTextUnit dateTime={dateTime} />
+				<TimeTextUnit dateTime={localDateTime} />
 			</Padding>
 			<Padding>
 				<Text>
-					<Icon type={iconTypes.wind} height={textHeight} /> <TextUnit text='22' unit='mph ESE' />
+					You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={minutesOnlyFromLocal} /> of sunlight.
+				</Text>
+				<Text>
+					You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={hoursOnlyFromLocal} /> of sunlight.
+				</Text>
+				<Text>
+					You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={fromLocal} /> of sunlight.
 				</Text>
 			</Padding>
 			<Padding>
 				<Text>
-					You can expect <TextUnit text='12' unit='h' /> <TextUnit text='14' unit='m' /> of sunlight.
+					<Icon type={iconTypes.wind} height={textHeight} /> <TextUnit text='22' unit='mph ESE' />
 				</Text>
 			</Padding>
 			<Padding>

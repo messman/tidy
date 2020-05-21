@@ -4,7 +4,7 @@ import { Flex } from '@/core/layout/flex';
 import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { css, styled } from '@/core/style/styled';
 import { SmallText, Text } from '@/core/symbol/text';
-import { TextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
+import { TimeTextUnit, TimeDurationTextUnit } from '@/core/symbol/text-unit';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { useElementSize } from '@/services/layout/element-size';
@@ -30,7 +30,6 @@ const SummaryAstroPrimary: React.FC = () => {
 	// Instead of using the current info, which is relative to the reference time, use the current day.
 	const [sunrise, sunset] = all.daily.days[0].sun;
 
-	const duration = sunset.time.diff(sunrise.time, ['hours', 'minutes']);
 	const timePercent = percentTimeBetween(info.referenceTime, sunrise.time, sunset.time);
 
 	return (
@@ -43,7 +42,7 @@ const SummaryAstroPrimary: React.FC = () => {
 				</Text>
 			</Left>
 			<Center>
-				<TextUnit text={duration.hours.toString()} unit='h' /> <TextUnit text={duration.minutes.toString()} unit='m' />
+				<TimeDurationTextUnit startTime={sunrise.time} endTime={sunset.time} />
 			</Center>
 			<Right>
 				<SmallText>SUNSET</SmallText>

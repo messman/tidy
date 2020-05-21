@@ -3,11 +3,12 @@ import { TextInline, SmallTextInline } from './text';
 import { styled } from '../style/styled';
 import { DateTime } from 'luxon';
 import { getTimeTwelveHour } from '@/services/time';
+import { CONSTANT } from '@/services/constant';
 
 export interface TextUnitProps {
 	text: string,
 	unit: string,
-	space?: number
+	space?: number;
 }
 
 export const TextUnit: React.FC<TextUnitProps> = (props) => {
@@ -20,14 +21,14 @@ export const TextUnit: React.FC<TextUnitProps> = (props) => {
 			<Unit space={space}>{props.unit}</Unit>
 		</NonBreakingTextInline>
 	);
-}
+};
 
 const NonBreakingTextInline = styled(TextInline)`
 	white-space: nowrap;
 `;
 
 interface UnitProps {
-	space: number
+	space: number;
 }
 
 const Unit = styled(SmallTextInline) <UnitProps>`
@@ -36,7 +37,7 @@ const Unit = styled(SmallTextInline) <UnitProps>`
 `;
 
 export interface TimeTextUnitProps {
-	dateTime: DateTime
+	dateTime: DateTime;
 }
 
 export const TimeTextUnit: React.FC<TimeTextUnitProps> = (props) => {
@@ -44,4 +45,37 @@ export const TimeTextUnit: React.FC<TimeTextUnitProps> = (props) => {
 	return (
 		<TextUnit text={twelveHour.time} unit={twelveHour.ampm} space={2} />
 	);
+};
+
+export interface TimeDurationTextUnitProps {
+	startTime: DateTime;
+	endTime: DateTime;
 }
+
+export const TimeDurationTextUnit: React.FC<TimeDurationTextUnitProps> = (props) => {
+	// Probably one of the coolest things Luxon does:
+	const duration = props.endTime.diff(props.startTime, ['hours', 'minutes']);
+
+	const hours = duration.hours > 0 ? (<TextUnit text={duration.hours.toString()} unit='h' />) : null;
+
+	const roundedMinutes = Math.round(duration.minutes);
+	const minutes = roundedMinutes > 0 ? (<TextUnit text={roundedMinutes.toString()} unit='m' />) : null;
+	const space = (!!hours && !!minutes) ? (<>&nbsp;</>) : null;
+
+	return (
+		<>
+			{hours}{space}{minutes}
+		</>
+	);
+};
+
+export interface WaterLevelTextUnitProps {
+	height: number;
+}
+
+export const WaterLevelTextUnit: React.FC<WaterLevelTextUnitProps> = (props) => {
+	const heightString = props.height.toFixed(CONSTANT.tideHeightPrecision);
+	return (
+		<TextUnit text={heightString} unit='ft' space={2} />
+	);
+};

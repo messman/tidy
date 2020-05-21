@@ -16,6 +16,9 @@ export const CONSTANT = {
 	elementSizeLargeThrottleTimeout: seconds(.3),
 
 	clearDataOnNewFetch: false,
+
+	/** Digits precision after the decimal on tide height. Overrides use of the AllResponse returned precision. */
+	tideHeightPrecision: 1,
 };
 
 function seconds(seconds: number): number {

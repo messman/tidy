@@ -2,10 +2,10 @@ import * as React from 'react';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { SmallText } from '@/core/symbol/text';
-import { TextUnit } from '@/core/symbol/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry, TimelineEntry, TimelineEntryProps } from './timeline-bar-common';
+import { WaterLevelTextUnit } from '@/core/symbol/text-unit';
 
 export const TimelineBarTide: React.FC = () => {
 
@@ -51,7 +51,7 @@ export const TimelineBarTide: React.FC = () => {
 				referenceTime={info.referenceTime}
 				dateTime={tideEvent.time}
 				isLow={tideEvent.isLow}
-				heightString={tideEvent.height.toFixed(info.tideHeightPrecision)}
+				height={tideEvent.height}
 			/>
 		);
 	});
@@ -71,7 +71,7 @@ const PaddedTimelineBarLine = styled(TimelineBarLine)`
 
 export interface TimelineTideDataEntryProps extends Omit<TimelineEntryProps, 'top'> {
 	isLow: boolean,
-	heightString: string,
+	height: number,
 }
 
 export const TimelineTideDataEntry: React.FC<TimelineTideDataEntryProps> = (props) => {
@@ -80,7 +80,7 @@ export const TimelineTideDataEntry: React.FC<TimelineTideDataEntryProps> = (prop
 	return (
 		<TimelineEntry referenceTime={props.referenceTime} dateTime={props.dateTime} top='4rem'>
 			<SmallText>{tideHighLowText}</SmallText>
-			<TextUnit text={props.heightString} unit='ft' space={2} />
+			<WaterLevelTextUnit height={props.height} />
 		</TimelineEntry>
 	);
 };
