@@ -45,7 +45,6 @@ export function timeToPixels(startDate: DateTime, endDate: DateTime): number {
 	return timeToPixelsWithConstant(startDate, endDate, _pixelsPerHour);
 }
 
-function timeToPixelsWithConstant(startDate: DateTime, endDate: DateTime, pixelsPerHour: number): number {
-	const hours = endDate.diff(startDate, 'millisecond').milliseconds / 1000 / 60 / 60;
-	return hours * pixelsPerHour;
+export function timeToPixelsWithConstant(startDate: DateTime, endDate: DateTime, pixelsPerHour: number): number {
+	return endDate.diff(startDate, 'hours').hours * pixelsPerHour;
 }

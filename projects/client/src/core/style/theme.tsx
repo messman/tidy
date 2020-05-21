@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createGlobalStyle, ThemeProps, ThemeProvider } from 'styled-components';
-import { useLocalStorage, UseLocalStorageReturn, keyFactory } from '@/services/data/local-storage';
 import { SmallTextInline } from '@/core/symbol/text';
+import { keyFactory, useLocalStorage, UseLocalStorageReturn } from '@/services/data/local-storage';
+import { borderRadiusStyle, edgePaddingValue } from './common';
 import { styled } from './styled';
-import { edgePaddingValue, borderRadiusStyle } from './common';
 
 /** Custom application theme type. */
 export interface Theme {
@@ -64,7 +64,7 @@ const darkTheme: Theme = {
 		backgroundTimelineDay: '#111111'
 	},
 	fontFamily: `'Work Sans', sans-serif;`
-}
+};
 
 /** The light theme */
 const lightTheme: Theme = {
@@ -88,6 +88,7 @@ export const themes: Theme[] = [darkTheme, lightTheme];
 
 // For some reason, VS Code is not happy to colorize the CSS in this block when `createGlobalStyle` is used with a type.
 // Note: '#root' is for storybook
+// Note: overscroll-behavior comes from https://stackoverflow.com/a/50846937 to prevent macs going back (since we have horizontal scroll)
 export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 	html {
 		font-family: ${p => p.theme.fontFamily};
@@ -103,6 +104,8 @@ export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 		margin: 0;
 		padding: 0;
 		height: 100%;
+
+		overscroll-behavior: none;
 	}
 
 	* {
@@ -135,13 +138,13 @@ export const LocalStorageThemeProvider: React.FC = (props) => {
 			</ThemeProvider>
 		</LocalStorageThemeContext.Provider>
 	);
-}
+};
 
 export const useLocalStorageTheme = () => React.useContext(LocalStorageThemeContext);
 export const useCurrentTheme = () => {
 	const [themeIndex] = React.useContext(LocalStorageThemeContext);
 	return themes[themeIndex];
-}
+};
 
 export const ThemePicker: React.FC = () => {
 
@@ -160,7 +163,7 @@ export const ThemePicker: React.FC = () => {
 				isSelected={index === themeIndex}
 				onClick={onClick}
 			/>
-		)
+		);
 	});
 
 	return (
@@ -168,7 +171,7 @@ export const ThemePicker: React.FC = () => {
 			{options}
 		</ThemePickerBubble>
 	);
-}
+};
 
 const ThemePickerBubble = styled.div`
 	display: inline-block;
@@ -198,11 +201,11 @@ const ThemePickerOption: React.FC<ThemePickerOptionProps> = (props) => {
 		<ThemePickerOptionBubble isSelected={props.isSelected} onClick={onClick}>
 			<SmallTextInline>{props.name.toUpperCase()}</SmallTextInline>
 		</ThemePickerOptionBubble>
-	)
+	);
 };
 
 interface ThemePickerOptionBubbleProps {
-	isSelected: boolean
+	isSelected: boolean;
 }
 
 const ThemePickerOptionBubble = styled.div<ThemePickerOptionBubbleProps>`

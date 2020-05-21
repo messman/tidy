@@ -1,8 +1,8 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { TideEventRange, TideStatus } from 'tidy-shared';
-import { DateTime } from 'luxon';
+import { createChartLine, makeRect, Point } from '@/services/draw/bezier';
 import { FillSVG, StrokeSVG } from './tide-common';
-import { Point, makeRect, createChartLine } from '@/services/draw/bezier';
 
 export interface TideChartInput {
 	/** Range for which we are creating a chart. */
@@ -23,7 +23,6 @@ export interface TideChartInput {
 
 /** Creates a chart output. Uses useMemo for basic optimization. */
 export function useTideChart(input: TideChartInput): JSX.Element | null {
-	console.log(input);
 	const { tideEventRange, startTime, endTime, outputWidth, outputHeight, outputPaddingTop, outputPaddingBottom } = input;
 
 	// TODO - are we allowed to use the input argument in the useMemo without exactly specifying it in the dependencies array?

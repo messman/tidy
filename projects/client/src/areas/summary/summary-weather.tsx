@@ -4,9 +4,10 @@ import { Flex, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { Icon, iconTypes } from '@/core/symbol/icon';
+import { iconTypes } from '@/core/symbol/icon';
 import { subtitleHeight, Text } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
+import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';
 
@@ -75,10 +76,6 @@ const PaddedFlexRow = styled(FlexRow)`
 
 const PushedDownText = styled(Text)`
 	margin-top: ${edgePaddingValue};
-`;
-
-const SpacedIcon = styled(Icon)`
-	margin-right: .3rem;
 `;
 
 const SummaryWeatherSecondary: React.FC = () => {

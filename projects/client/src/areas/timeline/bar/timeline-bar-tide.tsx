@@ -2,10 +2,10 @@ import * as React from 'react';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { SmallText } from '@/core/symbol/text';
+import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry, TimelineEntry, TimelineEntryProps } from './timeline-bar-common';
-import { WaterLevelTextUnit } from '@/core/symbol/text-unit';
 
 export const TimelineBarTide: React.FC = () => {
 
@@ -80,7 +80,7 @@ export const TimelineTideDataEntry: React.FC<TimelineTideDataEntryProps> = (prop
 	return (
 		<TimelineEntry referenceTime={props.referenceTime} dateTime={props.dateTime} top='4rem'>
 			<SmallText>{tideHighLowText}</SmallText>
-			<WaterLevelTextUnit height={props.height} />
+			<TideHeightTextUnit height={props.height} />
 		</TimelineEntry>
 	);
 };

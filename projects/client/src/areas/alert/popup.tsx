@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Flex, FlexColumn } from '@/core/layout/flex';
 import { Overlay } from '@/core/layout/overlay';
-import { borderRadiusStyle, edgePaddingValue, flowPaddingValue, addPadding } from '@/core/style/common';
+import { addPadding, borderRadiusStyle, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, iconTypes } from '@/core/symbol/icon';
 import { SmallText, Subtitle, Text, titleHeight } from '@/core/symbol/text';
-import { useAllResponse } from '@/services/data/data';
 import { CONSTANT } from '@/services/constant';
+import { useAllResponse } from '@/services/data/data';
 
 export enum PopupType {
 	/** Execution can continue. */
@@ -67,13 +67,13 @@ export const Popup: React.FC = (props) => {
 		*/
 		popupBody = (
 			<FlexColumn alignItems='center' justifyContent='space-evenly'>
-				<PopupBody flex={0} onClick={onClick}>
+				<PopupBody flex='none' onClick={onClick}>
 					<Icon type={iconTypes.alert} fill={alertColor} height={titleHeight} />
 					<PaddedSubtitle>{title}</PaddedSubtitle>
 					<PaddedText>{text}</PaddedText>
 					<SmallText>{buttonText}</SmallText>
 				</PopupBody>
-				<Flex flex={0} />
+				<Flex flex='none' />
 			</FlexColumn>
 		);
 	}

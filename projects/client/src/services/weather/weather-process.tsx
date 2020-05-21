@@ -1,13 +1,13 @@
-import { WeatherStatus, WeatherStatusType, WindDirection, weatherStatusTypeDescription, DailyWeather } from 'tidy-shared';
-import { SVGIconType, iconTypes } from '@/core/symbol/icon';
+import { DailyWeather, WeatherStatus, WeatherStatusType, weatherStatusTypeDescription, WindDirection } from 'tidy-shared';
+import { iconTypes, SVGIconType } from '@/core/symbol/icon';
 
 export interface WeatherDisplay {
 	tempText: string,
 	windText: string,
 	windDirectionUnit: string,
-	icon: SVGIconType
+	icon: SVGIconType;
 	shortStatusText: string,
-	chanceRainText: string
+	chanceRainText: string;
 }
 
 export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIcon: boolean): WeatherDisplay {
@@ -39,8 +39,9 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 export interface DailyWeatherDisplay {
 	minTempText: string,
 	maxTempText: string,
-	icon: SVGIconType
-	chanceRainText: string
+	icon: SVGIconType,
+	shortStatusText: string,
+	chanceRainText: string;
 }
 
 export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): DailyWeatherDisplay {
@@ -61,13 +62,14 @@ export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): Daily
 		minTempText: Math.round(minTemp).toString(),
 		maxTempText: Math.round(maxTemp).toString(),
 		icon: weatherStatusIconForTime,
+		shortStatusText: weatherStatusTypeDescription[weatherStatusKey].short,
 		chanceRainText: chanceRainPercentString
 	};
 }
 
 export interface WeatherStatusIcon {
 	day: SVGIconType,
-	night: SVGIconType
+	night: SVGIconType;
 }
 export type WeatherStatusIconMap = Record<keyof typeof WeatherStatusType, WeatherStatusIcon>;
 export const weatherStatusTypeIcon: WeatherStatusIconMap = {

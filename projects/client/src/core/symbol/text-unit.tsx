@@ -1,9 +1,8 @@
-import * as React from 'react';
-import { TextInline, SmallTextInline } from './text';
-import { styled } from '../style/styled';
 import { DateTime } from 'luxon';
+import * as React from 'react';
 import { getTimeTwelveHour } from '@/services/time';
-import { CONSTANT } from '@/services/constant';
+import { styled } from '../style/styled';
+import { SmallTextInline, TextInline } from './text';
 
 export interface TextUnitProps {
 	text: string,
@@ -66,16 +65,5 @@ export const TimeDurationTextUnit: React.FC<TimeDurationTextUnitProps> = (props)
 		<>
 			{hours}{space}{minutes}
 		</>
-	);
-};
-
-export interface WaterLevelTextUnitProps {
-	height: number;
-}
-
-export const WaterLevelTextUnit: React.FC<WaterLevelTextUnitProps> = (props) => {
-	const heightString = props.height.toFixed(CONSTANT.tideHeightPrecision);
-	return (
-		<TextUnit text={heightString} unit='ft' space={2} />
 	);
 };

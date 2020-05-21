@@ -37,7 +37,11 @@ export const Forecast: React.FC<ForecastProps> = () => {
 	let entries: JSX.Element[] = [];
 
 	if (size.width > 1) {
-		entries = all.daily.days.map((day, i) => {
+		const { tideExtremes, days } = all.daily;
+
+		const tideHeightRange = tideExtremes.highest.height - tideExtremes.lowest.height;
+
+		entries = days.map((day, i) => {
 			const key = `forecast_${day.date.valueOf()}`;
 
 			return (
@@ -46,6 +50,7 @@ export const Forecast: React.FC<ForecastProps> = () => {
 					isToday={i === 0}
 					day={day}
 					containerWidth={size.width}
+					absoluteTideHeightRange={tideHeightRange}
 				/>
 			);
 		});
@@ -71,7 +76,8 @@ const Margin = styled.div`
 
 // Pad the text for the day so that it's a tiny bit easier to read.
 const PaddedText = styled(Text)`
-	margin-bottom: .2rem;
+	margin-top: 1rem;
+	margin-bottom: .3rem;
 `;
 
 export interface ForecastContextBlockProps {
@@ -81,6 +87,8 @@ export interface ForecastContextBlockProps {
 	day: AllDailyDay,
 	/** The container width, used for creating tide charts. */
 	containerWidth: number;
+	/** Tallest tide height minus smallest tide height. */
+	absoluteTideHeightRange: number;
 }
 
 const ForecastEntry: React.FC<ForecastContextBlockProps> = (props) => {

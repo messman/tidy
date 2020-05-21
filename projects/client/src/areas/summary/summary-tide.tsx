@@ -4,7 +4,8 @@ import { Flex, FlexRow } from '@/core/layout/flex';
 import { flowPaddingValue } from '@/core/style/common';
 import { css, styled } from '@/core/style/styled';
 import { SmallText, Text } from '@/core/symbol/text';
-import { TimeTextUnit, WaterLevelTextUnit } from '@/core/symbol/text-unit';
+import { TimeTextUnit } from '@/core/symbol/text-unit';
+import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { percentTimeBetween } from '@/services/time';
 
@@ -62,15 +63,15 @@ const SummaryTidePrimary: React.FC = () => {
 			</FlexRow>
 			<FlexRow>
 				<FlexCenter>
-					<WaterLevelTextUnit height={tides.previous.height} />
+					<TideHeightTextUnit height={tides.previous.height} />
 				</FlexCenter>
 				<FlexCenter flex={2}>
 					<Text>
-						{timePercentString}% (<WaterLevelTextUnit height={tides.height} />)
+						{timePercentString}% (<TideHeightTextUnit height={tides.height} />)
 					</Text>
 				</FlexCenter>
 				<FlexCenter>
-					<WaterLevelTextUnit height={tides.next.height} />
+					<TideHeightTextUnit height={tides.next.height} />
 				</FlexCenter>
 			</FlexRow>
 		</Flex>

@@ -2,9 +2,8 @@ import * as React from 'react';
 import { FlexRow } from '@/core/layout/flex';
 import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
-import { useElementSize } from '@/services/layout/element-size';
 import { CONSTANT } from '@/services/constant';
-
+import { useElementSize } from '@/services/layout/element-size';
 
 export interface ContextBlockProps {
 	primary: JSX.Element,

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { edgePaddingValue } from '@/core/style/common';
-import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { Icon, iconTypes, SVGIconType } from '@/core/symbol/icon';
+import { iconTypes, SVGIconType } from '@/core/symbol/icon';
 import { subtitleHeight, SubtitleInline } from '@/core/symbol/text';
+import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { percentTimeBetween } from '@/services/time';
 
@@ -47,7 +46,7 @@ export const SummaryTitle: React.FC = () => {
 		text = `It's ${nextTideName} tide.`;
 	}
 
-	const icon = iconType ? <SpacedIcon type={iconType} fill={theme.color.tide} height={subtitleHeight} /> : null;
+	const icon = iconType ? <SpacedIcon type={iconType} fill={theme.color.tide} height={subtitleHeight} spacing='far' /> : null;
 
 	return (
 		<>
@@ -58,7 +57,3 @@ export const SummaryTitle: React.FC = () => {
 		</>
 	);
 };
-
-const SpacedIcon = styled(Icon)`
-	margin-left: ${edgePaddingValue};
-`;

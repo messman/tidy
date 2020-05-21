@@ -3,9 +3,10 @@ import { SunEvent, WeatherStatus } from 'tidy-shared';
 import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { Icon, iconTypes } from '@/core/symbol/icon';
+import { iconTypes } from '@/core/symbol/icon';
 import { subtitleHeight, Text, titleHeight } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
+import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';
 import { cutoffHoursFromReference, TimelineEntry, TimelineEntryProps } from '../bar/timeline-bar-common';
@@ -124,10 +125,6 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 
 const Center = styled.div`
 	text-align: center;
-`;
-
-const SpacedIcon = styled(Icon)`
-	margin-right: .4rem;
 `;
 
 const NonBreakingPadding = styled(Flex)`

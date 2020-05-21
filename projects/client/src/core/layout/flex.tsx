@@ -5,6 +5,14 @@ export interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
 	flex?: number | string;
 }
 
+/*
+	Note on flex value (flex={0} and flex='none') TL;DR: Use flex='none'
+	Flex '0' means '0 1 0%'
+		use the width/height of the inner content, but ignore width and height set on the element
+	Flex 'none' means '0 0 auto'
+		use the width and height set on the element or fall back to width/height of the inner content
+*/
+
 export const Flex = styled.div<FlexProps>`
 	position: relative;
 	flex: ${p => p.flex};
@@ -12,7 +20,7 @@ export const Flex = styled.div<FlexProps>`
 
 Flex.defaultProps = {
 	flex: 1
-}
+};
 
 interface FlexParentProps extends FlexProps {
 	/**

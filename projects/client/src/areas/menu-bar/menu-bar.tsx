@@ -39,7 +39,7 @@ export const MenuBar: React.FC = (props) => {
 		return (
 			<MenuBarBottomContainer>
 				{props.children}
-				<MenuBarContent flexDirection='row' flex={0} justifyContent={justifyContent}>
+				<MenuBarContent flexDirection='row' flex='none' justifyContent={justifyContent}>
 					{bar}
 				</MenuBarContent>
 			</MenuBarBottomContainer>
@@ -48,7 +48,7 @@ export const MenuBar: React.FC = (props) => {
 	else {
 		return (
 			<MenuBarLeftContainer>
-				<MenuBarContent flexDirection='column' flex={0} justifyContent={justifyContent}>
+				<MenuBarContent flexDirection='column' flex='none' justifyContent={justifyContent}>
 					{bar}
 				</MenuBarContent>
 				{props.children}

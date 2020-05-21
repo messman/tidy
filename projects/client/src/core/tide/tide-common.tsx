@@ -1,5 +1,8 @@
-import { css, styled } from '../style/styled';
+import * as React from 'react';
+import { CONSTANT } from '@/services/constant';
 import { SVGPath } from '@/services/draw/bezier';
+import { css, styled } from '../style/styled';
+import { TextUnit } from '../symbol/text-unit';
 
 const svgStyle = css`
 	position: absolute;
@@ -25,3 +28,14 @@ export const StrokeSVG = styled(SVGPath)`
 	stroke-width: 4px;
 	fill: transparent;
 `;
+
+export interface TideHeightTextUnitProps {
+	height: number;
+}
+
+export const TideHeightTextUnit: React.FC<TideHeightTextUnitProps> = (props) => {
+	const heightString = props.height.toFixed(CONSTANT.tideHeightPrecision);
+	return (
+		<TextUnit text={heightString} unit='ft' space={2} />
+	);
+};
