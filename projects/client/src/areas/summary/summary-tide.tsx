@@ -6,15 +6,21 @@ import { css, styled } from '@/core/style/styled';
 import { SmallText, Text } from '@/core/symbol/text';
 import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
+import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { percentTimeBetween } from '@/services/time';
+import { getDurationDescription, percentTimeBetween } from '@/services/time';
 
-export const SummaryTide: React.FC = () => {
+export interface SummaryTideProps {
+	isDualMode: boolean;
+}
+
+export const SummaryTide: React.FC<SummaryTideProps> = (props) => {
 	return (
 		<ContextBlock
 			primary={<SummaryTidePrimary />}
 			secondary={<SummaryTideSecondary />}
 			isPadded={true}
+			isDualMode={props.isDualMode}
 		/>
 	);
 };
@@ -92,9 +98,9 @@ const SummaryTideBar: React.FC<SummaryTideBarProps> = (props) => {
 	return (
 		<>
 			<CenterLine percent={percent} />
-			<CurrentDot percent={percent} />
 			<PreviousCircle />
 			<NextCircle />
+			<CurrentDot percent={percent} />
 		</>
 	);
 };
@@ -161,7 +167,17 @@ const SummaryTideSecondary: React.FC = () => {
 		return null;
 	}
 
+	const { all, info } = allResponseState.data!;
+	const tides = all.current.tides;
+	const currentTideHeightText = tides.height.toFixed(CONSTANT.tideHeightPrecision);
+	const nextTideHeightText = tides.next.height.toFixed(CONSTANT.tideHeightPrecision);
+	const nextTideText = tides.next.isLow ? 'low' : 'high';
+	const nextTideDurationText = getDurationDescription(info.referenceTime, tides.next.time);
+
 	return (
-		<Text>Hello</Text>
+		<Text>
+			The tide is at {currentTideHeightText} feet now.
+			The tide will be at a {nextTideText} of {nextTideHeightText} feet in {nextTideDurationText}.
+		</Text>
 	);
 };

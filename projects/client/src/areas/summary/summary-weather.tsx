@@ -1,22 +1,28 @@
 import * as React from 'react';
+import { WeatherStatusType, weatherStatusTypeDescription, WindDirection } from 'tidy-shared';
 import { ContextBlock } from '@/core/layout/context-block';
 import { Flex, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { iconTypes } from '@/core/symbol/icon';
-import { subtitleHeight, Text } from '@/core/symbol/text';
+import { subtitleHeight, Text, TextInline } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';
 
-export const SummaryWeather: React.FC = () => {
+export interface SummaryWeatherProps {
+	isDualMode: boolean;
+}
+
+export const SummaryWeather: React.FC<SummaryWeatherProps> = (props) => {
 	return (
 		<ContextBlock
 			primary={<SummaryWeatherPrimary />}
 			secondary={<SummaryWeatherSecondary />}
 			isPadded={true}
+			isDualMode={props.isDualMode}
 		/>
 	);
 };
@@ -85,7 +91,35 @@ const SummaryWeatherSecondary: React.FC = () => {
 		return null;
 	}
 
+	const { all } = allResponseState.data!;
+
+	const { temp, tempFeelsLike, windDirection, cloudCover, status, visibility } = all.current.weather;
+
+	// status long description, cloud cover, Feels like, wind direction, visibility
+
+	// Get the key, like 'unknown'.
+	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
+	// Use that key to get the icons (day and night).
+	const weatherStatusDescription = weatherStatusTypeDescription[weatherStatusKey].long;
+
+	const cloudCoverText = Math.round(cloudCover.entity! * 100);
+
+	const tempRounded = Math.round(temp.entity!);
+	const tempFeelsLikeRounded = Math.round(tempFeelsLike.entity!);
+	let tempFeelsLikeComponent = null;
+	if (tempRounded !== tempFeelsLikeRounded) {
+		tempFeelsLikeComponent = <TextInline>Feels like {tempFeelsLikeRounded}&deg;.&nbsp;</TextInline>;
+	}
+
+	const windOriginationText = WindDirection[windDirection];
+
+	const visibilityText = visibility.entity!.toFixed(1);
+
 	return (
-		<Text>Hello</Text>
+		<Text>
+			{weatherStatusDescription}.
+			Cloud cover at {cloudCoverText}%. {tempFeelsLikeComponent}Wind from the {windOriginationText}.
+			Visibility is {visibilityText} miles.
+		</Text>
 	);
 };

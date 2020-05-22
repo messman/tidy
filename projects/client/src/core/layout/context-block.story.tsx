@@ -1,17 +1,22 @@
 import * as React from 'react';
-import { decorate } from '@/test/storybook/decorate';
-import { Text } from '@/core/symbol/text';
-import { ContextBlock } from './context-block';
 import { Flex } from '@/core/layout/flex';
+import { Text } from '@/core/symbol/text';
+import { decorate } from '@/test/storybook/decorate';
+import { boolean } from '@storybook/addon-knobs';
+import { ContextBlock } from './context-block';
 
-export default { title: 'areas/summary' };
+export default { title: 'core/layout' };
 
 export const TestContextBlock = decorate(() => {
+
+	const isDualMode = boolean('Is Dual Mode', false);
+
 	return (
 		<ContextBlock
 			primary={<MockPrimary />}
 			secondary={<MockSecondary />}
 			isPadded={true}
+			isDualMode={isDualMode}
 		/>
 	);
 });

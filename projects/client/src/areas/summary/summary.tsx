@@ -13,21 +13,22 @@ export interface SummaryProps {
 }
 
 export const Summary: React.FC<SummaryProps> = (props) => {
+	const { isCompactVertical } = props;
 
-	if (props.isCompactVertical) {
+	if (isCompactVertical) {
 		return (
 			<Flex>
 				<SummaryPadding>
 					<SummaryTitle />
 				</SummaryPadding>
 				<SummaryPadding>
-					<SummaryTide />
+					<SummaryTide isDualMode={false} />
 				</SummaryPadding>
 				<SummaryPadding>
-					<SummaryAstro />
+					<SummaryAstro isDualMode={false} />
 				</SummaryPadding>
 				<SummaryPadding>
-					<SummaryWeather />
+					<SummaryWeather isDualMode={false} />
 				</SummaryPadding>
 			</Flex>
 		);
@@ -35,26 +36,46 @@ export const Summary: React.FC<SummaryProps> = (props) => {
 
 	return (
 		<FlexRow flex='none'>
+			<SummaryHorizontalPadding />
+			<SummaryTitleHorizontalContainer flex='none' alignItems='center'>
+				<SummaryTitle />
+			</SummaryTitleHorizontalContainer>
+			<SummaryHorizontalPadding />
 			<RegularWidthFlexColumn>
-				<SummaryPadding>
-					<SummaryTitle />
-				</SummaryPadding>
-				<SummaryPadding>
-					<SummaryTide />
-				</SummaryPadding>
+				<SummaryTitleHorizontalContainer>
+
+					<SummaryTide isDualMode={true} />
+				</SummaryTitleHorizontalContainer>
 			</RegularWidthFlexColumn>
+			<SummaryHorizontalPadding />
+
 			<RegularWidthFlexColumn>
-				<SummaryPadding>
-					<SummaryAstro />
-				</SummaryPadding>
-				<SummaryPadding>
-					<SummaryWeather />
-				</SummaryPadding>
+				<SummaryTitleHorizontalContainer>
+
+					<SummaryAstro isDualMode={true} />
+				</SummaryTitleHorizontalContainer>
 			</RegularWidthFlexColumn>
-		</FlexRow>
+			<SummaryHorizontalPadding />
+			<RegularWidthFlexColumn>
+				<SummaryTitleHorizontalContainer>
+
+					<SummaryWeather isDualMode={true} />
+				</SummaryTitleHorizontalContainer>
+			</RegularWidthFlexColumn>
+			<SummaryHorizontalPadding />
+
+		</FlexRow >
 	);
 };
 
+const SummaryHorizontalPadding = styled.div`
+	width: ${edgePaddingValue};
+`;
+
 const SummaryPadding = styled.div`
 	margin: ${edgePaddingValue};
+`;
+
+const SummaryTitleHorizontalContainer = styled(FlexRow)`
+	margin: ${edgePaddingValue} 0;
 `;

@@ -37,17 +37,17 @@ export enum WeatherStatusType {
 }
 export interface WeatherStatusDescription {
 	short: string,
-	long: string
+	long: string;
 }
 export type WeatherStatusDescriptionMap = Record<keyof typeof WeatherStatusType, WeatherStatusDescription>;
 export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
 	unknown: {
-		short: 'unknown',
-		long: 'unknown'
+		short: 'Unknown',
+		long: 'Unknown'
 	},
 	fair: {
 		short: 'Fair',
-		long: 'Fair/clear'
+		long: 'Fair and clear'
 	},
 	cloud_few: {
 		short: 'Some clouds',
@@ -67,7 +67,7 @@ export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
 	},
 	wind_fair: {
 		short: 'Windy',
-		long: 'Fair/clear and windy'
+		long: 'Fair / clear and windy'
 	},
 	wind_few: {
 		short: 'Windy',
@@ -91,15 +91,15 @@ export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
 	},
 	rain_snow: {
 		short: 'Rain/snow',
-		long: 'Rain/snow'
+		long: 'Rain and snow'
 	},
 	rain_sleet: {
 		short: 'Rain/sleet',
-		long: 'Rain/sleet'
+		long: 'Rain and sleet'
 	},
 	snow_sleet: {
 		short: 'Rain/sleet',
-		long: 'Rain/sleet'
+		long: 'Rain and sleet'
 	},
 	rain_freeze: {
 		short: 'Freezing rain',
@@ -107,11 +107,11 @@ export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
 	},
 	rain_freeze_rain: {
 		short: 'Freezing rain',
-		long: 'Rain/freezing rain'
+		long: 'Rain and freezing rain'
 	},
 	snow_freeze_rain: {
 		short: 'Freezing rain',
-		long: 'Freezing rain/snow'
+		long: 'Freezing rain and snow'
 	},
 	sleet: {
 		short: 'Sleet',
@@ -123,27 +123,27 @@ export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
 	},
 	rain_showers_high: {
 		short: 'Rain',
-		long: 'Rain showers (high cloud cover)'
+		long: 'Rain showers with high cloud cover'
 	},
 	rain_showers: {
 		short: 'Rain',
-		long: 'Rain showers (low cloud cover)'
+		long: 'Rain showers with low cloud cover'
 	},
 	thun_high: {
 		short: 'Thunderstorms',
-		long: 'Thunderstorm (high cloud cover)'
+		long: 'Thunderstorm with high cloud cover'
 	},
 	thun_med: {
 		short: 'Thunderstorms',
-		long: 'Thunderstorm (medium cloud cover)'
+		long: 'Thunderstorms with medium cloud cover'
 	},
 	thun_low: {
 		short: 'Thunderstorms',
-		long: 'Thunderstorm (low cloud cover)'
+		long: 'Thunderstorms with low cloud cover'
 	},
 	torn: {
 		short: 'Tornado',
-		long: 'Tornado'
+		long: 'Tornado conditions'
 	},
 	hurr: {
 		short: 'Hurricane',
@@ -179,6 +179,6 @@ export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
 	},
 	fog: {
 		short: 'Fog/mist',
-		long: 'Fog/mist'
+		long: 'Fog and mist'
 	},
-}
+};

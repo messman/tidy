@@ -4,18 +4,23 @@ import { Flex } from '@/core/layout/flex';
 import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { css, styled } from '@/core/style/styled';
 import { SmallText, Text } from '@/core/symbol/text';
-import { TimeTextUnit, TimeDurationTextUnit } from '@/core/symbol/text-unit';
+import { TimeDurationTextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { useElementSize } from '@/services/layout/element-size';
-import { percentTimeBetween } from '@/services/time';
+import { getDurationDescription, percentTimeBetween } from '@/services/time';
 
-export const SummaryAstro: React.FC = () => {
+export interface SummaryAstroProps {
+	isDualMode: boolean;
+}
+
+export const SummaryAstro: React.FC<SummaryAstroProps> = (props) => {
 	return (
 		<ContextBlock
 			primary={<SummaryAstroPrimary />}
 			secondary={<SummaryAstroSecondary />}
 			isPadded={true}
+			isDualMode={props.isDualMode}
 		/>
 	);
 };
@@ -247,7 +252,20 @@ const SummaryAstroSecondary: React.FC = () => {
 		return null;
 	}
 
+	const { all, info } = allResponseState.data!;
+	const sun = all.current.sun;
+
+	const [sunrise, sunset] = all.daily.days[0].sun;
+	const peak = sunrise.time.plus({ seconds: sunset.time.diff(sunrise.time, 'seconds').seconds / 2 });
+	const peakDurationText = getDurationDescription(info.referenceTime, peak);
+	const peakPhrase = info.referenceTime > peak ? `The sun was at its peak ${peakDurationText} ago` : `The sun will peak in ${peakDurationText}`;
+
+	const nextSunText = sun.next.isSunrise ? 'rise' : 'set';
+	const nextSunDurationText = getDurationDescription(info.referenceTime, sun.next.time);
+
 	return (
-		<Text>Hello</Text>
+		<Text>
+			{peakPhrase} at <TimeTextUnit dateTime={peak} />. The sun will {nextSunText} in {nextSunDurationText}.
+		</Text>
 	);
 };
