@@ -42,35 +42,36 @@ const SummaryWeatherPrimary: React.FC = () => {
 	const useDayIcon = !all.current.sun.next.isSunrise;
 	const { tempText, windText, windDirectionUnit, icon, shortStatusText, chanceRainText } = processWeatherForDisplay(all.current.weather, useDayIcon);
 
+	// NOTE - have to use flex='0' here, even though we don't rely on it anywhere else. 
 	return (
-		<FlexRow>
-			<Flex>
-				<Text>
+		<FlexRow justifyContent='space-around'>
+			<Flex flex='0'>
+				<TextInline>
 					<PaddedFlexRow alignItems='center'>
 						<SpacedIcon type={iconTypes.temperature} fill={iconColor} height={iconHeight} />
 						{tempText}&deg;
 					</PaddedFlexRow>
-				</Text>
-				<PushedDownText>
+				</TextInline>
+				<PushedDownTextInline>
 					<PaddedFlexRow alignItems='center'>
 						<SpacedIcon type={icon} fill={iconColor} height={iconHeight} />
 						{shortStatusText}
 					</PaddedFlexRow>
-				</PushedDownText>
+				</PushedDownTextInline>
 			</Flex>
-			<Flex>
-				<Text>
+			<Flex flex='0'>
+				<TextInline>
 					<FlexRow alignItems='center'>
 						<SpacedIcon type={iconTypes.wind} fill={iconColor} height={iconHeight} />
 						<TextUnit text={windText} unit={windDirectionUnit} />
 					</FlexRow>
-				</Text>
-				<PushedDownText>
+				</TextInline>
+				<PushedDownTextInline>
 					<FlexRow alignItems='center'>
 						<SpacedIcon type={iconTypes.rain} fill={iconColor} height={iconHeight} />
 						<TextUnit text={chanceRainText} unit='chance' space={3} />
 					</FlexRow>
-				</PushedDownText>
+				</PushedDownTextInline>
 			</Flex>
 		</FlexRow>
 	);
@@ -80,7 +81,7 @@ const PaddedFlexRow = styled(FlexRow)`
 	padding-right: .8rem;
 `;
 
-const PushedDownText = styled(Text)`
+const PushedDownTextInline = styled(TextInline)`
 	margin-top: ${edgePaddingValue};
 `;
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { RegularWidthFlexColumn } from '@/core/layout/common';
-import { Flex, FlexRow } from '@/core/layout/flex';
+import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { SummaryAstro } from './summary-astro';
@@ -41,27 +40,23 @@ export const Summary: React.FC<SummaryProps> = (props) => {
 				<SummaryTitle />
 			</SummaryTitleHorizontalContainer>
 			<SummaryHorizontalPadding />
-			<RegularWidthFlexColumn>
+			<ExplicitWidthFlexColumn>
 				<SummaryTitleHorizontalContainer>
-
 					<SummaryTide isDualMode={true} />
 				</SummaryTitleHorizontalContainer>
-			</RegularWidthFlexColumn>
+			</ExplicitWidthFlexColumn>
 			<SummaryHorizontalPadding />
-
-			<RegularWidthFlexColumn>
+			<ExplicitWidthFlexColumn>
 				<SummaryTitleHorizontalContainer>
-
 					<SummaryAstro isDualMode={true} />
 				</SummaryTitleHorizontalContainer>
-			</RegularWidthFlexColumn>
+			</ExplicitWidthFlexColumn>
 			<SummaryHorizontalPadding />
-			<RegularWidthFlexColumn>
+			<ExplicitWidthFlexColumn>
 				<SummaryTitleHorizontalContainer>
-
 					<SummaryWeather isDualMode={true} />
 				</SummaryTitleHorizontalContainer>
-			</RegularWidthFlexColumn>
+			</ExplicitWidthFlexColumn>
 			<SummaryHorizontalPadding />
 
 		</FlexRow >
@@ -78,4 +73,9 @@ const SummaryPadding = styled.div`
 
 const SummaryTitleHorizontalContainer = styled(FlexRow)`
 	margin: ${edgePaddingValue} 0;
+`;
+
+export const ExplicitWidthFlexColumn = styled(FlexColumn)`
+	/* Close to optimal width used for designs. */
+	width: 430px;
 `;

@@ -97,57 +97,59 @@ const SummaryTideBar: React.FC<SummaryTideBarProps> = (props) => {
 
 	return (
 		<>
-			<CenterLine percent={percent} />
 			<PreviousCircle />
 			<NextCircle />
+			<CenterLine percent={percent} />
 			<CurrentDot percent={percent} />
 		</>
 	);
 };
 
+const centerLineHeight = 4;
+const circleRadius = centerLineHeight * 2.6;
+const circleTopOffset = (centerLineHeight / 2) - (circleRadius);
+const dotRadius = centerLineHeight * 2.2;
+const dotTopOffset = (centerLineHeight / 2) - (dotRadius / 2);
+
 const CenterLinePadding = styled.div`
 	display: block;
 	position: relative;
 	width: 100%;
+	height: ${centerLineHeight}px;
 	margin: ${flowPaddingValue} 0;
 	background-color: ${p => p.theme.color.backgroundLightest};
 `;
 
 
-const centerLineHeight = 4;
-const circleRadius = centerLineHeight * 5;
-const circleTopOffset = (centerLineHeight / 2) - (circleRadius / 2);
-const dotRadius = centerLineHeight * 2;
-const dotTopOffset = (centerLineHeight / 2) - (dotRadius / 2);
-
 const CenterLine = styled.div<SummaryTideBarProps>`
 	display: block;
-	position: relative;
-	margin: ${flowPaddingValue} 0;
+	position: absolute;
+	left: ${circleRadius}px;
+	top: 0;
+	width: calc(${p => p.percent}% - ${circleRadius * 2}px);
+	height: 100%;
 	background-color: ${p => p.theme.color.tide};
-	height: ${centerLineHeight}px;
-	width: ${p => p.percent}%;
 `;
 
 const circleStyles = css`
 	position: absolute;
 	top: ${circleTopOffset}px;
 	background-color: ${p => p.theme.color.backgroundLighter};
-	width: ${circleRadius}px;
-	height: ${circleRadius}px;
+	width: ${circleRadius * 2}px;
+	height: ${circleRadius * 2}px;
 	border-radius: 50%;
 `;
 
 const PreviousCircle = styled.div`
 	${circleStyles}
-	left: -${circleRadius / 2}px;
+	left: -${circleRadius}px;
 	border: ${centerLineHeight}px solid ${p => p.theme.color.tide};
 `;
 
 const CurrentDot = styled.div<SummaryTideBarProps>`
 	position: absolute;
 	top: ${dotTopOffset}px;
-	left: calc(${p => p.percent}% - ${dotRadius / 2}px);
+	left: calc(${p => p.percent}% - ${(circleRadius * 2) - (dotRadius / 2)}px);
 	width: ${dotRadius}px;
 	height: ${dotRadius}px;
 	background-color: ${p => p.theme.color.tide};
@@ -156,7 +158,7 @@ const CurrentDot = styled.div<SummaryTideBarProps>`
 
 const NextCircle = styled.div`
 	${circleStyles}
-	right: -${circleRadius / 2}px;
+	right: -${circleRadius}px;
 	border: ${centerLineHeight}px solid ${p => p.theme.color.backgroundLightest};
 `;
 

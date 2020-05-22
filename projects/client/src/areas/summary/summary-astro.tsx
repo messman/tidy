@@ -90,7 +90,7 @@ const sunPathThickness = 4;
 const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 
 	const ref = React.useRef<HTMLDivElement>(null);
-	const size = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout, null);
+	const size = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout, [props.percent]);
 
 	let sunSVG: JSX.Element | null = null;
 	if (!size.isSizing && size.width > 1 && size.height > 1) {
