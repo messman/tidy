@@ -36,23 +36,25 @@ export const Summary: React.FC<SummaryProps> = (props) => {
 	return (
 		<FlexRow flex='none'>
 			<SummaryHorizontalPadding />
+			<SummaryHorizontalPadding />
 			<SummaryTitleHorizontalContainer flex='none' alignItems='center'>
 				<SummaryTitle />
 			</SummaryTitleHorizontalContainer>
 			<SummaryHorizontalPadding />
-			<ExplicitWidthFlexColumn>
+			<SummaryHorizontalPadding />
+			<ExplicitWidthFlexColumn flex='none'>
 				<SummaryTitleHorizontalContainer>
 					<SummaryTide isDualMode={true} />
 				</SummaryTitleHorizontalContainer>
 			</ExplicitWidthFlexColumn>
 			<SummaryHorizontalPadding />
-			<ExplicitWidthFlexColumn>
+			<ExplicitWidthFlexColumn flex='none'>
 				<SummaryTitleHorizontalContainer>
 					<SummaryAstro isDualMode={true} />
 				</SummaryTitleHorizontalContainer>
 			</ExplicitWidthFlexColumn>
 			<SummaryHorizontalPadding />
-			<ExplicitWidthFlexColumn>
+			<ExplicitWidthFlexColumn flex='none'>
 				<SummaryTitleHorizontalContainer>
 					<SummaryWeather isDualMode={true} />
 				</SummaryTitleHorizontalContainer>

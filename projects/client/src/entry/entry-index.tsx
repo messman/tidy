@@ -1,11 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Wrapper } from './wrapper';
 import { ApplicationResponsiveLayout } from '@/areas/layout/layout';
+import { MenuBar } from '@/areas/menu-bar/menu-bar';
+import { Wrapper } from './wrapper';
 
 ReactDOM.render(
 	<Wrapper>
-		<ApplicationResponsiveLayout />
+		<MenuBar>
+			<ApplicationResponsiveLayout />
+		</MenuBar>
 	</Wrapper>,
 	document.getElementById('react-root')
 );
