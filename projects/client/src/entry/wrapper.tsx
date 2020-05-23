@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { AllResponseProvider } from '@/services/data/data';
-import { LocalStorageThemeProvider } from '@/core/style/theme';
-import { ResponsiveLayoutProvider, defaultLowerBreakpoints } from '@/services/layout/responsive-layout';
 import { InvalidCheck } from '@/areas/alert/invalid';
-import { PopupProvider, Popup } from '@/areas/alert/popup';
+import { Loading } from '@/areas/alert/loading';
+import { Popup, PopupProvider } from '@/areas/alert/popup';
 import { ComponentLayoutProvider } from '@/areas/layout/component-layout';
 import { FlexRoot } from '@/core/layout/flex';
+import { LocalStorageThemeProvider } from '@/core/style/theme';
+import { AllResponseProvider } from '@/services/data/data';
 import { LocalDataPhraseProvider } from '@/services/data/data-local';
+import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/layout/responsive-layout';
 
 export const Wrapper: React.FC = (props) => {
 	return (
@@ -34,16 +35,18 @@ const Providers: React.FC = (props) => {
 			</ResponsiveLayoutProvider>
 		</LocalStorageThemeProvider>
 	);
-}
+};
 
 const UI: React.FC = (props) => {
 	return (
 		<FlexRoot flexDirection='column'>
 			<InvalidCheck>
-				<Popup>
-					{props.children}
-				</Popup>
+				<Loading>
+					<Popup>
+						{props.children}
+					</Popup>
+				</Loading>
 			</InvalidCheck>
 		</FlexRoot>
 	);
-}
+};

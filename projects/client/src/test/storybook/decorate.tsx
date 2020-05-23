@@ -1,15 +1,15 @@
 import * as React from 'react';
+import { themes, useLocalStorageTheme } from '@/core/style/theme';
 import { Wrapper } from '@/entry/wrapper';
-import { useLocalStorageTheme, themes } from '@/core/style/theme';
-import { select, withKnobs } from "@storybook/addon-knobs";
 import { useLocalDataPhrase } from '@/services/data/data-local';
 import { DEFINE } from '@/services/define';
+import { select, withKnobs } from '@storybook/addon-knobs';
 
 export interface StoryComponent {
 	(): JSX.Element,
 	story?: {
-		decorators?: any[]
-	}
+		decorators?: any[];
+	};
 }
 
 export function decorateWith(Component: React.FC, decorators: any[]) {
@@ -49,7 +49,7 @@ const DefaultDecorator = (story: () => JSX.Element) => {
 			</CommonKnobsWrapper>
 		</Wrapper>
 	);
-}
+};
 
 export function decorate(Component: React.FC) {
 	return decorateWith(Component, [DefaultDecorator]);
@@ -59,7 +59,7 @@ const CommonKnobsWrapper: React.FC = (props) => {
 
 	// THEME
 
-	const themeOptions: { [key: string]: number } = {};
+	const themeOptions: { [key: string]: number; } = {};
 	themes.forEach((theme, index) => {
 		themeOptions[theme.name] = index;
 	});
@@ -79,7 +79,7 @@ const CommonKnobsWrapper: React.FC = (props) => {
 	const [localDataPhrase, setLocalDataPhrase] = useLocalDataPhrase();
 	const notUsingLocalDataPhrase = 'REAL';
 
-	const localDataOptions: { [key: string]: string | null } = {
+	const localDataOptions: { [key: string]: string | null; } = {
 		[notUsingLocalDataPhrase]: null,
 	};
 	if (DEFINE.localTestData) {
@@ -91,8 +91,9 @@ const CommonKnobsWrapper: React.FC = (props) => {
 	const selectedLocalDataPhrase = select('Data', localDataOptions, localDataPhrase || notUsingLocalDataPhrase, 'Global');
 
 	React.useEffect(() => {
-		if (selectedLocalDataPhrase !== localDataPhrase) {
-			setLocalDataPhrase(selectedLocalDataPhrase);
+		const realSelectedPhrase = selectedLocalDataPhrase === notUsingLocalDataPhrase ? null : selectedLocalDataPhrase;
+		if (realSelectedPhrase !== localDataPhrase) {
+			setLocalDataPhrase(realSelectedPhrase);
 		}
 	}, [selectedLocalDataPhrase]);
 

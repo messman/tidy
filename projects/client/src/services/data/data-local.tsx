@@ -29,6 +29,6 @@ export const LocalDataPhraseProvider: React.FC = (props) => {
 			{props.children}
 		</LocalDataPhraseContext.Provider>
 	);
-}
+};
 
 export const useLocalDataPhrase = () => React.useContext(LocalDataPhraseContext);

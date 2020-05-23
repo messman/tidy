@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex, FlexColumn } from '@/core/layout/flex';
 import { Overlay } from '@/core/layout/overlay';
-import { addPadding, borderRadiusStyle, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
+import { addMargin, borderRadiusStyle, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, iconTypes } from '@/core/symbol/icon';
@@ -85,8 +85,8 @@ export const Popup: React.FC = (props) => {
 	);
 };
 
-const PaddedSubtitle = addPadding(Subtitle, flowPaddingValue);
-const PaddedText = addPadding(Text, flowPaddingValue);
+const PaddedSubtitle = addMargin(Subtitle, flowPaddingValue);
+const PaddedText = addMargin(Text, flowPaddingValue);
 
 const PopupBody = styled(Flex)`
 	background-color: ${p => p.theme.color.backgroundLighter};
