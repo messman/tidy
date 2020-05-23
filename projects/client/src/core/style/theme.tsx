@@ -19,6 +19,9 @@ export interface Theme {
 		/** All our text and icons that aren't superseded by another color. */
 		textAndIcon: string,
 
+		/** Color of text links. */
+		link: string,
+
 		/** Color of text or icons or other components that are disabled. */
 		disabled: string,
 
@@ -54,6 +57,7 @@ const darkTheme: Theme = {
 		backgroundLighter: '#1B1B1B',
 		backgroundLightest: '#2B2B2B',
 		textAndIcon: '#D8D8D8',
+		link: '#2575BF',
 		disabled: '#6B6B6B',
 		tide: '#145C9E',
 		sun: '#EAC435',

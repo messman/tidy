@@ -1,5 +1,5 @@
-import { styled, css } from '@/core/style/styled';
 import { StyledComponent } from 'styled-components';
+import { css, styled } from '@/core/style/styled';
 import { Theme } from './theme';
 
 /** Border-radius style. .5rem / 8px. */
@@ -12,6 +12,14 @@ export const noTouchStyle = css`
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
+`;
+
+export const Link = styled.a`
+	color: ${p => p.theme.color.link};
+
+	&:link, &:active, &:visited, &:hover {
+		color: ${p => p.theme.color.link};
+	}
 `;
 
 /** Smaller padding value, for edges against the screen. .625rem / 10px. */
