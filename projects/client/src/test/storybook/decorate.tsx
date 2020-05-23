@@ -80,7 +80,7 @@ const CommonKnobsWrapper: React.FC = (props) => {
 	const notUsingLocalDataPhrase = 'REAL';
 
 	const localDataOptions: { [key: string]: string | null; } = {
-		[notUsingLocalDataPhrase]: null,
+		[notUsingLocalDataPhrase]: notUsingLocalDataPhrase,
 	};
 	if (DEFINE.localTestData) {
 		Object.keys(DEFINE.localTestData).forEach((phrase) => {

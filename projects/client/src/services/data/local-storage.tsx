@@ -1,14 +1,15 @@
 import * as React from 'react';
+
 /** Using a wrapper object allows us to store falsy values. */
 interface Wrapper<T> {
-	v: T
+	v: T;
 }
 
 /** Returns a function that will prefix the key to a namespace to avoid collisions. */
 export function keyFactory(namespace: string): (key: string) => string {
 	return function getKey(key: string) {
 		return `${namespace}_${key}`;
-	}
+	};
 }
 
 /**
@@ -56,12 +57,10 @@ export function useLocalStorage<T>(key: string, initialValue: T | (() => T), isV
 		let value: T = get<T>(key)!;
 		if (value === undefined || (isValid && !isValid(value))) {
 			value = initialValue instanceof Function ? initialValue() : initialValue;
+			set(key, storedValue);
 		}
 		return value;
 	});
-
-	// Set right away to LocalStorage, in case this was our initial value.
-	set(key, storedValue);
 
 	function setValue(value: T): void {
 		if (!Object.is(value, storedValue)) {
