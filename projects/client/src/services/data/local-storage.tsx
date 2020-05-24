@@ -57,7 +57,7 @@ export function useLocalStorage<T>(key: string, initialValue: T | (() => T), isV
 		let value: T = get<T>(key)!;
 		if (value === undefined || (isValid && !isValid(value))) {
 			value = initialValue instanceof Function ? initialValue() : initialValue;
-			set(key, storedValue);
+			set(key, value);
 		}
 		return value;
 	});

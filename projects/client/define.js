@@ -22,7 +22,7 @@ module.exports = async function getDefine(isDevelopment) {
 	};
 
 	if (isDevelopment) {
-		DEFINE.fetchUrl = JSON.stringify('http://localhost:8000/latest');
+		DEFINE.fetchUrl = JSON.stringify('http://192.168.1.54:8000/latest');
 
 		/*
 			Below is code to create test data right now as part of the build process.
@@ -33,7 +33,7 @@ module.exports = async function getDefine(isDevelopment) {
 			The application uses localStorage to detect whether local data or fetched data was last used and will persist that choice across refreshes.
 			The settings page can be used to make a new choice.
 		*/
-		const localTestDataPhrases = ['Apple', 'Bronco', 'Caesar', 'Drum', 'Elk', 'Fragrance', 'Gingerbread', 'Halo']
+		const localTestDataPhrases = ['Apple', 'Bronco', 'Caesar', 'Drum', 'Elk', 'Fragrance', 'Gingerbread', 'Halo'];
 		console.log(`Adding local test data...`, localTestDataPhrases);
 
 		const localTestDataMap = {};
@@ -50,7 +50,7 @@ module.exports = async function getDefine(isDevelopment) {
 	}
 
 	return DEFINE;
-}
+};
 
 async function createLocalTestData(phrase) {
 	// Default to wells config.

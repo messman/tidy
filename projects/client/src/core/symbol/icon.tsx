@@ -71,34 +71,43 @@ export const iconTypes = {
 	chevronLeft: ChevronLeft,
 	arrowDown: ArrowDown,
 	arrowUp: ArrowUp,
-}
+};
 
 export interface IconProps {
 	type: SVGIconType,
 	fill?: string,
-	width?: string | number,
-	height?: string | number
+	width?: string,
+	height?: string;
 }
 
 export const Icon: React.FC<IconProps> = (props) => {
 
 	// Get the width and height props separately. If we use spread, 
-	const { type, fill, ...widthAndHeightProps } = props;
+	const { type, fill, width, height } = props;
+	// Note - Safari SVG does not accept 'rem' width/height - so use percent and scale using wrapper.
+	const setValue = !!width ? 'width' : 'height';
+	const iconProp = { [setValue]: '100%' };
+
 	const SVGIcon = type;
 
+
 	return (
-		<SVGWrapper fill={fill}>
-			<SVGIcon {...widthAndHeightProps} />
+		<SVGWrapper fill={fill} wrapperWidth={width} wrapperHeight={height}>
+			<SVGIcon {...iconProp} />
 		</SVGWrapper>
 	);
-}
+};
 
 interface SVGWrapperProps {
-	fill?: string
+	wrapperWidth?: string,
+	wrapperHeight?: string,
+	fill?: string;
 }
 
 const SVGWrapper = styled.span<SVGWrapperProps>`
 	display: inline-block;
+	width: ${p => p.wrapperWidth || 'unset'};
+	height: ${p => p.wrapperHeight || 'unset'}; 
 
 	svg, svg path {
 		fill: ${p => (p.fill || p.theme.color.textAndIcon)};
