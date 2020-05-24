@@ -53,7 +53,6 @@ function tryExecCopy(textLines: string[]): boolean {
 	document.body.appendChild(textarea);
 
 	textarea.value = textLines.join('\n');
-	console.log(textarea.value);
 	textarea.select();
 	const isSuccess = document.execCommand('copy');
 	textarea.parentNode!.removeChild(textarea);

@@ -72,6 +72,14 @@ export const ClipboardIcon: React.FC<ClipboardIconProps> = (props) => {
 	// Use two booleans to track the 3 states - success, failure, not clicked
 	const [isSuccess, setIsSuccess] = React.useState(false);
 	const [isFailure, setIsFailure] = React.useState(false);
+	const isMounted = React.useRef(true);
+
+	React.useEffect(() => {
+		isMounted.current = true;
+		return () => {
+			isMounted.current = false;
+		};
+	}, []);
 
 	const isDisabled = isSuccess || isFailure || props.isDisabled;
 	const clipboardIconType = isSuccess ? iconTypes.clipboardCheck : iconTypes.clipboard;
@@ -84,17 +92,26 @@ export const ClipboardIcon: React.FC<ClipboardIconProps> = (props) => {
 
 		function waitForReset(): void {
 			setTimeout(() => {
+				if (!isMounted.current) {
+					return;
+				}
 				setIsSuccess(false);
 				setIsFailure(false);
 			}, clipboardTimeout);
 		}
 
 		function onSuccess(): void {
+			if (!isMounted.current) {
+				return;
+			}
 			setIsSuccess(true);
 			waitForReset();
 		}
 
 		function onError(): void {
+			if (!isMounted.current) {
+				return;
+			}
 			setIsFailure(true);
 			setPopupData({
 				type: PopupType.warning,
