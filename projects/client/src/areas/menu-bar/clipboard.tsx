@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { iconTypes } from '@/core/symbol/icon';
+import { setClipboard } from '@/services/data/clipboard';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getTimeTwelveHourString } from '@/services/time';
 import { PopupType, usePopup } from '../alert/popup';
@@ -10,7 +11,7 @@ export const AllResponseClipboardIcon: React.FC = () => {
 	const allResponseState = useAllResponse();
 
 	let isDisabled = false;
-	let text = '';
+	let text: string[] = [];
 
 	if (hasAllResponseData(allResponseState)) {
 		isDisabled = false;
@@ -40,11 +41,11 @@ export const AllResponseClipboardIcon: React.FC = () => {
 		// const sunEventTimeString = getTimeTwelveHourString(sun.next.time);
 
 		text = [
-			[`It's ${referenceTimeString}. The tide is ${tideActionText}.`],
-			[`${nextTideText} tide is at ${nextTideTimeString}.`],
-			[``],
-			[`https://tidy.andrewmessier.com`],
-		].join('\n');
+			`It's ${referenceTimeString}. The tide is ${tideActionText}.`,
+			`${nextTideText} tide is at ${nextTideTimeString}.`,
+			``,
+			`https://tidy.andrewmessier.com`,
+		];
 	}
 
 	return (
@@ -54,7 +55,7 @@ export const AllResponseClipboardIcon: React.FC = () => {
 
 interface ClipboardIconProps {
 	/** Text that will be copied to clipboard. */
-	text: string,
+	text: string | string[],
 	/** Whether or not the clipboard icon is disabled. */
 	isDisabled: boolean,
 	/** Used for testing. */
@@ -76,7 +77,10 @@ export const ClipboardIcon: React.FC<ClipboardIconProps> = (props) => {
 	const clipboardIconType = isSuccess ? iconTypes.clipboardCheck : iconTypes.clipboard;
 	const clipboardTitle = isSuccess ? 'Copied' : 'Copy';
 
-	function onClick(): void {
+	async function onClick(): Promise<void> {
+		if (!props.text) {
+			return;
+		}
 
 		function waitForReset(): void {
 			setTimeout(() => {
@@ -102,12 +106,14 @@ export const ClipboardIcon: React.FC<ClipboardIconProps> = (props) => {
 			waitForReset();
 		}
 
-		// MDN: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText
-		// Permissions API might need to be used, particularly for Firefox.
-		if (!props.isForceFailure) {
-			navigator.clipboard.writeText(props.text).then(onSuccess, onError);
+		try {
+			if (props.isForceFailure) {
+				throw new Error('Purposefully failing.');
+			}
+			await setClipboard(props.text);
+			onSuccess();
 		}
-		else {
+		catch (error) {
 			onError();
 		}
 	}

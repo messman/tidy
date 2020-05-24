@@ -5,13 +5,12 @@ import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, SVGIconType } from '@/core/symbol/icon';
 import { SubText, subtitleHeight } from '@/core/symbol/text';
 
-export interface MenuBarIconProps {
+export interface MenuBarIconProps extends React.HTMLAttributes<HTMLButtonElement> {
 	/** Icon type to use. */
 	type: SVGIconType,
 	/** Title to show on hover or under the icon. */
 	title: string,
 	isDisabled: boolean,
-	onClick: () => void;
 }
 
 /** Single icon to be added to the Menu Bar. */
