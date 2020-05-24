@@ -97,10 +97,10 @@ const SummaryTideBar: React.FC<SummaryTideBarProps> = (props) => {
 
 	return (
 		<>
-			<PreviousCircle />
 			<NextCircle />
 			<CenterLine percent={percent} />
 			<CurrentDot percent={percent} />
+			<PreviousCircle />
 		</>
 	);
 };

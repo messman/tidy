@@ -34,7 +34,7 @@ export const TimelineChart: React.FC<TimelineChartProps> = (props) => {
 		endTime: cutoffDate,
 		outputWidth: width,
 		outputHeight: size.height,
-		outputPaddingTop: 30,
+		outputPaddingTop: 10,
 		outputPaddingBottom: 30
 	});
 
@@ -42,7 +42,7 @@ export const TimelineChart: React.FC<TimelineChartProps> = (props) => {
 	// Our ResizeContainer should size from the parent via Flex.
 	return (
 		<>
-			<ResizeContainer ref={ref} flex='2 1 0'>
+			<ResizeContainer ref={ref} flex='3 1 150px'>
 				{tideChart}
 			</ResizeContainer>
 		</>

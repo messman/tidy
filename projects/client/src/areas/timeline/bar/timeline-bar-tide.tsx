@@ -1,11 +1,13 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { SmallText } from '@/core/symbol/text';
+import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
-import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry, TimelineEntry, TimelineEntryProps } from './timeline-bar-common';
+import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry, TimelineEntryContainer } from './timeline-bar-common';
 
 export const TimelineBarTide: React.FC = () => {
 
@@ -39,8 +41,10 @@ export const TimelineBarTide: React.FC = () => {
 				key={timeKey}
 				referenceTime={info.referenceTime}
 				dateTime={tideEvent.time}
-				backgroundColor={color}
-			/>
+				dotColor={color}
+			>
+				<TimeTextUnit dateTime={tideEvent.time} />
+			</TimelineDotEntry>
 		);
 
 
@@ -64,23 +68,34 @@ export const TimelineBarTide: React.FC = () => {
 	);
 };
 
+const tideTimelineMarginBottom = '4rem';
+const tideTimelineDataEntryOffset = '2rem';
+
 const PaddedTimelineBarLine = styled(TimelineBarLine)`
-	margin-bottom: 4rem;
+	margin-bottom: ${tideTimelineMarginBottom};
 
 `;
 
-export interface TimelineTideDataEntryProps extends Omit<TimelineEntryProps, 'top'> {
+export interface TimelineTideDataEntryProps {
+	referenceTime: DateTime;
+	dateTime: DateTime;
 	isLow: boolean,
 	height: number,
 }
 
 export const TimelineTideDataEntry: React.FC<TimelineTideDataEntryProps> = (props) => {
-	const tideHighLowText = props.isLow ? 'LOW' : 'HIGH';
+	const { referenceTime, dateTime, isLow, height } = props;
+	const left = timeToPixels(referenceTime, dateTime);
 
+	/*
+		Structure:
+		- Outer FlexColumn that centers children horizontally
+			- The last child is the dot that sits at the very bottom and should align with the 'top'/'left' provided
+	*/
 	return (
-		<TimelineEntry referenceTime={props.referenceTime} dateTime={props.dateTime} top='4rem'>
-			<SmallText>{tideHighLowText}</SmallText>
-			<TideHeightTextUnit height={props.height} />
-		</TimelineEntry>
+		<TimelineEntryContainer alignItems='center' left={left} top={tideTimelineDataEntryOffset}>
+			<SmallText>{isLow ? 'LOW' : 'HIGH'}</SmallText>
+			<TideHeightTextUnit height={height} />
+		</TimelineEntryContainer>
 	);
 };

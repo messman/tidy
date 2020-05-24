@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@/core/style/styled';
+import { styled, StyledFC } from '@/core/style/styled';
 
 export type SVGIconType = React.FC<React.SVGAttributes<SVGElement>>;
 
@@ -80,7 +80,7 @@ export interface IconProps {
 	height?: string;
 }
 
-export const Icon: React.FC<IconProps> = (props) => {
+export const Icon: StyledFC<IconProps> = (props) => {
 
 	// Get the width and height props separately. If we use spread, 
 	const { type, fill, width, height } = props;
@@ -92,7 +92,7 @@ export const Icon: React.FC<IconProps> = (props) => {
 
 
 	return (
-		<SVGWrapper fill={fill} wrapperWidth={width} wrapperHeight={height}>
+		<SVGWrapper className={props.className} svgFill={fill} wrapperWidth={width} wrapperHeight={height}>
 			<SVGIcon {...iconProp} />
 		</SVGWrapper>
 	);
@@ -101,7 +101,7 @@ export const Icon: React.FC<IconProps> = (props) => {
 interface SVGWrapperProps {
 	wrapperWidth?: string,
 	wrapperHeight?: string,
-	fill?: string;
+	svgFill?: string;
 }
 
 const SVGWrapper = styled.span<SVGWrapperProps>`
@@ -110,6 +110,6 @@ const SVGWrapper = styled.span<SVGWrapperProps>`
 	height: ${p => p.wrapperHeight || 'unset'}; 
 
 	svg, svg path {
-		fill: ${p => (p.fill || p.theme.color.textAndIcon)};
+		fill: ${p => (p.svgFill || p.theme.color.textAndIcon)};
 	}
 `;

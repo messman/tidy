@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { SunEvent, WeatherStatus } from 'tidy-shared';
 import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
@@ -8,8 +9,9 @@ import { subtitleHeight, Text, titleHeight } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { timeToPixels } from '@/services/time';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';
-import { cutoffHoursFromReference, TimelineEntry, TimelineEntryProps } from '../bar/timeline-bar-common';
+import { cutoffHoursFromReference, TimelineEntryContainer } from '../bar/timeline-bar-common';
 
 interface TimelineWeatherProps {
 }
@@ -60,20 +62,24 @@ export const TimelineWeather: StyledFC<TimelineWeatherProps> = () => {
 	});
 
 	return (
-		<TimelineWeatherContainer flex='none'>
-			{weatherEntries}
-		</TimelineWeatherContainer>
+		<FlexRow alignItems='center' flex='1 0 auto'>
+			<TimelineWeatherContainer>
+				{weatherEntries}
+			</TimelineWeatherContainer>
+		</FlexRow>
 	);
 };
 
-const weatherContainerHeight = '9rem';
-const weatherEntriesHeight = '8rem';
+const weatherContainerHeight = '8rem';
+const weatherEntriesHeight = '1rem';
 
 const TimelineWeatherContainer = styled(Flex)`
 	height: ${weatherContainerHeight};
 `;
 
-interface TimelineWeatherEntryProps extends Omit<TimelineEntryProps, 'top'> {
+interface TimelineWeatherEntryProps {
+	referenceTime: DateTime;
+	dateTime: DateTime;
 	weatherStatus: WeatherStatus;
 	iconColor: string,
 	useDayIcon: boolean;
@@ -81,14 +87,15 @@ interface TimelineWeatherEntryProps extends Omit<TimelineEntryProps, 'top'> {
 
 const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 
+	const { referenceTime, dateTime, iconColor, useDayIcon, weatherStatus } = props;
+	const left = timeToPixels(referenceTime, dateTime);
+
+	const { tempText, windText, icon, chanceRainText } = processWeatherForDisplay(weatherStatus, useDayIcon);
 	const iconHeight = subtitleHeight;
-	const { iconColor, useDayIcon } = props;
-	const { tempText, windText, icon, chanceRainText } = processWeatherForDisplay(props.weatherStatus, useDayIcon);
 
 	return (
-		<TimelineEntry referenceTime={props.referenceTime} dateTime={props.dateTime} top={weatherEntriesHeight}>
+		<TimelineEntryContainer alignItems='center' left={left} top={weatherEntriesHeight}>
 			<FlexColumn>
-
 				<NonBreakingPadding>
 					<Center>
 						<Icon type={icon} fill={iconColor} height={titleHeight} />
@@ -118,7 +125,7 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 					</Text>
 				</NonBreakingPadding>
 			</FlexColumn>
-		</TimelineEntry>
+		</TimelineEntryContainer>
 	);
 };
 

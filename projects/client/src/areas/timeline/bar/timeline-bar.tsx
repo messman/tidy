@@ -7,10 +7,10 @@ import { TimelineBarWeather } from './timeline-bar-weather';
 
 export const TimelineBar: React.FC = () => {
 
-	// Use flex 1 0 0, meaning, "I can take up more space (vertically), but I won't shrink".
+	// Use flex 1 0 auto, meaning, "I can take up more space (vertically), but I won't shrink".
 	// And when growing, center the content within.
 	return (
-		<FlexColumn flex='1 0 0' justifyContent='center'>
+		<FlexColumn flex='2 0 auto' justifyContent='center'>
 
 			<BarPadding>
 				<TimelineBarWeather />

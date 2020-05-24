@@ -68,7 +68,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	*/
 	return (
 		<OverflowAutoFlexRow>
-			<FlexColumn>
+			<FlexColumn flex='none'>
 				<Summary isCompactVertical={false} />
 				<Timeline />
 			</FlexColumn>

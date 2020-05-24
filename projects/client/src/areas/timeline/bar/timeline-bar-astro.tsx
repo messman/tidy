@@ -3,13 +3,13 @@ import { DateTime } from 'tidy-shared/node_modules/@types/luxon';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Text } from '@/core/symbol/text';
+import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getDateDayOfWeek, timeToPixels } from '@/services/time';
-import { dotEntryTop, TimelineBarDot, TimelineBarLine, TimelineDotEntry, TimelineEntry, TimelineEntryProps } from './timeline-bar-common';
+import { TimelineBarLine, TimelineDotEntry } from './timeline-bar-common';
 
 // Used instead of the hours value of other components so that we can still show the highlight bar.
 const customCutoffMinutesFromReference = 30;
-const customCutoffHoursForTitle = 1;
 
 const customDayCutoffHoursFromStart = 1;
 const customDayCutoffHoursFromEnd = 1;
@@ -40,20 +40,16 @@ export const TimelineBarAstro: React.FC = () => {
 	const paddedLastEventTime = lastEvent.time.plus({ hours: 1 });
 	const widthPixels = timeToPixels(info.referenceTime, paddedLastEventTime);
 
-	const referenceTimePlusTitleCutoff = info.referenceTime.plus({ hours: customCutoffHoursForTitle });
 	const sunEntries = validSunEvents.map((sunEvent) => {
-
-		// If within the cutoff, don't show the time.
-		const isTitleHidden = sunEvent.time < referenceTimePlusTitleCutoff;
-
 		return (
 			<TimelineDotEntry
 				key={sunEvent.time.valueOf()}
 				referenceTime={info.referenceTime}
 				dateTime={sunEvent.time}
-				backgroundColor={color}
-				isTimeHidden={isTitleHidden}
-			/>
+				dotColor={color}
+			>
+				<TimeTextUnit dateTime={sunEvent.time} />
+			</TimelineDotEntry>
 		);
 	});
 
@@ -111,12 +107,16 @@ export const TimelineBarAstro: React.FC = () => {
 	const dayEntries = dayEvents.map((dayEvent) => {
 		const key = `astro_day_${dayEvent.valueOf()}`;
 		return (
-			<TimelineDayDotEntry
+			<TimelineDotEntry
 				key={key}
 				referenceTime={info.referenceTime}
 				dateTime={dayEvent}
-				backgroundColor={theme.color.textAndIcon}
-			/>
+				dotColor={theme.color.textAndIcon}
+			>
+				<NonBreaking>
+					<Text>{getDateDayOfWeek(dayEvent)}</Text>
+				</NonBreaking>
+			</TimelineDotEntry>
 		);
 	});
 
@@ -138,23 +138,6 @@ const SunBar = styled(TimelineBarLine) <SunBarProps>`
 	left: ${p => p.left}px;
 	background-color: ${p => p.theme.color.sun};
 `;
-
-
-export interface TimelineDayDotEntryProps extends Omit<TimelineEntryProps, 'top'> {
-	backgroundColor: string,
-}
-
-export const TimelineDayDotEntry: React.FC<TimelineDayDotEntryProps> = (props) => {
-	return (
-		<TimelineEntry referenceTime={props.referenceTime} dateTime={props.dateTime} top={dotEntryTop}>
-			<NonBreaking>
-
-				<Text>{getDateDayOfWeek(props.dateTime)}</Text>
-			</NonBreaking>
-			<TimelineBarDot backgroundColor={props.backgroundColor} />
-		</TimelineEntry>
-	);
-};
 
 const NonBreaking = styled.div`
 	white-space: nowrap;

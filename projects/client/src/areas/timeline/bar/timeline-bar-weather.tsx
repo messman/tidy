@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useCurrentTheme } from '@/core/style/theme';
+import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry } from './timeline-bar-common';
@@ -32,9 +33,10 @@ export const TimelineBarWeather: React.FC = () => {
 				key={weatherStatus.time.valueOf()}
 				referenceTime={info.referenceTime}
 				dateTime={weatherStatus.time}
-				backgroundColor={color}
-				isHourOnly={true}
-			/>
+				dotColor={color}
+			>
+				<TimeTextUnit dateTime={weatherStatus.time} isHourOnly={true} />
+			</TimelineDotEntry>
 		);
 	});
 

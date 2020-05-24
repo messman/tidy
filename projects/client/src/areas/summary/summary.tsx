@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { SummaryAstro } from './summary-astro';
 import { SummaryTide } from './summary-tide';
 import { SummaryTitle } from './summary-title';
@@ -12,6 +13,11 @@ export interface SummaryProps {
 }
 
 export const Summary: React.FC<SummaryProps> = (props) => {
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
+		return <Flex />;
+	}
+
 	const { isCompactVertical } = props;
 
 	if (isCompactVertical) {
@@ -67,6 +73,7 @@ export const Summary: React.FC<SummaryProps> = (props) => {
 
 const SummaryHorizontalPadding = styled.div`
 	width: ${edgePaddingValue};
+	height: 1rem;
 `;
 
 const SummaryPadding = styled.div`
