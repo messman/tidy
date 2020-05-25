@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useWindowDimensions } from './window-dimensions';
 
 export interface ElementSize {
 	isSizing: boolean,
@@ -13,13 +14,14 @@ const defaultElementSize: ElementSize = {
 };
 
 export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObject<T | null>, throttleMilliseconds: number | null, additionalDependencies: any[] | null): ElementSize {
+	const windowDimensions = useWindowDimensions();
 	const [size, setSize] = React.useState<ElementSize>(() => {
 		return defaultElementSize;
 	});
 	const throttleTimeoutId = React.useRef(-1);
 	const timeout = (isNaN(throttleMilliseconds!) || throttleMilliseconds! < 10) ? 10 : throttleMilliseconds;
 
-	function handleChange() {
+	React.useEffect(function () {
 		if (throttleTimeoutId.current !== -1) {
 			return;
 		}
@@ -49,21 +51,8 @@ export function useElementSize<T extends HTMLElement>(ref: React.MutableRefObjec
 				isSizing: true
 			};
 		});
-	}
 
-	React.useLayoutEffect(function () {
-		handleChange();
-
-		window.addEventListener('resize', handleChange);
-		window.addEventListener('orientationchange', handleChange);
-		window.addEventListener('visibilitychange', handleChange);
-
-		return function () {
-			window.removeEventListener('resize', handleChange);
-			window.removeEventListener('orientationchange', handleChange);
-			window.removeEventListener('visibilitychange', handleChange);
-		};
-	}, [ref.current, ...(additionalDependencies || [])]);
+	}, [ref.current, windowDimensions, ...(additionalDependencies || [])]);
 
 	return size;
 }

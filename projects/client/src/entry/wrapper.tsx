@@ -8,6 +8,7 @@ import { LocalStorageThemeProvider } from '@/core/style/theme';
 import { AllResponseProvider } from '@/services/data/data';
 import { LocalDataPhraseProvider } from '@/services/data/data-local';
 import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/layout/responsive-layout';
+import { WindowDimensionsProvider } from '@/services/layout/window-dimensions';
 
 export const Wrapper: React.FC = (props) => {
 	return (
@@ -22,17 +23,19 @@ export const Wrapper: React.FC = (props) => {
 const Providers: React.FC = (props) => {
 	return (
 		<LocalStorageThemeProvider>
-			<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
-				<ComponentLayoutProvider>
-					<LocalDataPhraseProvider>
-						<AllResponseProvider>
-							<PopupProvider>
-								{props.children}
-							</PopupProvider>
-						</AllResponseProvider>
-					</LocalDataPhraseProvider>
-				</ComponentLayoutProvider>
-			</ResponsiveLayoutProvider>
+			<WindowDimensionsProvider>
+				<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
+					<ComponentLayoutProvider>
+						<LocalDataPhraseProvider>
+							<AllResponseProvider>
+								<PopupProvider>
+									{props.children}
+								</PopupProvider>
+							</AllResponseProvider>
+						</LocalDataPhraseProvider>
+					</ComponentLayoutProvider>
+				</ResponsiveLayoutProvider>
+			</WindowDimensionsProvider>
 		</LocalStorageThemeProvider>
 	);
 };

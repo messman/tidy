@@ -31,10 +31,13 @@ export const Settings: React.FC<SettingsProps> = () => {
 			</Margin>
 			<MarginText>
 				Tidy provides present and future information on tides, sunrise/sunset, and weather for Wells, Maine.
-				</MarginText>
+			</MarginText>
 			<MarginText>
 				Tidy cannot guarantee the accuracy of any provided data. Data is sourced from public NOAA and NWS interfaces.
-				</MarginText>
+			</MarginText>
+			<MarginText>
+				Tidy is a work-in-progress and will change throughout 2020 as fixes and features are implemented.
+			</MarginText>
 			<Margin>
 				<FlexRow>
 					<Flex>

@@ -17,7 +17,7 @@ export enum LayoutMode {
 export interface ResponsiveLayout {
 	widthBreakpoint: number,
 	heightBreakpoint: number,
-	mode: LayoutMode
+	mode: LayoutMode;
 }
 
 export function isInvalidLayoutForApplication(layout: ResponsiveLayout): boolean {
@@ -46,14 +46,14 @@ function getLayout(dimensions: WindowDimensions, lowerBreakpoints: number[]): Re
 		widthBreakpoint: newWidthBreakpoint,
 		heightBreakpoint: newHeightBreakpoint,
 		mode: newMode
-	}
+	};
 }
 
 const ResponsiveLayoutContext = React.createContext<ResponsiveLayout>(null!);
 export const useResponsiveLayout = () => React.useContext(ResponsiveLayoutContext);
 
 export interface ResponsiveLayoutProviderProps {
-	lowerBreakpoints: number[]
+	lowerBreakpoints: number[];
 }
 
 export const ResponsiveLayoutProvider: React.FC<ResponsiveLayoutProviderProps> = (props) => {
@@ -74,5 +74,5 @@ export const ResponsiveLayoutProvider: React.FC<ResponsiveLayoutProviderProps> =
 		<ResponsiveLayoutContext.Provider value={layout}>
 			{props.children}
 		</ResponsiveLayoutContext.Provider>
-	)
-}
+	);
+};
