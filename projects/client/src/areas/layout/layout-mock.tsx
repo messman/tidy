@@ -11,14 +11,14 @@ export const MockSummary: React.FC<SummaryProps> = (props) => {
 
 	if (props.isCompactVertical) {
 		return (
-			<Area color='red' >
+			<Area color='lightpink' >
 				<Text>Summary Compact Vertical</Text>
 			</Area>
 		);
 	}
 
 	return (
-		<Area color='red' maxHeight={250}>
+		<Area color='lightpink' maxHeight={250}>
 			<Text>Summary Horizontal</Text>
 		</Area>
 	);
@@ -26,7 +26,7 @@ export const MockSummary: React.FC<SummaryProps> = (props) => {
 
 export const MockTimeline: React.FC<TimelineProps> = () => {
 	return (
-		<Area color='rebeccapurple'>
+		<Area color='lightpink'>
 			<Text>Timeline</Text>
 		</Area>
 	);
@@ -34,7 +34,7 @@ export const MockTimeline: React.FC<TimelineProps> = () => {
 
 export const MockForecast: React.FC<ForecastProps> = () => {
 	return (
-		<Area color='deepskyblue'>
+		<Area color='lightpink'>
 			<Text>Forecast</Text>
 		</Area>
 	);
@@ -42,7 +42,7 @@ export const MockForecast: React.FC<ForecastProps> = () => {
 
 export const MockSettings: React.FC<SettingsProps> = () => {
 	return (
-		<Area color='orange'>
+		<Area color='lightpink'>
 			<Text>Settings</Text>
 		</Area>
 	);

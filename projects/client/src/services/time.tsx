@@ -116,6 +116,10 @@ export function timeToPixels(startDate: DateTime, endDate: DateTime): number {
 	return timeToPixelsWithConstant(startDate, endDate, _pixelsPerHour);
 }
 
+export function pixelsToTime(dateTime: DateTime, pixelsOffset: number): DateTime {
+	return dateTime.plus({ hours: pixelsOffset / _pixelsPerHour });
+}
+
 export function timeToPixelsWithConstant(startDate: DateTime, endDate: DateTime, pixelsPerHour: number): number {
 	return endDate.diff(startDate, 'hours').hours * pixelsPerHour;
 }

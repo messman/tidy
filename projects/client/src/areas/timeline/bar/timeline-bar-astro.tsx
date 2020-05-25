@@ -6,15 +6,14 @@ import { Text } from '@/core/symbol/text';
 import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getDateDayOfWeek, timeToPixels } from '@/services/time';
-import { TimelineBarLine, TimelineDotEntry } from './timeline-bar-common';
+import { cutoffHoursFromStart, textCutoffHoursFromStart, TimelineBarLine, TimelineBaseProps, TimelineDotEntry } from './timeline-bar-common';
 
-// Used instead of the hours value of other components so that we can still show the highlight bar.
-const customCutoffMinutesFromReference = 30;
-
-const customDayCutoffHoursFromStart = 1;
+// When listing day entries, don't show so close to the end of our timeline.
 const customDayCutoffHoursFromEnd = 1;
 
-export const TimelineBarAstro: React.FC = () => {
+export interface TimelineBarAstroProps extends TimelineBaseProps { }
+
+export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 
 	const allResponseState = useAllResponse();
 	const theme = useCurrentTheme();
@@ -22,33 +21,39 @@ export const TimelineBarAstro: React.FC = () => {
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
-	const { all, info } = allResponseState.data!;
+	const { timelineStartTime } = props;
+	const { all } = allResponseState.data!;
 	const { sun, cutoffDate } = all.predictions;
+
+	// After we filter out entries, we also use this value to determine whether we show the text for the dot entry.
+	const startTimePlusTextCutoff = timelineStartTime.plus({ hours: textCutoffHoursFromStart });
 
 	//
 	// Sun Entries
 	//
 
 	// Filter out event if it's too close to our reference time or after our cutoff.
-	const referenceTimePlusCutoff = info.referenceTime.plus({ minutes: customCutoffMinutesFromReference });
+	const startTimePlusCutoff = timelineStartTime.plus({ hours: cutoffHoursFromStart });
 	const validSunEvents = sun.filter((sunEvent) => {
-		return (sunEvent.time > referenceTimePlusCutoff) && (sunEvent.time < cutoffDate);
+		return (sunEvent.time > startTimePlusCutoff) && (sunEvent.time < cutoffDate);
 	});
 
 	const lastEvent = validSunEvents[validSunEvents.length - 1];
 	// Add some time padding to make sure we include all necessary information.
 	const paddedLastEventTime = lastEvent.time.plus({ hours: 1 });
-	const widthPixels = timeToPixels(info.referenceTime, paddedLastEventTime);
+	const widthPixels = timeToPixels(timelineStartTime, paddedLastEventTime);
 
 	const sunEntries = validSunEvents.map((sunEvent) => {
+		const textUnitAfterTextCutoff = sunEvent.time > startTimePlusTextCutoff ? <TimeTextUnit dateTime={sunEvent.time} /> : null;
+
 		return (
 			<TimelineDotEntry
 				key={sunEvent.time.valueOf()}
-				referenceTime={info.referenceTime}
+				startTime={timelineStartTime}
 				dateTime={sunEvent.time}
 				dotColor={color}
 			>
-				<TimeTextUnit dateTime={sunEvent.time} />
+				{textUnitAfterTextCutoff}
 			</TimelineDotEntry>
 		);
 	});
@@ -62,7 +67,7 @@ export const TimelineBarAstro: React.FC = () => {
 	let startIndex = 0;
 	if (!firstEvent.isSunrise) {
 		startIndex = 1;
-		sunEventTimePairs.push([info.referenceTime, firstEvent.time]);
+		sunEventTimePairs.push([timelineStartTime, firstEvent.time]);
 	}
 	for (startIndex; startIndex < validSunEvents.length; startIndex += 2) {
 		const sunriseEvent = validSunEvents[startIndex];
@@ -75,7 +80,7 @@ export const TimelineBarAstro: React.FC = () => {
 
 	const sunBars = sunEventTimePairs.map((timePairs) => {
 		const key = `pair_${timePairs[0].valueOf()}`;
-		const left = timeToPixels(info.referenceTime, timePairs[0]);
+		const left = timeToPixels(timelineStartTime, timePairs[0]);
 		const width = timeToPixels(timePairs[0], timePairs[1]);
 
 		return (
@@ -91,7 +96,7 @@ export const TimelineBarAstro: React.FC = () => {
 	// Day Entries
 	//
 
-	const dayStartCutoffDate = info.referenceTime.plus({ hours: customDayCutoffHoursFromStart });
+	const dayStartCutoffDate = timelineStartTime.plus({ hours: cutoffHoursFromStart });
 	const dayEndCutoffDate = cutoffDate.minus({ hours: customDayCutoffHoursFromEnd });
 	// Start with the beginning of the next day, after our cutoff.
 	let day = dayStartCutoffDate.plus({ days: 1 });
@@ -106,16 +111,23 @@ export const TimelineBarAstro: React.FC = () => {
 
 	const dayEntries = dayEvents.map((dayEvent) => {
 		const key = `astro_day_${dayEvent.valueOf()}`;
-		return (
-			<TimelineDotEntry
-				key={key}
-				referenceTime={info.referenceTime}
-				dateTime={dayEvent}
-				dotColor={theme.color.textAndIcon}
-			>
+		let textAfterCutoff: JSX.Element | null = null;
+		if (dayEvent > startTimePlusTextCutoff) {
+			textAfterCutoff = (
 				<NonBreaking>
 					<Text>{getDateDayOfWeek(dayEvent)}</Text>
 				</NonBreaking>
+			);
+		}
+
+		return (
+			<TimelineDotEntry
+				key={key}
+				startTime={timelineStartTime}
+				dateTime={dayEvent}
+				dotColor={theme.color.textAndIcon}
+			>
+				{textAfterCutoff}
 			</TimelineDotEntry>
 		);
 	});

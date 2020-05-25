@@ -3,9 +3,12 @@ import { useCurrentTheme } from '@/core/style/theme';
 import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
-import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry } from './timeline-bar-common';
+import { filterWeather } from '@/services/weather/weather-process';
+import { TimelineBarLine, TimelineBaseProps, TimelineDotEntry, weatherCutoffHoursFromReference } from './timeline-bar-common';
 
-export const TimelineBarWeather: React.FC = () => {
+export interface TimelineBarWeatherProps extends TimelineBaseProps { }
+
+export const TimelineBarWeather: React.FC<TimelineBarWeatherProps> = (props) => {
 
 	const allResponseState = useAllResponse();
 	const theme = useCurrentTheme();
@@ -13,25 +16,22 @@ export const TimelineBarWeather: React.FC = () => {
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
+	const { timelineStartTime } = props;
 	const { all, info } = allResponseState.data!;
 	const { weather, cutoffDate } = all.predictions;
 
-	// Filter out status if it's too close to our reference time or after our cutoff.
-	const referenceTimePlusCutoff = info.referenceTime.plus({ hours: cutoffHoursFromReference });
-	const validWeatherStatuses = weather.filter((weatherStatus) => {
-		return (weatherStatus.time > referenceTimePlusCutoff) && (weatherStatus.time < cutoffDate);
-	});
+	const validWeatherStatuses = filterWeather(weather, info.referenceTime, weatherCutoffHoursFromReference, cutoffDate);
 
 	const lastEvent = validWeatherStatuses[validWeatherStatuses.length - 1];
 	// Add some time padding to make sure we include all necessary information.
 	const lastEventTime = lastEvent.time.plus({ hours: 2 });
-	const widthPixels = timeToPixels(info.referenceTime, lastEventTime);
+	const widthPixels = timeToPixels(timelineStartTime, lastEventTime);
 
 	const weatherEntries = validWeatherStatuses.map((weatherStatus) => {
 		return (
 			<TimelineDotEntry
 				key={weatherStatus.time.valueOf()}
-				referenceTime={info.referenceTime}
+				startTime={timelineStartTime}
 				dateTime={weatherStatus.time}
 				dotColor={color}
 			>

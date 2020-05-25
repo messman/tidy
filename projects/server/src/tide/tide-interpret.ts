@@ -1,15 +1,15 @@
-import { AllCurrentTides, TideEventRange, TideExtremes, TideStatus, TideEvent } from 'tidy-shared';
-import { APIConfigurationContext } from '../all/context';
 import { DateTime } from 'luxon';
+import { AllCurrentTides, TideEvent, TideEventRange, TideExtremes, TideStatus } from 'tidy-shared';
 import { ForDay } from '../all/all';
 import { AllIssue } from '../all/all-merge';
+import { APIConfigurationContext } from '../all/context';
 import { IntermediateTideValues } from './tide-intermediate';
 
 export interface InterpretedTides extends AllIssue {
 	currentTides: AllCurrentTides,
 	shortTermTides: TideEventRange,
 	longTermTideExtremes: TideExtremes,
-	longTermTides: ForDay<TideEventRange>[]
+	longTermTides: ForDay<TideEventRange>[];
 }
 
 export function interpretTides(configurationContext: APIConfigurationContext, intermediateTides: IntermediateTideValues): InterpretedTides {
@@ -22,13 +22,13 @@ export function interpretTides(configurationContext: APIConfigurationContext, in
 			shortTermTides: null!,
 			longTermTideExtremes: null!,
 			longTermTides: null!
-		}
+		};
 	}
 
 	const { pastEvents, current, futureEvents } = intermediateTides;
 
 	const currentTides = interpretCurrent(pastEvents, current, futureEvents);
-	const shortTermTides = interpretShortTerm(configurationContext, currentTides.previous, futureEvents!);
+	const shortTermTides = interpretShortTerm(configurationContext, pastEvents, futureEvents);
 	const [longTermTideExtremes, longTermTides] = interpretLongTerm(configurationContext, pastEvents, futureEvents);
 
 	return {
@@ -43,24 +43,6 @@ export function interpretTides(configurationContext: APIConfigurationContext, in
 
 function interpretCurrent(pastEvents: TideEvent[], current: TideStatus, futureEvents: TideEvent[]): AllCurrentTides {
 	// Get the previous and next tide relative to the reference time.
-
-	// OLD way - remove if needed.
-	// let previousTide: TideEvent = null!;
-	// let nextTide: TideEvent = null!;
-	// events.some(function (t) {
-	// 	if (!previousTide) {
-	// 		previousTide = t;
-	// 	}
-	// 	if (previousTide.time < t.time && t.time < referenceTime) {
-	// 		previousTide = t;
-	// 	}
-	// 	if (!nextTide && t.time > referenceTime) {
-	// 		nextTide = t;
-	// 		return true;
-	// 	}
-	// 	return false;
-	// });
-
 	const previousTide = pastEvents[pastEvents.length - 1];
 	const nextTide = futureEvents[0];
 	return {
@@ -71,23 +53,35 @@ function interpretCurrent(pastEvents: TideEvent[], current: TideStatus, futureEv
 
 }
 
-function interpretShortTerm(configurationContext: APIConfigurationContext, previousEvent: TideEvent, futureEvents: TideEvent[]): TideEventRange {
+function interpretShortTerm(configurationContext: APIConfigurationContext, pastEvents: TideEvent[], futureEvents: TideEvent[]): TideEventRange {
+
+	/*
+		Special case: usually this is a TideEventRange with only one previous and one next outside of range.
+		But here we include more in an array of previous and next, to handle additional scenarios (like how you might want to show X hours
+		of tides before the reference time and need that space).
+		We should be good to go back at least one full day per configuration.
+	*/
+	// TODO - this is arbitrary, make it part of the config.
+	const outsideEventsLimit = 2;
 
 	// Get the "predictions", a.k.a. the short-term tides information.
 	const shortTermLimitDate = configurationContext.context.maxShortTermDataFetch;
 
-	// Go one past so it looks continuous.
-	let outsideNextEvent: TideEvent | null = null;
-	let shortTermEvents = futureEvents.filter(function (t) {
+	// Go *a few* past so it looks continuous.
+	let outsideNextEventIndex: number = -1;
+	const shortTermEvents = futureEvents.filter(function (t, i) {
 		if (t.time <= shortTermLimitDate) {
 			return true;
 		}
-		else if (!outsideNextEvent) {
-			outsideNextEvent = t;
-			return false;
+		if (outsideNextEventIndex < 0) {
+			outsideNextEventIndex = i;
 		}
 		return false;
 	});
+	let outsideNextEvents: TideEvent[] = [];
+	if (outsideNextEventIndex >= 0) {
+		outsideNextEvents = futureEvents.slice(outsideNextEventIndex, Math.min(outsideNextEventIndex + outsideEventsLimit, futureEvents.length - 1));
+	}
 
 	const [minEvent, maxEvent] = getMinMaxEvents(shortTermEvents);
 
@@ -95,8 +89,8 @@ function interpretShortTerm(configurationContext: APIConfigurationContext, previ
 		lowest: minEvent,
 		highest: maxEvent,
 		events: shortTermEvents,
-		outsidePrevious: previousEvent,
-		outsideNext: outsideNextEvent
+		outsidePrevious: pastEvents.slice(-outsideEventsLimit),
+		outsideNext: outsideNextEvents
 	};
 }
 
@@ -107,7 +101,7 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 
 	const allEvents = [...pastEvents, ...futureEvents];
 	const eventsByDay: TideEvent[][] = [];
-	let currentEventsOfDay: TideEvent[] = []
+	let currentEventsOfDay: TideEvent[] = [];
 	let previousEventDateTime: DateTime;
 
 	allEvents.forEach((t) => {
@@ -151,8 +145,8 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 					lowest: minEvent,
 					highest: maxEvent,
 					events: events,
-					outsidePrevious: previousDayEvents[previousDayEvents.length - 1],
-					outsideNext: nextDayEvents[0]
+					outsidePrevious: previousDayEvents.slice(-1),
+					outsideNext: [nextDayEvents[0]]
 				}
 			});
 		}

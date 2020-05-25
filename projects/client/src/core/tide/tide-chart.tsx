@@ -71,9 +71,9 @@ function computeTideChartOutput(tideEventRange: TideEventRange, startTime: DateT
 
 function tideEventRangeToPoint(tideEventRange: TideEventRange): Point[] {
 	const points = [
-		tideStatusToPoint(tideEventRange.outsidePrevious),
+		...tideEventRange.outsidePrevious.map(tideStatusToPoint),
 		...tideEventRange.events.map(tideStatusToPoint),
-		tideStatusToPoint(tideEventRange.outsideNext),
+		...tideEventRange.outsideNext.map(tideStatusToPoint),
 	];
 	return points.filter<Point>((point): point is Point => {
 		return !!point;

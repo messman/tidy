@@ -7,9 +7,11 @@ import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
-import { cutoffHoursFromReference, TimelineBarLine, TimelineDotEntry, TimelineEntryContainer } from './timeline-bar-common';
+import { cutoffHoursFromStart, textCutoffHoursFromStart, TimelineBarLine, TimelineBaseProps, TimelineDotEntry, TimelineEntryContainer } from './timeline-bar-common';
 
-export const TimelineBarTide: React.FC = () => {
+export interface TimelineBarTideProps extends TimelineBaseProps { }
+
+export const TimelineBarTide: React.FC<TimelineBarTideProps> = (props) => {
 
 	const allResponseState = useAllResponse();
 	const theme = useCurrentTheme();
@@ -17,47 +19,58 @@ export const TimelineBarTide: React.FC = () => {
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
-	const { all, info } = allResponseState.data!;
+	const { timelineStartTime } = props;
+	const { all } = allResponseState.data!;
 	const { tides, cutoffDate } = all.predictions;
 
-	// Filter out status if it's too close to our reference time or after our cutoff.
-	const referenceTimePlusCutoff = info.referenceTime.plus({ hours: cutoffHoursFromReference });
-	const validTideEvents = tides.events.filter((tideEvent) => {
-		return (tideEvent.time > referenceTimePlusCutoff) && (tideEvent.time < cutoffDate);
+	// After we filter out entries, we also use this value to determine whether we show the text for the dot entry.
+	const startTimePlusTextCutoff = timelineStartTime.plus({ hours: textCutoffHoursFromStart });
+
+	// Filter out status if it's too close to our start time or after our cutoff.
+	const startTimePlusCutoff = timelineStartTime.plus({ hours: cutoffHoursFromStart });
+
+	const allTideEvents = [...tides.outsidePrevious, ...tides.events];
+	const validTideEvents = allTideEvents.filter((tideEvent) => {
+		return (tideEvent.time > startTimePlusCutoff) && (tideEvent.time < cutoffDate);
 	});
 
 	const lastEvent = validTideEvents[validTideEvents.length - 1];
 	// Add some time padding to make sure we include all necessary information.
 	const lastEventTime = lastEvent.time.plus({ hours: 2 });
-	const widthPixels = timeToPixels(info.referenceTime, lastEventTime);
+	const widthPixels = timeToPixels(timelineStartTime, lastEventTime);
 
 	// TODO - exclude any entries past the cutoff or too close to our reference time
 	const tideDotEntries: JSX.Element[] = [];
 	const tideDataEntries: JSX.Element[] = [];
 	validTideEvents.forEach((tideEvent) => {
+
+		const showText = tideEvent.time > startTimePlusTextCutoff;
+		const textUnitAfterTextCutoff = showText ? <TimeTextUnit dateTime={tideEvent.time} /> : null;
+
 		const timeKey = `time_${tideEvent.time.valueOf()}`;
 		tideDotEntries.push(
 			<TimelineDotEntry
 				key={timeKey}
-				referenceTime={info.referenceTime}
+				startTime={timelineStartTime}
 				dateTime={tideEvent.time}
 				dotColor={color}
 			>
-				<TimeTextUnit dateTime={tideEvent.time} />
+				{textUnitAfterTextCutoff}
 			</TimelineDotEntry>
 		);
 
-
-		const dataKey = `data_${tideEvent.time.valueOf()}`;
-		tideDataEntries.push(
-			<TimelineTideDataEntry
-				key={dataKey}
-				referenceTime={info.referenceTime}
-				dateTime={tideEvent.time}
-				isLow={tideEvent.isLow}
-				height={tideEvent.height}
-			/>
-		);
+		if (showText) {
+			const dataKey = `data_${tideEvent.time.valueOf()}`;
+			tideDataEntries.push(
+				<TimelineTideDataEntry
+					key={dataKey}
+					startTime={timelineStartTime}
+					dateTime={tideEvent.time}
+					isLow={tideEvent.isLow}
+					height={tideEvent.height}
+				/>
+			);
+		}
 	});
 
 	return (
@@ -77,15 +90,15 @@ const PaddedTimelineBarLine = styled(TimelineBarLine)`
 `;
 
 export interface TimelineTideDataEntryProps {
-	referenceTime: DateTime;
+	startTime: DateTime;
 	dateTime: DateTime;
 	isLow: boolean,
 	height: number,
 }
 
 export const TimelineTideDataEntry: React.FC<TimelineTideDataEntryProps> = (props) => {
-	const { referenceTime, dateTime, isLow, height } = props;
-	const left = timeToPixels(referenceTime, dateTime);
+	const { startTime, dateTime, isLow, height } = props;
+	const left = timeToPixels(startTime, dateTime);
 
 	/*
 		Structure:

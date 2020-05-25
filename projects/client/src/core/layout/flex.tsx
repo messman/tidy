@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { StyledComponent } from 'styled-components';
 import { styled } from '@/core/style/styled';
+import { Theme } from '../style/theme';
 
 export interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
 	flex?: number | string;
@@ -12,11 +14,24 @@ export interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
 	Flex 'none' means '0 0 auto'
 		use the width and height set on the element or fall back to width/height of the inner content
 */
+/*
+	Note on performance: We use Flex *a lot* in this application. So styled-components gives this warning:
+	"Over 200 classes were generated for component Flex with the id of [_______].
+	Consider using the attrs method, together with a style object for frequently changed styles."
 
-export const Flex = styled.div<FlexProps>`
+	More info: https://stackoverflow.com/q/57996925
+	Solution: use the recommended approach, even if just to get the warning out of the way.	
+*/
+export const Flex = styled.div.attrs((p: FlexProps) => {
+	return {
+		style: {
+			flex: p.flex!
+		}
+	};
+})`
 	position: relative;
-	flex: ${p => p.flex};
-`;
+` as StyledComponent<'div', Theme, FlexProps, never>;
+
 
 Flex.defaultProps = {
 	flex: 1

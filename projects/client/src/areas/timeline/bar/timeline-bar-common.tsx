@@ -4,7 +4,17 @@ import { FlexColumn } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { timeToPixels } from '@/services/time';
 
-export const cutoffHoursFromReference = 1.2;
+// Weather won't start until after the reference time.
+export const weatherCutoffHoursFromReference = 1.2;
+// If less than this amount of time to the edge of the screen, don't even render the event.
+export const cutoffHoursFromStart = 0.25;
+// If less than this amount of time to the edge of the screen, don't show the text component of the event.
+export const textCutoffHoursFromStart = 1;
+
+export interface TimelineBaseProps {
+	/** Used to calculate left offset for absolutely-positioned elements. */
+	timelineStartTime: DateTime;
+}
 
 interface TimelineBarLineProps {
 	lineWidth: number;
@@ -37,7 +47,7 @@ export const TimelineBarDot = styled.div<TimelineBarDotProps>`
 `;
 
 export interface TimelineDotEntryProps {
-	referenceTime: DateTime;
+	startTime: DateTime;
 	dateTime: DateTime;
 	dotColor: string;
 }
@@ -45,8 +55,8 @@ export interface TimelineDotEntryProps {
 const dotEntryTop = `${(barDotDiameter + barLineThickness) / 2}px`;
 
 export const TimelineDotEntry: React.FC<TimelineDotEntryProps> = (props) => {
-	const { referenceTime, dateTime, dotColor, children } = props;
-	const left = timeToPixels(referenceTime, dateTime);
+	const { startTime, dateTime, dotColor, children } = props;
+	const left = timeToPixels(startTime, dateTime);
 
 	/*
 		Structure:

@@ -1,5 +1,15 @@
+import { DateTime } from 'luxon';
 import { DailyWeather, WeatherStatus, WeatherStatusType, weatherStatusTypeDescription, WindDirection } from 'tidy-shared';
 import { iconTypes, SVGIconType } from '@/core/symbol/icon';
+
+export function filterWeather(statuses: WeatherStatus[], referenceTime: DateTime, cutOffHoursFromReference: number, cutoffDate: DateTime): WeatherStatus[] {
+	// Filter out status if it's too close to our reference time or after our cutoff.
+	// Note - only weather deals with the reference time. Other bars may use start time.
+	const referenceTimePlusCutoff = referenceTime.plus({ hours: cutOffHoursFromReference });
+	return statuses.filter((weatherStatus) => {
+		return (weatherStatus.time > referenceTimePlusCutoff) && (weatherStatus.time < cutoffDate);
+	});
+}
 
 export interface WeatherDisplay {
 	tempText: string,

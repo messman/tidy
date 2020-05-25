@@ -10,13 +10,12 @@ import { TextUnit } from '@/core/symbol/text-unit';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
-import { processWeatherForDisplay } from '@/services/weather/weather-process';
-import { cutoffHoursFromReference, TimelineEntryContainer } from '../bar/timeline-bar-common';
+import { filterWeather, processWeatherForDisplay } from '@/services/weather/weather-process';
+import { TimelineBaseProps, TimelineEntryContainer, weatherCutoffHoursFromReference } from '../bar/timeline-bar-common';
 
-interface TimelineWeatherProps {
-}
+interface TimelineWeatherProps extends TimelineBaseProps { }
 
-export const TimelineWeather: StyledFC<TimelineWeatherProps> = () => {
+export const TimelineWeather: StyledFC<TimelineWeatherProps> = (props) => {
 
 	const allResponseState = useAllResponse();
 	const theme = useCurrentTheme();
@@ -24,14 +23,11 @@ export const TimelineWeather: StyledFC<TimelineWeatherProps> = () => {
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
+	const { timelineStartTime } = props;
 	const { all, info } = allResponseState.data!;
 	const { weather, cutoffDate, sun } = all.predictions;
 
-	// Filter out status if it's too close to our reference time or after our cutoff.
-	const referenceTimePlusCutoff = info.referenceTime.plus({ hours: cutoffHoursFromReference });
-	const validWeatherStatuses = weather.filter((weatherStatus) => {
-		return (weatherStatus.time > referenceTimePlusCutoff) && (weatherStatus.time < cutoffDate);
-	});
+	const validWeatherStatuses = filterWeather(weather, info.referenceTime, weatherCutoffHoursFromReference, cutoffDate);
 
 	// We need to know when the sunrise and sunset is for each of the weather statuses!
 	// Since everything is in order already, we will iterate as we map the weather statuses.
@@ -52,7 +48,7 @@ export const TimelineWeather: StyledFC<TimelineWeatherProps> = () => {
 		return (
 			<TimelineWeatherEntry
 				key={weatherStatus.time.valueOf()}
-				referenceTime={info.referenceTime}
+				startTime={timelineStartTime}
 				dateTime={weatherStatus.time}
 				weatherStatus={weatherStatus}
 				iconColor={color}
@@ -78,7 +74,7 @@ const TimelineWeatherContainer = styled(Flex)`
 `;
 
 interface TimelineWeatherEntryProps {
-	referenceTime: DateTime;
+	startTime: DateTime;
 	dateTime: DateTime;
 	weatherStatus: WeatherStatus;
 	iconColor: string,
@@ -87,8 +83,8 @@ interface TimelineWeatherEntryProps {
 
 const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 
-	const { referenceTime, dateTime, iconColor, useDayIcon, weatherStatus } = props;
-	const left = timeToPixels(referenceTime, dateTime);
+	const { startTime, dateTime, iconColor, useDayIcon, weatherStatus } = props;
+	const left = timeToPixels(startTime, dateTime);
 
 	const { tempText, windText, icon, chanceRainText } = processWeatherForDisplay(weatherStatus, useDayIcon);
 	const iconHeight = subtitleHeight;

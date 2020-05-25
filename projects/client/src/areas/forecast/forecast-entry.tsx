@@ -150,7 +150,7 @@ export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = () 
 
 	return (
 		<Margin>
-			<Text>Hello!</Text>
+			<Text>In the future, this area will have a summary of the day's forecast information.</Text>
 		</Margin>
 	);
 };

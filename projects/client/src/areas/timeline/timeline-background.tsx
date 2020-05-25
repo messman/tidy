@@ -2,8 +2,9 @@ import * as React from 'react';
 import { styled } from '@/core/style/styled';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { pixelsPerDay, timeToPixels } from '@/services/time';
+import { TimelineBaseProps } from './bar/timeline-bar-common';
 
-export interface TimelineBackgroundProps {
+export interface TimelineBackgroundProps extends TimelineBaseProps {
 	barWidth: number;
 }
 
@@ -13,17 +14,23 @@ export const TimelineBackground: React.FC<TimelineBackgroundProps> = (props) => 
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
-	if (props.barWidth < 1) {
+	const { barWidth, timelineStartTime } = props;
+	if (barWidth < 1) {
 		return null;
 	}
 	const { info } = allResponseState.data!;
 
-	// First, handle the rest of today.
-	const endOfReferenceDay = info.referenceTime.endOf('day');
-	const remainingPixelsToday = timeToPixels(info.referenceTime, endOfReferenceDay);
-	const widths: number[] = [remainingPixelsToday];
+	/*
+		day of the referenceTime should always have the default dark background instead of the other background.
+	*/
+	const isFirstDayAlternate = !timelineStartTime.hasSame(info.referenceTime, 'day');
 
-	let totalBarWidthRemaining = props.barWidth - remainingPixelsToday;
+	// First, handle the rest of the start day.
+	const endOfStartDay = timelineStartTime.endOf('day');
+	const remainingPixelsStartDay = timeToPixels(timelineStartTime, endOfStartDay);
+	const widths: number[] = [remainingPixelsStartDay];
+
+	let totalBarWidthRemaining = props.barWidth - remainingPixelsStartDay;
 	while (totalBarWidthRemaining > 0) {
 		const newTotalBarWidthRemaining = Math.max(0, totalBarWidthRemaining - pixelsPerDay);
 		widths.push(totalBarWidthRemaining - newTotalBarWidthRemaining);
@@ -34,7 +41,7 @@ export const TimelineBackground: React.FC<TimelineBackgroundProps> = (props) => 
 	const backgrounds = widths.map((width, i) => {
 		const left = totalLeft;
 		const key = `bg_${left}_${width}`;
-		const isAlternate = i % 2 !== 0;
+		const isAlternate = i % 2 === (isFirstDayAlternate ? 0 : 1);
 		totalLeft += width;
 		return (
 			<FlippingBackground
