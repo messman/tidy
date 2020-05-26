@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { FlexRoot } from '@/core/layout/flex';
 import { LocalStorageThemeProvider, ThemePicker } from '@/core/style/theme';
+import { TextPara } from '@/core/symbol/text';
 import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/layout/responsive-layout';
+import { WindowDimensionsProvider } from '@/services/layout/window-dimensions';
 import { decorateWith } from '@/test/storybook/decorate';
 import { boolean, text } from '@storybook/addon-knobs';
 import { InvalidCheck } from './invalid';
@@ -14,11 +16,13 @@ export default { title: 'areas/alert' };
 const WrapperDecorator = (story: () => JSX.Element) => {
 	return (
 		<LocalStorageThemeProvider>
-			<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
-				<FlexRoot>
-					{story()}
-				</FlexRoot>
-			</ResponsiveLayoutProvider>
+			<WindowDimensionsProvider>
+				<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
+					<FlexRoot>
+						{story()}
+					</FlexRoot>
+				</ResponsiveLayoutProvider>
+			</WindowDimensionsProvider>
 		</LocalStorageThemeProvider>
 	);
 };
@@ -47,10 +51,33 @@ export const TestInvalid = decorateWith(() => {
 			forceAlertMessages={alertMessages}
 			isForceInternetExplorer={isForceInternetExplorer}
 			isForceInvalidLayout={isForceInvalidLayout}
+			error={null}
 		>
 			<div>
 				<ThemePicker />
+				<ErrorThrower />
 			</div>
 		</InvalidCheck>
 	);
 }, [WrapperDecorator]);
+
+const ErrorThrower: React.FC = () => {
+
+	const [isError, setIsError] = React.useState(false);
+
+	function onClick() {
+		setIsError(true);
+	}
+
+	if (isError) {
+		throw new Error('Error while rendering!');
+	}
+
+	return (
+		<div onClick={onClick}>
+			<TextPara>
+				Click here to cause an error!
+			</TextPara>
+		</div>
+	);
+};

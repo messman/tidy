@@ -60,6 +60,7 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 	const shortTermWeather: WeatherStatus[] = [];
 
 	// Current weather comes from the closest even hour (moving forward).
+	// Note - this means we may skip forward into the next day.
 	let startHour = currentHour;
 	if (startHour.hour % 2 === 1) {
 		startHour = startHour.plus({ hours: 1 });
