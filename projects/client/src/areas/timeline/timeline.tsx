@@ -20,7 +20,10 @@ export const Timeline: React.FC<TimelineProps> = () => {
 
 	const allResponseState = useAllResponse();
 	const ref = React.useRef<HTMLDivElement>(null);
-	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, null);
+	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, [
+		// Additional dependencies for checking on element size
+		allResponseState.isRunning
+	]);
 	const dimensions = useWindowDimensions();
 	if (!hasAllResponseData(allResponseState)) {
 		return null;

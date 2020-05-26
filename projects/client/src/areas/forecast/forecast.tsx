@@ -26,7 +26,8 @@ export const Forecast: React.FC<ForecastProps> = () => {
 	const ref = React.useRef<HTMLDivElement>(null!);
 	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, [
 		// Additional dependencies to control when we should check for size - special case. See the TODO above.
-		componentLayout.isCompactForecastView
+		componentLayout.isCompactForecastView,
+		allResponseState.data
 	]);
 
 	if (!hasAllResponseData(allResponseState)) {
