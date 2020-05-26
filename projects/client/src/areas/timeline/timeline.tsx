@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FlexColumn } from '@/core/layout/flex';
+import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
@@ -43,6 +44,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
 		<FlexColumn ref={ref}>
 			<TimelineBackground timelineStartTime={startTime} barWidth={size.width} />
 			<CurrentTimeLine leftOffset={offsetToReferenceTime} />
+			<CurrentTimeLineLegend leftOffset={offsetToReferenceTime} >Now</CurrentTimeLineLegend>
 			<TimelineWeather timelineStartTime={startTime} />
 			<TimelineBar timelineStartTime={startTime} />
 			<TimelineChart timelineStartTime={startTime} all={all} info={info} />
@@ -59,9 +61,20 @@ const CurrentTimeLine = styled.div<CurrentTimeLineProps>`
 	position: absolute;
 	top: 0px;
 	left: ${p => p.leftOffset}px;
-	width: 4px;
+	width: 3px;
 	height: 100%;
 	background-color: ${p => p.theme.color.context};
 	border-radius: 2px;
-	opacity: .3;
+	opacity: .5;
+`;
+
+
+const CurrentTimeLineLegend = styled.div<CurrentTimeLineProps>`
+	position: absolute;
+	top: 0px;
+	right: calc(100% - ${p => p.leftOffset}px);
+	margin-right: ${edgePaddingValue};
+	color: ${p => p.theme.color.context};
+	opacity: .5;
+	text-transform: uppercase;
 `;
