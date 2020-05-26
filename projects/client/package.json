@@ -11,6 +11,7 @@
 		"static": "cd dist && python -m SimpleHTTPServer 8888",
 		"production": "webpack --config webpack.prod.js",
 		"production:w": "webpack --config webpack.prod.js --watch",
+		"analyze-bundle": "webpack-bundle-analyzer --port 4200 dist/stats.json",
 		"storybook": "start-storybook --port=58888"
 	},
 	"repository": {
@@ -62,6 +63,7 @@
 		"typescript": "^3.9.3",
 		"typescript-plugin-styled-components": "^1.4.3",
 		"webpack": "^4.43.0",
+		"webpack-bundle-analyzer": "^3.8.0",
 		"webpack-cli": "^3.3.11",
 		"webpack-dev-server": "^3.7.1",
 		"webpack-merge": "^4.2.1"

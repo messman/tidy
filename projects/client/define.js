@@ -1,6 +1,3 @@
-const tidyServer = require('tidy-server');
-const tidyShared = require('tidy-shared');
-
 module.exports = async function getDefine(isDevelopment) {
 
 	const buildTime = (new Date()).getTime();
@@ -22,6 +19,8 @@ module.exports = async function getDefine(isDevelopment) {
 	};
 
 	if (isDevelopment) {
+		const tidyServer = require('tidy-server');
+		const tidyShared = require('tidy-shared');
 		DEFINE.fetchUrl = JSON.stringify('http://192.168.1.54:8000/latest');
 
 		/*
@@ -39,7 +38,7 @@ module.exports = async function getDefine(isDevelopment) {
 		const localTestDataMap = {};
 		for (let i = 0; i < localTestDataPhrases.length; i++) {
 			const phrase = localTestDataPhrases[i];
-			localTestDataMap[phrase] = tidyShared.serialize(await createLocalTestData(phrase));
+			localTestDataMap[phrase] = tidyShared.serialize(await createLocalTestData(tidyServer, phrase));
 		}
 		// Stringify to JS code, which prevents issues with Date objects (see shared code).
 		DEFINE.localTestData = JSON.stringify(localTestDataMap);
@@ -52,7 +51,7 @@ module.exports = async function getDefine(isDevelopment) {
 	return DEFINE;
 };
 
-async function createLocalTestData(phrase) {
+async function createLocalTestData(tidyServer, phrase) {
 	// Default to wells config.
 	const wellsConfiguration = tidyServer.createWellsConfiguration();
 	return await tidyServer.getAllTestForConfiguration(wellsConfiguration, phrase);

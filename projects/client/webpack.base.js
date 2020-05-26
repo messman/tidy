@@ -3,6 +3,8 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 // Cleans a directory
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -28,7 +30,11 @@ const baseWebpackOptions = {
 		extensions: ['.ts', '.tsx', '.js', '.json'],
 
 		alias: {
-			'@': path.resolve(__dirname, './src')
+			'@': path.resolve(__dirname, './src'),
+
+			// Used to resolve issues when peer dependencies are needed from local dependencies (tidy-shared)
+			// See https://stackoverflow.com/q/57231161
+			'luxon': path.resolve('node_modules', 'luxon'),
 		}
 	},
 
@@ -77,6 +83,10 @@ const baseWebpackOptions = {
 			// Copy to output folder, but then go one up
 			{ from: 'src/static/favicons', to: './' },
 		]),
+		new BundleAnalyzerPlugin({
+			analyzerMode: 'disabled',
+			generateStatsFile: true
+		})
 	]
 };
 

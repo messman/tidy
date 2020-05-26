@@ -16,7 +16,22 @@ module.exports = async () => {
 		},
 
 		optimization: {
-			minimize: true
+			minimize: true,
+			splitChunks: {
+				cacheGroups: {
+					vendor: {
+						name: "node_vendors", // part of the bundle name and
+						// can be used in chunks array of HtmlWebpackPlugin
+						test: /[\\/]node_modules[\\/]/,
+						chunks: "all",
+					},
+				},
+			},
+		},
+
+		stats: {
+			assets: true,
+			assetsSort: '!size'
 		},
 
 		plugins: [

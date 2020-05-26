@@ -6,7 +6,9 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "ts-webpack-builder",
-		"build-client": "ts-webpack-builder --isNode=false --excludeNodeModules=false"
+		"build-production": "ts-webpack-builder --isDevelopment=false",
+		"build-client": "ts-webpack-builder --isNode=false",
+		"build-client-production": "ts-webpack-builder --isNode=false --isDevelopment=false"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",
