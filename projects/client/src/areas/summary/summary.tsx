@@ -24,7 +24,7 @@ export const Summary: React.FC<SummaryProps> = (props) => {
 		return (
 			<Flex>
 				<SummaryPadding>
-					<SummaryTitle />
+					<SummaryTitle showExpandedText={false} />
 				</SummaryPadding>
 				<SummaryPadding>
 					<SummaryTide isDualMode={false} />
@@ -43,8 +43,8 @@ export const Summary: React.FC<SummaryProps> = (props) => {
 		<FlexRow flex='none'>
 			<SummaryHorizontalPadding />
 			<SummaryHorizontalPadding />
-			<SummaryTitleHorizontalContainer flex='none' alignItems='center'>
-				<SummaryTitle />
+			<SummaryTitleHorizontalContainer flex='none' alignItems='center' justifyContent='center'>
+				<SummaryTitle showExpandedText={true} />
 			</SummaryTitleHorizontalContainer>
 			<SummaryHorizontalPadding />
 			<SummaryHorizontalPadding />
@@ -80,7 +80,7 @@ const SummaryPadding = styled.div`
 	margin: ${edgePaddingValue};
 `;
 
-const SummaryTitleHorizontalContainer = styled(FlexRow)`
+const SummaryTitleHorizontalContainer = styled(FlexColumn)`
 	margin: ${edgePaddingValue} 0;
 `;
 

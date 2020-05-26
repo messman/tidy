@@ -30,7 +30,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
 		If in compact view, we want our reference time to be exactly centered. Otherwise, we just need a fair amount of
 		space to show where our reference time is.
 	*/
-	const windowWidth = dimensions.width <= LayoutBreakpoint.regular ? dimensions.width : (LayoutBreakpoint.regular / 2);
+	const windowWidth = dimensions.width <= LayoutBreakpoint.regular ? dimensions.width : (LayoutBreakpoint.regular / 3);
 	const offsetToReferenceTime = windowWidth / 2;
 	const startTime = pixelsToTime(info.referenceTime, -offsetToReferenceTime);
 

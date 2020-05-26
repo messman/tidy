@@ -57,6 +57,7 @@ const baseWebpackOptions = {
 					{
 						loader: '@svgr/webpack',
 						options: {
+							dimensions: false,
 							svgoConfig: {
 								plugins: {
 									removeViewBox: false

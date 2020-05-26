@@ -12,8 +12,8 @@ export const CONSTANT = {
 	/** Expiration timeout for a success. */
 	cacheExpirationTimeout: minutes(4),
 
-	elementSizeSmallThrottleTimeout: seconds(.05),
-	elementSizeLargeThrottleTimeout: seconds(.15),
+	elementSizeSmallThrottleTimeout: seconds(.1),
+	elementSizeLargeThrottleTimeout: seconds(.2),
 
 	clearDataOnNewFetch: false,
 
