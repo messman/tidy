@@ -20,13 +20,14 @@ export const SummaryTitle: React.FC<SummaryTitleProps> = (props) => {
 	}
 	const { all, info } = allResponseState.data!;
 	const { tides } = all.current;
+	const [previous, next] = tides.range.events;
 
 	// [0-100]
-	const timePercent = percentTimeBetween(info.referenceTime, tides.previous.time, tides.next.time);
+	const timePercent = percentTimeBetween(info.referenceTime, previous.time, next.time);
 
-	const previousTideName = tides.previous.isLow ? 'low' : 'high';
-	const nextTideName = tides.next.isLow ? 'low' : 'high';
-	const nextTideIconType = tides.next.isLow ? iconTypes.arrowDown : iconTypes.arrowUp;
+	const previousTideName = previous.isLow ? 'low' : 'high';
+	const nextTideName = next.isLow ? 'low' : 'high';
+	const nextTideIconType = next.isLow ? iconTypes.arrowDown : iconTypes.arrowUp;
 
 	let text = '';
 	let iconType: SVGIconType | null = null;
@@ -37,7 +38,7 @@ export const SummaryTitle: React.FC<SummaryTitleProps> = (props) => {
 	}
 	else if (timePercent <= 80) {
 		// (10-80]
-		const tideActionName = tides.previous.isLow ? 'rising' : 'falling';
+		const tideActionName = previous.isLow ? 'rising' : 'falling';
 		text = `The tide is ${tideActionName}.`;
 		iconType = nextTideIconType;
 	}

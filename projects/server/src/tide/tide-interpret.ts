@@ -44,11 +44,22 @@ export function interpretTides(configurationContext: APIConfigurationContext, in
 function interpretCurrent(pastEvents: TideEvent[], current: TideStatus, futureEvents: TideEvent[]): AllCurrentTides {
 	// Get the previous and next tide relative to the reference time.
 	const previousTide = pastEvents[pastEvents.length - 1];
+	const outsidePreviousTide = pastEvents[pastEvents.length - 2];
 	const nextTide = futureEvents[0];
+	const outsideNextTide = futureEvents[1];
+
+	const events = [previousTide, nextTide];
+	const [minEvent, maxEvent] = getMinMaxEvents(events);
+
 	return {
-		previous: previousTide,
-		next: nextTide,
-		height: current.height
+		height: current.height,
+		range: {
+			events: events,
+			lowest: minEvent,
+			highest: maxEvent,
+			outsidePrevious: [outsidePreviousTide],
+			outsideNext: [outsideNextTide]
+		}
 	};
 
 }

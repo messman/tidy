@@ -2,9 +2,11 @@ import * as React from 'react';
 import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
+import { SmallText } from '@/core/symbol/text';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { SummaryAstro } from './summary-astro';
 import { SummaryTide } from './summary-tide';
+import { SummaryTideChart } from './summary-tide-chart';
 import { SummaryTitle } from './summary-title';
 import { SummaryWeather } from './summary-weather';
 
@@ -22,66 +24,84 @@ export const Summary: React.FC<SummaryProps> = (props) => {
 
 	if (isCompactVertical) {
 		return (
-			<Flex>
-				<SummaryPadding>
+			<FlexColumn>
+				<VerticalPadding />
+				<VerticalContainer>
 					<SummaryTitle showExpandedText={false} />
-				</SummaryPadding>
-				<SummaryPadding>
+				</VerticalContainer>
+				<VerticalPadding />
+				<VerticalContainer>
 					<SummaryTide isDualMode={false} />
-				</SummaryPadding>
-				<SummaryPadding>
+				</VerticalContainer>
+				<VerticalPadding />
+				<VerticalContainer>
 					<SummaryAstro isDualMode={false} />
-				</SummaryPadding>
-				<SummaryPadding>
+				</VerticalContainer>
+				<VerticalPadding />
+				<VerticalContainer>
 					<SummaryWeather isDualMode={false} />
-				</SummaryPadding>
-			</Flex>
+				</VerticalContainer>
+				<SummaryTideChart />
+				<VerticalContainer>
+					<CenterSmallText>Swipe right to left to see a full timeline.</CenterSmallText>
+				</VerticalContainer>
+				<VerticalPadding />
+			</FlexColumn>
 		);
 	}
 
 	return (
 		<FlexRow flex='none'>
-			<SummaryHorizontalPadding />
-			<SummaryHorizontalPadding />
-			<SummaryTitleHorizontalContainer flex='none' alignItems='center' justifyContent='center'>
+			<HorizontalPadding />
+			<HorizontalPadding />
+			<HorizontalContainer flex='none' alignItems='center' justifyContent='center'>
 				<SummaryTitle showExpandedText={true} />
-			</SummaryTitleHorizontalContainer>
-			<SummaryHorizontalPadding />
-			<SummaryHorizontalPadding />
+			</HorizontalContainer>
+			<HorizontalPadding />
+			<HorizontalPadding />
 			<ExplicitWidthFlexColumn flex='none'>
-				<SummaryTitleHorizontalContainer>
+				<HorizontalContainer>
 					<SummaryTide isDualMode={true} />
-				</SummaryTitleHorizontalContainer>
+				</HorizontalContainer>
 			</ExplicitWidthFlexColumn>
-			<SummaryHorizontalPadding />
+			<HorizontalPadding />
 			<ExplicitWidthFlexColumn flex='none'>
-				<SummaryTitleHorizontalContainer>
+				<HorizontalContainer>
 					<SummaryAstro isDualMode={true} />
-				</SummaryTitleHorizontalContainer>
+				</HorizontalContainer>
 			</ExplicitWidthFlexColumn>
-			<SummaryHorizontalPadding />
+			<HorizontalPadding />
 			<ExplicitWidthFlexColumn flex='none'>
-				<SummaryTitleHorizontalContainer>
+				<HorizontalContainer>
 					<SummaryWeather isDualMode={true} />
-				</SummaryTitleHorizontalContainer>
+				</HorizontalContainer>
 			</ExplicitWidthFlexColumn>
-			<SummaryHorizontalPadding />
+			<HorizontalPadding />
 
 		</FlexRow >
 	);
 };
 
-const SummaryHorizontalPadding = styled.div`
+const HorizontalPadding = styled.div`
 	width: ${edgePaddingValue};
 	height: 1rem;
 `;
 
-const SummaryPadding = styled.div`
-	margin: ${edgePaddingValue};
+const HorizontalContainer = styled(FlexColumn)`
+	margin: ${edgePaddingValue} 0;
 `;
 
-const SummaryTitleHorizontalContainer = styled(FlexColumn)`
-	margin: ${edgePaddingValue} 0;
+const VerticalPadding = styled.div`
+	height: ${edgePaddingValue};
+	width: 1rem;
+`;
+
+const VerticalContainer = styled.div`
+	margin: 0 ${edgePaddingValue};
+`;
+
+const CenterSmallText = styled(SmallText)`
+	text-align: center;
 `;
 
 export const ExplicitWidthFlexColumn = styled(FlexColumn)`

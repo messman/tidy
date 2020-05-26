@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { SunEvent } from '../astro/astro-event';
-import { TideEvent, TideEventRange, TideExtremes } from '../tide/tide-event';
+import { TideEventRange, TideExtremes } from '../tide/tide-event';
 import { DailyWeather, WeatherStatus } from '../weather/weather-status';
 import { Info } from './info';
 import { Errors, Warnings } from './issue';
@@ -42,10 +42,8 @@ export interface AllCurrent<TDate = DateTime> {
 export interface AllCurrentTides<TDate = DateTime> {
 	/** The height, in feet. */
 	height: number,
-	/** The previous tide event, which may also be the current tide event. */
-	previous: TideEvent<TDate>,
-	/** The next tide event. */
-	next: TideEvent<TDate>;
+	/** The range of tides - will always have two events - previous and next. */
+	range: TideEventRange<TDate>;
 }
 
 export interface AllPredictions<TDate = DateTime> {

@@ -17,12 +17,12 @@ export const AllResponseClipboardIcon: React.FC = () => {
 		isDisabled = false;
 		const { all, info } = allResponseState.data!;
 		const { tides } = all.current;
-
+		const next = tides.range.events[1];
 
 		const referenceTimeString = getTimeTwelveHourString(info.referenceTime);
-		const tideActionText = tides.next.isLow ? 'falling' : 'rising';
-		const nextTideText = tides.next.isLow ? 'Low' : 'High';
-		const nextTideTimeString = getTimeTwelveHourString(tides.next.time);
+		const tideActionText = next.isLow ? 'falling' : 'rising';
+		const nextTideText = next.isLow ? 'Low' : 'High';
+		const nextTideTimeString = getTimeTwelveHourString(next.time);
 
 		/*
 			TODO - figure out what else we want to put in.

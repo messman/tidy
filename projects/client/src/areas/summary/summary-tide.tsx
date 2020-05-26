@@ -34,16 +34,17 @@ const SummaryTidePrimary: React.FC = () => {
 	const { all, info } = allResponseState.data!;
 	const tides = all.current.tides;
 
-	const timePercent = percentTimeBetween(info.referenceTime, tides.previous.time, tides.next.time);
+	const [previous, next] = tides.range.events;
+	const timePercent = percentTimeBetween(info.referenceTime, previous.time, next.time);
 	const timePercentString = timePercent.toString();
 
 	return (
 		<Flex>
 			<FlexRow alignItems='center'>
 				<FlexCenter>
-					<SmallText>{tides.previous.isLow ? 'LOW' : 'HIGH'}</SmallText>
+					<SmallText>{previous.isLow ? 'LOW' : 'HIGH'}</SmallText>
 					<Text>
-						<TimeTextUnit dateTime={tides.previous.time} />
+						<TimeTextUnit dateTime={previous.time} />
 					</Text>
 				</FlexCenter>
 				<FlexCenter flex={2}>
@@ -52,9 +53,9 @@ const SummaryTidePrimary: React.FC = () => {
 					</Text>
 				</FlexCenter>
 				<FlexCenter>
-					<SmallText>{tides.next.isLow ? 'LOW' : 'HIGH'}</SmallText>
+					<SmallText>{next.isLow ? 'LOW' : 'HIGH'}</SmallText>
 					<Text>
-						<TimeTextUnit dateTime={tides.next.time} />
+						<TimeTextUnit dateTime={next.time} />
 					</Text>
 				</FlexCenter>
 			</FlexRow>
@@ -69,7 +70,7 @@ const SummaryTidePrimary: React.FC = () => {
 			</FlexRow>
 			<FlexRow>
 				<FlexCenter>
-					<TideHeightTextUnit height={tides.previous.height} />
+					<TideHeightTextUnit height={previous.height} />
 				</FlexCenter>
 				<FlexCenter flex={2}>
 					<Text>
@@ -77,7 +78,7 @@ const SummaryTidePrimary: React.FC = () => {
 					</Text>
 				</FlexCenter>
 				<FlexCenter>
-					<TideHeightTextUnit height={tides.next.height} />
+					<TideHeightTextUnit height={next.height} />
 				</FlexCenter>
 			</FlexRow>
 		</Flex>
@@ -171,10 +172,11 @@ const SummaryTideSecondary: React.FC = () => {
 
 	const { all, info } = allResponseState.data!;
 	const tides = all.current.tides;
+	const next = tides.range.events[1];
 	const currentTideHeightText = tides.height.toFixed(CONSTANT.tideHeightPrecision);
-	const nextTideHeightText = tides.next.height.toFixed(CONSTANT.tideHeightPrecision);
-	const nextTideText = tides.next.isLow ? 'low' : 'high';
-	const nextTideDurationText = getDurationDescription(info.referenceTime, tides.next.time);
+	const nextTideHeightText = next.height.toFixed(CONSTANT.tideHeightPrecision);
+	const nextTideText = next.isLow ? 'low' : 'high';
+	const nextTideDurationText = getDurationDescription(info.referenceTime, next.time);
 
 	return (
 		<Text>
