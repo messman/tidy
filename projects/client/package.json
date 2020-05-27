@@ -1,0 +1,71 @@
+{
+	"name": "tidy-client",
+	"version": "3.0.0",
+	"description": "A mobile-first web app that uses NOAA data to show a simple view of tide information.",
+	"main": "webpack.config.js",
+	"scripts": {
+		"build": "webpack --config webpack.dev.js",
+		"dev": "webpack --config webpack.dev.js",
+		"dev:w": "webpack --config webpack.dev.js --watch",
+		"dev:s": "webpack-dev-server --config webpack.dev.js",
+		"static": "cd dist && python -m SimpleHTTPServer 8888",
+		"production": "webpack --config webpack.prod.js",
+		"production:w": "webpack --config webpack.prod.js --watch",
+		"analyze-bundle": "webpack-bundle-analyzer --port 4200 dist/stats.json",
+		"storybook": "start-storybook --port=58888"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/messman/tidy.git"
+	},
+	"keywords": [
+		"javascript",
+		"css",
+		"canvas",
+		"api",
+		"noaa"
+	],
+	"author": "Andrew Messier",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/messman/tidy/issues"
+	},
+	"homepage": "https://github.com/messman/tidy#readme",
+	"dependencies": {
+		"luxon": "^1.24.0",
+		"react": "^16.8.6",
+		"react-dom": "^16.8.6",
+		"react-is": "~16.13.1",
+		"styled-components": "^5.1.0",
+		"tidy-shared": "file:../shared"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.4.5",
+		"@babel/preset-env": "^7.4.5",
+		"@babel/preset-react": "^7.0.0",
+		"@storybook/addon-knobs": "^5.3.19",
+		"@storybook/addon-viewport": "^5.3.19",
+		"@storybook/react": "^5.3.19",
+		"@svgr/webpack": "^5.4.0",
+		"@types/luxon": "^1.24.0",
+		"@types/node": "^12.12.42",
+		"@types/react": "^16.8.19",
+		"@types/react-dom": "^16.8.4",
+		"@types/styled-components": "^5.1.0",
+		"babel-loader": "^8.0.6",
+		"clean-webpack-plugin": "^3.0.0",
+		"copy-webpack-plugin": "^5.0.3",
+		"html-webpack-plugin": "^4.3.0",
+		"javascript-stringify": "^2.0.1",
+		"regenerator-runtime": "~0.13.5",
+		"tidy-server": "file:../server",
+		"ts-loader": "^7.0.5",
+		"typescript": "^3.9.3",
+		"typescript-plugin-styled-components": "^1.4.3",
+		"webpack": "^4.43.0",
+		"webpack-bundle-analyzer": "^3.8.0",
+		"webpack-cli": "^3.3.11",
+		"webpack-dev-server": "^3.7.1",
+		"webpack-merge": "^4.2.1"
+	}
+}

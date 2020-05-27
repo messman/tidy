@@ -1,0 +1,26 @@
+{
+	"extends": "../../tsconfig-base.json",
+	"compilerOptions": {
+		"declaration": false,
+		"declarationMap": false,
+		"lib": [
+			"DOM",
+			"ES2017"
+		],
+		"target": "ES2015",
+		"jsx": "react",
+		"outDir": "./ts-build",
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [
+				"src/*"
+			]
+		}
+	},
+	"exclude": [
+		"node_modules"
+	],
+	"include": [
+		"src/**/*"
+	]
+}

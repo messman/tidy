@@ -1,0 +1,23 @@
+{
+	"name": "tidy-shared",
+	"version": "3.0.0",
+	"description": "Shared code between client and server for tidy.",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "ts-webpack-builder",
+		"build-production": "ts-webpack-builder --isDevelopment=false",
+		"build-client": "ts-webpack-builder --isNode=false",
+		"build-client-production": "ts-webpack-builder --isNode=false --isDevelopment=false"
+	},
+	"author": "Andrew Messier",
+	"license": "MIT",
+	"peerDependencies": {
+		"luxon": "^1.24.1"
+	},
+	"devDependencies": {
+		"@types/luxon": "^1.24.0",
+		"luxon": "^1.24.1",
+		"typescript": "^3.8.3"
+	}
+}

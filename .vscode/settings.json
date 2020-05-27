@@ -1,0 +1,5 @@
+{
+	"importSorter.generalConfiguration.sortOnBeforeSave": true,
+	"appService.showBuildDuringDeployPrompt": false,
+	"appService.defaultWebAppToDeploy": "None"
+}
