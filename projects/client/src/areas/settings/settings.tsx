@@ -5,6 +5,7 @@ import { addMargin, flowPaddingValue, Link } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { ThemePicker } from '@/core/style/theme';
 import { Text, textHeight, TitleInline } from '@/core/symbol/text';
+import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { useLocalDataPhrase } from '@/services/data/data-local';
 import { DEFINE } from '@/services/define';
 
@@ -13,6 +14,11 @@ export interface SettingsProps {
 }
 
 export const Settings: React.FC<SettingsProps> = () => {
+
+	const allResponseState = useAllResponse();
+	if (!hasAllResponseData(allResponseState)) {
+		return null;
+	}
 
 	let localDataPicker: JSX.Element | null = null;
 	if (!!DEFINE.localTestData) {

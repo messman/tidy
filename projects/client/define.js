@@ -45,7 +45,7 @@ module.exports = async function getDefine(isDevelopment) {
 		console.log(`Done adding local test data`);
 	}
 	else {
-		DEFINE.fetchUrl = JSON.stringify('tidy-api.andrewmessier.com');
+		DEFINE.fetchUrl = JSON.stringify('https://agm-tidy-server.azurewebsites.net/latest');
 	}
 
 	return DEFINE;

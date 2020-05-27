@@ -3,8 +3,6 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 // Cleans a directory
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -82,11 +80,7 @@ const baseWebpackOptions = {
 		new CopyPlugin([
 			// Copy to output folder, but then go one up
 			{ from: 'src/static/favicons', to: './' },
-		]),
-		new BundleAnalyzerPlugin({
-			analyzerMode: 'disabled',
-			generateStatsFile: true
-		})
+		])
 	]
 };
 
