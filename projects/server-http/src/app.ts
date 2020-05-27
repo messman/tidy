@@ -1,9 +1,9 @@
-import { Application, Request, Response, NextFunction } from 'express';
+import { Application, NextFunction, Request, Response } from 'express';
 import { createWellsConfiguration, getAllForConfiguration } from 'tidy-server';
 import { AllResponse, createReplacer } from 'tidy-shared';
 
 const isCaching: boolean = false;
-const cacheExpirationMilliseconds: number = 1000 * 60 * 10; // 10 minutes
+const cacheExpirationMilliseconds: number = 1000 * 60 * 5; // 5 minutes
 
 function log(...args: any[]): void {
 	console.log('>', ...args);
@@ -88,6 +88,10 @@ export function configureApp(app: Application): void {
 	app.get('/stats', async (_: Request, res: Response<StatsResponse>) => {
 		return res.json(stats);
 	});
+
+	app.get('/', async (_: Request, res: Response) => {
+		return res.json({ status: 'ready' });
+	});
 }
 
 async function getResponse(): Promise<AllResponse> {
@@ -97,7 +101,7 @@ async function getResponse(): Promise<AllResponse> {
 
 interface LastResponse {
 	allResponse: AllResponse | null,
-	cacheTimeRemaining: number
+	cacheTimeRemaining: number;
 }
 
 interface StatsResponse {

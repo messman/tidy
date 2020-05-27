@@ -5,7 +5,8 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"build": "tsc",
-		"start": "tsc && node ./dist/index"
+		"build-azure-deploy": "tsc --p tsconfig.azure-deploy.json",
+		"start": "tsc && PORT=8000 NODE_ENV=dev node ./dist/index"
 	},
 	"repository": {
 		"type": "git",

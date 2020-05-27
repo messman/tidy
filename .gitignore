@@ -12,6 +12,8 @@ npm-debug.log
 
 **/ts-build
 
+**/azure-deploy/*.js
+
 # Output of 'npm pack'
 *.tgz
 
