@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { performance } from 'perf_hooks';
 import { errorIssue, TideEvent, TideStatus } from 'tidy-shared';
 import { mergeIssues } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';
