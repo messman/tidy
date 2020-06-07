@@ -1,9 +1,10 @@
-import { APIConfigurationContext } from "../all/context";
-import { TideStatus, TideEvent, errorIssue } from "tidy-shared";
-import { getJSON, FetchResponse } from "../util/fetch";
-import { IntermediateTideValues } from "./tide-intermediate";
-import { mergeIssues } from "../all/all-merge";
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
+import { performance } from 'perf_hooks';
+import { errorIssue, TideEvent, TideStatus } from 'tidy-shared';
+import { mergeIssues } from '../all/all-merge';
+import { APIConfigurationContext } from '../all/context';
+import { FetchResponse, getJSON } from '../util/fetch';
+import { IntermediateTideValues } from './tide-intermediate';
 
 /*
 	From https://tidesandcurrents.noaa.gov/api/
@@ -56,14 +57,14 @@ export async function fetchTides(configContext: APIConfigurationContext): Promis
 			pastEvents: null!,
 			current: null!,
 			futureEvents: null!
-		}
+		};
 	}
 
 	const currentLevelData = currentLevelResponse.result!.data[0];
 	const current: TideStatus = {
 		time: DateTimeFromNOAAString(currentLevelData.t, configContext.configuration.location.timeZoneLabel),
 		height: parseFloat(parseFloat(currentLevelData.v).toFixed(configContext.configuration.tides.tideHeightPrecision))
-	}
+	};
 
 	const pastEvents: TideEvent[] = [];
 	const futureEvents: TideEvent[] = [];
@@ -109,7 +110,7 @@ interface BaseNOAAInput {
 	format: string,
 	time_zone: string,
 	units: 'english' | 'metric',
-	product: string
+	product: string;
 }
 
 const defaultNOAAInput: BaseNOAAInput = {
@@ -119,44 +120,44 @@ const defaultNOAAInput: BaseNOAAInput = {
 	time_zone: 'lst_ldt', // Local Time with DST offset
 	units: 'english',
 	product: null!
-}
+};
 
 interface NOAAPredictionInput extends BaseNOAAInput {
 	datum: string,
 	interval: string,
 	begin_date: string,
-	range: number
+	range: number;
 }
 
 interface NOAACurrentLevelInput extends BaseNOAAInput {
 	datum: string,
-	date: string
+	date: string;
 }
 
 
 interface NOAAPredictionOutput extends NOAARawErrorResponse {
-	predictions: NOAAPredictionEntry[]
+	predictions: NOAAPredictionEntry[];
 }
 
 interface NOAAPredictionEntry {
 	t: string,
 	v: string,
-	type: 'H' | 'L'
+	type: 'H' | 'L';
 }
 
 interface NOAACurrentLevelOutput extends NOAARawErrorResponse {
-	data: NOAACurrentLevelEntry[]
+	data: NOAACurrentLevelEntry[];
 }
 
 interface NOAACurrentLevelEntry {
 	t: string,
-	v: string
+	v: string;
 }
 
 interface NOAARawErrorResponse {
 	error: {
-		message: string
-	}
+		message: string;
+	};
 }
 
 async function makeJSONRequest<T extends NOAARawErrorResponse>(options: any, name: string): Promise<FetchResponse<T>> {
@@ -179,12 +180,12 @@ async function makeJSONRequest<T extends NOAARawErrorResponse>(options: any, nam
 	return {
 		issues: null,
 		result: result!
-	}
+	};
 }
 
 const api_noaa = "https://tidesandcurrents.noaa.gov/api/datagetter";
 // Takes key-val options, returns a query string
-function createRequestUrl(params: { [key: string]: any }): string {
+function createRequestUrl(params: { [key: string]: any; }): string {
 	const paramsAsString = Object.keys(params).map(key => `${key}=${encodeURIComponent(params[key])}`).join("&");
 	return `${api_noaa}?${paramsAsString}`;
 }

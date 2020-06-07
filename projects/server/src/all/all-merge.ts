@@ -1,35 +1,35 @@
 /* Holds common functionality for merging our different API areas. */
 
-import { Errors, Warnings, TideEventRange, SunEvent, AllDailyDay, DailyWeather, Issue } from "tidy-shared";
-import { InterpretedTides, interpretTides } from "../tide/tide-interpret";
-import { InterpretedAstro, interpretAstro } from "../astro/astro-interpret";
-import { InterpretedWeather, interpretWeather } from "../weather/weather-interpret";
-import { APIConfigurationContext } from "./context";
-import { ForDay } from "./all";
-import { fetchTides } from "../tide/tide-fetch";
-import { fetchAstro } from "../astro/astro-fetch";
-import { fetchWeather } from "../weather/weather-fetch";
-import { IntermediateTideValues } from "../tide/tide-intermediate";
-import { IntermediateAstroValues } from "../astro/astro-intermediate";
-import { IntermediateWeatherValues } from "../weather/weather-intermediate";
-import { TestSeed } from "../test/all";
+import { AllDailyDay, DailyWeather, Errors, Issue, SunEvent, TideEventRange, Warnings } from 'tidy-shared';
+import { fetchAstro } from '../astro/astro-fetch';
+import { IntermediateAstroValues } from '../astro/astro-intermediate';
+import { interpretAstro, InterpretedAstro } from '../astro/astro-interpret';
+import { TestSeed } from '../test/all';
+import { fetchTides } from '../tide/tide-fetch';
+import { IntermediateTideValues } from '../tide/tide-intermediate';
+import { InterpretedTides, interpretTides } from '../tide/tide-interpret';
+import { fetchWeather } from '../weather/weather-fetch';
+import { IntermediateWeatherValues } from '../weather/weather-intermediate';
+import { InterpretedWeather, interpretWeather } from '../weather/weather-interpret';
+import { ForDay } from './all';
+import { APIConfigurationContext } from './context';
 
 /** Base interface to hold common properties for error and warning. */
 export interface AllIssue {
 	errors: Errors | null,
-	warnings: Warnings | null
+	warnings: Warnings | null;
 }
 
 /** Intermediate interface for Merge functions. */
 export interface AllMerge extends AllIssue {
 	interpretedTides: InterpretedTides,
 	interpretedAstro: InterpretedAstro,
-	interpretedWeather: InterpretedWeather
+	interpretedWeather: InterpretedWeather;
 }
 
 /** Common type for functions used for either real-life fetching or for testing. */
 export interface AllMergeFunc {
-	(configContext: APIConfigurationContext, testSeed: TestSeed): Promise<AllMerge>
+	(configContext: APIConfigurationContext, testSeed: TestSeed): Promise<AllMerge>;
 }
 
 /** Real-life/production merge function. Should return only errors if any piece of any area is invalid. */
@@ -51,7 +51,7 @@ export const allMerge: AllMergeFunc = async (configContext: APIConfigurationCont
 			interpretedTides: null!,
 			interpretedAstro: null!,
 			interpretedWeather: null!
-		}
+		};
 	}
 
 	const interpretedTides = interpretTides(configContext, tidesData);
@@ -66,7 +66,7 @@ export const allMerge: AllMergeFunc = async (configContext: APIConfigurationCont
 			interpretedTides: null!,
 			interpretedAstro: null!,
 			interpretedWeather: null!
-		}
+		};
 	}
 
 	return {
@@ -75,8 +75,8 @@ export const allMerge: AllMergeFunc = async (configContext: APIConfigurationCont
 		interpretedTides: interpretedTides,
 		interpretedAstro: interpretedAstro,
 		interpretedWeather: interpretedWeather
-	}
-}
+	};
+};
 
 /** Merges different API areas for long-term data (daily weather, tides, etc). */
 export function mergeForLongTerm(configContext: APIConfigurationContext, tides: ForDay<TideEventRange>[], sunEvents: ForDay<SunEvent[]>[], weatherEvents: DailyWeather[]): AllDailyDay[] {
@@ -107,7 +107,7 @@ export function mergeForLongTerm(configContext: APIConfigurationContext, tides: 
 		}
 	});
 
-	return Array.from(dayMap.values())
+	return Array.from(dayMap.values());
 }
 
 /** Merges Errors objects. Returns null if there were no errors in any of the arguments. */
@@ -118,7 +118,7 @@ export function mergeErrors(...errors: (Errors | null)[]): Errors | null {
 	if (mergedIssues) {
 		return {
 			errors: mergedIssues
-		}
+		};
 	}
 	return null;
 }
@@ -131,7 +131,7 @@ export function mergeWarnings(...warnings: (Warnings | null)[]): Warnings | null
 	if (mergedIssues) {
 		return {
 			warnings: mergedIssues
-		}
+		};
 	}
 	return null;
 }

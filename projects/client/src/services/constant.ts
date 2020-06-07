@@ -6,7 +6,9 @@ export const CONSTANT = {
 	/** Minimum time to wait for fetch response. */
 	fetchMinTimeout: seconds(.5),
 	/** Maximum time to wait for fetch response. */
-	fetchMaxTimeout: seconds(15),
+	fetchMaxTimeout: seconds(36),
+	/** Time before max where an update is shown to the user to reassure them. */
+	fetchStillWaitingTimeout: seconds(15),
 	/** Minimum time to wait for local data fetch response. */
 	localTestDataMinTimeout: seconds(0),
 	/** Expiration timeout for a success. */

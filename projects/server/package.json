@@ -1,6 +1,6 @@
 {
 	"name": "tidy-server",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "Server-side code for tidy.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

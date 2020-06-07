@@ -1,10 +1,10 @@
-import { APIConfigurationContext } from "../all/context";
-import { errorIssue, WeatherStatusType, WindDirection } from "tidy-shared";
-import { getJSON, FetchResponse } from "../util/fetch";
-import { mergeIssues } from "../all/all-merge";
-import { DateTime, Duration } from "luxon";
-import { IntermediateWeatherValues, createEmptyIntermediateWeather } from "./weather-intermediate";
-import { TimeSpan, IterableTimeData } from "../util/iterator";
+import { DateTime, Duration } from 'luxon';
+import { errorIssue, WeatherStatusType, WindDirection } from 'tidy-shared';
+import { mergeIssues } from '../all/all-merge';
+import { APIConfigurationContext } from '../all/context';
+import { FetchResponse, getJSON } from '../util/fetch';
+import { IterableTimeData, TimeSpan } from '../util/iterator';
+import { createEmptyIntermediateWeather, IntermediateWeatherValues } from './weather-intermediate';
 
 /*
 	From https://www.weather.gov/documentation/services-web-api
@@ -71,7 +71,7 @@ interface CoordinateLookupResponse {
 		forecastHourly: string,
 
 		/** URL to provide information on each data point for the given area. */
-		forecastGridData: string
+		forecastGridData: string;
 
 		//timeZone: string
 	},
@@ -79,7 +79,7 @@ interface CoordinateLookupResponse {
 
 interface ForecastURLs {
 	period: string,
-	grid: string
+	grid: string;
 }
 
 async function getForecastURLFromCoordinates(latitude: number, longitude: number): Promise<FetchResponse<ForecastURLs>> {
@@ -100,7 +100,7 @@ async function getForecastURLFromCoordinates(latitude: number, longitude: number
 		return {
 			issues: [errorIssue('Error retrieving weather information', 'Error in weather coordinate lookup', { status: result!.status, detail: result!.detail })],
 			result: null
-		}
+		};
 	}
 
 	return {
@@ -109,7 +109,7 @@ async function getForecastURLFromCoordinates(latitude: number, longitude: number
 			period: result!.properties.forecastHourly,
 			grid: result!.properties.forecastGridData
 		}
-	}
+	};
 }
 
 /** Time, of form 2020-04-21T07:00:00+00:00 */
@@ -134,12 +134,12 @@ interface GridForecastResponse {
 }
 
 interface GridForecastEntity<T> {
-	values: GridForecastEntityValue<T>[]
+	values: GridForecastEntityValue<T>[];
 }
 
 interface GridForecastEntityValue<T> {
 	validTime: ISODurationString,
-	value: T
+	value: T;
 }
 
 interface PeriodForecastResponse {
@@ -147,7 +147,7 @@ interface PeriodForecastResponse {
 		updateTime: ISOTimeString,
 		validTimes: ISODurationString,
 
-		periods: PeriodForecastEntity[]
+		periods: PeriodForecastEntity[];
 	},
 }
 
@@ -155,7 +155,7 @@ interface PeriodForecastEntity {
 	startTime: ISOTimeString,
 	endTime: ISOTimeString,
 	icon: string,
-	shortForecast: string
+	shortForecast: string;
 }
 
 async function getIntermediateWeather(configContext: APIConfigurationContext, gridURL: string, periodURL: string): Promise<FetchResponse<IntermediateWeatherValues>> {
@@ -172,7 +172,7 @@ async function getIntermediateWeather(configContext: APIConfigurationContext, gr
 		return {
 			issues: combinedIssues,
 			result: null
-		}
+		};
 	}
 
 	const timeZone = configContext.configuration.location.timeZoneLabel;
@@ -188,7 +188,7 @@ async function getIntermediateWeather(configContext: APIConfigurationContext, gr
 		return {
 			span: timeSpanFromTimes(e.startTime, e.endTime, timeZone),
 			value: getStatusFromIcon(e.icon)
-		}
+		};
 	});
 
 	return {
@@ -206,7 +206,7 @@ async function getIntermediateWeather(configContext: APIConfigurationContext, gr
 			visibility: createIterableData(visibility, timeZone, metersToPrecisionMiles),
 			status: periods
 		}
-	}
+	};
 
 }
 
@@ -215,19 +215,19 @@ function createIterableData<T>(gridForecastEntity: GridForecastEntity<any>, time
 		return {
 			span: timeSpanFromString(e.validTime, timeZone),
 			value: valueConversion(e.value)
-		}
+		};
 	});
 }
 
 interface ValueConverter<O> {
-	(value: any): O
+	(value: any): O;
 }
 
 function wrapForPrecision(valueConverter: ValueConverter<number>, precision: number) {
 	return function (value: number) {
 		const convertedValue = valueConverter(value);
 		return parseFloat(convertedValue.toFixed(precision));
-	}
+	};
 }
 
 /** Converts temperature from celsius to fahrenheit. */
@@ -290,7 +290,7 @@ function timeSpanFromString(timeString: string, timeZone: string): TimeSpan {
 	return {
 		begin: luxonTime,
 		end: luxonEnd
-	}
+	};
 }
 
 function timeSpanFromTimes(startTimeString: string, endTimeString: string, timeZone: string): TimeSpan {
@@ -301,7 +301,7 @@ function timeSpanFromTimes(startTimeString: string, endTimeString: string, timeZ
 	return {
 		begin: luxonStartTime,
 		end: luxonEndTime
-	}
+	};
 }
 
 function getStatusFromIcon(iconUrl: string): WeatherStatusType {

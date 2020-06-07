@@ -1,6 +1,6 @@
 {
 	"name": "tidy-server-http-azure-deploy",
-	"version": "3.0.0",
+	"version": "1",
 	"description": "An api for the tidy project.",
 	"main": "dist/index.js",
 	"scripts": {
@@ -10,7 +10,7 @@
 	"dependencies": {
 		"express": "^4.17.1",
 		"luxon": "^1.24.0",
-		"tidy-server": "file:../../server/tidy-server-3.0.0.tgz",
-		"tidy-shared": "file:../../shared/tidy-shared-3.0.0.tgz"
+		"tidy-server": "file:../../server/tidy-server-3.0.1.tgz",
+		"tidy-shared": "file:../../shared/tidy-shared-3.0.1.tgz"
 	}
 }

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Flex, FlexColumn } from '@/core/layout/flex';
 import { Overlay } from '@/core/layout/overlay';
-import { addPadding, edgePaddingValue } from '@/core/style/common';
+import { addPadding, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { keyframes, styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { Subtitle } from '@/core/symbol/text';
+import { Subtitle, Text } from '@/core/symbol/text';
+import { CONSTANT } from '@/services/constant';
 import { useAllResponse } from '@/services/data/data';
 import { PopupType, usePopup } from './popup';
 
@@ -20,9 +21,27 @@ export const Loading: React.FC<LoadingProps> = (props) => {
 	const { isRunning, error } = useAllResponse();
 	const theme = useCurrentTheme();
 	const setPopup = usePopup()[1];
+	const [isStillWorking, setIsStillWorking] = React.useState(false);
 
 	let loadingBody: JSX.Element | null = null;
 	const isOverlayActive = isRunning || !!props.forceIsShowing;
+
+	React.useEffect(() => {
+		let timeoutId = -1;
+		if (!isOverlayActive) {
+			return;
+		}
+		timeoutId = window.setTimeout(() => {
+			setIsStillWorking(true);
+		}, CONSTANT.fetchStillWaitingTimeout);
+
+		return () => {
+			if (timeoutId !== -1) {
+				window.clearTimeout(timeoutId);
+			}
+			setIsStillWorking(false);
+		};
+	}, [isOverlayActive]);
 
 	// If the application set a pop-up...
 	if (isOverlayActive) {
@@ -55,6 +74,7 @@ export const Loading: React.FC<LoadingProps> = (props) => {
 					<div>
 						{loadingDots}
 					</div>
+					<StillWorkingText isShowing={isStillWorking}>(Still working...)</StillWorkingText>
 				</LoadingBody>
 				<Flex flex='none' />
 			</FlexColumn>
@@ -82,6 +102,15 @@ export const Loading: React.FC<LoadingProps> = (props) => {
 };
 
 const PaddedSubtitle = addPadding(Subtitle, edgePaddingValue);
+
+interface StillWorkingTextProps {
+	isShowing: boolean;
+}
+
+const StillWorkingText = styled(Text) <StillWorkingTextProps>`
+	margin-top: ${flowPaddingValue};
+	opacity: ${p => p.isShowing ? 1 : 0};
+`;
 
 const LoadingBody = styled(Flex)`
 	/* Prevents crazy resizing scenarios. */
