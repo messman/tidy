@@ -1,7 +1,8 @@
-import { APIConfigurationContext } from "../all/context";
-import { DateTime } from "luxon";
-import { IntermediateAstroValues } from "./astro-intermediate";
-import { SunEvent } from "tidy-shared";
+import { DateTime } from 'luxon';
+import { SunEvent } from 'tidy-shared';
+import { APIConfigurationContext } from '../all/context';
+import { RunFlags } from '../util/run-flags';
+import { IntermediateAstroValues } from './astro-intermediate';
 
 /*
 	For now, while we are only supporting sunrise / sunset, we do the calculation manually without the assistance of an API.
@@ -15,7 +16,7 @@ import { SunEvent } from "tidy-shared";
 
 */
 
-export async function fetchAstro(configContext: APIConfigurationContext): Promise<IntermediateAstroValues> {
+export async function fetchAstro(configContext: APIConfigurationContext, _: RunFlags): Promise<IntermediateAstroValues> {
 
 	const { latitude, longitude } = configContext.configuration.location;
 	const startDay = configContext.context.astro.minimumSunDataFetch;
@@ -66,7 +67,7 @@ function getJulianDay(date: DateTime): number {
 	}
 	const A = Math.floor(year / 100);
 	const B = 2 - A + Math.floor(A / 4);
-	const julianDay = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5
+	const julianDay = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
 
 	return julianDay;
 }
@@ -74,7 +75,7 @@ function getJulianDay(date: DateTime): number {
 interface SunriseSunsetOutput {
 	julianDay: number,
 	localMinutes: number,
-	azimuth: number
+	azimuth: number;
 }
 
 // Original: calcSunriseSet
@@ -160,11 +161,11 @@ function calcDateFromJD(jd: number) {
 	var month = (E < 14) ? E - 1 : E - 13;
 	var year = (month > 2) ? C - 4716 : C - 4715;
 
-	return { "year": year, "month": month, "day": day }
+	return { "year": year, "month": month, "day": day };
 }
 
 function calcDoyFromJD(jd: number) {
-	var date = calcDateFromJD(jd)
+	var date = calcDateFromJD(jd);
 
 	var k = (isLeapYear(date.year) ? 1 : 2);
 	var doy = Math.floor((275 * date.month) / 9) - k * Math.floor((date.month + 9) / 12) + date.day - 30;
@@ -182,14 +183,14 @@ function degToRad(angleDeg: number) {
 }
 
 function calcGeomMeanLongSun(t: number) {
-	var L0 = 280.46646 + t * (36000.76983 + t * (0.0003032))
+	var L0 = 280.46646 + t * (36000.76983 + t * (0.0003032));
 	while (L0 > 360.0) {
-		L0 -= 360.0
+		L0 -= 360.0;
 	}
 	while (L0 < 0.0) {
-		L0 += 360.0
+		L0 += 360.0;
 	}
-	return L0		// in degrees
+	return L0;		// in degrees
 }
 
 function calcGeomMeanAnomalySun(t: number) {
@@ -318,64 +319,64 @@ function calcRefraction(elev: number) {
 		correction = correction / 3600.0;
 	}
 
-	return correction
+	return correction;
 }
 
 function calcAzEl(T: number, localtime: number, latitude: number, longitude: number, zone: number) {
 
-	var eqTime = calcEquationOfTime(T)
-	var theta = calcSunDeclination(T)
+	var eqTime = calcEquationOfTime(T);
+	var theta = calcSunDeclination(T);
 
-	var solarTimeFix = eqTime + 4.0 * longitude - 60.0 * zone
-	var trueSolarTime = localtime + solarTimeFix
+	var solarTimeFix = eqTime + 4.0 * longitude - 60.0 * zone;
+	var trueSolarTime = localtime + solarTimeFix;
 	while (trueSolarTime > 1440) {
-		trueSolarTime -= 1440
+		trueSolarTime -= 1440;
 	}
 	var hourAngle = trueSolarTime / 4.0 - 180.0;
 	if (hourAngle < -180) {
-		hourAngle += 360.0
+		hourAngle += 360.0;
 	}
-	var haRad = degToRad(hourAngle)
-	var csz = Math.sin(degToRad(latitude)) * Math.sin(degToRad(theta)) + Math.cos(degToRad(latitude)) * Math.cos(degToRad(theta)) * Math.cos(haRad)
+	var haRad = degToRad(hourAngle);
+	var csz = Math.sin(degToRad(latitude)) * Math.sin(degToRad(theta)) + Math.cos(degToRad(latitude)) * Math.cos(degToRad(theta)) * Math.cos(haRad);
 	if (csz > 1.0) {
-		csz = 1.0
+		csz = 1.0;
 	} else if (csz < -1.0) {
-		csz = -1.0
+		csz = -1.0;
 	}
-	var zenith = radToDeg(Math.acos(csz))
-	var azDenom = (Math.cos(degToRad(latitude)) * Math.sin(degToRad(zenith)))
+	var zenith = radToDeg(Math.acos(csz));
+	var azDenom = (Math.cos(degToRad(latitude)) * Math.sin(degToRad(zenith)));
 	if (Math.abs(azDenom) > 0.001) {
-		var azRad = ((Math.sin(degToRad(latitude)) * Math.cos(degToRad(zenith))) - Math.sin(degToRad(theta))) / azDenom
+		var azRad = ((Math.sin(degToRad(latitude)) * Math.cos(degToRad(zenith))) - Math.sin(degToRad(theta))) / azDenom;
 		if (Math.abs(azRad) > 1.0) {
 			if (azRad < 0) {
-				azRad = -1.0
+				azRad = -1.0;
 			} else {
-				azRad = 1.0
+				azRad = 1.0;
 			}
 		}
-		var azimuth = 180.0 - radToDeg(Math.acos(azRad))
+		var azimuth = 180.0 - radToDeg(Math.acos(azRad));
 		if (hourAngle > 0.0) {
-			azimuth = -azimuth
+			azimuth = -azimuth;
 		}
 	} else {
 		if (latitude > 0.0) {
-			var azimuth = 180.0
+			var azimuth = 180.0;
 		} else {
-			var azimuth = 0.0
+			var azimuth = 0.0;
 		}
 	}
 	if (azimuth < 0.0) {
-		azimuth += 360.0
+		azimuth += 360.0;
 	}
-	var exoatmElevation = 90.0 - zenith
+	var exoatmElevation = 90.0 - zenith;
 
 	// Atmospheric Refraction correction
-	var refractionCorrection = calcRefraction(exoatmElevation)
+	var refractionCorrection = calcRefraction(exoatmElevation);
 
 	var solarZen = zenith - refractionCorrection;
-	var elevation = 90.0 - solarZen
+	var elevation = 90.0 - solarZen;
 
-	return { "azimuth": azimuth, "elevation": elevation }
+	return { "azimuth": azimuth, "elevation": elevation };
 }
 
 
@@ -389,11 +390,11 @@ function calcJDofNextPrevRiseSet(isNext: boolean, isSunrise: boolean, JD: number
 		julianday += increment;
 		time = getSunriseSunsetUTC(isSunrise, julianday, latitude, longitude);
 	}
-	var timeLocal = time + tz * 60.0
+	var timeLocal = time + tz * 60.0;
 	while ((timeLocal < 0.0) || (timeLocal >= 1440.0)) {
-		var incr = ((timeLocal < 0) ? 1 : -1)
-		timeLocal += (incr * 1440.0)
-		julianday -= incr
+		var incr = ((timeLocal < 0) ? 1 : -1);
+		timeLocal += (incr * 1440.0);
+		julianday -= incr;
 	}
 
 	return julianday;

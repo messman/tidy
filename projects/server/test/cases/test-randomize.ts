@@ -1,11 +1,13 @@
 // import { randomizer, quadraticFromPoints, linearFromPoints } from '../../dist/index';
 // import * as assert from 'assert';
 
+import { TestEnv } from '../test';
+
 // function logWithArgs<F extends (...args: any) => any>(f: F, ...args: Parameters<F>): void {
 // 	console.log(args, ' => ', f(...args as any[]));
 // }
 
-export function run(): void {
+export function run(_: TestEnv): void {
 	// const testRandomizer = randomizer('test');
 
 	// assert.equal(17.57185, testRandomizer.randomFloat(1, 20, 5, true), 'testRandomizer does not return expected random number');

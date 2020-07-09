@@ -1,222 +1,203 @@
-import { DateTime, Duration } from 'luxon';
+import { DateTime, DateTimeOptions } from 'luxon';
 import { errorIssue, WeatherStatusType, WindDirection } from 'tidy-shared';
-import { mergeIssues } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';
 import { FetchResponse, getJSON } from '../util/fetch';
-import { IterableTimeData, TimeSpan } from '../util/iterator';
+import { createServerLog } from '../util/log';
+import { RunFlags } from '../util/run-flags';
 import { createEmptyIntermediateWeather, IntermediateWeatherValues } from './weather-intermediate';
 
 /*
-	From https://www.weather.gov/documentation/services-web-api
-	More info: https://weather-gov.github.io/api/general-faqs
+	Uses OpenWeather's free 'One Call API', which replaced multiple calls to the NWS API.
+	API key required - sent via RunFlags.
 
-	Process:
-	Do initial request for 'discovery' based on latitude/longitude
-	Do secondary request with URL returned in discovery response.
+	Documentation:
+	https://openweathermap.org/api/one-call-api
+	Example (put in the API key):
+	https://api.openweathermap.org/data/2.5/onecall?lat=43.294&lon=-70.568&appid=APIKEY&units=imperial
 
-	Sample URLs:
-	First:
-	https://api.weather.gov/points/43.29,-70.57
-
-	Second:
-	https://api.weather.gov/gridpoints/GYX/68,39
-	https://api.weather.gov/gridpoints/GYX/68,39/forecast/hourly
-	https://api.weather.gov/gridpoints/GYX/68,39/forecast (unused)
 */
 
-export async function fetchWeather(configContext: APIConfigurationContext): Promise<IntermediateWeatherValues> {
+export async function fetchWeather(configContext: APIConfigurationContext, runFlags: RunFlags): Promise<IntermediateWeatherValues> {
 
 	// Make our initial request to get our API URL from the latitude and longitude
 	const { latitude, longitude } = configContext.configuration.location;
 
-	const coordinateLookupResponse = await getForecastURLFromCoordinates(latitude, longitude);
-	if (coordinateLookupResponse.issues) {
+	const openWeatherResponse = await getOpenWeatherData(latitude, longitude, configContext, runFlags);
+	if (openWeatherResponse.issues) {
 		return Object.assign({}, createEmptyIntermediateWeather(), {
 			errors: {
-				errors: coordinateLookupResponse.issues
+				errors: openWeatherResponse.issues
 			}
 		});
 	}
 
-	const forecastURLs = coordinateLookupResponse.result!;
-	const intermediateWeatherResponse = await getIntermediateWeather(configContext, forecastURLs.grid, forecastURLs.period);
-	if (intermediateWeatherResponse.issues) {
-		return Object.assign({}, createEmptyIntermediateWeather(), {
-			errors: {
-				errors: intermediateWeatherResponse.issues
-			}
-		});
-	}
-
-	return intermediateWeatherResponse.result!;
+	return openWeatherResponse.result!;
 }
 
-const commonHeaders = {
-	// Per the request of the weather API
-	'User-Agent': 'andrewmessier.com, andrewgmessier@gmail.com'
-};
+const openWeatherDataUrl = 'https://api.openweathermap.org/data/2.5/onecall?units=imperial&exclude=minutely';
 
-const coordinateLookupUrl = 'https://api.weather.gov/points/';
+async function getOpenWeatherData(latitude: number, longitude: number, configContext: APIConfigurationContext, runFlags: RunFlags): Promise<FetchResponse<IntermediateWeatherValues>> {
 
-interface CoordinateLookupResponse {
-	/** Error status. */
-	status: number | null,
-	/** Error detail. */
-	detail: string | null,
+	const logger = createServerLog(runFlags);
 
-	properties: {
-		//forecast: string,
-
-		/** URL to provide information just on periods of time for the given area (status, short forecast). */
-		forecastHourly: string,
-
-		/** URL to provide information on each data point for the given area. */
-		forecastGridData: string;
-
-		//timeZone: string
-	},
-}
-
-interface ForecastURLs {
-	period: string,
-	grid: string;
-}
-
-async function getForecastURLFromCoordinates(latitude: number, longitude: number): Promise<FetchResponse<ForecastURLs>> {
 	// Maximum precision is 4 decimal points.
 	const fixedLatitude = parseFloat(latitude.toFixed(4));
 	const fixedLongitude = parseFloat(longitude.toFixed(4));
-	const url = `${coordinateLookupUrl}${fixedLatitude},${fixedLongitude}`;
 
-	const fetched = await getJSON<CoordinateLookupResponse>(url, 'weather coordinate lookup', commonHeaders);
+	// Don't include API key in log statement, just in case.
+	let url = `${openWeatherDataUrl}&lat=${fixedLatitude}&lon=${fixedLongitude}`;
+	logger('Starting weather fetch', url);
+	url += `&appid=${runFlags.keys.weather}`;
+
+	const fetched = await getJSON<OpenWeatherResponse>(url, 'weather fetch', null);
+	logger('Finished weather fetch');
 	const { issues, result } = fetched;
 	if (issues) {
 		// Short-circuit, because it doesn't matter.
-		return fetched as unknown as FetchResponse<ForecastURLs>;
+		return fetched as unknown as FetchResponse<IntermediateWeatherValues>;
 	}
 
-	if (result!.detail) {
+	const response = result!;
+	if (response.cod) {
 		// Likely an error.
 		return {
-			issues: [errorIssue('Error retrieving weather information', 'Error in weather coordinate lookup', { status: result!.status, detail: result!.detail })],
+			issues: [errorIssue('Error retrieving weather information', 'Error returned in weather fetch', { code: response.cod, message: response.message })],
 			result: null
 		};
 	}
 
-	return {
-		issues: null,
-		result: {
-			period: result!.properties.forecastHourly,
-			grid: result!.properties.forecastGridData
-		}
-	};
-}
-
-/** Time, of form 2020-04-21T07:00:00+00:00 */
-type ISOTimeString = string;
-/** Time, of form 2020-04-21T07:00:00+00:00/PT1H */
-type ISODurationString = string;
-
-interface GridForecastResponse {
-	properties: {
-		updateTime: ISOTimeString,
-		validTimes: ISODurationString,
-
-		temperature: GridForecastEntity<number>,
-		apparentTemperature: GridForecastEntity<number>,
-		probabilityOfPrecipitation: GridForecastEntity<number>,
-		windDirection: GridForecastEntity<string>,
-		windSpeed: GridForecastEntity<number>,
-		dewpoint: GridForecastEntity<number>,
-		skyCover: GridForecastEntity<number>,
-		visibility: GridForecastEntity<number>,
-	},
-}
-
-interface GridForecastEntity<T> {
-	values: GridForecastEntityValue<T>[];
-}
-
-interface GridForecastEntityValue<T> {
-	validTime: ISODurationString,
-	value: T;
-}
-
-interface PeriodForecastResponse {
-	properties: {
-		updateTime: ISOTimeString,
-		validTimes: ISODurationString,
-
-		periods: PeriodForecastEntity[];
-	},
-}
-
-interface PeriodForecastEntity {
-	startTime: ISOTimeString,
-	endTime: ISOTimeString,
-	icon: string,
-	shortForecast: string;
-}
-
-async function getIntermediateWeather(configContext: APIConfigurationContext, gridURL: string, periodURL: string): Promise<FetchResponse<IntermediateWeatherValues>> {
-
-	const requests: [Promise<FetchResponse<GridForecastResponse>>, Promise<FetchResponse<PeriodForecastResponse>>] = [
-		getJSON<GridForecastResponse>(gridURL, 'weather grid forecast lookup', commonHeaders),
-		getJSON<PeriodForecastResponse>(periodURL, 'weather period forecast lookup', commonHeaders)
-	];
-
-	const [gridForecastResponse, periodForecastResponse] = await Promise.all(requests);
-
-	const combinedIssues = mergeIssues([gridForecastResponse.issues, periodForecastResponse.issues]);
-	if (combinedIssues) {
-		return {
-			issues: combinedIssues,
-			result: null
-		};
-	}
-
-	const timeZone = configContext.configuration.location.timeZoneLabel;
-	const { temperature, apparentTemperature, probabilityOfPrecipitation, windDirection, windSpeed, dewpoint, skyCover, visibility } = gridForecastResponse.result!.properties;
+	// Per documentation - all times are Unix seconds UTC.
+	const zoneOptions: DateTimeOptions = { zone: configContext.configuration.location.timeZoneLabel };
 
 	// Create functions to process the raw data by running conversions and adding precision.
-	const temperatureToPrecisionFahrenheit = wrapForPrecision(temperatureCelsiusToFahrenheit, configContext.configuration.weather.temperaturePrecision);
+	const temperatureToPrecision = wrapForPrecision(x => x, configContext.configuration.weather.temperaturePrecision);
+	const toDefaultPrecision = wrapForPrecision(x => x, configContext.configuration.weather.defaultPrecision);
 	const percentToPrecision = wrapForPrecision(toPercent, configContext.configuration.weather.defaultPrecision + 2);
-	const windToPrecisionMiles = wrapForPrecision(windMetersPerSecondToMilesPerHour, configContext.configuration.weather.defaultPrecision);
 	const metersToPrecisionMiles = wrapForPrecision(metersToMiles, configContext.configuration.weather.defaultPrecision);
-
-	const periods = periodForecastResponse.result!.properties.periods.map<IterableTimeData<WeatherStatusType>>((e) => {
-		return {
-			span: timeSpanFromTimes(e.startTime, e.endTime, timeZone),
-			value: getStatusFromIcon(e.icon)
-		};
-	});
+	const pressureToPrecisionMillibars = wrapForPrecision(pressureToMillibars, configContext.configuration.weather.defaultPrecision);
 
 	return {
 		issues: null,
 		result: {
 			errors: null,
 			warnings: null,
-			temp: createIterableData(temperature, timeZone, temperatureToPrecisionFahrenheit),
-			tempFeelsLike: createIterableData(apparentTemperature, timeZone, temperatureToPrecisionFahrenheit),
-			chanceRain: createIterableData(probabilityOfPrecipitation, timeZone, percentToPrecision),
-			windDirection: createIterableData(windDirection, timeZone, degreesToDirection),
-			wind: createIterableData(windSpeed, timeZone, windToPrecisionMiles),
-			dewPoint: createIterableData(dewpoint, timeZone, temperatureToPrecisionFahrenheit),
-			cloudCover: createIterableData(skyCover, timeZone, percentToPrecision),
-			visibility: createIterableData(visibility, timeZone, metersToPrecisionMiles),
-			status: periods
+			currentWeather: {
+				time: DateTime.fromSeconds(response.current.dt, zoneOptions),
+				temp: temperatureToPrecision(response.current.temp),
+				tempFeelsLike: temperatureToPrecision(response.current.feels_like),
+				wind: toDefaultPrecision(response.current.wind_speed),
+				windDirection: degreesToDirection(response.current.wind_deg),
+				pressure: pressureToPrecisionMillibars(response.current.pressure),
+				cloudCover: percentToPrecision(response.current.clouds),
+				visibility: metersToPrecisionMiles(response.current.visibility),
+				dewPoint: temperatureToPrecision(response.current.dew_point),
+				status: getStatusType(response.current.weather[0])
+			},
+			shortTermWeather: response.hourly.map((hourly) => {
+				return {
+					time: DateTime.fromSeconds(hourly.dt, zoneOptions).startOf('hour'),
+					temp: temperatureToPrecision(hourly.temp),
+					tempFeelsLike: temperatureToPrecision(hourly.feels_like),
+					wind: toDefaultPrecision(hourly.wind_speed),
+					windDirection: degreesToDirection(hourly.wind_deg),
+					pressure: pressureToPrecisionMillibars(hourly.pressure),
+					cloudCover: percentToPrecision(hourly.clouds),
+					visibility: null,
+					dewPoint: temperatureToPrecision(hourly.dew_point),
+					status: getStatusType(hourly.weather[0])
+				};
+			}),
+			longTermWeather: response.daily.map((daily) => {
+				return {
+					day: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
+					minTemp: temperatureToPrecision(daily.temp.min),
+					maxTemp: temperatureToPrecision(daily.temp.max),
+					status: getStatusType(daily.weather[0])
+				};
+			}),
 		}
 	};
-
 }
 
-function createIterableData<T>(gridForecastEntity: GridForecastEntity<any>, timeZone: string, valueConversion: ValueConverter<T>): IterableTimeData<T>[] {
-	return gridForecastEntity.values.map((e) => {
-		return {
-			span: timeSpanFromString(e.validTime, timeZone),
-			value: valueConversion(e.value)
-		};
-	});
+interface OpenWeatherResponse {
+	/** Error code */
+	cod: number;
+	/** Error message */
+	message: string;
+
+	current: {
+		/** Unix time, UTC, seconds */
+		dt: number;
+		/** Temperature, F, two digits past decimal */
+		temp: number;
+		/** Temperature, F, two digits past decimal */
+		feels_like: number;
+		/** Atmospheric pressure at sea level, hPa */
+		pressure: number;
+		/** Dew point, F, two digits past decimal */
+		dew_point: number;
+		/** Cloudiness, [0,100] percent */
+		clouds: number;
+		/** Visibility in meters */
+		visibility: number;
+		/** Wind speed in mph, two digits past decimal */
+		wind_speed: number;
+		/** Wind direction in degrees (direction coming from - 0 is coming from north) */
+		wind_deg: number;
+		weather: OpenWeatherWeatherStatus[];
+	};
+	hourly: OpenWeatherHourlyEntry[];
+	daily: OpenWeatherDailyEntry[];
+}
+
+interface OpenWeatherHourlyEntry {
+	/** Unix time, UTC, seconds */
+	dt: number;
+	/** Temperature, F, two digits past decimal */
+	temp: number;
+	/** Temperature, F, two digits past decimal */
+	feels_like: number;
+	/** Atmospheric pressure at sea level, hPa */
+	pressure: number;
+	/** Dew point, F, two digits past decimal */
+	dew_point: number;
+	/** Cloudiness, [0,100] percent */
+	clouds: number;
+	/** Wind speed in mph, two digits past decimal */
+	wind_speed: number;
+	/** Wind direction in degrees (direction coming from - 0 is coming from north) */
+	wind_deg: number;
+	weather: OpenWeatherWeatherStatus[];
+}
+
+interface OpenWeatherDailyEntry {
+	/** Unix time, UTC, seconds */
+	dt: number;
+	temp: {
+		min: number;
+		max: number;
+	};
+	/** Atmospheric pressure at sea level, hPa */
+	pressure: number;
+	/** Dew point, F, two digits past decimal */
+	dew_point: number;
+	/** Cloudiness, [0,100] percent */
+	clouds: number;
+	/** Wind speed in mph, two digits past decimal */
+	wind_speed: number;
+	/** Wind direction in degrees (direction coming from - 0 is coming from north) */
+	wind_deg: number;
+	weather: OpenWeatherWeatherStatus[];
+}
+
+interface OpenWeatherWeatherStatus {
+	/** Code - see https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2 */
+	id: number;
+	/** Short name for weather event: Haze, Dust, Mist, Clear */
+	main: string;
+	/** Longer description for weather event */
+	description: string;
+	//icon: string;
 }
 
 interface ValueConverter<O> {
@@ -229,11 +210,6 @@ function wrapForPrecision(valueConverter: ValueConverter<number>, precision: num
 		return parseFloat(convertedValue.toFixed(precision));
 	};
 }
-
-/** Converts temperature from celsius to fahrenheit. */
-const temperatureCelsiusToFahrenheit: ValueConverter<number> = (value) => {
-	return value * (9 / 5) + 32;
-};
 
 /** Converts a value in [0, 100] to a value in [0, 1]. */
 const toPercent: ValueConverter<number> = (value) => {
@@ -251,119 +227,88 @@ const degreesToDirection: ValueConverter<WindDirection> = (value: number) => {
 	return directionValue as WindDirection;
 };
 
-/** Converts wind speed meters/second to miles/hour. */
-const windMetersPerSecondToMilesPerHour: ValueConverter<number> = (value) => {
-	return value * 2.23694;
-};
-
 /** Converts meters to miles. */
 const metersToMiles: ValueConverter<number> = (value) => {
 	return value * 0.0006213;
 };
 
+/** Converts hPa (100 Pa) to mb (100 Pa). */
+const pressureToMillibars: ValueConverter<number> = (value) => {
+	return value;
+};
 
-
-//const timespanRegex = /([0-9]+)([a-zA-Z])([0-9]*)([a-zA-Z]?)/;
-/** Parse a timeSpan from a single string that gives a time and a duration. */
-function timeSpanFromString(timeString: string, timeZone: string): TimeSpan {
-	// 2019-07-19T10:00:00+00:00/PT1H means 7/10/2019, 10 AM GMT, for 1 hour
-	const separatorIndex = timeString.indexOf("/");
-	if (separatorIndex === -1)
-		throw new Error('No separator for time span');
-
-	const time = timeString.slice(0, separatorIndex);
-
-	// Length could be "PT12H", "PT6H", "P1D", etc
-	const duration = Duration.fromISO(timeString.substr(separatorIndex + 1)); // Leave off the "/"
-	// const matches = timespanRegex.exec(lengthRaw)!;
-	// console.log(lengthRaw, matches);
-	// const timespanTime1 = parseInt(matches[0], 10);
-	// const timespanLength1 = matches[1] === 'H' ? 1 : 24;
-
-	// const timespanTime2 = matches[2] ? parseInt(matches[2], 10) : null;
-	// const timespanLength2 = matches[3] ? (matches[3] === 'H' ? 1 : 24) : 0;
-	// const totalHours = (timespanTime1 * timespanLength1) + (timespanTime2 ? (timespanTime2 * timespanLength2) : 0);
-
-	const luxonTime = DateTime.fromISO(time, { zone: timeZone });
-	const luxonEnd = luxonTime.plus(duration);
-
-	return {
-		begin: luxonTime,
-		end: luxonEnd
-	};
+function getStatusType(status: OpenWeatherWeatherStatus): WeatherStatusType {
+	return openWeatherStatusMap[status.id as keyof typeof openWeatherStatusMap] || WeatherStatusType.unknown;
 }
 
-function timeSpanFromTimes(startTimeString: string, endTimeString: string, timeZone: string): TimeSpan {
-	// 2020-01-05T16:00:00-05:00
-	// Parse using whatever offset is presented in the string, but convert to the given zone.
-	const luxonStartTime = DateTime.fromISO(startTimeString, { zone: timeZone });
-	const luxonEndTime = DateTime.fromISO(endTimeString, { zone: timeZone });
-	return {
-		begin: luxonStartTime,
-		end: luxonEndTime
-	};
-}
+// Retrieved from https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
+const openWeatherStatusMap = {
+	// Thunderstorm
+	200: WeatherStatusType.thun_light,
+	201: WeatherStatusType.thun_medium,
+	202: WeatherStatusType.thun_heavy,
+	210: WeatherStatusType.thun_light,
+	211: WeatherStatusType.thun_medium,
+	212: WeatherStatusType.thun_heavy,
+	221: WeatherStatusType.thun_medium,
+	230: WeatherStatusType.thun_light,
+	231: WeatherStatusType.thun_medium,
+	232: WeatherStatusType.thun_heavy,
 
-function getStatusFromIcon(iconUrl: string): WeatherStatusType {
-	// "https://api.weather.gov/icons/land/day/skc?size=small"
-	const lastSlashIndex = iconUrl.lastIndexOf('/');
-	if (lastSlashIndex === -1) {
-		return WeatherStatusType.unknown;
-	}
-	// May be a comma or a question mark.
-	const commaIndex = iconUrl.indexOf(',');
-	const qMarkIndex = iconUrl.indexOf('?');
+	// Drizzle
+	300: WeatherStatusType.rain_drizzle,
+	301: WeatherStatusType.rain_drizzle,
+	302: WeatherStatusType.rain_drizzle,
+	310: WeatherStatusType.rain_drizzle,
+	311: WeatherStatusType.rain_drizzle,
+	312: WeatherStatusType.rain_drizzle,
+	313: WeatherStatusType.rain_drizzle,
+	314: WeatherStatusType.rain_drizzle,
+	321: WeatherStatusType.rain_drizzle,
 
-	let icon: string = null!;
-	if (commaIndex !== -1) {
-		icon = iconUrl.substring(lastSlashIndex + 1, commaIndex);
-	}
-	else if (qMarkIndex !== -1) {
-		icon = iconUrl.substring(lastSlashIndex + 1, qMarkIndex);
-	}
-	else {
-		icon = iconUrl.substring(lastSlashIndex + 1);
-	}
+	// Rain
+	500: WeatherStatusType.rain_light,
+	501: WeatherStatusType.rain_medium,
+	502: WeatherStatusType.rain_heavy,
+	503: WeatherStatusType.rain_heavy,
+	504: WeatherStatusType.rain_heavy,
+	511: WeatherStatusType.rain_freeze,
+	520: WeatherStatusType.rain_light,
+	521: WeatherStatusType.rain_medium,
+	522: WeatherStatusType.rain_heavy,
+	531: WeatherStatusType.rain_medium,
 
-	const weatherIconKey = icon as keyof typeof weatherIconStatuses;
-	const weatherIconStatus = weatherIconStatuses[weatherIconKey];
-	return weatherIconStatus || WeatherStatusType.unknown;
-}
+	// Snow
+	600: WeatherStatusType.snow_light,
+	601: WeatherStatusType.snow_medium,
+	602: WeatherStatusType.snow_heavy,
+	611: WeatherStatusType.snow_sleet,
+	612: WeatherStatusType.snow_sleet,
+	613: WeatherStatusType.snow_sleet,
+	615: WeatherStatusType.snow_rain,
+	616: WeatherStatusType.snow_rain,
+	620: WeatherStatusType.snow_rain,
+	621: WeatherStatusType.snow_rain,
+	622: WeatherStatusType.snow_rain,
 
-// Retrieved from https://api.weather.gov/icons
-const weatherIconStatuses = {
-	"skc": WeatherStatusType.fair,
-	"few": WeatherStatusType.cloud_few,
-	"sct": WeatherStatusType.cloud_part,
-	"bkn": WeatherStatusType.cloud_most,
-	"ovc": WeatherStatusType.cloud_over,
-	"wind_skc": WeatherStatusType.wind_fair,
-	"wind_few": WeatherStatusType.wind_few,
-	"wind_sct": WeatherStatusType.wind_part,
-	"wind_bkn": WeatherStatusType.wind_most,
-	"wind_ovc": WeatherStatusType.wind_over,
-	"snow": WeatherStatusType.snow,
-	"rain_snow": WeatherStatusType.rain_snow,
-	"rain_sleet": WeatherStatusType.rain_sleet,
-	"snow_sleet": WeatherStatusType.snow_sleet,
-	"fzra": WeatherStatusType.rain_freeze,
-	"rain_fzra": WeatherStatusType.rain_freeze_rain,
-	"snow_fzra": WeatherStatusType.snow_freeze_rain,
-	"sleet": WeatherStatusType.sleet,
-	"rain": WeatherStatusType.rain,
-	"rain_showers": WeatherStatusType.rain_showers_high,
-	"rain_showers_hi": WeatherStatusType.rain_showers,
-	"tsra": WeatherStatusType.thun_high,
-	"tsra_sct": WeatherStatusType.thun_med,
-	"tsra_hi": WeatherStatusType.thun_low,
-	"tornado": WeatherStatusType.torn,
-	"hurricane": WeatherStatusType.hurr,
-	"tropical_storm": WeatherStatusType.trop,
-	"dust": WeatherStatusType.dust,
-	"smoke": WeatherStatusType.smoke,
-	"haze": WeatherStatusType.haze,
-	"hot": WeatherStatusType.hot,
-	"cold": WeatherStatusType.cold,
-	"blizzard": WeatherStatusType.blizz,
-	"fog": WeatherStatusType.fog
+	// Atmosphere
+	700: WeatherStatusType.fog,
+	711: WeatherStatusType.smoke,
+	721: WeatherStatusType.haze,
+	731: WeatherStatusType.dust,
+	741: WeatherStatusType.fog,
+	751: WeatherStatusType.dust,
+	761: WeatherStatusType.dust,
+	762: WeatherStatusType.dust,
+	771: WeatherStatusType.intense_other,
+	781: WeatherStatusType.intense_storm,
+
+	// Clear
+	800: WeatherStatusType.clear,
+
+	// Clouds
+	801: WeatherStatusType.clouds_few,
+	802: WeatherStatusType.clouds_some,
+	803: WeatherStatusType.clouds_most,
+	804: WeatherStatusType.clouds_over
 };

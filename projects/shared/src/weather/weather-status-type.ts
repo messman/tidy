@@ -1,42 +1,34 @@
 export enum WeatherStatusType {
 	unknown,
-	fair,
-	cloud_few,
-	cloud_part,
-	cloud_most,
-	cloud_over,
-	wind_fair,
-	wind_few,
-	wind_part,
-	wind_most,
-	wind_over,
-	snow,
-	rain_snow,
-	rain_sleet,
-	snow_sleet,
+	clear,
+	clear_hot,
+	clear_cold,
+	clouds_few,
+	clouds_some,
+	clouds_most,
+	clouds_over,
+	rain_drizzle,
+	rain_light,
+	rain_medium,
+	rain_heavy,
 	rain_freeze,
-	rain_freeze_rain,
-	snow_freeze_rain,
-	sleet,
-	rain,
-	rain_showers_high,
-	rain_showers,
-	thun_high,
-	thun_med,
-	thun_low,
-	torn,
-	hurr,
-	trop,
+	snow_light,
+	snow_medium,
+	snow_heavy,
+	snow_sleet,
+	snow_rain,
+	thun_light,
+	thun_medium,
+	thun_heavy,
+	intense_storm,
+	intense_other,
 	dust,
 	smoke,
 	haze,
-	hot,
-	cold,
-	blizz,
 	fog
 }
 export interface WeatherStatusDescription {
-	short: string,
+	short: string;
 	long: string;
 }
 export type WeatherStatusDescriptionMap = Record<keyof typeof WeatherStatusType, WeatherStatusDescription>;
@@ -45,113 +37,93 @@ export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
 		short: 'Unknown',
 		long: 'Unknown'
 	},
-	fair: {
-		short: 'Fair',
+	clear: {
+		short: 'Clear',
 		long: 'Fair and clear'
 	},
-	cloud_few: {
-		short: 'Some clouds',
+	clear_hot: {
+		short: 'Hot',
+		long: 'Hot'
+	},
+	clear_cold: {
+		short: 'Cold',
+		long: 'Cold'
+	},
+	clouds_few: {
+		short: 'Few Clouds',
 		long: 'A few clouds'
 	},
-	cloud_part: {
-		short: 'Some clouds',
+	clouds_some: {
+		short: 'Clouds',
 		long: 'Partly cloudy'
 	},
-	cloud_most: {
-		short: 'Cloudy',
+	clouds_most: {
+		short: 'Clouds',
 		long: 'Mostly cloudy'
 	},
-	cloud_over: {
+	clouds_over: {
 		short: 'Overcast',
 		long: 'Overcast'
 	},
-	wind_fair: {
-		short: 'Windy',
-		long: 'Fair / clear and windy'
+	rain_drizzle: {
+		short: 'Drizzle',
+		long: 'Drizzling'
 	},
-	wind_few: {
-		short: 'Windy',
-		long: 'A few clouds and windy'
+	rain_light: {
+		short: 'Rain',
+		long: 'Light rain'
 	},
-	wind_part: {
-		short: 'Windy',
-		long: 'Partly cloudy and windy'
-	},
-	wind_most: {
-		short: 'Cloudy/windy',
-		long: 'Mostly cloudy and windy'
-	},
-	wind_over: {
-		short: 'Cloudy/windy',
-		long: 'Overcast and windy'
-	},
-	snow: {
-		short: 'Snow',
-		long: 'Snow'
-	},
-	rain_snow: {
-		short: 'Rain/snow',
-		long: 'Rain and snow'
-	},
-	rain_sleet: {
-		short: 'Rain/sleet',
-		long: 'Rain and sleet'
-	},
-	snow_sleet: {
-		short: 'Rain/sleet',
-		long: 'Rain and sleet'
-	},
-	rain_freeze: {
-		short: 'Freezing rain',
-		long: 'Freezing rain'
-	},
-	rain_freeze_rain: {
-		short: 'Freezing rain',
-		long: 'Rain and freezing rain'
-	},
-	snow_freeze_rain: {
-		short: 'Freezing rain',
-		long: 'Freezing rain and snow'
-	},
-	sleet: {
-		short: 'Sleet',
-		long: 'Sleet'
-	},
-	rain: {
+	rain_medium: {
 		short: 'Rain',
 		long: 'Rain'
 	},
-	rain_showers_high: {
+	rain_heavy: {
 		short: 'Rain',
-		long: 'Rain showers with high cloud cover'
+		long: 'Heavy rain'
 	},
-	rain_showers: {
+	rain_freeze: {
 		short: 'Rain',
-		long: 'Rain showers with low cloud cover'
+		long: 'Freezing rain'
 	},
-	thun_high: {
-		short: 'Thunderstorms',
-		long: 'Thunderstorm with high cloud cover'
+	snow_light: {
+		short: 'Snow',
+		long: 'Light snow'
 	},
-	thun_med: {
-		short: 'Thunderstorms',
-		long: 'Thunderstorms with medium cloud cover'
+	snow_medium: {
+		short: 'Snow',
+		long: 'Snow'
 	},
-	thun_low: {
-		short: 'Thunderstorms',
-		long: 'Thunderstorms with low cloud cover'
+	snow_heavy: {
+		short: 'Snow',
+		long: 'Heavy snow'
 	},
-	torn: {
-		short: 'Tornado',
-		long: 'Tornado conditions'
+	snow_sleet: {
+		short: 'Sleet',
+		long: 'Sleeting'
 	},
-	hurr: {
-		short: 'Hurricane',
-		long: 'Hurricane conditions'
+	snow_rain: {
+		short: 'Snow',
+		long: 'Snow and rain'
 	},
-	trop: {
-		short: 'Storm',
-		long: 'Tropical storm conditions'
+	thun_light: {
+		short: 'Thunderstorm',
+		long: 'Light or scattered thunderstorms'
+	},
+	thun_medium: {
+		short: 'Thunderstorm',
+		long: 'Thunderstorms'
+	},
+	thun_heavy: {
+		short: 'Thunderstorm',
+		long: 'Heavy thunderstorms'
+	},
+	intense_storm: {
+		short: 'Intense',
+		long: 'Intense and dangerous storms'
+	},
+	intense_other: {
+		short: 'Intense',
+		long: 'Intense and dangerous weather'
 	},
 	dust: {
 		short: 'Dust',
@@ -165,20 +137,8 @@ export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
 		short: 'Haze',
 		long: 'Haze'
 	},
-	hot: {
-		short: 'Hot',
-		long: 'Hot'
-	},
-	cold: {
-		short: 'Cold',
-		long: 'Cold'
-	},
-	blizz: {
-		short: 'Blizzard',
-		long: 'Blizzard'
-	},
 	fog: {
 		short: 'Fog/mist',
 		long: 'Fog and mist'
-	},
+	}
 };

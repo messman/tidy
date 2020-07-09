@@ -4,10 +4,10 @@ import { AllDailyDay, DailyWeather, Errors, Issue, SunEvent, TideEventRange, War
 import { fetchAstro } from '../astro/astro-fetch';
 import { IntermediateAstroValues } from '../astro/astro-intermediate';
 import { interpretAstro, InterpretedAstro } from '../astro/astro-interpret';
-import { TestSeed } from '../test/all';
 import { fetchTides } from '../tide/tide-fetch';
 import { IntermediateTideValues } from '../tide/tide-intermediate';
 import { InterpretedTides, interpretTides } from '../tide/tide-interpret';
+import { RunFlags } from '../util/run-flags';
 import { fetchWeather } from '../weather/weather-fetch';
 import { IntermediateWeatherValues } from '../weather/weather-intermediate';
 import { InterpretedWeather, interpretWeather } from '../weather/weather-interpret';
@@ -29,16 +29,16 @@ export interface AllMerge extends AllIssue {
 
 /** Common type for functions used for either real-life fetching or for testing. */
 export interface AllMergeFunc {
-	(configContext: APIConfigurationContext, testSeed: TestSeed): Promise<AllMerge>;
+	(configContext: APIConfigurationContext, runFlags: RunFlags): Promise<AllMerge>;
 }
 
 /** Real-life/production merge function. Should return only errors if any piece of any area is invalid. */
-export const allMerge: AllMergeFunc = async (configContext: APIConfigurationContext, _: TestSeed) => {
+export const allMerge: AllMergeFunc = async (configContext: APIConfigurationContext, runFlags: RunFlags) => {
 
 	const requests: [Promise<IntermediateTideValues>, Promise<IntermediateAstroValues>, Promise<IntermediateWeatherValues>] = [
-		fetchTides(configContext),
-		fetchAstro(configContext),
-		fetchWeather(configContext)
+		fetchTides(configContext, runFlags),
+		fetchAstro(configContext, runFlags),
+		fetchWeather(configContext, runFlags)
 	];
 
 	const [tidesData, astroData, weatherData] = await Promise.all(requests);

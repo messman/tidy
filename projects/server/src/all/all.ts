@@ -1,5 +1,7 @@
 import { AllResponse, Info } from 'tidy-shared';
-import { allTestMerge, TestSeed } from '../test/all';
+import { allTestMerge } from '../test/all';
+import { serverLog } from '../util/log';
+import { defaultRunFlags, RunFlags } from '../util/run-flags';
 import { allMerge, AllMergeFunc, mergeForLongTerm } from './all-merge';
 import { APIConfiguration, createContext } from './context';
 
@@ -14,8 +16,8 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 			},
 			time: {
 				referenceTime: time,
-				shortTermDataFetchDays: 2,
-				longTermDataFetchDays: 6,
+				shortTermDataFetchHours: 2 * 24,
+				longTermDataFetchDays: 5,
 			},
 			tides: {
 				station: station,
@@ -41,20 +43,24 @@ export function createWellsConfiguration(): APIConfiguration {
 }
 
 /** The main function - retrieves the 'AllResponse' object for the provided configuration. Calls APIs. */
-export async function getAllForConfiguration(configuration: APIConfiguration): Promise<AllResponse> {
-	return getAll(configuration, allMerge, null);
+export async function getAllForConfiguration(configuration: APIConfiguration, runFlags: RunFlags | null): Promise<AllResponse> {
+	return getAll(configuration, allMerge, runFlags);
 }
 
 /** The main test function - creates random data and interprets it using the same common functions from the production function. */
-export async function getAllTestForConfiguration(configuration: APIConfiguration, seed: TestSeed): Promise<AllResponse> {
-	return getAll(configuration, allTestMerge, seed);
+export async function getAllTestForConfiguration(configuration: APIConfiguration, runFlags: RunFlags | null): Promise<AllResponse> {
+	return getAll(configuration, allTestMerge, runFlags);
 }
 
 /** Common function that takes a 'Merge Function' to resolve issues and warnings and retrieve the data. */
-async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, testSeed: TestSeed): Promise<AllResponse> {
+async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, runFlags: RunFlags | null): Promise<AllResponse> {
+	serverLog(runFlags, 'Started');
+	runFlags = runFlags || defaultRunFlags;
 
 	const configContext = createContext(configuration);
-	const { errors, warnings, interpretedTides, interpretedAstro, interpretedWeather } = await mergeFunc(configContext, testSeed);
+	serverLog(runFlags, 'Created context');
+
+	const { errors, warnings, interpretedTides, interpretedAstro, interpretedWeather } = await mergeFunc(configContext, runFlags);
 
 	const info: Info = {
 		referenceTime: configContext.context.referenceTimeInZone,
@@ -71,7 +77,7 @@ async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, 
 		};
 	}
 
-	return {
+	const response: AllResponse = {
 		info: info,
 		error: null,
 		all: {
@@ -97,7 +103,8 @@ async function getAll(configuration: APIConfiguration, mergeFunc: AllMergeFunc, 
 			}
 		}
 	};
-
+	serverLog(runFlags, 'Finished');
+	return response;
 }
 
 /** Intermediate interface used when merging API data. Holds data for a specific day. */

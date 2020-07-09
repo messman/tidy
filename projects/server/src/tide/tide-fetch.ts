@@ -3,6 +3,8 @@ import { errorIssue, TideEvent, TideStatus } from 'tidy-shared';
 import { mergeIssues } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';
 import { FetchResponse, getJSON } from '../util/fetch';
+import { createServerLog, ServerLogger } from '../util/log';
+import { RunFlags } from '../util/run-flags';
 import { IntermediateTideValues } from './tide-intermediate';
 
 /*
@@ -13,7 +15,9 @@ import { IntermediateTideValues } from './tide-intermediate';
 	https://tidesandcurrents.noaa.gov/api/datagetter?application=messman_tidy&station=8419317&format=json&time_zone=lst_ldt&units=english&product=water_level&datum=mllw&date=latest
 */
 
-export async function fetchTides(configContext: APIConfigurationContext): Promise<IntermediateTideValues> {
+export async function fetchTides(configContext: APIConfigurationContext, runFlags: RunFlags): Promise<IntermediateTideValues> {
+
+	const logger = createServerLog(runFlags);
 
 	const station = configContext.configuration.tides.station;
 	// Add one day to our max time because we need tides for the day after in order to construct graph UI.
@@ -40,8 +44,8 @@ export async function fetchTides(configContext: APIConfigurationContext): Promis
 	} as NOAACurrentLevelInput));
 
 	const requests: [Promise<FetchResponse<NOAAPredictionOutput>>, Promise<FetchResponse<NOAACurrentLevelOutput>>] = [
-		makeJSONRequest(predictionInput, 'tide prediction'),
-		makeJSONRequest(currentLevelInput, 'tide level')
+		makeJSONRequest(predictionInput, 'tide prediction', logger),
+		makeJSONRequest(currentLevelInput, 'tide level', logger)
 	];
 
 	const [predictionResponse, currentLevelResponse] = await Promise.all(requests);
@@ -159,10 +163,13 @@ interface NOAARawErrorResponse {
 	};
 }
 
-async function makeJSONRequest<T extends NOAARawErrorResponse>(options: any, name: string): Promise<FetchResponse<T>> {
+async function makeJSONRequest<T extends NOAARawErrorResponse>(options: any, name: string, logger: ServerLogger): Promise<FetchResponse<T>> {
 	const url = createRequestUrl(options);
 
+	logger('Starting request', url);
 	const fetched = await getJSON<T>(url, name, null);
+	logger('Finished request', url);
+
 	const { issues, result } = fetched;
 	if (issues) {
 		// Short-circuit, because it doesn't matter.

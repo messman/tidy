@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { SunEvent, TideEvent, TideStatus, warningIssue, Warnings, WeatherStatusType, WindDirection } from 'tidy-shared';
+import { DailyWeather, SunEvent, TideEvent, TideStatus, warningIssue, Warnings, WeatherStatus, WeatherStatusType, WindDirection } from 'tidy-shared';
 import { AllMergeFunc, mergeWarnings } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';
 import { IntermediateAstroValues } from '../astro/astro-intermediate';
@@ -7,6 +7,7 @@ import { interpretAstro } from '../astro/astro-interpret';
 import { IntermediateTideValues } from '../tide/tide-intermediate';
 import { interpretTides } from '../tide/tide-interpret';
 import { IterableTimeData } from '../util/iterator';
+import { RunFlags } from '../util/run-flags';
 import { IntermediateWeatherValues } from '../weather/weather-intermediate';
 import { interpretWeather } from '../weather/weather-interpret';
 import { linearFromPoints, quadraticFromPoints } from './equation';
@@ -19,17 +20,17 @@ function combineSeed(initialSeed: string, testSeed: TestSeed): string {
 }
 
 /** The main 'merge' function for our test data. Creates the fake data for each API area and combines them. */
-export const allTestMerge: AllMergeFunc = async (configContext: APIConfigurationContext, testSeed: TestSeed) => {
+export const allTestMerge: AllMergeFunc = async (configContext: APIConfigurationContext, runFlags: RunFlags) => {
 
-	const tideData = createTideData(configContext, testSeed);
+	const tideData = createTideData(configContext, runFlags);
 	//const tideData = await fetchTides(configContext);
 	const interpretedTides = interpretTides(configContext, tideData);
 
-	const astroData = createAstroData(configContext, testSeed);
+	const astroData = createAstroData(configContext, runFlags);
 	//const astroData = await fetchAstro(configContext);
 	const interpretedAstro = interpretAstro(configContext, astroData);
 
-	const weatherData = createWeatherData(configContext, testSeed);
+	const weatherData = createWeatherData(configContext, runFlags);
 	//const weatherData = await fetchWeather(configContext);
 	const interpretedWeather = interpretWeather(configContext, weatherData);
 
@@ -50,9 +51,9 @@ function createTestWarnings(): Warnings {
 }
 
 /** Creates random tide data. Uses a seeded randomizer. */
-export function createTideData(configContext: APIConfigurationContext, testSeed: TestSeed): IntermediateTideValues {
+export function createTideData(configContext: APIConfigurationContext, runFlags: RunFlags): IntermediateTideValues {
 
-	const tideRandomizer = randomizer(combineSeed('_tide_', testSeed));
+	const tideRandomizer = randomizer(combineSeed('_tide_', runFlags.data.seed));
 
 	// Get our time between highs and lows.
 	// This is typically 6 hours 12 minutes and some change, but we'll make it a little random and pretend it's because of the sun.
@@ -126,8 +127,8 @@ export function createTideData(configContext: APIConfigurationContext, testSeed:
 }
 
 /** Creates random astro/sun data. Uses a seeded randomizer. */
-export function createAstroData(configContext: APIConfigurationContext, testSeed: TestSeed): IntermediateAstroValues {
-	const sunRandomizer = randomizer(combineSeed('_sun_', testSeed));
+export function createAstroData(configContext: APIConfigurationContext, runFlags: RunFlags): IntermediateAstroValues {
+	const sunRandomizer = randomizer(combineSeed('_sun_', runFlags.data.seed));
 
 	let startDateTime = configContext.context.astro.minimumSunDataFetch;
 	const endDateTime = configContext.context.maxLongTermDataFetch;
@@ -180,11 +181,11 @@ export function createAstroData(configContext: APIConfigurationContext, testSeed
 }
 
 /** Creates random weather data. Uses a seeded randomizer. */
-export function createWeatherData(configContext: APIConfigurationContext, testSeed: TestSeed): IntermediateWeatherValues {
-	const weatherRandomizer = randomizer(combineSeed('_weather_', testSeed));
+export function createWeatherData(configContext: APIConfigurationContext, runFlags: RunFlags): IntermediateWeatherValues {
+	const weatherRandomizer = randomizer(combineSeed('_weather_', runFlags.data.seed));
 
-	const startDateTime = configContext.context.referenceTimeInZone.startOf('hour').minus({ hours: 1 });
-	const endDateTime = configContext.context.maxLongTermDataFetch;
+	const hourlyStartDateTime = configContext.context.referenceTimeInZone.startOf('hour').minus({ hours: 1 });
+	const hourlyEndDateTime = configContext.context.maxShortTermDataFetch;
 	const temperaturePrecision = configContext.configuration.weather.temperaturePrecision;
 	const defaultPrecision = configContext.configuration.weather.defaultPrecision;
 
@@ -195,35 +196,82 @@ export function createWeatherData(configContext: APIConfigurationContext, testSe
 		Overkill? Definitely.
 	*/
 
-	function weatherData(hoursGap: number, minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
-		return quadraticShakeData(weatherRandomizer, startDateTime, endDateTime, hoursGap, minY, maxY, precision, inclusive, shake);
+	function hourlyWeatherData(minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
+		return quadraticShakeData(weatherRandomizer, hourlyStartDateTime, hourlyEndDateTime, 1, minY, maxY, precision, inclusive, shake);
 	}
 
 	const nWindDirection = Object.keys(WindDirection).filter((k) => !isNaN(k as unknown as number)).length - 1;
 	const nWeatherStatusType = Object.keys(WeatherStatusType).filter((k) => !isNaN(k as unknown as number)).length - 1;
 
-	return {
-		errors: null,
-		warnings: createTestWarnings(),
-		temp: weatherData(2, 40, 60, temperaturePrecision, true, .2),
-		tempFeelsLike: weatherData(2, 40, 60, temperaturePrecision, true, .2),
-		chanceRain: weatherData(2, 0, 1, defaultPrecision + 2, true, .2),
-		wind: weatherData(3, 0, 15, defaultPrecision, true, .2),
-		windDirection: weatherData(4, 0, nWindDirection, 0, false, .2).map((data) => {
+	const hourly = {
+		temp: hourlyWeatherData(40, 60, temperaturePrecision, true, .2),
+		tempFeelsLike: hourlyWeatherData(40, 60, temperaturePrecision, true, .2),
+		wind: hourlyWeatherData(0, 15, defaultPrecision, true, .2),
+		windDirection: hourlyWeatherData(0, nWindDirection, 0, false, .2).map((data) => {
 			return {
 				span: data.span,
 				value: data.value as WindDirection
 			};
 		}),
-		dewPoint: weatherData(2, 20, 40, temperaturePrecision, true, .2),
-		cloudCover: weatherData(2, 0, 1, defaultPrecision + 2, true, .2),
-		status: weatherData(4, 0, nWeatherStatusType, 0, false, .1).map((data) => {
+		pressure: hourlyWeatherData(.8, 1, 0, true, .2),
+		dewPoint: hourlyWeatherData(20, 40, temperaturePrecision, true, .2),
+		cloudCover: hourlyWeatherData(0, 1, defaultPrecision + 2, true, .2),
+		status: hourlyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {
 			return {
 				span: data.span,
 				value: data.value as WeatherStatusType
 			};
 		}),
-		visibility: weatherData(12, 2, 20, defaultPrecision, true, .2)
+		visibility: hourlyWeatherData(2, 20, defaultPrecision, true, .2)
+	};
+	const shortTermWeather: WeatherStatus<DateTime, number>[] = hourly.temp.map((temp, i) => {
+		return {
+			time: temp.span.begin,
+			temp: temp.value,
+			tempFeelsLike: hourly.tempFeelsLike[i].value,
+			wind: hourly.wind[i].value,
+			windDirection: hourly.windDirection[i].value,
+			dewPoint: hourly.dewPoint[i].value,
+			cloudCover: hourly.cloudCover[i].value,
+			status: hourly.status[i].value,
+			visibility: hourly.visibility[i].value,
+			pressure: hourly.pressure[i].value!
+		};
+	});
+
+	const dailyStartDateTime = configContext.context.referenceTimeInZone.startOf('day');
+	const dailyEndDateTime = configContext.context.maxShortTermDataFetch;
+
+	function dailyWeatherData(minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
+		return quadraticShakeData(weatherRandomizer, dailyStartDateTime, dailyEndDateTime, 24, minY, maxY, precision, inclusive, shake);
+	}
+
+	const daily = {
+		minTemp: dailyWeatherData(30, 50, temperaturePrecision, true, .2),
+		maxTemp: dailyWeatherData(50, 80, temperaturePrecision, true, .2),
+		status: dailyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {
+			return {
+				span: data.span,
+				value: data.value as WeatherStatusType
+			};
+		}),
+	};
+
+	const longTermWeather: DailyWeather[] = daily.minTemp.map((minTemp, i) => {
+		return {
+			day: minTemp.span.begin,
+			minTemp: minTemp.value,
+			maxTemp: daily.maxTemp[i].value,
+			status: daily.status[i].value,
+		};
+	});
+
+	return {
+		errors: null,
+		warnings: createTestWarnings(),
+		currentWeather: shortTermWeather[0],
+		shortTermWeather: shortTermWeather,
+		longTermWeather: longTermWeather
 	};
 }
 

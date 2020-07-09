@@ -1,6 +1,6 @@
 {
 	"name": "tidy-server-http",
-	"version": "3.0.1",
+	"version": "3.1.0",
 	"description": "An api for the tidy project.",
 	"main": "dist/index.js",
 	"scripts": {
@@ -8,16 +8,8 @@
 		"build-azure-deploy": "tsc --p tsconfig.azure-deploy.json",
 		"start": "tsc && PORT=8000 NODE_ENV=dev node ./dist/index"
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/messman/tidy-api.git"
-	},
 	"author": "Andrew Messier",
 	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/messman/tidy-api/issues"
-	},
-	"homepage": "https://github.com/messman/tidy-api#readme",
 	"dependencies": {
 		"express": "^4.17.1",
 		"luxon": "^1.24.0",

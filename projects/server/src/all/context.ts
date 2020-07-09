@@ -22,11 +22,10 @@ export interface APIConfiguration {
 			referenceTime: Date,
 
 			/**
-			 * Number of days into the future to grab short-term data (data that shows in our scrolling data view).
-			 * So if 3, adds 3 days and goes to end of that day.
-			 * Should be shorter than long-term date.
+			 * Number of hours into the future to grab short-term data (data that shows in our scrolling data view).
+			 * Does not go to the end of the day.
 			 */
-			shortTermDataFetchDays: number,
+			shortTermDataFetchHours: number,
 			/**
 			 * Number of days into the future to grab long-term data (data that shows in our long-term view).
 			 * So if 7, adds 7 days and goes to end of that day.
@@ -125,7 +124,7 @@ export function createContext(apiConfiguration: APIConfiguration): APIConfigurat
 		referenceTimeInZone: referenceTime,
 
 		// Use that day, but note you may have to translate to 'beginning of next day' for some logic.
-		maxShortTermDataFetch: referenceTime.plus({ days: configuration.time.shortTermDataFetchDays }).endOf("day"),
+		maxShortTermDataFetch: referenceTime.plus({ hours: configuration.time.shortTermDataFetchHours }),
 		maxLongTermDataFetch: referenceTime.plus({ days: configuration.time.longTermDataFetchDays }).endOf("day"),
 
 		tides: {
