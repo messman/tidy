@@ -1,9 +1,24 @@
 import { Application, NextFunction, Request, Response } from 'express';
 import { createWellsConfiguration, getAllForConfiguration } from 'tidy-server';
 import { AllResponse, createReplacer } from 'tidy-shared';
+import { processEnv } from './env';
 
-const isCaching: boolean = false;
-const cacheExpirationMilliseconds: number = 1000 * 60 * 5; // 5 minutes
+const isCaching: boolean = true;
+const cacheExpirationMilliseconds: number = 1000 * 60 * 2; // 2 minutes
+
+interface TestEnv {
+	OpenWeatherDebugAPIKey: string;
+}
+let openWeatherDebugAPIKey: string | null = processEnv.KEY_OPEN_WEATHER || null;
+if (!openWeatherDebugAPIKey && processEnv.NODE_ENV === 'dev') {
+	try {
+		const env: TestEnv = require('../test-env.json');
+		openWeatherDebugAPIKey = env.OpenWeatherDebugAPIKey;
+	}
+	catch (e) {
+		log(e);
+	}
+}
 
 function log(...args: any[]): void {
 	console.log('>', ...args);
@@ -40,7 +55,6 @@ export function configureApp(app: Application): void {
 
 	app.get('/latest', async (_: Request, response: Response<AllResponse>, next: NextFunction) => {
 		stats.totalHits++;
-
 		if (isCaching) {
 			const now = Date.now();
 
@@ -58,8 +72,14 @@ export function configureApp(app: Application): void {
 			}
 		}
 
+		let newest: AllResponse = null!;
+		let hasErrors = false;
 		try {
-			last = await getResponse();
+			newest = await getResponse();
+			hasErrors = !!newest.error;
+			if (!hasErrors) {
+				last = newest;
+			}
 		}
 		catch (e) {
 			console.error(e);
@@ -67,8 +87,11 @@ export function configureApp(app: Application): void {
 		}
 		cacheExpirationTime = Date.now() + cacheExpirationMilliseconds;
 
-		log(`Latest - caching for ${cacheExpirationMilliseconds}ms`);
-		return response.json(last);
+		const errorText = hasErrors ? ' with errors' : '';
+		const cachingText = !hasErrors && isCaching ? ` caching for ${cacheExpirationMilliseconds}ms` : ' not caching';
+		log(`Latest${errorText} -${cachingText}`);
+
+		return response.json(newest);
 	});
 
 	app.get('/last', async (_: Request, response: Response<LastResponse>) => {
@@ -96,7 +119,18 @@ export function configureApp(app: Application): void {
 
 async function getResponse(): Promise<AllResponse> {
 	const configuration = createWellsConfiguration();
-	return await getAllForConfiguration(configuration);
+	return await getAllForConfiguration(configuration, {
+		logging: {
+			isActive: true,
+			prefix: 'tidy-server'
+		},
+		data: {
+			seed: null
+		},
+		keys: {
+			weather: openWeatherDebugAPIKey
+		}
+	});
 }
 
 interface LastResponse {

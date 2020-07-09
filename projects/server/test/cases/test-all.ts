@@ -9,7 +9,6 @@ export async function run(env: TestEnv): Promise<void> {
 
 	const isTest = false;
 
-	console.log(env.OpenWeatherDebugAPIKey);
 	const runFlags: RunFlags = {
 		logging: {
 			isActive: true,

@@ -1,14 +1,15 @@
 import express = require('express');
 import { NextFunction, Request, Response } from 'express';
 import { configureApp } from './app';
+import { processEnv } from './env';
 
-const port = process.env.PORT || 8000;
+const port = processEnv.PORT || 8000;
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-if (process.env.NODE_ENV === 'dev') {
+if (processEnv.NODE_ENV === 'dev') {
 	// CORS (since this is just for development)
 	console.log('Using open CORS settings for development');
 	app.use(function (_request: Request, response: Response, next: NextFunction) {

@@ -44,6 +44,14 @@ async function getOpenWeatherData(latitude: number, longitude: number, configCon
 	const fixedLatitude = parseFloat(latitude.toFixed(4));
 	const fixedLongitude = parseFloat(longitude.toFixed(4));
 
+	if (!runFlags.keys.weather) {
+		// Not set up correctly.
+		return {
+			issues: [errorIssue('Error retrieving weather information', 'No API Key provided for weather fetch')],
+			result: null
+		};
+	}
+
 	// Don't include API key in log statement, just in case.
 	let url = `${openWeatherDataUrl}&lat=${fixedLatitude}&lon=${fixedLongitude}`;
 	logger('Starting weather fetch', url);

@@ -12,6 +12,8 @@ npm-debug.log
 
 **/ts-build
 
+test-env.json
+
 **/azure-deploy/*.js
 
 # Output of 'npm pack'
