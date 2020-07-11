@@ -84,8 +84,8 @@ interface SummaryAstroSunBarProps {
 	percent: number;
 }
 
-const sunRadius = 8;
-const sunPathThickness = 4;
+const sunRadius = 9;
+const sunPathThickness = 6;
 
 const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 
@@ -164,7 +164,7 @@ const SunBarContainer = styled.div`
 	height: 4rem;
 `;
 
-const startEndCircleRadius = 5;
+const startEndCircleRadius = 7;
 // Position in the bottom corners of our bounds as circles.
 const sunBarStartEndStyle = css`
 	position: absolute;

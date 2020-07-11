@@ -25,7 +25,7 @@ export const StrokeSVG = styled(SVGPath)`
 
 	width: ${p => p.destRect.right - p.destRect.left}px;
 	stroke: ${p => p.theme.color.tide};
-	stroke-width: 4px;
+	stroke-width: 6px;
 	fill: transparent;
 `;
 

@@ -95,7 +95,6 @@ interface SummaryTideBarProps {
 
 const SummaryTideBar: React.FC<SummaryTideBarProps> = (props) => {
 	const { percent } = props;
-
 	return (
 		<>
 			<NextCircle />
@@ -106,11 +105,11 @@ const SummaryTideBar: React.FC<SummaryTideBarProps> = (props) => {
 	);
 };
 
-const centerLineHeight = 4;
-const circleRadius = centerLineHeight * 2.6;
+const centerLineHeight = 6;
+const circleRadius = centerLineHeight * 2;
 const circleTopOffset = (centerLineHeight / 2) - (circleRadius);
-const dotRadius = centerLineHeight * 2.2;
-const dotTopOffset = (centerLineHeight / 2) - (dotRadius / 2);
+const dotRadius = centerLineHeight * 1.3;
+const dotTopOffset = (centerLineHeight / 2) - dotRadius;
 
 const CenterLinePadding = styled.div`
 	display: block;
@@ -125,9 +124,9 @@ const CenterLinePadding = styled.div`
 const CenterLine = styled.div<SummaryTideBarProps>`
 	display: block;
 	position: absolute;
-	left: ${circleRadius}px;
+	left: 0;
 	top: 0;
-	width: calc(${p => p.percent}% - ${circleRadius * 2}px);
+	width: ${p => p.percent}%;
 	height: 100%;
 	background-color: ${p => p.theme.color.tide};
 `;
@@ -150,9 +149,9 @@ const PreviousCircle = styled.div`
 const CurrentDot = styled.div<SummaryTideBarProps>`
 	position: absolute;
 	top: ${dotTopOffset}px;
-	left: calc(${p => p.percent}% - ${(circleRadius * 2) - (dotRadius / 2)}px);
-	width: ${dotRadius}px;
-	height: ${dotRadius}px;
+	left: calc(${p => p.percent}% - ${dotRadius}px);
+	width: ${dotRadius * 2}px;
+	height: ${dotRadius * 2}px;
 	background-color: ${p => p.theme.color.tide};
 	border-radius: 50%;
 `;

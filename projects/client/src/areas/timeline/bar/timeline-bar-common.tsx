@@ -20,7 +20,7 @@ interface TimelineBarLineProps {
 	lineWidth: number;
 }
 
-const barLineThickness = 4;
+const barLineThickness = 6;
 
 export const TimelineBarLine = styled.div<TimelineBarLineProps>`
 	position: relative;
@@ -34,7 +34,7 @@ interface TimelineBarDotProps {
 	dotColor: string;
 }
 
-const barDotDiameter = 10;
+const barDotDiameter = 12;
 
 export const TimelineBarDot = styled.div<TimelineBarDotProps>`
 	display: block;

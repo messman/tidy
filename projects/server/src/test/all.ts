@@ -213,7 +213,7 @@ export function createWeatherData(configContext: APIConfigurationContext, runFla
 				value: data.value as WindDirection
 			};
 		}),
-		pressure: hourlyWeatherData(.8, 1, 0, true, .2),
+		pressure: hourlyWeatherData(1000, 1200, 0, true, .2),
 		dewPoint: hourlyWeatherData(20, 40, temperaturePrecision, true, .2),
 		cloudCover: hourlyWeatherData(0, 1, defaultPrecision + 2, true, .2),
 		status: hourlyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {

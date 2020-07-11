@@ -36,6 +36,7 @@ const Reload = require('@/static/icons/reload.svg').default as SVGIconType;
 const ChevronLeft = require('@/static/icons/chevron-left.svg').default as SVGIconType;
 const ArrowDown = require('@/static/icons/arrow-down.svg').default as SVGIconType;
 const ArrowUp = require('@/static/icons/arrow-up.svg').default as SVGIconType;
+const Pressure = require('@/static/icons/pressure.svg').default as SVGIconType;
 
 export const iconTypes = {
 	sunset: Sunset,
@@ -71,6 +72,7 @@ export const iconTypes = {
 	chevronLeft: ChevronLeft,
 	arrowDown: ArrowDown,
 	arrowUp: ArrowUp,
+	pressure: Pressure
 };
 
 export interface IconProps {

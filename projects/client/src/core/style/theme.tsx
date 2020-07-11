@@ -56,7 +56,7 @@ const darkTheme: Theme = {
 		background: '#0A0A0A',
 		backgroundLighter: '#1B1B1B',
 		backgroundLightest: '#2B2B2B',
-		textAndIcon: '#D8D8D8',
+		textAndIcon: '#C7C7C7',
 		link: '#2575BF',
 		disabled: '#6B6B6B',
 		tide: '#145C9E',
@@ -96,7 +96,7 @@ export const themes: Theme[] = [darkTheme, lightTheme];
 export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 	html {
 		font-family: ${p => p.theme.fontFamily};
-		font-weight: 300;
+		font-weight: 400;
 	}
 	
 	body {
@@ -113,6 +113,7 @@ export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 	}
 
 	* {
+		font-weight: 400;
 		vertical-align: top;
 		-webkit-text-size-adjust: 100%;
 		box-sizing: border-box;

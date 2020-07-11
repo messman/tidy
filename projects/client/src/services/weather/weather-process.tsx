@@ -17,12 +17,12 @@ export interface WeatherDisplay {
 	windDirectionUnit: string;
 	icon: SVGIconType;
 	shortStatusText: string;
-
+	pressureText: string;
 }
 
 export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIcon: boolean): WeatherDisplay {
 
-	const { temp, status, wind, windDirection } = weatherStatus;
+	const { temp, status, wind, windDirection, pressure } = weatherStatus;
 
 	// Get the key, like 'unknown'.
 	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
@@ -37,6 +37,7 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 		windDirectionUnit: `mph ${WindDirection[windDirection]}`,
 		icon: weatherStatusIconForTime,
 		shortStatusText: weatherStatusTypeDescription[weatherStatusKey].short,
+		pressureText: Math.round(pressure.entity!).toString()
 	};
 
 	return weatherDisplay;
