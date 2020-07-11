@@ -76,7 +76,7 @@ export interface APIConfigurationContext extends APIConfiguration {
 		/** Time of the request, from which all searches will be relatively based. Adjusted to proper timezone. Includes DST offset. */
 		referenceTimeInZone: DateTime,
 
-		/** The maximum date for which we should get any data for short term information. Should be in the future at the end of that day. */
+		/** The maximum date for which we should get any data for short term information. Should be in the future but does not need to be the end of the day. */
 		maxShortTermDataFetch: DateTime,
 		/** The maximum date for which we should get any data for long term information. Should be in the future at the end of that day. */
 		maxLongTermDataFetch: DateTime,

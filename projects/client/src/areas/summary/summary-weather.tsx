@@ -40,7 +40,7 @@ const SummaryWeatherPrimary: React.FC = () => {
 	const iconHeight = subtitleHeight;
 
 	const useDayIcon = !all.current.sun.next.isSunrise;
-	const { tempText, windText, windDirectionUnit, icon, shortStatusText, chanceRainText } = processWeatherForDisplay(all.current.weather, useDayIcon);
+	const { tempText, windText, windDirectionUnit, icon, shortStatusText } = processWeatherForDisplay(all.current.weather, useDayIcon);
 
 	// NOTE - have to use flex='0' here, even though we don't rely on it anywhere else. 
 	return (
@@ -68,8 +68,8 @@ const SummaryWeatherPrimary: React.FC = () => {
 				</TextInline>
 				<PushedDownTextInline>
 					<FlexRow alignItems='center'>
-						<SpacedIcon type={iconTypes.rain} fill={iconColor} height={iconHeight} />
-						<TextUnit text={chanceRainText} unit='chance' space={3} />
+						<SpacedIcon type={iconTypes.temperature} fill={iconColor} height={iconHeight} />
+						<TextUnit text={'d'} unit='atm' space={3} />
 					</FlexRow>
 				</PushedDownTextInline>
 			</Flex>

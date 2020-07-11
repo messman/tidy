@@ -7,6 +7,8 @@
 	"scripts": {
 		"build": "ts-webpack-builder --isDevelopmentForDebug",
 		"build-production": "ts-webpack-builder --isDevelopment=false",
+		"build-test": "npm run build && npm run test",
+		"build-retest": "npm run build && npm run test-again",
 		"test": "npm run test-build && npm run test-again",
 		"test-build": "tsc --p test/tsconfig.json",
 		"test-again": "node test/test.js",

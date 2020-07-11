@@ -1,7 +1,7 @@
 import { SunEvent } from 'tidy-shared';
-import { APIConfigurationContext } from '../all/context';
 import { ForDay } from '../all/all';
 import { AllIssue } from '../all/all-merge';
+import { APIConfigurationContext } from '../all/context';
 import { IntermediateAstroValues } from './astro-intermediate';
 
 export interface InterpretedAstro extends AllIssue {
@@ -24,12 +24,12 @@ export function interpretAstro(configurationContext: APIConfigurationContext, in
 			nextEvent: null!,
 			shortTermEvents: null!,
 			longTermEvents: null!
-		}
+		};
 	}
 
 	const referenceTime = configurationContext.context.referenceTimeInZone;
 	const referenceDay = referenceTime.startOf('day');
-	const shortTermLimit = configurationContext.context.maxShortTermDataFetch;
+	const shortTermLimit = configurationContext.context.maxShortTermDataFetch.endOf('day');
 	const longTermLimit = configurationContext.context.maxLongTermDataFetch;
 
 	let previousEvent: SunEvent = null!;

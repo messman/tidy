@@ -2,7 +2,7 @@ import { DateTime, DateTimeOptions } from 'luxon';
 import { errorIssue, WeatherStatusType, WindDirection } from 'tidy-shared';
 import { APIConfigurationContext } from '../all/context';
 import { FetchResponse, getJSON } from '../util/fetch';
-import { createServerLog } from '../util/log';
+import { createServerLog, serverLog } from '../util/log';
 import { RunFlags } from '../util/run-flags';
 import { createEmptyIntermediateWeather, IntermediateWeatherValues } from './weather-intermediate';
 
@@ -99,7 +99,7 @@ async function getOpenWeatherData(latitude: number, longitude: number, configCon
 				cloudCover: percentToPrecision(response.current.clouds),
 				visibility: metersToPrecisionMiles(response.current.visibility),
 				dewPoint: temperatureToPrecision(response.current.dew_point),
-				status: getStatusType(response.current.weather[0])
+				status: getStatusType(response.current.weather, runFlags)
 			},
 			shortTermWeather: response.hourly.map((hourly) => {
 				return {
@@ -112,7 +112,7 @@ async function getOpenWeatherData(latitude: number, longitude: number, configCon
 					cloudCover: percentToPrecision(hourly.clouds),
 					visibility: null,
 					dewPoint: temperatureToPrecision(hourly.dew_point),
-					status: getStatusType(hourly.weather[0])
+					status: getStatusType(hourly.weather, runFlags)
 				};
 			}),
 			longTermWeather: response.daily.map((daily) => {
@@ -120,7 +120,7 @@ async function getOpenWeatherData(latitude: number, longitude: number, configCon
 					day: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
 					minTemp: temperatureToPrecision(daily.temp.min),
 					maxTemp: temperatureToPrecision(daily.temp.max),
-					status: getStatusType(daily.weather[0])
+					status: getStatusType(daily.weather, runFlags)
 				};
 			}),
 		}
@@ -245,8 +245,23 @@ const pressureToMillibars: ValueConverter<number> = (value) => {
 	return value;
 };
 
-function getStatusType(status: OpenWeatherWeatherStatus): WeatherStatusType {
-	return openWeatherStatusMap[status.id as keyof typeof openWeatherStatusMap] || WeatherStatusType.unknown;
+function getStatusType(statuses: OpenWeatherWeatherStatus[], runFlags: RunFlags): WeatherStatusType {
+	if (!statuses.length) {
+		serverLog(runFlags, 'No statuses provided');
+	}
+	const statusNumbers = statuses.map((status) => {
+		return status.id;
+	});
+	if (statusNumbers.length > 1 || statusNumbers[0] === 0) {
+		serverLog(runFlags, 'Multiple statuses provided', statusNumbers);
+	}
+	let statusNumber = statusNumbers[0];
+
+	const status = openWeatherStatusMap[statusNumber as keyof typeof openWeatherStatusMap] || WeatherStatusType.unknown;
+	if (status === WeatherStatusType.unknown) {
+		serverLog(runFlags, `Weather status is unknown due to mismatch of ID [${statusNumber}]`);
+	}
+	return status;
 }
 
 // Retrieved from https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
@@ -300,7 +315,7 @@ const openWeatherStatusMap = {
 	622: WeatherStatusType.snow_rain,
 
 	// Atmosphere
-	700: WeatherStatusType.fog,
+	701: WeatherStatusType.fog,
 	711: WeatherStatusType.smoke,
 	721: WeatherStatusType.haze,
 	731: WeatherStatusType.dust,

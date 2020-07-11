@@ -12,17 +12,17 @@ export function filterWeather(statuses: WeatherStatus[], referenceTime: DateTime
 }
 
 export interface WeatherDisplay {
-	tempText: string,
-	windText: string,
-	windDirectionUnit: string,
+	tempText: string;
+	windText: string;
+	windDirectionUnit: string;
 	icon: SVGIconType;
-	shortStatusText: string,
-	chanceRainText: string;
+	shortStatusText: string;
+
 }
 
 export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIcon: boolean): WeatherDisplay {
 
-	const { temp, status, wind, windDirection, chanceRain } = weatherStatus;
+	const { temp, status, wind, windDirection } = weatherStatus;
 
 	// Get the key, like 'unknown'.
 	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
@@ -31,32 +31,27 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 	// Choose between day and night based on the sun event.
 	const weatherStatusIconForTime = useDayIcon ? weatherStatusIcon.day : weatherStatusIcon.night;
 
-	const chanceRainPercent = Math.round(chanceRain.entity! * 100);
-	const chanceRainPercentString = `${chanceRainPercent}%`;
-
 	const weatherDisplay: WeatherDisplay = {
 		tempText: Math.round(temp.entity!).toString(),
 		windText: Math.round(wind.entity!).toString(),
 		windDirectionUnit: `mph ${WindDirection[windDirection]}`,
 		icon: weatherStatusIconForTime,
 		shortStatusText: weatherStatusTypeDescription[weatherStatusKey].short,
-		chanceRainText: chanceRainPercentString
 	};
 
 	return weatherDisplay;
 }
 
 export interface DailyWeatherDisplay {
-	minTempText: string,
-	maxTempText: string,
-	icon: SVGIconType,
-	shortStatusText: string,
-	chanceRainText: string;
+	minTempText: string;
+	maxTempText: string;
+	icon: SVGIconType;
+	shortStatusText: string;
 }
 
 export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): DailyWeatherDisplay {
 
-	const { minTemp, maxTemp, maxChanceRain, status } = dailyWeather;
+	const { minTemp, maxTemp, status } = dailyWeather;
 
 	// Get the key, like 'unknown'.
 	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
@@ -65,15 +60,12 @@ export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): Daily
 	// FOr the day, always use the day icon.
 	const weatherStatusIconForTime = weatherStatusIcon.day;
 
-	const chanceRainPercent = Math.round(maxChanceRain * 100);
-	const chanceRainPercentString = `${chanceRainPercent}%`;
 
 	return {
 		minTempText: Math.round(minTemp).toString(),
 		maxTempText: Math.round(maxTemp).toString(),
 		icon: weatherStatusIconForTime,
 		shortStatusText: weatherStatusTypeDescription[weatherStatusKey].short,
-		chanceRainText: chanceRainPercentString
 	};
 }
 
@@ -87,111 +79,91 @@ export const weatherStatusTypeIcon: WeatherStatusIconMap = {
 		day: iconTypes.question,
 		night: iconTypes.question
 	},
-	fair: {
+	clear: {
 		day: iconTypes.sun,
 		night: iconTypes.moon
 	},
-	cloud_few: {
+	clear_hot: {
+		day: iconTypes.temperatureHot,
+		night: iconTypes.temperatureHot
+	},
+	clear_cold: {
+		day: iconTypes.temperatureCold,
+		night: iconTypes.temperatureCold
+	},
+	clouds_few: {
 		day: iconTypes.cloudySun,
 		night: iconTypes.cloudyMoon
 	},
-	cloud_part: {
+	clouds_some: {
 		day: iconTypes.cloudySun,
 		night: iconTypes.cloudyMoon
 	},
-	cloud_most: {
+	clouds_most: {
 		day: iconTypes.cloud,
 		night: iconTypes.cloud
 	},
-	cloud_over: {
+	clouds_over: {
 		day: iconTypes.clouds,
 		night: iconTypes.clouds
 	},
-	wind_fair: {
-		day: iconTypes.wind,
-		night: iconTypes.wind
+	rain_drizzle: {
+		day: iconTypes.rainSun,
+		night: iconTypes.rainMoon
 	},
-	wind_few: {
-		day: iconTypes.wind,
-		night: iconTypes.wind
+	rain_light: {
+		day: iconTypes.rainSun,
+		night: iconTypes.rainMoon
 	},
-	wind_part: {
-		day: iconTypes.cloudyWind,
-		night: iconTypes.cloudyWind
-	},
-	wind_most: {
-		day: iconTypes.cloudyWind,
-		night: iconTypes.cloudyWind
-	},
-	wind_over: {
-		day: iconTypes.cloudyWind,
-		night: iconTypes.cloudyWind
-	},
-	snow: {
-		day: iconTypes.snowflake,
-		night: iconTypes.snowflake
-	},
-	rain_snow: {
+	rain_medium: {
 		day: iconTypes.rain,
 		night: iconTypes.rain
 	},
-	rain_sleet: {
+	rain_heavy: {
 		day: iconTypes.rain,
 		night: iconTypes.rain
-	},
-	snow_sleet: {
-		day: iconTypes.snowflake,
-		night: iconTypes.snowflake
 	},
 	rain_freeze: {
 		day: iconTypes.hail,
 		night: iconTypes.hail
 	},
-	rain_freeze_rain: {
-		day: iconTypes.hail,
-		night: iconTypes.hail
-	},
-	snow_freeze_rain: {
-		day: iconTypes.hail,
-		night: iconTypes.hail
-	},
-	sleet: {
+	snow_light: {
 		day: iconTypes.snowflake,
 		night: iconTypes.snowflake
 	},
-	rain: {
-		day: iconTypes.rain,
-		night: iconTypes.rain
+	snow_medium: {
+		day: iconTypes.snowflake,
+		night: iconTypes.snowflake
 	},
-	rain_showers_high: {
-		day: iconTypes.rain,
-		night: iconTypes.rain
+	snow_heavy: {
+		day: iconTypes.snowflake,
+		night: iconTypes.snowflake
 	},
-	rain_showers: {
-		day: iconTypes.rainSun,
-		night: iconTypes.rainMoon
+	snow_sleet: {
+		day: iconTypes.snowflake,
+		night: iconTypes.snowflake
 	},
-	thun_high: {
-		day: iconTypes.lightning,
-		night: iconTypes.lightning
+	snow_rain: {
+		day: iconTypes.snowflake,
+		night: iconTypes.snowflake
 	},
-	thun_med: {
-		day: iconTypes.lightning,
-		night: iconTypes.lightning
-	},
-	thun_low: {
+	thun_light: {
 		day: iconTypes.lightningSun,
 		night: iconTypes.lightningMoon
 	},
-	torn: {
+	thun_medium: {
+		day: iconTypes.lightning,
+		night: iconTypes.lightning
+	},
+	thun_heavy: {
+		day: iconTypes.lightning,
+		night: iconTypes.lightning
+	},
+	intense_storm: {
 		day: iconTypes.weatherAlert,
 		night: iconTypes.weatherAlert
 	},
-	hurr: {
-		day: iconTypes.weatherAlert,
-		night: iconTypes.weatherAlert
-	},
-	trop: {
+	intense_other: {
 		day: iconTypes.weatherAlert,
 		night: iconTypes.weatherAlert
 	},
@@ -206,18 +178,6 @@ export const weatherStatusTypeIcon: WeatherStatusIconMap = {
 	haze: {
 		day: iconTypes.fog,
 		night: iconTypes.fog
-	},
-	hot: {
-		day: iconTypes.temperatureHot,
-		night: iconTypes.temperatureHot
-	},
-	cold: {
-		day: iconTypes.temperatureCold,
-		night: iconTypes.temperatureCold
-	},
-	blizz: {
-		day: iconTypes.snowflake,
-		night: iconTypes.snowflake
 	},
 	fog: {
 		day: iconTypes.fog,

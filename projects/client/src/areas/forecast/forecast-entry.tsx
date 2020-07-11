@@ -3,7 +3,6 @@ import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { iconTypes } from '@/core/symbol/icon';
 import { SmallText, Text, textHeight, TextInline } from '@/core/symbol/text';
 import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { useTideChart } from '@/core/tide/tide-chart';
@@ -40,7 +39,7 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 		outputPaddingBottom: paddingBottomHeight
 	});
 
-	const { minTempText, maxTempText, chanceRainText, icon, shortStatusText } = processDailyWeatherForDisplay(day.weather);
+	const { minTempText, maxTempText, icon, shortStatusText } = processDailyWeatherForDisplay(day.weather);
 
 	const [sunrise, sunset] = day.sun;
 	const pixelsPerHour = props.containerWidth / 24;
@@ -63,23 +62,16 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 			<Margin>
 
 				<FlexRow>
-					<FlexRowInline alignItems='center' flex='none'>
+					<FlexRowInline alignItems='center'>
 						<TextInline>
 							{maxTempText}&deg;/{minTempText}&deg;
 						</TextInline>
 					</FlexRowInline>
-					<FlexRowInline alignItems='center' justifyContent='center'>
+					<FlexRowInline alignItems='center' flex='none'>
 
 						<SpacedIcon type={icon} fill={theme.color.weather} height={textHeight} spacing='close' />
 						<TextInline>
 							{shortStatusText}
-						</TextInline>
-					</FlexRowInline>
-					<FlexRowInline alignItems='center' flex='none'>
-
-						<SpacedIcon type={iconTypes.rain} fill={theme.color.weather} height={textHeight} spacing='close' />
-						<TextInline>
-							{chanceRainText}
 						</TextInline>
 					</FlexRowInline>
 				</FlexRow>

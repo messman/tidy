@@ -1,5 +1,4 @@
-import { createContext, createWeatherData, createWellsConfiguration } from '../../dist/index';
-import { defaultRunFlags } from '../../dist/util/run-flags';
+import { createContext, createWeatherData, createWellsConfiguration, defaultRunFlags } from '../../dist/index';
 import { log, TestEnv } from '../test';
 
 export function run(_: TestEnv): void {

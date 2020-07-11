@@ -86,7 +86,7 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 	const { startTime, dateTime, iconColor, useDayIcon, weatherStatus } = props;
 	const left = timeToPixels(startTime, dateTime);
 
-	const { tempText, windText, icon, chanceRainText } = processWeatherForDisplay(weatherStatus, useDayIcon);
+	const { tempText, windText, icon } = processWeatherForDisplay(weatherStatus, useDayIcon);
 	const iconHeight = subtitleHeight;
 
 	return (
@@ -103,14 +103,6 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 							{tempText}&deg;
 					</Text>
 					</Center>
-				</NonBreakingPadding>
-				<NonBreakingPadding>
-					<Text>
-						<FlexRow alignItems='center'>
-							<SpacedIcon type={iconTypes.rain} fill={iconColor} height={iconHeight} />
-							{chanceRainText}
-						</FlexRow>
-					</Text>
 				</NonBreakingPadding>
 				<NonBreakingPadding>
 					<Text>

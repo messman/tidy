@@ -240,7 +240,7 @@ export function createWeatherData(configContext: APIConfigurationContext, runFla
 	});
 
 	const dailyStartDateTime = configContext.context.referenceTimeInZone.startOf('day');
-	const dailyEndDateTime = configContext.context.maxShortTermDataFetch;
+	const dailyEndDateTime = configContext.context.maxLongTermDataFetch;
 
 	function dailyWeatherData(minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
 		return quadraticShakeData(weatherRandomizer, dailyStartDateTime, dailyEndDateTime, 24, minY, maxY, precision, inclusive, shake);

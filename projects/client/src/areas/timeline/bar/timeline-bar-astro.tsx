@@ -6,7 +6,7 @@ import { Text } from '@/core/symbol/text';
 import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getDateDayOfWeek, timeToPixels } from '@/services/time';
-import { cutoffHoursFromStart, textCutoffHoursFromStart, TimelineBarLine, TimelineBaseProps, TimelineDotEntry } from './timeline-bar-common';
+import { renderCutoffHours, textCutoffHours, TimelineBarLine, TimelineBaseProps, TimelineDotEntry } from './timeline-bar-common';
 
 // When listing day entries, don't show so close to the end of our timeline.
 const customDayCutoffHoursFromEnd = 1;
@@ -26,16 +26,18 @@ export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 	const { sun, cutoffDate } = all.predictions;
 
 	// After we filter out entries, we also use this value to determine whether we show the text for the dot entry.
-	const startTimePlusTextCutoff = timelineStartTime.plus({ hours: textCutoffHoursFromStart });
+	const startTimePlusTextCutoff = timelineStartTime.plus({ hours: textCutoffHours });
+	const cutoffTimeMinusTextCutoff = cutoffDate.minus({ hours: textCutoffHours });
 
 	//
 	// Sun Entries
 	//
 
 	// Filter out event if it's too close to our reference time or after our cutoff.
-	const startTimePlusCutoff = timelineStartTime.plus({ hours: cutoffHoursFromStart });
+	const startTimePlusRenderCutoff = timelineStartTime.plus({ hours: renderCutoffHours });
+	const cutoffTimeMinusRenderCutoff = cutoffDate.minus({ hours: renderCutoffHours });
 	const validSunEvents = sun.filter((sunEvent) => {
-		return (sunEvent.time > startTimePlusCutoff) && (sunEvent.time < cutoffDate);
+		return (sunEvent.time > startTimePlusRenderCutoff) && (sunEvent.time < cutoffTimeMinusRenderCutoff);
 	});
 
 	const lastEvent = validSunEvents[validSunEvents.length - 1];
@@ -44,7 +46,8 @@ export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 	const widthPixels = timeToPixels(timelineStartTime, paddedLastEventTime);
 
 	const sunEntries = validSunEvents.map((sunEvent) => {
-		const textUnitAfterTextCutoff = sunEvent.time > startTimePlusTextCutoff ? <TimeTextUnit dateTime={sunEvent.time} /> : null;
+		const showText = sunEvent.time > startTimePlusTextCutoff && sunEvent.time < cutoffTimeMinusTextCutoff;
+		const textUnitAfterTextCutoff = showText ? <TimeTextUnit dateTime={sunEvent.time} /> : null;
 
 		return (
 			<TimelineDotEntry
@@ -72,7 +75,7 @@ export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 	for (startIndex; startIndex < validSunEvents.length; startIndex += 2) {
 		const sunriseEvent = validSunEvents[startIndex];
 		// Rely on the fact that we always have a sunrise and a sunset.. but we may have cut the sunset off, so have a backup.
-		const sunsetEvent = validSunEvents[startIndex + 1] || paddedLastEventTime;
+		const sunsetEvent = validSunEvents[startIndex + 1] || { isSunrise: false, time: paddedLastEventTime };
 		if (sunriseEvent && sunsetEvent) {
 			sunEventTimePairs.push([sunriseEvent.time, sunsetEvent.time]);
 		}
@@ -96,7 +99,7 @@ export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 	// Day Entries
 	//
 
-	const dayStartCutoffDate = timelineStartTime.plus({ hours: cutoffHoursFromStart });
+	const dayStartCutoffDate = timelineStartTime.plus({ hours: renderCutoffHours });
 	const dayEndCutoffDate = cutoffDate.minus({ hours: customDayCutoffHoursFromEnd });
 	// Start with the beginning of the next day, after our cutoff.
 	let day = dayStartCutoffDate.plus({ days: 1 });

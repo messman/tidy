@@ -7,7 +7,7 @@ import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
-import { cutoffHoursFromStart, textCutoffHoursFromStart, TimelineBarLine, TimelineBaseProps, TimelineDotEntry, TimelineEntryContainer } from './timeline-bar-common';
+import { renderCutoffHours, textCutoffHours, TimelineBarLine, TimelineBaseProps, TimelineDotEntry, TimelineEntryContainer } from './timeline-bar-common';
 
 export interface TimelineBarTideProps extends TimelineBaseProps { }
 
@@ -24,14 +24,16 @@ export const TimelineBarTide: React.FC<TimelineBarTideProps> = (props) => {
 	const { tides, cutoffDate } = all.predictions;
 
 	// After we filter out entries, we also use this value to determine whether we show the text for the dot entry.
-	const startTimePlusTextCutoff = timelineStartTime.plus({ hours: textCutoffHoursFromStart });
+	const startTimePlusTextCutoff = timelineStartTime.plus({ hours: textCutoffHours });
+	const cutoffTimeMinusTextCutoff = cutoffDate.minus({ hours: textCutoffHours });
 
 	// Filter out status if it's too close to our start time or after our cutoff.
-	const startTimePlusCutoff = timelineStartTime.plus({ hours: cutoffHoursFromStart });
+	const startTimePlusRenderCutoff = timelineStartTime.plus({ hours: renderCutoffHours });
+	const cutoffTimeMinusRenderCutoff = cutoffDate.minus({ hours: renderCutoffHours });
 
 	const allTideEvents = [...tides.outsidePrevious, ...tides.events];
 	const validTideEvents = allTideEvents.filter((tideEvent) => {
-		return (tideEvent.time > startTimePlusCutoff) && (tideEvent.time < cutoffDate);
+		return (tideEvent.time > startTimePlusRenderCutoff) && (tideEvent.time < cutoffTimeMinusRenderCutoff);
 	});
 
 	const lastEvent = validTideEvents[validTideEvents.length - 1];
@@ -44,7 +46,7 @@ export const TimelineBarTide: React.FC<TimelineBarTideProps> = (props) => {
 	const tideDataEntries: JSX.Element[] = [];
 	validTideEvents.forEach((tideEvent) => {
 
-		const showText = tideEvent.time > startTimePlusTextCutoff;
+		const showText = tideEvent.time > startTimePlusTextCutoff && tideEvent.time < cutoffTimeMinusTextCutoff;
 		const textUnitAfterTextCutoff = showText ? <TimeTextUnit dateTime={tideEvent.time} /> : null;
 
 		const timeKey = `time_${tideEvent.time.valueOf()}`;

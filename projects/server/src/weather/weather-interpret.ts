@@ -39,8 +39,8 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 	const hoursGapBetweenWeatherData = configurationContext.configuration.weather.hoursGapBetweenWeatherData;
 	const shortTermLimit = configurationContext.context.maxShortTermDataFetch;
 
-	const shortTermIterator = createTimeIterator(intermediateWeather.shortTermWeather.map((shortTerm, i) => {
-		const next = intermediateWeather.shortTermWeather[i];
+	const iterableHourlyData = intermediateWeather.shortTermWeather.map((shortTerm, i) => {
+		const next = intermediateWeather.shortTermWeather[i + 1];
 		const nextTime = next?.time || shortTerm.time.plus({ hours: 1 });
 
 		// We aren't doing real measurements right now, so just do fake ones.
@@ -64,7 +64,8 @@ export function interpretWeather(configurationContext: APIConfigurationContext, 
 			},
 			value: value
 		};
-	}));
+	});
+	const shortTermIterator = createTimeIterator(iterableHourlyData);
 
 	const currentHour = referenceTime.startOf("hour");
 	// Hourly weather comes from the closest even hour (moving forward).

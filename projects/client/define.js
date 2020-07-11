@@ -21,7 +21,7 @@ module.exports = async function getDefine(isDevelopment) {
 	if (isDevelopment) {
 		const tidyServer = require('tidy-server');
 		const tidyShared = require('tidy-shared');
-		DEFINE.fetchUrl = JSON.stringify('http://192.168.1.54:8000/latest');
+		DEFINE.fetchUrl = JSON.stringify('http://192.168.86.40:8000/latest');
 
 		/*
 			Below is code to create test data right now as part of the build process.
@@ -54,5 +54,16 @@ module.exports = async function getDefine(isDevelopment) {
 async function createLocalTestData(tidyServer, phrase) {
 	// Default to wells config.
 	const wellsConfiguration = tidyServer.createWellsConfiguration();
-	return await tidyServer.getAllTestForConfiguration(wellsConfiguration, phrase);
+	return await tidyServer.getAllTestForConfiguration(wellsConfiguration, {
+		logging: {
+			isActive: false,
+			prefix: null
+		},
+		data: {
+			seed: phrase
+		},
+		keys: {
+			weather: null
+		}
+	});
 }
