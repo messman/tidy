@@ -77,7 +77,13 @@ export function configureApp(app: Application): void {
 		try {
 			newest = await getResponse();
 			hasErrors = !!newest.error;
-			if (!hasErrors) {
+			if (hasErrors) {
+				const allErrors = newest.error!.errors.map((issue) => {
+					return issue.dev?.message || issue.userMessage;
+				}).join(' | ');
+				log('Errors:', allErrors);
+			}
+			else {
 				last = newest;
 			}
 		}
