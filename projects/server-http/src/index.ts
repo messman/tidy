@@ -9,15 +9,15 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-if (processEnv.NODE_ENV === 'dev') {
-	// CORS (since this is just for development)
-	console.log('Using open CORS settings for development');
-	app.use(function (_request: Request, response: Response, next: NextFunction) {
-		response.header('Access-Control-Allow-Origin', '*');
-		response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-		next();
-	});
-}
+const isDev = processEnv.NODE_ENV === 'dev';
+const allowedDomain = isDev ? '*' : 'tidy.andrewmessier.com';
+
+console.log(isDev ? 'Using open CORS settings for development' : `Restricting via CORS to '${allowedDomain}'`);
+app.use(function (_request: Request, response: Response, next: NextFunction) {
+	response.header('Access-Control-Allow-Origin', allowedDomain);
+	response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	next();
+});
 
 configureApp(app);
 
