@@ -8,10 +8,9 @@
 		"build": "tsc",
 		"start": "PORT=8000 NODE_ENV=dev node ./dist/index",
 		"build-start": "npm run clean && npm run build && npm run start",
-		"heroku-build": "deploy-build.sh",
+		"heroku-build": "bash ./deploy-build.sh",
 		"heroku-start": "node ./dist/index",
-		"clean": "trash dist",
-		"clean-modules": "trash node_modules"
+		"clean": "trash dist"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",
@@ -25,5 +24,13 @@
 		"@types/node": "^12.4.0",
 		"trash-cli": "^3.0.0",
 		"typescript": "^3.8.3"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/messman/tidy.git"
+	},
+	"bugs": {
+		"url": "https://github.com/messman/tidy/issues"
+	},
+	"homepage": "https://github.com/messman/tidy#readme"
 }

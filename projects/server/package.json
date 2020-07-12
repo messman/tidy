@@ -33,5 +33,13 @@
 		"luxon": "^1.24.1",
 		"tidy-shared": "file:../shared",
 		"typescript": "^3.8.3"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/messman/tidy.git"
+	},
+	"bugs": {
+		"url": "https://github.com/messman/tidy/issues"
+	},
+	"homepage": "https://github.com/messman/tidy#readme"
 }
