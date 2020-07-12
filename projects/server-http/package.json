@@ -4,22 +4,26 @@
 	"description": "An api for the tidy project.",
 	"main": "dist/index.js",
 	"scripts": {
+		"link": "npm link tidy-shared && npm link tidy-server",
 		"build": "tsc",
-		"build-azure-deploy": "tsc --p tsconfig.azure-deploy.json",
-		"start": "tsc && PORT=8000 NODE_ENV=dev node ./dist/index"
+		"start": "PORT=8000 NODE_ENV=dev node ./dist/index",
+		"build-start": "npm run clean && npm run build && npm run start",
+		"heroku-build": "deploy-build.sh",
+		"heroku-start": "node ./dist/index",
+		"clean": "trash dist",
+		"clean-modules": "trash node_modules"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"dependencies": {
 		"express": "^4.17.1",
-		"luxon": "^1.24.0",
-		"tidy-server": "file:../server",
-		"tidy-shared": "file:../shared"
+		"luxon": "^1.24.0"
 	},
 	"devDependencies": {
-		"@types/luxon": "^1.24.0",
 		"@types/express": "^4.17.6",
+		"@types/luxon": "^1.24.0",
 		"@types/node": "^12.4.0",
+		"trash-cli": "^3.0.0",
 		"typescript": "^3.8.3"
 	}
 }

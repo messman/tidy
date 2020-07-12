@@ -6,9 +6,10 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "ts-webpack-builder",
-		"build-production": "ts-webpack-builder --isDevelopment=false",
+		"build-production": "npm run clean && ts-webpack-builder --isDevelopment=false",
 		"build-client": "ts-webpack-builder --isNode=false",
-		"build-client-production": "ts-webpack-builder --isNode=false --isDevelopment=false"
+		"build-client-production": "ts-webpack-builder --isNode=false --isDevelopment=false",
+		"clean": "trash dist"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",
@@ -16,8 +17,10 @@
 		"luxon": "^1.24.1"
 	},
 	"devDependencies": {
+		"@messman/ts-webpack-builder": "^1.4.3",
 		"@types/luxon": "^1.24.0",
 		"luxon": "^1.24.1",
+		"trash-cli": "^3.0.0",
 		"typescript": "^3.8.3"
 	}
 }
