@@ -45,7 +45,7 @@ module.exports = async function getDefine(isDevelopment) {
 		console.log(`Done adding local test data`);
 	}
 	else {
-		DEFINE.fetchUrl = JSON.stringify('https://agm-tidy-server.azurewebsites.net/latest');
+		DEFINE.fetchUrl = JSON.stringify('https://agm-tidy-server.herokuapp.com/latest');
 	}
 
 	return DEFINE;
