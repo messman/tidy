@@ -110,7 +110,7 @@ export const TimelineTideDataEntry: React.FC<TimelineTideDataEntryProps> = (prop
 	return (
 		<TimelineEntryContainer alignItems='center' left={left} top={tideTimelineDataEntryOffset}>
 			<SmallText>{isLow ? 'LOW' : 'HIGH'}</SmallText>
-			<TideHeightTextUnit height={height} />
+			<TideHeightTextUnit height={height} isEstimate={true} />
 		</TimelineEntryContainer>
 	);
 };

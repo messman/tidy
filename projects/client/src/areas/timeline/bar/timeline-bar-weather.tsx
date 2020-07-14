@@ -24,7 +24,7 @@ export const TimelineBarWeather: React.FC<TimelineBarWeatherProps> = (props) => 
 
 	const lastEvent = validWeatherStatuses[validWeatherStatuses.length - 1];
 	// Add some time padding to make sure we include all necessary information.
-	const lastEventTime = lastEvent.time.plus({ hours: 2 });
+	const lastEventTime = lastEvent.time.plus({ hours: 1.5 });
 	const widthPixels = timeToPixels(timelineStartTime, lastEventTime);
 
 	const weatherEntries = validWeatherStatuses.map((weatherStatus) => {

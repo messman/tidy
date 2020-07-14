@@ -70,7 +70,7 @@ const SummaryTidePrimary: React.FC = () => {
 			</FlexRow>
 			<FlexRow>
 				<FlexCenter>
-					<TideHeightTextUnit height={previous.height} />
+					<TideHeightTextUnit height={previous.height} isEstimate={true} />
 				</FlexCenter>
 				<FlexCenter flex={2}>
 					<Text>
@@ -78,7 +78,7 @@ const SummaryTidePrimary: React.FC = () => {
 					</Text>
 				</FlexCenter>
 				<FlexCenter>
-					<TideHeightTextUnit height={next.height} />
+					<TideHeightTextUnit height={next.height} isEstimate={true} />
 				</FlexCenter>
 			</FlexRow>
 		</Flex>
@@ -179,8 +179,8 @@ const SummaryTideSecondary: React.FC = () => {
 
 	return (
 		<Text>
-			The tide is at {currentTideHeightText} feet now.
-			The tide will be at a {nextTideText} of {nextTideHeightText} feet in {nextTideDurationText}.
+			The tide is at {currentTideHeightText} feet now (where 0 is the average low).
+			The tide will be at an estimated {nextTideText} of {nextTideHeightText} feet in {nextTideDurationText}.
 		</Text>
 	);
 };

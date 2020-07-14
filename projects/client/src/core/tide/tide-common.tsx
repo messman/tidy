@@ -31,11 +31,15 @@ export const StrokeSVG = styled(SVGPath)`
 
 export interface TideHeightTextUnitProps {
 	height: number;
+	isEstimate?: boolean;
 }
 
 export const TideHeightTextUnit: React.FC<TideHeightTextUnitProps> = (props) => {
-	const heightString = props.height.toFixed(CONSTANT.tideHeightPrecision);
+	let text = props.height.toFixed(CONSTANT.tideHeightPrecision);
+	if (props.isEstimate) {
+		text = '~' + text;
+	}
 	return (
-		<TextUnit text={heightString} unit='ft' space={2} />
+		<TextUnit text={text} unit='ft' space={2} />
 	);
 };
