@@ -25,6 +25,10 @@ export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 	const primaryPanelSize = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout, null);
 	const primaryPanelHeight = (!isDualMode && primaryPanelSize.height > 0) ? primaryPanelSize.height : undefined;
 
+	let contextIndicator: JSX.Element | null = null;
+	if (primary && secondary && !isDualMode) {
+		contextIndicator = <ContextIndicator />;
+	}
 
 	function onClick(): void {
 		if (!isDualMode) {
@@ -36,6 +40,7 @@ export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 
 	return (
 		<ContextBlockRoot onClick={onClick} justifyContent='space-between'>
+			{contextIndicator}
 			<ContextBlockPanel ref={ref} isActive={isShowingPrimary || isDualMode} isPadded={isPadded} isDualMode={isDualMode}>
 				{primary}
 			</ContextBlockPanel>
@@ -69,4 +74,15 @@ const ContextBlockPanel = styled.div <ContextBlockPanelProps>`
 const ContextBlockDependentPanel = styled(ContextBlockPanel)`
 	height: ${p => p.heightInPixels}px;
 	overflow-y: auto;
+`;
+
+const contextIndicatorLength = 24;
+const ContextIndicator = styled.div`
+	background-color: ${p => p.theme.color.backgroundLightest};
+	width: ${contextIndicatorLength}px;
+	height: ${contextIndicatorLength}px;
+	transform: rotateZ(45deg);
+	position: absolute;
+	top: -${contextIndicatorLength / 2}px;
+	right: -${contextIndicatorLength / 2}px;
 `;

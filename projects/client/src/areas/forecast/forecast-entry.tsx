@@ -94,6 +94,7 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 
 const FlexRowInline = styled(FlexRow)`
 	display: inline-flex;
+	margin: 0 ${edgePaddingValue};
 `;
 
 const Margin = styled.div`
