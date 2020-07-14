@@ -63,7 +63,7 @@ export const TimelineBarWeather: React.FC<TimelineBarWeatherProps> = (props) => 
 				key={time.valueOf()}
 				startTime={timelineStartTime}
 				dateTime={time}
-				dotColor={theme.color.disabled}
+				dotColor={color}
 				isSmall={true}
 			/>
 		);
