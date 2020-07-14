@@ -106,21 +106,27 @@ const SummaryWeatherSecondary: React.FC = () => {
 	const cloudCoverText = Math.round(cloudCover.entity! * 100);
 
 	const tempRounded = Math.round(temp.entity!);
-	const tempFeelsLikeRounded = Math.round(tempFeelsLike.entity!);
-	let tempFeelsLikeComponent = null;
-	if (tempRounded !== tempFeelsLikeRounded) {
-		tempFeelsLikeComponent = <TextInline>Feels like {tempFeelsLikeRounded}&deg;.&nbsp;</TextInline>;
+	let tempFeelsLikeComponent: JSX.Element | null = null;
+	if (tempFeelsLike.entity) {
+		const tempFeelsLikeRounded = Math.round(tempFeelsLike.entity);
+		if (tempRounded !== tempFeelsLikeRounded) {
+			tempFeelsLikeComponent = <TextInline>Feels like {tempFeelsLikeRounded}&deg;.&nbsp;</TextInline>;
+		}
 	}
 
 	const windOriginationText = WindDirection[windDirection];
 
-	const visibilityText = visibility.entity!.toFixed(1);
+	let visibilityText: JSX.Element | null = null;
+	const visibilityEntity = visibility.entity;
+	if (visibilityEntity) {
+		visibilityText = <> Visibility is {visibilityEntity.toFixed(1)} miles.</>;
+	}
 
 	return (
 		<Text>
 			{weatherStatusDescription}.
 			Cloud cover at {cloudCoverText}%. {tempFeelsLikeComponent}Wind from the {windOriginationText}.
-			Visibility is {visibilityText} miles.
+			{visibilityText}
 		</Text>
 	);
 };
