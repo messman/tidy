@@ -1,6 +1,6 @@
 {
 	"name": "tidy-server-http",
-	"version": "3.3.0",
+	"version": "3.4.0",
 	"description": "An api for the tidy project.",
 	"main": "dist/index.js",
 	"scripts": {

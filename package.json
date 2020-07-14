@@ -1,6 +1,6 @@
 {
 	"name": "tidy-server-heroku-deploy",
-	"version": "3.3.0",
+	"version": "3.4.0",
 	"description": "A package.json file used exclusively for heroku deployment of the API. It does not cover any source code.",
 	"scripts": {
 		"build": "cd projects/server-http && npm run heroku-build",
