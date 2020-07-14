@@ -32,14 +32,16 @@ export const TimelineBarLine = styled.div<TimelineBarLineProps>`
 
 interface TimelineBarDotProps {
 	dotColor: string;
+	isSmall: boolean;
 }
 
-const barDotDiameter = 14;
+const barDotDiameter = 12;
+const barSmallDotDiameter = 6;
 
 export const TimelineBarDot = styled.div<TimelineBarDotProps>`
 	display: block;
-	width: ${barDotDiameter}px;
-	height: ${barDotDiameter}px;
+	width: ${p => p.isSmall ? barSmallDotDiameter : barDotDiameter}px;
+	height: ${p => p.isSmall ? barSmallDotDiameter : barDotDiameter}px;
 	margin-top: .3rem;
 	border-radius: 50%;
 	background-color: ${p => p.dotColor};
@@ -50,12 +52,14 @@ export interface TimelineDotEntryProps {
 	startTime: DateTime;
 	dateTime: DateTime;
 	dotColor: string;
+	isSmall: boolean;
 }
 
 const dotEntryTop = `${(barDotDiameter + barLineThickness) / 2}px`;
+const smallDotEntryTop = `${(barSmallDotDiameter + barLineThickness) / 2}px`;
 
 export const TimelineDotEntry: React.FC<TimelineDotEntryProps> = (props) => {
-	const { startTime, dateTime, dotColor, children } = props;
+	const { startTime, dateTime, dotColor, isSmall, children } = props;
 	const left = timeToPixels(startTime, dateTime);
 
 	/*
@@ -63,10 +67,11 @@ export const TimelineDotEntry: React.FC<TimelineDotEntryProps> = (props) => {
 		- Outer FlexColumn that centers children horizontally and all child elements will appear *above* it
 			- The last child is the dot that sits at the very bottom and should align with the 'top'/'left' provided
 	*/
+	const entryTop = isSmall ? smallDotEntryTop : dotEntryTop;
 	return (
-		<TimelineEntryContainer alignItems='center' justifyContent='flex-end' left={left} top={dotEntryTop}>
+		<TimelineEntryContainer alignItems='center' justifyContent='flex-end' left={left} top={entryTop}>
 			{children}
-			<TimelineBarDot dotColor={dotColor} />
+			<TimelineBarDot dotColor={dotColor} isSmall={isSmall} />
 		</TimelineEntryContainer>
 	);
 };

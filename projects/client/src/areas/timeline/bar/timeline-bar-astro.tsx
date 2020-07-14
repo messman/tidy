@@ -5,13 +5,15 @@ import { useCurrentTheme } from '@/core/style/theme';
 import { Text } from '@/core/symbol/text';
 import { TimeTextUnit } from '@/core/symbol/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { getDateDayOfWeek, timeToPixels } from '@/services/time';
+import { getDateDayOfWeek, pixelsToTime, timeToPixels } from '@/services/time';
 import { renderCutoffHours, textCutoffHours, TimelineBarLine, TimelineBaseProps, TimelineDotEntry } from './timeline-bar-common';
 
 // When listing day entries, don't show so close to the end of our timeline.
 const customDayCutoffHoursFromEnd = 1;
 
-export interface TimelineBarAstroProps extends TimelineBaseProps { }
+export interface TimelineBarAstroProps extends TimelineBaseProps {
+	barWidth: number;
+}
 
 export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 
@@ -21,7 +23,7 @@ export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
-	const { timelineStartTime } = props;
+	const { timelineStartTime, barWidth } = props;
 	const { all } = allResponseState.data!;
 	const { sun, cutoffDate } = all.predictions;
 
@@ -55,6 +57,7 @@ export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 				startTime={timelineStartTime}
 				dateTime={sunEvent.time}
 				dotColor={color}
+				isSmall={false}
 			>
 				{textUnitAfterTextCutoff}
 			</TimelineDotEntry>
@@ -74,8 +77,13 @@ export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 	}
 	for (startIndex; startIndex < validSunEvents.length; startIndex += 2) {
 		const sunriseEvent = validSunEvents[startIndex];
+
 		// Rely on the fact that we always have a sunrise and a sunset.. but we may have cut the sunset off, so have a backup.
-		const sunsetEvent = validSunEvents[startIndex + 1] || { isSunrise: false, time: paddedLastEventTime };
+		// The backup is why we have the total bar width - use it to send a bar off the edge of our render area.
+		let sunsetEvent = validSunEvents[startIndex + 1];
+		if (!sunsetEvent) {
+			sunsetEvent = { isSunrise: false, time: pixelsToTime(timelineStartTime, barWidth).plus({ hours: .5 }) };
+		}
 		if (sunriseEvent && sunsetEvent) {
 			sunEventTimePairs.push([sunriseEvent.time, sunsetEvent.time]);
 		}
@@ -128,7 +136,8 @@ export const TimelineBarAstro: React.FC<TimelineBarAstroProps> = (props) => {
 				key={key}
 				startTime={timelineStartTime}
 				dateTime={dayEvent}
-				dotColor={theme.color.textAndIcon}
+				dotColor={theme.color.disabled}
+				isSmall={false}
 			>
 				{textAfterCutoff}
 			</TimelineDotEntry>

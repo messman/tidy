@@ -49,7 +49,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
 			<CurrentTimeLine leftOffset={offsetToReferenceTime} />
 			<CurrentTimeLineLegend leftOffset={offsetToReferenceTime} >Now</CurrentTimeLineLegend>
 			<TimelineWeather timelineStartTime={startTime} />
-			<TimelineBar timelineStartTime={startTime} />
+			<TimelineBar timelineStartTime={startTime} barWidth={size.width} />
 			<TimelineChart timelineStartTime={startTime} all={all} info={info} />
 		</FlexColumn>
 
@@ -64,7 +64,7 @@ const CurrentTimeLine = styled.div<CurrentTimeLineProps>`
 	position: absolute;
 	top: 0px;
 	left: ${p => p.leftOffset}px;
-	width: 3px;
+	width: 4px;
 	height: 100%;
 	background-color: ${p => p.theme.color.context};
 	border-radius: 2px;
@@ -74,7 +74,7 @@ const CurrentTimeLine = styled.div<CurrentTimeLineProps>`
 
 const CurrentTimeLineLegend = styled.div<CurrentTimeLineProps>`
 	position: absolute;
-	top: 0px;
+	top: 1px;
 	right: calc(100% - ${p => p.leftOffset}px);
 	margin-right: ${edgePaddingValue};
 	color: ${p => p.theme.color.context};

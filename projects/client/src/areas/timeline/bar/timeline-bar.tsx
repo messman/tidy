@@ -6,11 +6,13 @@ import { TimelineBaseProps } from './timeline-bar-common';
 import { TimelineBarTide } from './timeline-bar-tide';
 import { TimelineBarWeather } from './timeline-bar-weather';
 
-export interface TimelineBarProps extends TimelineBaseProps { }
+export interface TimelineBarProps extends TimelineBaseProps {
+	barWidth: number;
+}
 
 export const TimelineBar: React.FC<TimelineBarProps> = (props) => {
 
-	const { timelineStartTime } = props;
+	const { timelineStartTime, barWidth } = props;
 	// Use flex 1 0 auto, meaning, "I can take up more space (vertically), but I won't shrink".
 	// And when growing, center the content within.
 	return (
@@ -20,7 +22,7 @@ export const TimelineBar: React.FC<TimelineBarProps> = (props) => {
 				<TimelineBarWeather timelineStartTime={timelineStartTime} />
 			</BarPadding>
 			<BarPadding>
-				<TimelineBarAstro timelineStartTime={timelineStartTime} />
+				<TimelineBarAstro timelineStartTime={timelineStartTime} barWidth={barWidth} />
 			</BarPadding>
 			<BarPadding>
 				<TimelineBarTide timelineStartTime={timelineStartTime} />
@@ -30,6 +32,7 @@ export const TimelineBar: React.FC<TimelineBarProps> = (props) => {
 };
 
 const BarPadding = styled.div`
-	margin-top: 2.5rem;
-	margin-bottom: 1rem;
+	padding-top: 2.5rem;
+	padding-bottom: 1rem;
+	overflow: hidden;
 `;

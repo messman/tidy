@@ -56,6 +56,7 @@ export const TimelineBarTide: React.FC<TimelineBarTideProps> = (props) => {
 				startTime={timelineStartTime}
 				dateTime={tideEvent.time}
 				dotColor={color}
+				isSmall={false}
 			>
 				{textUnitAfterTextCutoff}
 			</TimelineDotEntry>
