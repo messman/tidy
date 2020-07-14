@@ -3,12 +3,12 @@ import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { SmallText, Text, textHeight, TextInline } from '@/core/symbol/text';
-import { TimeTextUnit } from '@/core/symbol/text-unit';
+import { SmallText, subtitleHeight, TextInline, TextPara } from '@/core/symbol/text';
+import { TimeDurationTextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
 import { useTideChart } from '@/core/tide/tide-chart';
+import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { timeToPixelsWithConstant } from '@/services/time';
-import { processDailyWeatherForDisplay } from '@/services/weather/weather-process';
 import { ForecastContextBlockProps } from './forecast';
 
 interface ForecastEntryPrimaryProps extends ForecastContextBlockProps { }
@@ -21,7 +21,7 @@ const heightPaddingBottomFactor = .2;
 /** Primary entry for a day's forecast. Shows the temperature info, daylight time, a center tide chart, and tide highs/lows. */
 export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props) => {
 	const theme = useCurrentTheme();
-	const { day, containerWidth, absoluteTideHeightRange } = props;
+	const { day, dailyWeatherDisplay, containerWidth, absoluteTideHeightRange } = props;
 	const startOfDay = day.date.startOf('day');
 
 	const outputHeight = (absoluteTideHeightRange * pixelsPerFootHeight) / heightPaddingBottomFactor;
@@ -40,7 +40,7 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 		outputPaddingBottom: paddingBottomHeight
 	});
 
-	const { minTempText, maxTempText, icon, shortStatusText } = processDailyWeatherForDisplay(day.weather);
+	const { minTempText, maxTempText, icon, shortStatusText } = dailyWeatherDisplay;
 
 	const [sunrise, sunset] = day.sun;
 	const pixelsPerHour = props.containerWidth / 24;
@@ -70,7 +70,7 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 					</FlexRowInline>
 					<FlexRowInline alignItems='center' flex='none'>
 
-						<SpacedIcon type={icon} fill={theme.color.weather} height={textHeight} spacing='close' />
+						<SpacedIcon type={icon} fill={theme.color.weather} height={subtitleHeight} spacing='default' />
 						<TextInline>
 							{shortStatusText}
 						</TextInline>
@@ -139,11 +139,26 @@ const SunBarLine = styled.div<SunBarLineProps>`
 
 interface ForecastEntrySecondaryProps extends ForecastContextBlockProps { }
 
-export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = () => {
+export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = (props) => {
+
+	const { day, dailyWeatherDisplay } = props;
+
+	const [sunriseEvent, sunsetEvent] = day.sun;
+
+	const lowestTide = day.tides.lowest;
+	const highestTide = day.tides.highest;
 
 	return (
 		<Margin>
-			<Text>In the future, this area will have a summary of the day's forecast information.</Text>
+			<TextPara>
+				Sunrise at <TimeTextUnit dateTime={sunriseEvent.time} /> and sunset at <TimeTextUnit dateTime={sunsetEvent.time} /> for a total of <TimeDurationTextUnit startTime={sunriseEvent.time} endTime={sunsetEvent.time} /> of sun.
+			</TextPara>
+			<TextPara>
+				Predicted low of <TideHeightTextUnit height={lowestTide.height} /> at <TimeTextUnit dateTime={lowestTide.time} /> and high of <TideHeightTextUnit height={highestTide.height} /> at <TimeTextUnit dateTime={highestTide.time} />.
+			</TextPara>
+			<TextPara>
+				{dailyWeatherDisplay.longStatusText}.
+			</TextPara>
 		</Margin>
 	);
 };

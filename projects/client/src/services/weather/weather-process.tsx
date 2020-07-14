@@ -11,6 +11,11 @@ export function filterWeather(statuses: WeatherStatus[], referenceTime: DateTime
 	});
 }
 
+/** Gets the key/name, like 'unknown'. */
+function getWeatherStatusKey(status: WeatherStatusType): keyof typeof WeatherStatusType {
+	return WeatherStatusType[status] as keyof typeof WeatherStatusType;
+}
+
 export interface WeatherDisplay {
 	tempText: string;
 	windText: string;
@@ -24,8 +29,7 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 
 	const { temp, status, wind, windDirection, pressure } = weatherStatus;
 
-	// Get the key, like 'unknown'.
-	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
+	const weatherStatusKey = getWeatherStatusKey(status);
 	// Use that key to get the icons (day and night).
 	const weatherStatusIcon = weatherStatusTypeIcon[weatherStatusKey];
 	// Choose between day and night based on the sun event.
@@ -48,14 +52,14 @@ export interface DailyWeatherDisplay {
 	maxTempText: string;
 	icon: SVGIconType;
 	shortStatusText: string;
+	longStatusText: string;
 }
 
 export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): DailyWeatherDisplay {
 
 	const { minTemp, maxTemp, status } = dailyWeather;
 
-	// Get the key, like 'unknown'.
-	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
+	const weatherStatusKey = getWeatherStatusKey(status);
 	// Use that key to get the icons (day and night).
 	const weatherStatusIcon = weatherStatusTypeIcon[weatherStatusKey];
 	// FOr the day, always use the day icon.
@@ -67,6 +71,7 @@ export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): Daily
 		maxTempText: Math.round(maxTemp).toString(),
 		icon: weatherStatusIconForTime,
 		shortStatusText: weatherStatusTypeDescription[weatherStatusKey].short,
+		longStatusText: weatherStatusTypeDescription[weatherStatusKey].long,
 	};
 }
 

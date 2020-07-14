@@ -9,6 +9,7 @@ import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { useElementSize } from '@/services/layout/element-size';
 import { getDateDayOfWeek } from '@/services/time';
+import { DailyWeatherDisplay, processDailyWeatherForDisplay } from '@/services/weather/weather-process';
 import { useComponentLayout } from '../layout/component-layout';
 import { ForecastEntryPrimary, ForecastEntrySecondary } from './forecast-entry';
 
@@ -42,24 +43,24 @@ export const Forecast: React.FC<ForecastProps> = () => {
 	if (size.width > 1) {
 		const { tideExtremes, days } = all.daily;
 
-		// Filter down days to only those with tides, weather, and sun information.
-		// Particularly weather, which is always in the future and so may not exist when we are on a day's 23rd hour.
-		// Also, the weather we have for today doesn't make much sense if it's not using the whole day's data.
-		// So for now - always exclude today.
-		const validDays = days.filter((day) => {
-			return !info.referenceTime.hasSame(day.date, 'day');
-		});
-
 		const tideHeightRange = tideExtremes.highest.height - tideExtremes.lowest.height;
 
-		entries = validDays.map((day, i) => {
+		const today = info.referenceTime.startOf('day');
+		const tomorrow = today.plus({ days: 1 });
+
+		entries = days.map((day) => {
 			const key = `forecast_${day.date.valueOf()}`;
+
+			const isToday = day.date.hasSame(today, 'day');
+			const isTomorrow = day.date.hasSame(tomorrow, 'day');
 
 			return (
 				<ForecastEntry
 					key={key}
-					isTomorrow={i === 0}
+					isToday={isToday}
+					isTomorrow={isTomorrow}
 					day={day}
+					dailyWeatherDisplay={processDailyWeatherForDisplay(day.weather)}
 					containerWidth={size.width}
 					absoluteTideHeightRange={tideHeightRange}
 				/>
@@ -92,10 +93,14 @@ const PaddedText = styled(Text)`
 `;
 
 export interface ForecastContextBlockProps {
+	/** Whether the entry is for today. */
+	isToday: boolean;
 	/** Whether the entry is for tomorrow. */
-	isTomorrow: boolean,
+	isTomorrow: boolean;
 	/** The day data. */
-	day: AllDailyDay,
+	day: AllDailyDay;
+	/** weather data, ready for output. */
+	dailyWeatherDisplay: DailyWeatherDisplay;
 	/** The container width, used for creating tide charts. */
 	containerWidth: number;
 	/** Tallest tide height minus smallest tide height. */
@@ -103,10 +108,13 @@ export interface ForecastContextBlockProps {
 }
 
 const ForecastEntry: React.FC<ForecastContextBlockProps> = (props) => {
-	const { isTomorrow, day } = props;
+	const { isToday, isTomorrow, day } = props;
 
 	let titleText = getDateDayOfWeek(day.date);
-	if (isTomorrow) {
+	if (isToday) {
+		titleText = 'Today, ' + titleText;
+	}
+	else if (isTomorrow) {
 		titleText = 'Tomorrow, ' + titleText;
 	}
 
