@@ -6,7 +6,7 @@ import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { iconTypes } from '@/core/symbol/icon';
-import { subtitleHeight, Text, TextInline } from '@/core/symbol/text';
+import { Text, TextInline, titleHeight } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
@@ -37,10 +37,10 @@ const SummaryWeatherPrimary: React.FC = () => {
 	}
 	const { all } = allResponseState.data!;
 	const iconColor = theme.color.weather;
-	const iconHeight = subtitleHeight;
+	const iconHeight = titleHeight;
 
 	const useDayIcon = !all.current.sun.next.isSunrise;
-	const { tempText, windText, windDirectionUnit, icon, shortStatusText, pressureText } = processWeatherForDisplay(all.current.weather, useDayIcon);
+	const { tempText, windText, windDirectionUnit, icon, pressureText } = processWeatherForDisplay(all.current.weather, useDayIcon);
 
 	// NOTE - have to use flex='0' here, even though we don't rely on it anywhere else. 
 	return (
@@ -55,7 +55,7 @@ const SummaryWeatherPrimary: React.FC = () => {
 				<PushedDownTextInline>
 					<PaddedFlexRow alignItems='center'>
 						<SpacedIcon type={icon} fill={iconColor} height={iconHeight} />
-						{shortStatusText}
+						{'Few Clouds'}
 					</PaddedFlexRow>
 				</PushedDownTextInline>
 			</Flex>
@@ -79,6 +79,8 @@ const SummaryWeatherPrimary: React.FC = () => {
 
 const PaddedFlexRow = styled(FlexRow)`
 	padding-right: .8rem;
+	/* Prevent multi-word short statuses from wrapping. */
+	white-space: nowrap;
 `;
 
 const PushedDownTextInline = styled(TextInline)`

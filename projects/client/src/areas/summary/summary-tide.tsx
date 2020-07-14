@@ -179,8 +179,8 @@ const SummaryTideSecondary: React.FC = () => {
 
 	return (
 		<Text>
-			The tide is at {currentTideHeightText} feet now (where 0 is the average low).
-			The tide will be at an estimated {nextTideText} of {nextTideHeightText} feet in {nextTideDurationText}.
+			The tide is {currentTideHeightText} feet above the average low.
+			The tide will be at a {nextTideText} of around {nextTideHeightText} feet in {nextTideDurationText}.
 		</Text>
 	);
 };
