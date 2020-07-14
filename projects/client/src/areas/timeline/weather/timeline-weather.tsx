@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { SunEvent, WeatherStatus } from 'tidy-shared';
 import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
+import { edgePaddingValue } from '@/core/style/common';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, iconTypes } from '@/core/symbol/icon';
@@ -86,7 +87,7 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 	const { startTime, dateTime, iconColor, useDayIcon, weatherStatus } = props;
 	const left = timeToPixels(startTime, dateTime);
 
-	const { tempText, windText, icon } = processWeatherForDisplay(weatherStatus, useDayIcon);
+	const { tempText, windText, windDirectionUnit, pressureText, icon } = processWeatherForDisplay(weatherStatus, useDayIcon);
 	const iconHeight = subtitleHeight;
 
 	return (
@@ -108,7 +109,13 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 					<Text>
 						<FlexRow alignItems='center'>
 							<SpacedIcon type={iconTypes.wind} fill={iconColor} height={iconHeight} />
-							<TextUnit text={windText} unit='mph' />
+							<TextUnit text={windText} unit={windDirectionUnit} />
+						</FlexRow>
+					</Text>
+					<Text>
+						<FlexRow alignItems='center'>
+							<SpacedIcon type={iconTypes.pressure} fill={iconColor} height={iconHeight} />
+							<TextUnit text={pressureText} unit='mb' />
 						</FlexRow>
 					</Text>
 				</NonBreakingPadding>
@@ -123,4 +130,5 @@ const Center = styled.div`
 
 const NonBreakingPadding = styled(Flex)`
 	white-space: nowrap;
+	margin: calc(${edgePaddingValue} / 6) 0;
 `;

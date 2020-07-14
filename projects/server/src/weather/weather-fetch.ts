@@ -230,8 +230,10 @@ const degreesToDirection: ValueConverter<WindDirection> = (value: number) => {
 	// 90 degrees is N to E, 45 is N to NE, 22.5 is N to NNE, 11.5 is to halfway between N and NNE.
 	// Use that logic to convert from number [0, 360] to direction.
 
-	const clampedValue = value === 360 ? 0 : value;
-	const directionValue = Math.floor((clampedValue + 11.25) / 22.5);
+	let directionValue = Math.floor((value + 11.25) / 22.5);
+	if (directionValue === 16) {
+		directionValue = 0;
+	}
 	return directionValue as WindDirection;
 };
 
