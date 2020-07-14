@@ -33,6 +33,7 @@ export const SummaryTideChart: React.FC<SummaryTideChartProps> = () => {
 
 	const tideChart = useTideChart({
 		tideEventRange: tides,
+		includeOutsideRange: false,
 		startTime: startTime,
 		endTime: stopTime,
 		outputWidth: width,

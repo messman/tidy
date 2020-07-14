@@ -32,6 +32,7 @@ export const TimelineChart: React.FC<TimelineChartProps> = (props) => {
 
 	const tideChart = useTideChart({
 		tideEventRange: tides,
+		includeOutsideRange: true,
 		startTime: timelineStartTime,
 		endTime: cutoffDate,
 		outputWidth: width,

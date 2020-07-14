@@ -34,7 +34,7 @@ interface TimelineBarDotProps {
 	dotColor: string;
 }
 
-const barDotDiameter = 12;
+const barDotDiameter = 14;
 
 export const TimelineBarDot = styled.div<TimelineBarDotProps>`
 	display: block;

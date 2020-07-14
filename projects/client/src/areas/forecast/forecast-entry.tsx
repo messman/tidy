@@ -29,6 +29,7 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 
 	const tideChart = useTideChart({
 		tideEventRange: day.tides,
+		includeOutsideRange: false,
 		// Use the start and end of this day.
 		startTime: startOfDay,
 		endTime: day.date.endOf('day'),

@@ -109,7 +109,7 @@ export function getDurationDescription(from: DateTime, to: DateTime): string {
 	return `about ${hours}${minutesAppend} hours`;
 }
 
-const _pixelsPerHour = 60;
+const _pixelsPerHour = 80;
 export const pixelsPerDay = 24 * _pixelsPerHour;
 
 export function timeToPixels(startDate: DateTime, endDate: DateTime): number {
