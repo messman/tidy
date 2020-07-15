@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { deserialize, AllResponse, Info, AllResponseData } from 'tidy-shared';
+import { AllResponse, AllResponseData, deserialize, Info } from 'tidy-shared';
 import { DEFINE } from '@/services/define';
-import { usePromise, clampPromise, PromiseOutput } from '../promise';
 import { CONSTANT } from '../constant';
+import { clampPromise, PromiseOutput, usePromise } from '../promise';
 import { useLocalDataPhrase } from './data-local';
+import { usePromiseRefresh } from './data-refresh';
 
 export interface AllResponseSuccess extends AllResponse {
 	/** Info about the request. */
@@ -46,6 +47,8 @@ export const AllResponseProvider: React.FC = (props) => {
 			}, CONSTANT.clearDataOnNewFetch);
 		}
 	}, [localDataPhrase]);
+
+	usePromiseRefresh(localDataPhrase ? null : promiseState);
 
 	return (
 		<AllResponseContext.Provider value={promiseState}>
