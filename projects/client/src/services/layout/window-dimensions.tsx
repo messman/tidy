@@ -16,68 +16,41 @@ export interface WindowDimensions {
 const WindowDimensionsContext = React.createContext<WindowDimensions>(null!);
 export const WindowDimensionsProvider: React.FC = (props: React.ComponentProps<any>) => {
 	const [dimensions, setDimensions] = React.useState<WindowDimensions>({
-		width: window.innerWidth,
-		height: window.innerHeight,
+		width: document.documentElement.clientWidth,
+		height: document.documentElement.clientHeight,
 	});
 	const resizeMQL = React.useRef(window.matchMedia('(orientation: portrait)'));
 
-	function checkDimensions(reason: string): void {
-		const newInnerWidth = window.innerWidth;
-		const newInnerHeight = window.innerHeight;
-		console.log(newInnerWidth, newInnerHeight, reason, document.documentElement.clientWidth, document.documentElement.clientHeight);
-		setTimeout(() => {
-			console.log(newInnerWidth, newInnerHeight, reason, document.documentElement.clientWidth, document.documentElement.clientHeight, 2);
-		}, 50);
+	function checkDimensions(): void {
+		const newWidth = document.documentElement.clientWidth;
+		const newHeight = document.documentElement.clientHeight;
 		setDimensions((p) => {
-			if (newInnerWidth === p.width && newInnerHeight === p.height) {
+			if (newWidth === p.width && newHeight === p.height) {
 				return p;
 			}
 			return {
-				width: newInnerWidth,
-				height: newInnerHeight,
+				width: newWidth,
+				height: newHeight,
 			};
 		});
 	}
 
 	React.useEffect(() => {
-		function handleChangeR() {
-			checkDimensions('resize');
-		}
-		function handleChangeV() {
-			checkDimensions('visibility');
-		}
-		function handleChangeM() {
-			checkDimensions('mql');
+		function handleChange() {
+			checkDimensions();
 		}
 		if (resizeMQL.current) {
-			resizeMQL.current.addListener(handleChangeM);
+			resizeMQL.current.addListener(handleChange);
 		}
-		window.addEventListener('resize', handleChangeR);
-		window.addEventListener('visibilitychange', handleChangeV);
+		window.addEventListener('resize', handleChange);
+		window.addEventListener('visibilitychange', handleChange);
 		return function () {
 			if (resizeMQL.current) {
-				resizeMQL.current.removeListener(handleChangeM);
+				resizeMQL.current.removeListener(handleChange);
 			}
-			window.removeEventListener('resize', handleChangeR);
-			window.removeEventListener('visibilitychange', handleChangeV);
+			window.removeEventListener('resize', handleChange);
+			window.removeEventListener('visibilitychange', handleChange);
 		};
-
-
-		// function handleChange() {
-		// 	checkDimensions();
-		// }
-		// if (resizeMQL.current) {
-		// 	resizeMQL.current.addListener(handleChange);
-		// }
-		// window.addEventListener('resize', handleChange);
-		// window.addEventListener('visibilitychange', handleChange);
-		// return function () {
-		// 	if (resizeMQL.current) {
-		// 		resizeMQL.current.removeListener(handleChange);
-		// 	}
-		// 	window.removeEventListener('resize', handleChange);
-		// 	window.removeEventListener('visibilitychange', handleChange);
-		// };
 	}, []);
 
 	return (
