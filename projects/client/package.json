@@ -1,6 +1,6 @@
 {
 	"name": "tidy-client",
-	"version": "3.4.1",
+	"version": "3.4.2",
 	"description": "A mobile-first web app that uses NOAA data to show a simple view of tide information.",
 	"main": "webpack.config.js",
 	"scripts": {
