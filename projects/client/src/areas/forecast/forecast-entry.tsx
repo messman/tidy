@@ -15,8 +15,8 @@ interface ForecastEntryPrimaryProps extends ForecastContextBlockProps { }
 
 // On these forecast entries, we have to set some height for our tide chart. 
 // This will allow us to have consistent heights across all entries.
-const pixelsPerFootHeight = 2;
-const heightPaddingBottomFactor = .2;
+const pixelsPerFootHeight = 1.75;
+const heightPaddingBottomFactor = .25;
 
 /** Primary entry for a day's forecast. Shows the temperature info, daylight time, a center tide chart, and tide highs/lows. */
 export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props) => {
@@ -53,7 +53,10 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 		return (
 			<InlineCenter key={key}>
 				<SmallText>{tideStatus.isLow ? 'LOW' : 'HIGH'}</SmallText>
-				<TimeTextUnit dateTime={tideStatus.time} />
+				<div>
+					<TimeTextUnit dateTime={tideStatus.time} />
+				</div>
+				<TideHeightTextUnit height={tideStatus.height} isEstimate={false} />
 			</InlineCenter>
 		);
 	});
@@ -149,13 +152,20 @@ export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = (pr
 	const lowestTide = day.tides.lowest;
 	const highestTide = day.tides.highest;
 
+	const lowestRender = <>lowest of <TideHeightTextUnit height={lowestTide.height} /> at <TimeTextUnit dateTime={lowestTide.time} /></>;
+	const highestRender = <>highest of <TideHeightTextUnit height={highestTide.height} /> at <TimeTextUnit dateTime={highestTide.time} /></>;
+
+	const lowestIsBeforeHighest = lowestTide.time < highestTide.time;
+	const firstRender = lowestIsBeforeHighest ? lowestRender : highestRender;
+	const secondRender = lowestIsBeforeHighest ? highestRender : lowestRender;
+
 	return (
 		<Margin>
 			<TextPara>
 				Sunrise at <TimeTextUnit dateTime={sunriseEvent.time} /> and sunset at <TimeTextUnit dateTime={sunsetEvent.time} /> for a total of <TimeDurationTextUnit startTime={sunriseEvent.time} endTime={sunsetEvent.time} /> of sun.
 			</TextPara>
 			<TextPara>
-				Predicted low of <TideHeightTextUnit height={lowestTide.height} /> at <TimeTextUnit dateTime={lowestTide.time} /> and high of <TideHeightTextUnit height={highestTide.height} /> at <TimeTextUnit dateTime={highestTide.time} />.
+				Predicted {firstRender} and {secondRender}.
 			</TextPara>
 			<TextPara>
 				{dailyWeatherDisplay.longStatusText}.
