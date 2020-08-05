@@ -70,7 +70,7 @@ const SummaryTidePrimary: React.FC = () => {
 			</FlexRow>
 			<FlexRow>
 				<FlexCenter>
-					<TideHeightTextUnit height={previous.height} isEstimate={true} />
+					<TideHeightTextUnit height={previous.height} />
 				</FlexCenter>
 				<FlexCenter flex={2}>
 					<Text>
@@ -78,7 +78,7 @@ const SummaryTidePrimary: React.FC = () => {
 					</Text>
 				</FlexCenter>
 				<FlexCenter>
-					<TideHeightTextUnit height={next.height} isEstimate={true} />
+					<TideHeightTextUnit height={next.height} />
 				</FlexCenter>
 			</FlexRow>
 		</Flex>

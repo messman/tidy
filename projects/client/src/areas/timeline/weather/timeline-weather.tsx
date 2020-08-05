@@ -5,10 +5,9 @@ import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { Icon, iconTypes } from '@/core/symbol/icon';
-import { subtitleHeight, Text, titleHeight } from '@/core/symbol/text';
+import { Icon } from '@/core/symbol/icon';
+import { SmallText, Text, titleHeight } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
-import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 import { filterWeather, processWeatherForDisplay } from '@/services/weather/weather-process';
@@ -87,8 +86,7 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 	const { startTime, dateTime, iconColor, useDayIcon, weatherStatus } = props;
 	const left = timeToPixels(startTime, dateTime);
 
-	const { tempText, windText, windDirectionUnit, pressureText, icon } = processWeatherForDisplay(weatherStatus, useDayIcon);
-	const iconHeight = subtitleHeight;
+	const { tempText, windText, windDirectionUnit, icon } = processWeatherForDisplay(weatherStatus, useDayIcon);
 
 	return (
 		<TimelineEntryContainer alignItems='center' left={left} top={weatherEntriesHeight}>
@@ -106,18 +104,14 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 					</Center>
 				</NonBreakingPadding>
 				<NonBreakingPadding>
-					<Text>
-						<FlexRow alignItems='center'>
-							<SpacedIcon type={iconTypes.wind} fill={iconColor} height={iconHeight} />
-							<TextUnit text={windText} unit={windDirectionUnit} />
-						</FlexRow>
-					</Text>
-					<Text>
-						<FlexRow alignItems='center'>
-							<SpacedIcon type={iconTypes.pressure} fill={iconColor} height={iconHeight} />
-							<TextUnit text={pressureText} unit='mb' />
-						</FlexRow>
-					</Text>
+					<Center>
+						<Text>
+							<TextUnit text={windText} unit='mph' />
+						</Text>
+						<SmallText>
+							{windDirectionUnit}
+						</SmallText>
+					</Center>
 				</NonBreakingPadding>
 			</FlexColumn>
 		</TimelineEntryContainer>
@@ -130,5 +124,5 @@ const Center = styled.div`
 
 const NonBreakingPadding = styled(Flex)`
 	white-space: nowrap;
-	margin: calc(${edgePaddingValue} / 6) 0;
+	margin: calc(${edgePaddingValue} / 4) 0;
 `;

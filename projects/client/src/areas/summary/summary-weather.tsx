@@ -63,7 +63,7 @@ const SummaryWeatherPrimary: React.FC = () => {
 				<TextInline>
 					<FlexRow alignItems='center'>
 						<SpacedIcon type={iconTypes.wind} fill={iconColor} height={iconHeight} />
-						<TextUnit text={windText} unit={windDirectionUnit} />
+						<TextUnit text={windText} unit={`mph ${windDirectionUnit}`} />
 					</FlexRow>
 				</TextInline>
 				<PushedDownTextInline>

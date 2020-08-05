@@ -38,7 +38,7 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 	const weatherDisplay: WeatherDisplay = {
 		tempText: Math.round(temp.entity!).toString(),
 		windText: Math.round(wind.entity!).toString(),
-		windDirectionUnit: `mph ${WindDirection[windDirection]}`,
+		windDirectionUnit: WindDirection[windDirection],
 		icon: weatherStatusIconForTime,
 		shortStatusText: weatherStatusTypeDescription[weatherStatusKey].short,
 		pressureText: Math.round(pressure.entity!).toString()

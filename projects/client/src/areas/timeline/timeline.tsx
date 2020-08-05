@@ -34,7 +34,9 @@ export const Timeline: React.FC<TimelineProps> = () => {
 		If in compact view, we want our reference time to be exactly centered. Otherwise, we just need a fair amount of
 		space to show where our reference time is.
 	*/
-	const windowWidth = dimensions.width <= LayoutBreakpoint.regular ? dimensions.width : (LayoutBreakpoint.regular / 3);
+	const useCompactView = false; //dimensions.width <= LayoutBreakpoint.regular; // disabled for now.
+
+	const windowWidth = useCompactView ? dimensions.width : (LayoutBreakpoint.regular / 3);
 	const offsetToReferenceTime = windowWidth / 2;
 	const startTime = pixelsToTime(info.referenceTime, -offsetToReferenceTime);
 
@@ -64,20 +66,20 @@ const CurrentTimeLine = styled.div<CurrentTimeLineProps>`
 	position: absolute;
 	top: 0px;
 	left: ${p => p.leftOffset}px;
-	width: 4px;
+	width: 2px;
 	height: 100%;
-	background-color: ${p => p.theme.color.context};
+	background-color: ${p => p.theme.color.disabled};
 	border-radius: 2px;
-	opacity: .5;
+	opacity: .7;
 `;
 
 
 const CurrentTimeLineLegend = styled.div<CurrentTimeLineProps>`
 	position: absolute;
-	top: 1px;
+	top: 4px;
+	text-transform: uppercase;
 	right: calc(100% - ${p => p.leftOffset}px);
 	margin-right: ${edgePaddingValue};
-	color: ${p => p.theme.color.context};
-	opacity: .5;
-	text-transform: uppercase;
+	color: ${p => p.theme.color.disabled};
+	opacity: .7;
 `;

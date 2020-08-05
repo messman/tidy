@@ -16,7 +16,7 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 			},
 			time: {
 				referenceTime: time,
-				shortTermDataFetchHours: 2 * 24,
+				shortTermDataFetchHours: 30,
 				longTermDataFetchDays: 5,
 			},
 			tides: {
@@ -28,7 +28,7 @@ export function createConfigurationFor(time: Date, timeZoneLabel: string, statio
 				daysInPastToFetchSun: 1,
 			},
 			weather: {
-				hoursGapBetweenWeatherData: 2,
+				hoursGapBetweenWeatherData: 1,
 				includeChanges: false,
 				temperaturePrecision: 1,
 				defaultPrecision: 1

@@ -5,7 +5,7 @@ import { styled } from '@/core/style/styled';
 import { timeToPixels } from '@/services/time';
 
 // Weather won't start until after the reference time.
-export const weatherCutoffHoursFromReference = 1.2;
+export const weatherCutoffHoursFromReference = .75;
 // If less than this amount of time to the edge of the screen, don't even render the event.
 export const renderCutoffHours = 0.25;
 // If less than this amount of time to the edge of the screen, don't show the text component of the event.

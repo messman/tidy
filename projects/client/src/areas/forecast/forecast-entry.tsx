@@ -56,7 +56,7 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 				<div>
 					<TimeTextUnit dateTime={tideStatus.time} />
 				</div>
-				<TideHeightTextUnit height={tideStatus.height} isEstimate={false} />
+				<TideHeightTextUnit height={tideStatus.height} />
 			</InlineCenter>
 		);
 	});
