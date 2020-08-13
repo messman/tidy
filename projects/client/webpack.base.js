@@ -50,7 +50,8 @@ const baseWebpackOptions = {
 					{
 						loader: 'ts-loader',
 						options: {
-							getCustomTransformers: () => ({ before: [createStyledComponentsTransformer()] })
+							getCustomTransformers: () => ({ before: [createStyledComponentsTransformer()] }),
+							onlyCompileBundledFiles: true
 						}
 					}
 				]
