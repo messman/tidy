@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { TextPara } from '@/core/symbol/text';
 import { DEFINE } from '@/services/define';
 import { decorate } from '@/test/storybook/decorate';
-import { TextPara } from '@/core/symbol/text';
 import { useAllResponse } from './data/data';
 
 export default { title: 'services' };
@@ -12,7 +12,7 @@ export const TestDefine = decorate(() => {
 
 	let referenceTime: string = '...';
 	if (allResponseState.data) {
-		referenceTime = allResponseState.data.info.referenceTime.toISO();
+		referenceTime = allResponseState.data.info.referenceTime.toISO()!;
 	}
 
 	return (

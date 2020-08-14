@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const WebpackMerge = require('webpack-merge');
 const base = require('./webpack.base.js');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -9,7 +9,7 @@ module.exports = async () => {
 
 	const DEFINE = await getDefine(true);
 
-	return merge(base.base, {
+	return WebpackMerge.merge(base.base, {
 		mode: 'development',
 
 		devtool: 'source-map',

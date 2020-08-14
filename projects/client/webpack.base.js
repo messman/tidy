@@ -78,10 +78,12 @@ const baseWebpackOptions = {
 	plugins: [
 		// Clean the output folder each time
 		new CleanWebpackPlugin(),
-		new CopyPlugin([
-			{ from: 'src/static/favicons', to: './' },
-			{ from: 'src/static/images', to: './' }
-		])
+		new CopyPlugin({
+			patterns: [
+				{ from: 'src/static/favicons', to: './' },
+				{ from: 'src/static/images', to: './' }
+			]
+		})
 	]
 };
 

@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const WebpackMerge = require('webpack-merge');
 const base = require('./webpack.base.js');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const getDefine = require('./define');
@@ -8,7 +8,7 @@ module.exports = async () => {
 
 	const DEFINE = await getDefine(false);
 
-	return merge(base.base, {
+	return WebpackMerge.merge(base.base, {
 		mode: 'production',
 
 		output: {
