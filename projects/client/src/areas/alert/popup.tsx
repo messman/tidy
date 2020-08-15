@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Flex, FlexColumn } from '@/core/layout/flex';
 import { Overlay } from '@/core/layout/overlay';
 import { addMargin, borderRadiusStyle, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
@@ -8,6 +7,7 @@ import { Icon, iconTypes } from '@/core/symbol/icon';
 import { SmallText, Subtitle, Text, titleHeight } from '@/core/symbol/text';
 import { CONSTANT } from '@/services/constant';
 import { useAllResponse } from '@/services/data/data';
+import { Flex, FlexColumn } from '@messman/react-common';
 
 export enum PopupType {
 	/** Execution can continue. */
@@ -35,7 +35,7 @@ export const Popup: React.FC = (props) => {
 
 	// Pull from our context.
 	const [popupData, setPopupData] = usePopup();
-	const { run } = useAllResponse();
+	const { reset } = useAllResponse();
 	const theme = useCurrentTheme();
 
 	let popupBody: JSX.Element | null = null;
@@ -55,7 +55,12 @@ export const Popup: React.FC = (props) => {
 			}
 			else if (forceDataRefresh) {
 				// Reload the data.
-				run(CONSTANT.clearDataOnNewFetch);
+				const keepDataAndError = CONSTANT.clearDataOnNewFetch ? null : undefined;
+				reset({
+					isStarted: true,
+					data: keepDataAndError,
+					error: keepDataAndError
+				});
 			}
 		}
 

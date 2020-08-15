@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { AllResponse, AllResponseData, deserialize, Info } from 'tidy-shared';
 import { DEFINE } from '@/services/define';
+import { clampPromise, PromiseOutput, useChangeEffect, usePromise } from '@messman/react-common';
 import { CONSTANT } from '../constant';
-import { clampPromise, PromiseOutput, usePromise } from '../promise';
 import { useLocalDataPhrase } from './data-local';
-import { usePromiseRefresh } from './data-refresh';
 
 export interface AllResponseSuccess extends AllResponse {
 	/** Info about the request. */
@@ -20,35 +19,26 @@ const AllResponseContext = React.createContext<PromiseOutput<AllResponseSuccess>
 export const AllResponseProvider: React.FC = (props) => {
 
 	const [localDataPhrase] = useLocalDataPhrase();
-	const firstLocalDataPhrase = React.useRef(localDataPhrase);
 
-
-	const runImmediately = true;
-	const promiseState = usePromise(() => {
-
-		const promiseFunc = createPromiseFunc(localDataPhrase);
-
-		return {
-			promiseFunc: promiseFunc,
-			runImmediately: runImmediately
-		};
-	});
-
-	React.useEffect(() => {
-		// When local data phrase changes, retrieve new data.
-		if (localDataPhrase !== firstLocalDataPhrase.current) {
-			firstLocalDataPhrase.current = localDataPhrase;
-
-			const promiseFunc = createPromiseFunc(localDataPhrase);
-
-			promiseState.reset({
-				promiseFunc: promiseFunc,
-				runImmediately: runImmediately
-			}, CONSTANT.clearDataOnNewFetch);
-		}
+	const promiseFunc = React.useMemo(() => {
+		return createPromiseFunc(localDataPhrase);
 	}, [localDataPhrase]);
 
-	usePromiseRefresh(localDataPhrase ? null : promiseState);
+	const promiseState = usePromise({
+		isStarted: true,
+		promiseFunc: promiseFunc
+	});
+
+	useChangeEffect(() => {
+		const keepDataAndError = CONSTANT.clearDataOnNewFetch ? null : undefined;
+
+		promiseState.reset({
+			isStarted: true,
+			promiseFunc: createPromiseFunc(localDataPhrase),
+			data: keepDataAndError,
+			error: keepDataAndError
+		});
+	}, [localDataPhrase, promiseFunc]);
 
 	return (
 		<AllResponseContext.Provider value={promiseState}>

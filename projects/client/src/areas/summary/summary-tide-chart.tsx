@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Flex } from '@/core/layout/flex';
 import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 import { css, styled } from '@/core/style/styled';
 import { useTideChart } from '@/core/tide/tide-chart';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { useElementSize } from '@/services/layout/element-size';
 import { pixelsToTime, timeToPixels } from '@/services/time';
+import { Flex, useControlledElementSize } from '@messman/react-common';
 
 export interface SummaryTideChartProps {
 }
@@ -17,8 +16,7 @@ const chartPaddingBottom = 20;
 export const SummaryTideChart: React.FC<SummaryTideChartProps> = () => {
 
 	const allResponseState = useAllResponse();
-	const ref = React.useRef<HTMLDivElement>(null!);
-	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, null);
+	const [ref, size] = useControlledElementSize(CONSTANT.elementSizeLargeThrottleTimeout);
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}

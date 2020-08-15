@@ -2,8 +2,7 @@ import * as React from 'react';
 import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { CONSTANT } from '@/services/constant';
-import { useElementSize } from '@/services/layout/element-size';
-import { FlexColumn } from './flex';
+import { FlexColumn, useControlledElementSize } from '@messman/react-common';
 
 export interface ContextBlockProps {
 	/** Primary component to show in the context block. */
@@ -21,8 +20,7 @@ export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
 	const { primary, secondary, isPadded, isDualMode } = props;
 	const [isShowingPrimary, setIsShowingPrimary] = React.useState(true);
 
-	const ref = React.useRef<HTMLDivElement>(null!);
-	const primaryPanelSize = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout, null);
+	const [ref, primaryPanelSize] = useControlledElementSize(CONSTANT.elementSizeSmallThrottleTimeout);
 	const primaryPanelHeight = (!isDualMode && primaryPanelSize.height > 0) ? primaryPanelSize.height : undefined;
 
 	let contextIndicator: JSX.Element | null = null;

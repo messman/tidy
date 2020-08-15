@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { createGlobalStyle, ThemeProps, ThemeProvider } from 'styled-components';
 import { SmallTextInline } from '@/core/symbol/text';
-import { keyFactory, useLocalStorage, UseLocalStorageReturn } from '@/services/data/local-storage';
+import { localStorage } from '@/services/data/local-storage';
+import { UseLocalStorageReturn } from '@messman/react-common';
 import { borderRadiusStyle, edgePaddingValue } from './common';
 import { styled } from './styled';
 
@@ -123,12 +124,14 @@ export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 
 const LocalStorageThemeContext = React.createContext<UseLocalStorageReturn<number>>(null!);
 
-const getKey = keyFactory('tidy');
-const themeIndexKey = getKey('themeIndex');
-
 export const LocalStorageThemeProvider: React.FC = (props) => {
-	const localStorageReturn = useLocalStorage(themeIndexKey, 0, (value) => {
-		return !!themes[value];
+
+	const localStorageReturn = localStorage.useLocalStorage<number>('themeIndex', (value) => {
+		// If not stored or no longer valid, go with the first option.
+		if (value === undefined || !themes[value]) {
+			return 0;
+		}
+		return value;
 	});
 	const [themeIndex] = localStorageReturn;
 	const theme = themes[themeIndex];
@@ -148,7 +151,7 @@ export const LocalStorageThemeProvider: React.FC = (props) => {
 export const useLocalStorageTheme = () => React.useContext(LocalStorageThemeContext);
 export const useCurrentTheme = () => {
 	const [themeIndex] = React.useContext(LocalStorageThemeContext);
-	return themes[themeIndex];
+	return themes[themeIndex!];
 };
 
 export const ThemePicker: React.FC = () => {

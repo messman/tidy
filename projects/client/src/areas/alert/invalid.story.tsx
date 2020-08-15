@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { FlexRoot } from '@/core/layout/flex';
 import { LocalStorageThemeProvider, ThemePicker } from '@/core/style/theme';
 import { TextPara } from '@/core/symbol/text';
-import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/layout/responsive-layout';
-import { WindowDimensionsProvider } from '@/services/layout/window-dimensions';
 import { decorateWith } from '@/test/storybook/decorate';
+import { defaultLowerBreakpoints, FlexRoot, WindowDimensionsProvider, WindowLayoutProvider } from '@messman/react-common';
 import { boolean, text } from '@storybook/addon-knobs';
 import { InvalidCheck } from './invalid';
 
@@ -17,11 +15,11 @@ const WrapperDecorator = (story: () => JSX.Element) => {
 	return (
 		<LocalStorageThemeProvider>
 			<WindowDimensionsProvider>
-				<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
+				<WindowLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
 					<FlexRoot>
 						{story()}
 					</FlexRoot>
-				</ResponsiveLayoutProvider>
+				</WindowLayoutProvider>
 			</WindowDimensionsProvider>
 		</LocalStorageThemeProvider>
 	);

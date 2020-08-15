@@ -1,3 +1,5 @@
+import { minutes, seconds } from '@messman/react-common';
+
 export const CONSTANT = {
 
 	/** Messages used to block the application. */
@@ -24,14 +26,6 @@ export const CONSTANT = {
 	/** Digits precision after the decimal on tide height. Overrides use of the AllResponse returned precision. */
 	tideHeightPrecision: 1,
 };
-
-function seconds(seconds: number): number {
-	return seconds * 1000;
-}
-
-function minutes(minutes: number): number {
-	return seconds(minutes * 60);
-}
 
 // Make these public on the window for us to easily check
 (window as any)['CONSTANT'] = CONSTANT;

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Flex, FlexRow } from '@/core/layout/flex';
 import { addPadding, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, iconTypes } from '@/core/symbol/icon';
 import { SmallText, Subtitle, Text, titleHeight } from '@/core/symbol/text';
 import { CONSTANT } from '@/services/constant';
-import { isInvalidLayoutForApplication, useResponsiveLayout } from '@/services/layout/responsive-layout';
+import { DefaultLayoutBreakpoint, Flex, FlexRow, useWindowLayout } from '@messman/react-common';
 
 export interface InvalidCheckProps {
 	/** Used for testing. Messages about the application as a whole. */
@@ -65,7 +64,7 @@ export class InvalidCheck extends React.Component<InvalidCheckProps, InvalidChec
 const InvalidCheckParser: React.FC<InvalidCheckProps> = (props) => {
 
 	// Get our responsive layout so we can check its validity.
-	const responsiveLayout = useResponsiveLayout();
+	const windowLayout = useWindowLayout();
 
 	let invalidMessages: string[] = [];
 	let isAllowRefreshClick = false;
@@ -85,7 +84,7 @@ const InvalidCheckParser: React.FC<InvalidCheckProps> = (props) => {
 		// Honestly, we may never even get here. Internet Explorer may cause the application to fail before we ever run this check. Nice to keep just in case, though.
 		invalidMessages = [`It looks like you're using Internet Explorer`, 'Internet Explorer is not supported for this application.', 'Please, we beg you - use a more modern browser.'];
 	}
-	else if (props.isForceInvalidLayout || isInvalidLayoutForApplication(responsiveLayout)) {
+	else if (props.isForceInvalidLayout || windowLayout.heightBreakpoint < DefaultLayoutBreakpoint.regular) {
 		invalidMessages = ['Your screen size and/or rotation are invalid for this application', 'Consider rotating your device or using a different device.'];
 		isAllowRefreshClick = true;
 	}

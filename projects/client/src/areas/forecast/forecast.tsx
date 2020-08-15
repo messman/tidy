@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { AllDailyDay } from 'tidy-shared';
 import { ContextBlock } from '@/core/layout/context-block';
-import { Flex } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { Subtitle, Text } from '@/core/symbol/text';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { useElementSize } from '@/services/layout/element-size';
 import { getDateDayOfWeek } from '@/services/time';
 import { DailyWeatherDisplay, processDailyWeatherForDisplay } from '@/services/weather/weather-process';
-import { useComponentLayout } from '../layout/component-layout';
+import { Flex, useControlledElementSize } from '@messman/react-common';
 import { ForecastEntryPrimary, ForecastEntrySecondary } from './forecast-entry';
 
 export interface ForecastProps {
@@ -20,23 +18,15 @@ export interface ForecastProps {
 export const Forecast: React.FC<ForecastProps> = () => {
 
 	const allResponseState = useAllResponse();
-	// TODO - rethink this logic. We set it up such that forecast/settings would always be rendered, but here we essentially turn that off. Maybe use z-indexing instead of display: none?
-	const [componentLayout] = useComponentLayout();
 
 	// Attach a ref to our title to get the width, which we use with all entries below. NOTE - this is kind of messy logic. See other TODO about fixing this.
-	const ref = React.useRef<HTMLDivElement>(null!);
-	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, [
-		// Additional dependencies to control when we should check for size - special case. See the TODO above.
-		componentLayout.isCompactForecastView,
-		allResponseState.data
-	]);
+	const [ref, size] = useControlledElementSize(CONSTANT.elementSizeLargeThrottleTimeout);
 
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
 
 	const { all, info } = allResponseState.data!;
-
 
 	let entries: JSX.Element[] = [];
 

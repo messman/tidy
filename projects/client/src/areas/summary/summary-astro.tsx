@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { ContextBlock } from '@/core/layout/context-block';
-import { Flex } from '@/core/layout/flex';
 import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { css, styled } from '@/core/style/styled';
 import { SmallText, Text } from '@/core/symbol/text';
 import { TimeDurationTextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { useElementSize } from '@/services/layout/element-size';
 import { getDurationDescription, percentTimeBetween } from '@/services/time';
+import { Flex, useControlledElementSize } from '@messman/react-common';
 
 export interface SummaryAstroProps {
 	isDualMode: boolean;
@@ -89,11 +88,10 @@ const sunPathThickness = 6;
 
 const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 
-	const ref = React.useRef<HTMLDivElement>(null);
-	const size = useElementSize(ref, CONSTANT.elementSizeSmallThrottleTimeout, [props.percent]);
+	const [ref, size] = useControlledElementSize(CONSTANT.elementSizeSmallThrottleTimeout);
 
 	let sunSVG: JSX.Element | null = null;
-	if (!size.isSizing && size.width > 1 && size.height > 1) {
+	if (size.width > 1 && size.height > 1) {
 
 		// Add the sun path thickness to offset correctly for box-sizing (border-box).
 		const width = size.width + sunPathThickness;

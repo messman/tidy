@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ContextBlock } from '@/core/layout/context-block';
-import { Flex, FlexRow } from '@/core/layout/flex';
 import { flowPaddingValue } from '@/core/style/common';
 import { css, styled } from '@/core/style/styled';
 import { SmallText, Text } from '@/core/symbol/text';
@@ -9,6 +8,7 @@ import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getDurationDescription, percentTimeBetween } from '@/services/time';
+import { Flex, FlexRow } from '@messman/react-common';
 
 export interface SummaryTideProps {
 	isDualMode: boolean;

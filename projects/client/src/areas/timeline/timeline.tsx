@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { FlexColumn } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { useElementSize } from '@/services/layout/element-size';
-import { LayoutBreakpoint } from '@/services/layout/responsive-layout';
-import { useWindowDimensions } from '@/services/layout/window-dimensions';
 import { pixelsToTime } from '@/services/time';
+import { DefaultLayoutBreakpoint, FlexColumn, useControlledElementSize, useWindowDimensions } from '@messman/react-common';
 import { TimelineBar } from './bar/timeline-bar';
 import { TimelineChart } from './chart/timeline-chart';
 import { TimelineBackground } from './timeline-background';
@@ -19,11 +16,7 @@ export interface TimelineProps {
 export const Timeline: React.FC<TimelineProps> = () => {
 
 	const allResponseState = useAllResponse();
-	const ref = React.useRef<HTMLDivElement>(null);
-	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, [
-		// Additional dependencies for checking on element size
-		allResponseState.isRunning
-	]);
+	const [ref, size] = useControlledElementSize(CONSTANT.elementSizeLargeThrottleTimeout);
 	const dimensions = useWindowDimensions();
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
@@ -36,7 +29,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
 	*/
 	const useCompactView = false; //dimensions.width <= LayoutBreakpoint.regular; // disabled for now.
 
-	const windowWidth = useCompactView ? dimensions.width : (LayoutBreakpoint.regular / 3);
+	const windowWidth = useCompactView ? dimensions.width : (DefaultLayoutBreakpoint.regular / 3);
 	const offsetToReferenceTime = windowWidth / 2;
 	const startTime = pixelsToTime(info.referenceTime, -offsetToReferenceTime);
 

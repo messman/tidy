@@ -3,9 +3,9 @@ import { ForecastProps } from '@/areas/forecast/forecast';
 import { SettingsProps } from '@/areas/settings/settings';
 import { SummaryProps } from '@/areas/summary/summary';
 import { TimelineProps } from '@/areas/timeline/timeline';
-import { Flex } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { Text } from '@/core/symbol/text';
+import { Flex } from '@messman/react-common';
 
 export const MockSummary: React.FC<SummaryProps> = (props) => {
 

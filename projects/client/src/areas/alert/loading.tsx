@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Flex, FlexColumn } from '@/core/layout/flex';
 import { Overlay } from '@/core/layout/overlay';
 import { addPadding, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { keyframes, styled } from '@/core/style/styled';
@@ -7,6 +6,7 @@ import { useCurrentTheme } from '@/core/style/theme';
 import { Subtitle, Text } from '@/core/symbol/text';
 import { CONSTANT } from '@/services/constant';
 import { useAllResponse } from '@/services/data/data';
+import { Flex, FlexColumn } from '@messman/react-common';
 import { PopupType, usePopup } from './popup';
 
 export interface LoadingProps {
@@ -18,13 +18,13 @@ export interface LoadingProps {
  */
 export const Loading: React.FC<LoadingProps> = (props) => {
 
-	const { isRunning, error } = useAllResponse();
+	const { isStarted, error } = useAllResponse();
 	const theme = useCurrentTheme();
 	const setPopup = usePopup()[1];
 	const [isStillWorking, setIsStillWorking] = React.useState(false);
 
 	let loadingBody: JSX.Element | null = null;
-	const isOverlayActive = isRunning || !!props.forceIsShowing;
+	const isOverlayActive = isStarted || !!props.forceIsShowing;
 
 	React.useEffect(() => {
 		let timeoutId = -1;
@@ -83,7 +83,7 @@ export const Loading: React.FC<LoadingProps> = (props) => {
 
 	// TODO - this does not belong here.
 	React.useEffect(() => {
-		if (!isRunning && !!error) {
+		if (!isStarted && !!error) {
 			setPopup({
 				type: PopupType.error,
 				title: 'Could Not Load Data',
@@ -92,7 +92,7 @@ export const Loading: React.FC<LoadingProps> = (props) => {
 				forcePageReload: true
 			});
 		}
-	}, [isRunning, error]);
+	}, [isStarted, error]);
 
 	return (
 		<Overlay isActive={isOverlayActive} backdropOpacity={1} component={loadingBody}>

@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { Flex, FlexRow } from '@/core/layout/flex';
 import { addMargin, flowPaddingValue, Link } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { ThemePicker } from '@/core/style/theme';
@@ -8,6 +7,7 @@ import { Text, textHeight, TitleInline } from '@/core/symbol/text';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { useLocalDataPhrase } from '@/services/data/data-local';
 import { DEFINE } from '@/services/define';
+import { Flex, FlexRow } from '@messman/react-common';
 
 export interface SettingsProps {
 

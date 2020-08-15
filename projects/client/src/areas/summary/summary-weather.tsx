@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { WeatherStatusType, weatherStatusTypeDescription, WindDirection } from 'tidy-shared';
 import { ContextBlock } from '@/core/layout/context-block';
-import { Flex, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
@@ -11,6 +10,7 @@ import { TextUnit } from '@/core/symbol/text-unit';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';
+import { Flex, FlexRow } from '@messman/react-common';
 
 export interface SummaryWeatherProps {
 	isDualMode: boolean;

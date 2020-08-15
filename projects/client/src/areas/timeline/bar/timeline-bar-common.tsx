@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { FlexColumn } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { timeToPixels } from '@/services/time';
+import { FlexColumn } from '@messman/react-common';
 
 // Weather won't start until after the reference time.
 export const weatherCutoffHoursFromReference = .75;

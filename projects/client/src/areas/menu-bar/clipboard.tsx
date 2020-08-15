@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { iconTypes } from '@/core/symbol/icon';
-import { setClipboard } from '@/services/data/clipboard';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getTimeTwelveHourString } from '@/services/time';
+import { setClipboard } from '@messman/react-common';
 import { PopupType, usePopup } from '../alert/popup';
 import { MenuBarIcon } from './menu-bar-icon';
 

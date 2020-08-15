@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Flex, FlexColumn, FlexRow } from '@/core/layout/flex';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
@@ -9,6 +8,7 @@ import { useTideChart } from '@/core/tide/tide-chart';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { timeToPixelsWithConstant } from '@/services/time';
+import { Flex, FlexColumn, FlexRow } from '@messman/react-common';
 import { ForecastContextBlockProps } from './forecast';
 
 interface ForecastEntryPrimaryProps extends ForecastContextBlockProps { }

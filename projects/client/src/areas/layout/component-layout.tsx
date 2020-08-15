@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LayoutBreakpoint, useResponsiveLayout } from '@/services/layout/responsive-layout';
+import { DefaultLayoutBreakpoint, useWindowLayout } from '@messman/react-common';
 
 export interface ComponentLayout {
 	/** Whether or not the application is viewing the forecast component while in the compact view. */
@@ -19,16 +19,16 @@ const defaultComponentLayout: ComponentLayout = {
 };
 
 export const ComponentLayoutProvider: React.FC = (props) => {
-	const responsiveLayout = useResponsiveLayout();
+	const responsiveLayout = useWindowLayout();
 	const layoutState = React.useState<ComponentLayout>(defaultComponentLayout);
 
 	const [componentLayout, setComponentLayout] = layoutState;
 	React.useEffect(() => {
 		// Remember, effects are run on mount. So check each time to prevent unnecessary renders.
-		if (responsiveLayout.widthBreakpoint !== LayoutBreakpoint.compact && (componentLayout.isCompactForecastView || componentLayout.isCompactSettingsView)) {
+		if (responsiveLayout.widthBreakpoint !== DefaultLayoutBreakpoint.compact && (componentLayout.isCompactForecastView || componentLayout.isCompactSettingsView)) {
 			setComponentLayout(defaultComponentLayout);
 		}
-	}, [responsiveLayout.widthBreakpoint === LayoutBreakpoint.compact]);
+	}, [responsiveLayout.widthBreakpoint === DefaultLayoutBreakpoint.compact]);
 
 	return (
 		<ComponentLayoutContext.Provider value={layoutState}>

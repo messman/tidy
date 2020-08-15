@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { FlexRoot } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
+import { FlexRoot } from '@messman/react-common';
 
 export interface OverlayProps {
 	isActive: boolean,
 	component: JSX.Element | null,
 	backdropOpacity?: number,
-	backdropColor?: string
+	backdropColor?: string;
 }
 
 export const Overlay: React.FC<OverlayProps> = (props) => {
@@ -30,7 +30,7 @@ export const Overlay: React.FC<OverlayProps> = (props) => {
 			</OverlayAbsoluteComponentContainer>
 		</>
 	);
-}
+};
 
 interface OverlayAbsoluteBackdropProps {
 	isActive: boolean,
@@ -50,7 +50,7 @@ const OverlayAbsoluteBackdrop = styled.div<OverlayAbsoluteBackdropProps>`
 `;
 
 interface OverlayAbsoluteComponentContainerProps {
-	isActive: boolean
+	isActive: boolean;
 }
 
 const OverlayAbsoluteComponentContainer = styled(FlexRoot) <OverlayAbsoluteComponentContainerProps>`

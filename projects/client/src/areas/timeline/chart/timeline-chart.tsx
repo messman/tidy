@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { AllResponseData, Info } from 'tidy-shared';
-import { Flex } from '@/core/layout/flex';
 import { styled } from '@/core/style/styled';
 import { useTideChart } from '@/core/tide/tide-chart';
 import { CONSTANT } from '@/services/constant';
-import { useElementSize } from '@/services/layout/element-size';
 import { timeToPixels } from '@/services/time';
+import { Flex, useControlledElementSize } from '@messman/react-common';
 import { TimelineBaseProps } from '../bar/timeline-bar-common';
 
 export interface TimelineChartProps extends TimelineBaseProps {
@@ -19,8 +18,7 @@ const timelineChartPaddingBottom = 30;
 /** Creates a timeline chart specific to the timeline area - flexes its space and maintains the pixel-per-hour ratio. */
 export const TimelineChart: React.FC<TimelineChartProps> = (props) => {
 
-	const ref = React.useRef<HTMLDivElement>(null!);
-	const size = useElementSize(ref, CONSTANT.elementSizeLargeThrottleTimeout, null);
+	const [ref, size] = useControlledElementSize(CONSTANT.elementSizeLargeThrottleTimeout);
 
 	const { all, timelineStartTime } = props;
 	const { tides, cutoffDate } = all.predictions;

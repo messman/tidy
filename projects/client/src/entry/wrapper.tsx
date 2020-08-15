@@ -3,12 +3,10 @@ import { InvalidCheck } from '@/areas/alert/invalid';
 import { Loading } from '@/areas/alert/loading';
 import { Popup, PopupProvider } from '@/areas/alert/popup';
 import { ComponentLayoutProvider } from '@/areas/layout/component-layout';
-import { FlexRoot } from '@/core/layout/flex';
 import { LocalStorageThemeProvider } from '@/core/style/theme';
 import { AllResponseProvider } from '@/services/data/data';
 import { LocalDataPhraseProvider } from '@/services/data/data-local';
-import { defaultLowerBreakpoints, ResponsiveLayoutProvider } from '@/services/layout/responsive-layout';
-import { WindowDimensionsProvider } from '@/services/layout/window-dimensions';
+import { defaultLowerBreakpoints, FlexRoot, WindowDimensionsProvider, WindowLayoutProvider } from '@messman/react-common';
 
 export const Wrapper: React.FC = (props) => {
 	return (
@@ -24,7 +22,7 @@ const Providers: React.FC = (props) => {
 	return (
 		<LocalStorageThemeProvider>
 			<WindowDimensionsProvider>
-				<ResponsiveLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
+				<WindowLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
 					<ComponentLayoutProvider>
 						<LocalDataPhraseProvider>
 							<AllResponseProvider>
@@ -34,7 +32,7 @@ const Providers: React.FC = (props) => {
 							</AllResponseProvider>
 						</LocalDataPhraseProvider>
 					</ComponentLayoutProvider>
-				</ResponsiveLayoutProvider>
+				</WindowLayoutProvider>
 			</WindowDimensionsProvider>
 		</LocalStorageThemeProvider>
 	);

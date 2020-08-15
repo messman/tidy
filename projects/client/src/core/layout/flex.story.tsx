@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SmallText, Subtitle, Text, TextInline } from '@/core/symbol/text';
 import { decorate } from '@/test/storybook/decorate';
+import { Flex, FlexColumn, FlexRoot, FlexRow } from '@messman/react-common';
 import { styled } from '../style/styled';
-import { Flex, FlexColumn, FlexRoot, FlexRow } from './flex';
 
 export default { title: 'core/layout' };
 
