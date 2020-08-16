@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { LocalStorageThemeProvider, ThemePicker } from '@/core/style/theme';
+import { LocalStorageThemeProvider } from '@/core/style/theme';
 import { TextPara } from '@/core/symbol/text';
 import { decorateWith } from '@/test/storybook/decorate';
-import { defaultLowerBreakpoints, FlexRoot, WindowDimensionsProvider, WindowLayoutProvider } from '@messman/react-common';
+import { defaultLowerBreakpoints, Flex, FlexRoot, WindowDimensionsProvider, WindowLayoutProvider } from '@messman/react-common';
 import { boolean, text } from '@storybook/addon-knobs';
+import { ThemePicker } from '../settings/theme-picker';
 import { InvalidCheck } from './invalid';
 
 export default { title: 'areas/alert' };
@@ -51,10 +52,11 @@ export const TestInvalid = decorateWith(() => {
 			isForceInvalidLayout={isForceInvalidLayout}
 			error={null}
 		>
-			<div>
+			<Flex>
+
 				<ThemePicker />
 				<ErrorThrower />
-			</div>
+			</Flex>
 		</InvalidCheck>
 	);
 }, [WrapperDecorator]);

@@ -1,4 +1,6 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
+import { TideEvent } from 'tidy-shared';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
@@ -7,8 +9,10 @@ import { TimeDurationTextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
 import { useTideChart } from '@/core/tide/tide-chart';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { SpacedIcon } from '@/core/weather/weather-common';
+import { CONSTANT } from '@/services/constant';
 import { timeToPixelsWithConstant } from '@/services/time';
-import { Flex, FlexColumn, FlexRow } from '@messman/react-common';
+import { Flex, FlexRow, minutes } from '@messman/react-common';
+import { getMinMaxEvents } from '../../core/tide/tide-chart';
 import { ForecastContextBlockProps } from './forecast';
 
 interface ForecastEntryPrimaryProps extends ForecastContextBlockProps { }
@@ -18,10 +22,37 @@ interface ForecastEntryPrimaryProps extends ForecastContextBlockProps { }
 const pixelsPerFootHeight = 1.75;
 const heightPaddingBottomFactor = .25;
 
+// If a tide event is this many minutes before sunrise or after sunset, still report it.
+const daylightTideLeniency = minutes(30);
+
 /** Primary entry for a day's forecast. Shows the temperature info, daylight time, a center tide chart, and tide highs/lows. */
 export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props) => {
 	const theme = useCurrentTheme();
-	const { day, dailyWeatherDisplay, containerWidth, absoluteTideHeightRange } = props;
+	const { day, dailyWeatherDisplay, containerWidth, absoluteTideHeightRange, showFullDay } = props;
+
+	let tides = day.tides;
+	let timeRangeStart = day.date.startOf('day');
+	let timeRangeEnd = day.date.endOf('day');
+	if (!showFullDay) {
+		// Daylight only
+		const [sunrise, sunset] = day.sun;
+		timeRangeStart = sunrise.time;
+		timeRangeEnd = sunset.time;
+
+		const daylightTideEvents = tides.events.filter((event) => {
+			return event.time >= timeRangeStart && event.time <= timeRangeEnd;
+		});
+		const [min, max] = getMinMaxEvents(daylightTideEvents);
+
+		tides = {
+			events: daylightTideEvents,
+			highest: max,
+			lowest: min,
+			outsideNext: [],
+			outsidePrevious: []
+		};
+	}
+
 	const startOfDay = day.date.startOf('day');
 
 	const outputHeight = (absoluteTideHeightRange * pixelsPerFootHeight) / heightPaddingBottomFactor;
@@ -30,9 +61,8 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 	const tideChart = useTideChart({
 		tideEventRange: day.tides,
 		includeOutsideRange: false,
-		// Use the start and end of this day.
-		startTime: startOfDay,
-		endTime: day.date.endOf('day'),
+		startTime: timeRangeStart,
+		endTime: timeRangeEnd,
 		// Use the width passed in from the parent. NOTE - this only works because the margins are the same. TODO - make this logic more straightforward, possible by using useElementSize differently.
 		outputWidth: containerWidth,
 		outputHeight: outputHeight,
@@ -42,70 +72,87 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 
 	const { minTempText, maxTempText, icon, shortStatusText } = dailyWeatherDisplay;
 
-	const [sunrise, sunset] = day.sun;
-	const pixelsPerHour = props.containerWidth / 24;
-	const left = timeToPixelsWithConstant(startOfDay, sunrise.time, pixelsPerHour);
-	const width = timeToPixelsWithConstant(sunrise.time, sunset.time, pixelsPerHour);
+	let sunBarRender: JSX.Element | null = null;
+	if (showFullDay) {
+		const [sunrise, sunset] = day.sun;
+		const pixelsPerHour = props.containerWidth / 24;
+		const left = timeToPixelsWithConstant(startOfDay, sunrise.time, pixelsPerHour);
+		const width = timeToPixelsWithConstant(sunrise.time, sunset.time, pixelsPerHour);
+		sunBarRender = (
+			<>
+				<Separator />
 
-
-	const tideExtrema = day.tides.events.map((tideStatus) => {
-		const key = `extreme_${tideStatus.time.valueOf()}`;
-		return (
-			<InlineCenter key={key}>
-				<SmallText>{tideStatus.isLow ? 'LOW' : 'HIGH'}</SmallText>
-				<div>
-					<TimeTextUnit dateTime={tideStatus.time} />
-				</div>
-				<TideHeightTextUnit height={tideStatus.height} />
-			</InlineCenter>
+				<EmptySunBarLine>
+					<SunBarLine leftOffset={left} width={width} />
+				</EmptySunBarLine>
+			</>
 		);
-	});
+	}
+	else {
+		sunBarRender = (
+			<VerticalMargin>
+				<Separator />
+			</VerticalMargin>
+		);
+	}
+
+	let tideExtremaToReport = tides.events;
+	if (!showFullDay) {
+		// Add leniency now that we have already rendered our chart
+		timeRangeStart = timeRangeStart.minus({ milliseconds: daylightTideLeniency });
+		timeRangeEnd = timeRangeEnd.plus({ milliseconds: daylightTideLeniency });
+		tideExtremaToReport = day.tides.events.filter((event) => {
+			return event.time >= timeRangeStart && event.time <= timeRangeEnd;
+		});
+	}
+
+	const [extremaRender, justifyContent] = createPositionedExtremaInfo(tideExtremaToReport, timeRangeStart, timeRangeEnd);
 
 	return (
-		<FlexColumn>
+		<div>
 			<Margin>
-
 				<FlexRow>
-					<FlexRowInline alignItems='center'>
+					<FlexRowMargin alignItems='center'>
 						<TextInline>
 							{maxTempText}&deg;/{minTempText}&deg;
 						</TextInline>
-					</FlexRowInline>
-					<FlexRowInline alignItems='center' flex='none'>
+					</FlexRowMargin>
+					<FlexRowMargin alignItems='center' flex='none'>
 
 						<SpacedIcon type={icon} fill={theme.color.weather} height={subtitleHeight} spacing='default' />
 						<TextInline>
 							{shortStatusText}
 						</TextInline>
-					</FlexRowInline>
+					</FlexRowMargin>
 				</FlexRow>
 			</Margin>
-			<EmptySunBarLine>
-				<SunBarLine leftOffset={left} width={width} />
-			</EmptySunBarLine>
+			<Separator />
 			<Margin>
-				<FlexRow justifyContent='space-around'>
-					{tideExtrema}
-				</FlexRow>
+				<FlexRowMargin justifyContent={justifyContent}>
+					{extremaRender}
+				</FlexRowMargin>
 			</Margin>
+			{sunBarRender}
 			<TideChartContainer flex='none' height={outputHeight}>
 				{tideChart}
 			</TideChartContainer>
-		</FlexColumn>
+		</div>
 	);
 };
 
-const FlexRowInline = styled(FlexRow)`
-	display: inline-flex;
+const FlexRowMargin = styled(FlexRow)`
+	display: flex;
 	margin: 0 ${edgePaddingValue};
 `;
 
 const Margin = styled.div`
 	margin: ${edgePaddingValue};
 `;
+const VerticalMargin = styled.div`
+	margin: ${edgePaddingValue} 0;
+`;
 
-const InlineCenter = styled.div`
-	display: inline-block;
+const Center = styled.div`
 	text-align: center;
 `;
 
@@ -117,13 +164,18 @@ const TideChartContainer = styled(Flex) <TideChartContainerProps>`
 	height: ${p => p.height}px;
 `;
 
+const Separator = styled.div`
+	height: 2px;
+	background-color: ${p => p.theme.color.backgroundLightest};
+`;
+
 const barLineThickness = 4;
 
 const EmptySunBarLine = styled.div`
+	margin-bottom: ${edgePaddingValue};
 	position: relative;
 	width: 100%;
 	height: ${barLineThickness}px;
-	background-color: ${p => p.theme.color.backgroundLightest};
 `;
 
 interface SunBarLineProps {
@@ -141,6 +193,55 @@ const SunBarLine = styled.div<SunBarLineProps>`
 	border-radius: ${barLineThickness / 2}px;
 `;
 
+
+function createPositionedExtremaInfo(events: TideEvent<DateTime>[], startTime: DateTime, endTime: DateTime): [JSX.Element[], 'space-around' | 'space-between'] {
+	let tideExtrema = events.map((event) => {
+		const key = `extreme_${event.time.valueOf()}`;
+		return <TideExtreme key={key} event={event} isShown={true} />;
+	});
+
+	// Time between beginning and end
+	const timeRange = endTime.diff(startTime, 'milliseconds').milliseconds;
+	// Number of events we could possibly squeeze into this time range.
+	const maximumTideEventsCount = Math.floor(timeRange / CONSTANT.tidalHalfPeriod) + 1;
+
+	if (events.length === maximumTideEventsCount) {
+		return [tideExtrema, 'space-between'];
+	}
+	return [tideExtrema, 'space-around'];
+}
+
+interface TideExtremeProps {
+	event: TideEvent<DateTime>;
+	isShown: boolean;
+}
+
+const TideExtreme: React.FC<TideExtremeProps> = (props) => {
+	const { event, isShown } = props;
+
+	return (
+		<Opacity isShown={isShown}>
+			<Center>
+				<SmallText>{event.isLow ? 'LOW' : 'HIGH'}</SmallText>
+				<div>
+					<TimeTextUnit dateTime={event.time} />
+				</div>
+				<div>
+					<TideHeightTextUnit height={event.height} />
+				</div>
+			</Center>
+		</Opacity>
+	);
+};
+
+interface OpacityProps {
+	isShown: boolean;
+}
+
+const Opacity = styled.div<OpacityProps>`
+	opacity: ${p => p.isShown ? 1 : 0};
+`;
+
 interface ForecastEntrySecondaryProps extends ForecastContextBlockProps { }
 
 export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = (props) => {
@@ -152,8 +253,8 @@ export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = (pr
 	const lowestTide = day.tides.lowest;
 	const highestTide = day.tides.highest;
 
-	const lowestRender = <>lowest of <TideHeightTextUnit height={lowestTide.height} /> at <TimeTextUnit dateTime={lowestTide.time} /></>;
-	const highestRender = <>highest of <TideHeightTextUnit height={highestTide.height} /> at <TimeTextUnit dateTime={highestTide.time} /></>;
+	const lowestRender = <>lowest tide of the day at <TimeTextUnit dateTime={lowestTide.time} /> (<TideHeightTextUnit height={lowestTide.height} />)</>;
+	const highestRender = <>highest tide of the day at <TimeTextUnit dateTime={highestTide.time} /> (<TideHeightTextUnit height={highestTide.height} />)</>;
 
 	const lowestIsBeforeHighest = lowestTide.time < highestTide.time;
 	const firstRender = lowestIsBeforeHighest ? lowestRender : highestRender;
@@ -162,7 +263,7 @@ export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = (pr
 	return (
 		<Margin>
 			<TextPara>
-				Sunrise at <TimeTextUnit dateTime={sunriseEvent.time} /> and sunset at <TimeTextUnit dateTime={sunsetEvent.time} /> for a total of <TimeDurationTextUnit startTime={sunriseEvent.time} endTime={sunsetEvent.time} /> of sun.
+				Sunrise at <TimeTextUnit dateTime={sunriseEvent.time} /> and sunset at <TimeTextUnit dateTime={sunsetEvent.time} /> for a total of <TimeDurationTextUnit startTime={sunriseEvent.time} endTime={sunsetEvent.time} /> of daylight.
 			</TextPara>
 			<TextPara>
 				Predicted {firstRender} and {secondRender}.

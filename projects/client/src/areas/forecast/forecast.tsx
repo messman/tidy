@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { AllDailyDay } from 'tidy-shared';
+import { Toggle } from '@/core/common/toggle';
 import { ContextBlock } from '@/core/layout/context-block';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { Subtitle, Text } from '@/core/symbol/text';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { localStorage } from '@/services/data/local-storage';
 import { getDateDayOfWeek } from '@/services/time';
 import { DailyWeatherDisplay, processDailyWeatherForDisplay } from '@/services/weather/weather-process';
 import { Flex, useControlledElementSize } from '@messman/react-common';
@@ -15,6 +17,13 @@ export interface ForecastProps {
 
 }
 
+const forecastRangeOptions = {
+	daylight: 'Daylight',
+	fullDay: 'Full Day'
+};
+
+const forecastRangeEntries = [forecastRangeOptions.daylight, forecastRangeOptions.fullDay];
+
 export const Forecast: React.FC<ForecastProps> = () => {
 
 	const allResponseState = useAllResponse();
@@ -22,8 +31,19 @@ export const Forecast: React.FC<ForecastProps> = () => {
 	// Attach a ref to our title to get the width, which we use with all entries below. NOTE - this is kind of messy logic. See other TODO about fixing this.
 	const [ref, size] = useControlledElementSize(CONSTANT.elementSizeLargeThrottleTimeout);
 
+	const [rangeOptionIndex, setRangeOptionIndex] = localStorage.useLocalStorage<number>('forecast-day-range', (value) => {
+		if (value === undefined) {
+			return 0;
+		}
+		return value;
+	});
+
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
+	}
+
+	function onForecastRangeOptionChange(index: number): void {
+		setRangeOptionIndex(index);
 	}
 
 	const { all, info } = allResponseState.data!;
@@ -32,6 +52,7 @@ export const Forecast: React.FC<ForecastProps> = () => {
 
 	if (size.width > 1) {
 		const { tideExtremes, days } = all.daily;
+		const isShowFullDay = forecastRangeEntries[rangeOptionIndex] === forecastRangeOptions.fullDay;
 
 		const tideHeightRange = tideExtremes.highest.height - tideExtremes.lowest.height;
 
@@ -49,6 +70,7 @@ export const Forecast: React.FC<ForecastProps> = () => {
 					key={key}
 					isToday={isToday}
 					isTomorrow={isTomorrow}
+					showFullDay={isShowFullDay}
 					day={day}
 					dailyWeatherDisplay={processDailyWeatherForDisplay(day.weather)}
 					containerWidth={size.width}
@@ -62,6 +84,9 @@ export const Forecast: React.FC<ForecastProps> = () => {
 		<OverflowFlex>
 			<Margin>
 				<Subtitle ref={ref}>Daily Forecast</Subtitle>
+			</Margin>
+			<Margin>
+				<Toggle selectedEntryIndex={rangeOptionIndex} onSelected={onForecastRangeOptionChange} entries={forecastRangeEntries} />
 			</Margin>
 			{entries}
 		</OverflowFlex>
@@ -87,6 +112,8 @@ export interface ForecastContextBlockProps {
 	isToday: boolean;
 	/** Whether the entry is for tomorrow. */
 	isTomorrow: boolean;
+	/** Whether we should show the full day or just the daylight hours. */
+	showFullDay: boolean;
 	/** The day data. */
 	day: AllDailyDay;
 	/** weather data, ready for output. */

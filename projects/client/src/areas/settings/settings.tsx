@@ -2,12 +2,12 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { addMargin, flowPaddingValue, Link } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
-import { ThemePicker } from '@/core/style/theme';
 import { Text, textHeight, TitleInline } from '@/core/symbol/text';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { useLocalDataPhrase } from '@/services/data/data-local';
 import { DEFINE } from '@/services/define';
 import { Flex, FlexRow } from '@messman/react-common';
+import { ThemePicker } from './theme-picker';
 
 export interface SettingsProps {
 
@@ -32,7 +32,9 @@ export const Settings: React.FC<SettingsProps> = () => {
 					<TitleInline>
 						Tidy
 					</TitleInline>
-					<ThemePicker />
+					<Flex flex='0'>
+						<ThemePicker />
+					</Flex>
 				</FlexRow>
 			</Margin>
 			<MarginText>

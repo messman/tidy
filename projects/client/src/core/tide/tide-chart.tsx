@@ -100,7 +100,7 @@ function tideStatusToPoint(status: TideStatus | null | undefined): Point | null 
 	};
 }
 
-function getMinMaxEvents(events: TideEvent[]): [TideEvent, TideEvent] {
+export function getMinMaxEvents(events: TideEvent[]): [TideEvent, TideEvent] {
 	if (!events || !events.length) {
 		throw new Error('Cannot get min and max of empty array');
 	}

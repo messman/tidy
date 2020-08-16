@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { createGlobalStyle, ThemeProps, ThemeProvider } from 'styled-components';
-import { SmallTextInline } from '@/core/symbol/text';
 import { localStorage } from '@/services/data/local-storage';
 import { UseLocalStorageReturn } from '@messman/react-common';
-import { borderRadiusStyle, edgePaddingValue } from './common';
-import { styled } from './styled';
 
 /** Custom application theme type. */
 export interface Theme {
@@ -153,77 +150,3 @@ export const useCurrentTheme = () => {
 	const [themeIndex] = React.useContext(LocalStorageThemeContext);
 	return themes[themeIndex!];
 };
-
-export const ThemePicker: React.FC = () => {
-
-	const [themeIndex, setThemeIndex] = useLocalStorageTheme();
-
-	function onClick(index: number): void {
-		setThemeIndex(index);
-	}
-
-	const options = themes.map((theme, index) => {
-		return (
-			<ThemePickerOption
-				key={theme.name}
-				name={theme.name}
-				index={index}
-				isSelected={index === themeIndex}
-				onClick={onClick}
-			/>
-		);
-	});
-
-	return (
-		<ThemePickerBubble>
-			{options}
-		</ThemePickerBubble>
-	);
-};
-
-const ThemePickerBubble = styled.div`
-	display: inline-block;
-	font-size: 0;
-
-	background-color: ${p => p.theme.color.backgroundLighter};
-	padding: ${edgePaddingValue};
-	${borderRadiusStyle}
-`;
-
-interface ThemePickerOptionProps {
-	name: string,
-	isSelected: boolean,
-	index: number,
-	onClick: (index: number) => void;
-}
-
-const ThemePickerOption: React.FC<ThemePickerOptionProps> = (props) => {
-
-	function onClick(): void {
-		if (!props.isSelected) {
-			props.onClick(props.index);
-		}
-	}
-
-	return (
-		<ThemePickerOptionBubble isSelected={props.isSelected} onClick={onClick}>
-			<SmallTextInline>{props.name.toUpperCase()}</SmallTextInline>
-		</ThemePickerOptionBubble>
-	);
-};
-
-interface ThemePickerOptionBubbleProps {
-	isSelected: boolean;
-}
-
-const ThemePickerOptionBubble = styled.div<ThemePickerOptionBubbleProps>`
-	display: inline-block;
-	font-size: 0;
-
-	min-width: 3.5rem;
-	text-align: center;
-	background-color: ${p => p.isSelected ? p.theme.color.context : 'transparent'};
-	padding: calc(${edgePaddingValue} / 3) ${edgePaddingValue};
-	${borderRadiusStyle}
-	cursor: pointer;
-`;

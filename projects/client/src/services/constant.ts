@@ -1,4 +1,4 @@
-import { minutes, seconds } from '@messman/react-common';
+import { hours, minutes, seconds } from '@messman/react-common';
 
 export const CONSTANT = {
 
@@ -23,6 +23,9 @@ export const CONSTANT = {
 
 	/** Digits precision after the decimal on tide height. Overrides use of the AllResponse returned precision. */
 	tideHeightPrecision: 1,
+
+	/** Approximation of how many milliseconds pass between a high and low tide. */
+	tidalHalfPeriod: hours(6) + minutes(12.5)
 };
 
 // Make these public on the window for us to easily check
