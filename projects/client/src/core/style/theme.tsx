@@ -52,9 +52,9 @@ const darkTheme: Theme = {
 	name: 'dark',
 	color: {
 		background: '#0A0A0A',
-		backgroundLighter: '#1B1B1B',
+		backgroundLighter: '#161616',
 		backgroundLightest: '#2B2B2B',
-		textAndIcon: '#C7C7C7',
+		textAndIcon: '#C0C0C0',
 		link: '#2575BF',
 		disabled: '#6B6B6B',
 		tide: '#145C9E',
@@ -76,12 +76,12 @@ const lightTheme: Theme = {
 		...darkTheme.color,
 
 		// Overrides
-		background: '#FEFCFB',
-		backgroundLighter: '#F0F0F0',
+		background: '#F7F7F7',
+		backgroundLighter: '#EFEFEF',
 		backgroundLightest: '#DDDDDD',
-		textAndIcon: '#1B1B1B',
+		textAndIcon: '#1F1F1F',
 		disabled: '#737373',
-		backgroundTimelineDay: '#F8F8F8',
+		backgroundTimelineDay: '#F0F0F0',
 	}
 };
 
