@@ -18,7 +18,6 @@ export const SummaryAstro: React.FC<SummaryAstroProps> = (props) => {
 		<ContextBlock
 			primary={<SummaryAstroPrimary />}
 			secondary={<SummaryAstroSecondary />}
-			isPadded={true}
 			isDualMode={props.isDualMode}
 		/>
 	);

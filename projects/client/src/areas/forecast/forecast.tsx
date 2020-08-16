@@ -122,7 +122,7 @@ const ForecastEntry: React.FC<ForecastContextBlockProps> = (props) => {
 						{...props}
 					/>
 				)}
-				isPadded={false}
+				paddingStyle='0'
 				isDualMode={false}
 			/>
 		</Margin>

@@ -21,7 +21,6 @@ export const SummaryWeather: React.FC<SummaryWeatherProps> = (props) => {
 		<ContextBlock
 			primary={<SummaryWeatherPrimary />}
 			secondary={<SummaryWeatherSecondary />}
-			isPadded={true}
 			isDualMode={props.isDualMode}
 		/>
 	);

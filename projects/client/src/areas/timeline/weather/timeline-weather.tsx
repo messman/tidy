@@ -124,5 +124,5 @@ const Center = styled.div`
 
 const NonBreakingPadding = styled(Flex)`
 	white-space: nowrap;
-	margin: calc(${edgePaddingValue} / 4) 0;
+	margin: calc(${edgePaddingValue} / 3) 0;
 `;

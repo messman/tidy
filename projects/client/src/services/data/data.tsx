@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AllResponse, AllResponseData, deserialize, Info } from 'tidy-shared';
 import { DEFINE } from '@/services/define';
-import { clampPromise, PromiseOutput, StalePromiseTimerComponent, StalePromiseTimerOutput, useDocumentVisibility, useRenderDebug, useStalePromiseTimer } from '@messman/react-common';
+import { clampPromise, PromiseOutput, StalePromiseTimerComponent, StalePromiseTimerOutput, useDocumentVisibility, useStalePromiseTimer } from '@messman/react-common';
 import { CONSTANT } from '../constant';
 import { useLocalDataPhrase } from './data-local';
 
@@ -38,8 +38,6 @@ export const AllResponseProvider: React.FC = (props) => {
 	});
 
 	const { timer, promise, lastCompleted } = promiseTimer;
-
-	useRenderDebug('Data', { timer, promise, lastCompleted, localDataPhrase });
 
 	React.useEffect(() => {
 		if (localDataPhrase !== currentPromiseLocalDataPhrase) {

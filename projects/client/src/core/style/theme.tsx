@@ -61,10 +61,10 @@ const darkTheme: Theme = {
 		link: '#2575BF',
 		disabled: '#6B6B6B',
 		tide: '#145C9E',
-		sun: '#EAC435',
+		sun: '#CBA415',
 		weather: '#1282A2',
 		context: '#A63446',
-		warning: '#EAC435',
+		warning: '#CBA415',
 		error: '#A63446',
 		backgroundTimelineDay: '#111111'
 	},

@@ -19,7 +19,6 @@ export const SummaryTide: React.FC<SummaryTideProps> = (props) => {
 		<ContextBlock
 			primary={<SummaryTidePrimary />}
 			secondary={<SummaryTideSecondary />}
-			isPadded={true}
 			isDualMode={props.isDualMode}
 		/>
 	);

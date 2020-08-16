@@ -1,53 +1,85 @@
 import * as React from 'react';
 import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
-import { CONSTANT } from '@/services/constant';
-import { FlexColumn, useControlledElementSize } from '@messman/react-common';
+import { FlexColumn, FlexRow } from '@messman/react-common';
 
 export interface ContextBlockProps {
 	/** Primary component to show in the context block. */
 	primary: JSX.Element,
 	/** Secondary component to show on click. */
 	secondary: JSX.Element;
-	/** If true, top-level component will include the theme padding. This is a convenience setting to avoid an unnecessary padding component inside. */
-	isPadded: boolean;
+	/** If true, top-level component will include padding. This is a convenience setting to avoid an unnecessary padding component inside. */
+	paddingStyle?: string;
 	/** If true, both components will be shown together in a vertical stack. */
 	isDualMode: boolean;
 }
 
 export const ContextBlock: React.FC<ContextBlockProps> = (props) => {
+	if (props.isDualMode) {
+		return <DualModeContextBlock {...props} />;
+	}
+	return <SingleModeContextBlock {...props} />;
+};
 
-	const { primary, secondary, isPadded, isDualMode } = props;
+const DualModeContextBlock: React.FC<ContextBlockProps> = (props) => {
+	const { primary, secondary, paddingStyle } = props;
+
+	return (
+		<ContextBlockRoot justifyContent='space-between'>
+			<DualModeContextPanel paddingStyle={paddingStyle}>
+				{primary}
+			</DualModeContextPanel>
+			<DualModeContextPanel paddingStyle={paddingStyle}>
+				{secondary}
+			</DualModeContextPanel>
+		</ContextBlockRoot>
+	);
+};
+
+const SingleModeContextBlock: React.FC<ContextBlockProps> = (props) => {
+	const { primary, secondary, paddingStyle } = props;
 	const [isShowingPrimary, setIsShowingPrimary] = React.useState(true);
 
-	const [ref, primaryPanelSize] = useControlledElementSize(CONSTANT.elementSizeSmallThrottleTimeout);
-	const primaryPanelHeight = (!isDualMode && primaryPanelSize.height > 0) ? primaryPanelSize.height : undefined;
-
-	let contextIndicator: JSX.Element | null = null;
-	if (primary && secondary && !isDualMode) {
-		contextIndicator = <ContextIndicator />;
-	}
-
 	function onClick(): void {
-		if (!isDualMode) {
-			setIsShowingPrimary((previous) => {
-				return !previous;
-			});
-		}
+		setIsShowingPrimary((previous) => {
+			return !previous;
+		});
 	}
 
 	return (
 		<ContextBlockRoot onClick={onClick} justifyContent='space-between'>
-			{contextIndicator}
-			<ContextBlockPanel ref={ref} isActive={isShowingPrimary || isDualMode} isPadded={isPadded} isDualMode={isDualMode}>
-				{primary}
-			</ContextBlockPanel>
-			<ContextBlockDependentPanel heightInPixels={primaryPanelHeight} isActive={!isShowingPrimary || isDualMode} isPadded={isPadded} isDualMode={isDualMode}>
-				{secondary}
-			</ContextBlockDependentPanel>
+			<ContextIndicator />
+			<SingleModeContainer isShowingPrimary={isShowingPrimary} alignItems='stretch'>
+				<SingleModeContextPanel paddingStyle={paddingStyle}>
+					{primary}
+				</SingleModeContextPanel>
+				<SingleModeContextPanel paddingStyle={paddingStyle}>
+					{secondary}
+				</SingleModeContextPanel>
+			</SingleModeContainer>
 		</ContextBlockRoot>
 	);
 };
+
+interface DualModeContextPanelProps {
+	paddingStyle?: string;
+}
+
+const DualModeContextPanel = styled.div<DualModeContextPanelProps>`
+	padding: ${p => p.paddingStyle || edgePaddingValue};
+	overflow: hidden;
+`;
+
+interface SingleModeContainerProps {
+	isShowingPrimary: boolean;
+}
+
+const SingleModeContainer = styled(FlexRow) <SingleModeContainerProps>`
+	width: 200%;
+	left: ${p => p.isShowingPrimary ? '0' : '-100%'};
+	cursor: pointer;
+`;
+
 
 const ContextBlockRoot = styled(FlexColumn)`
 	background-color: ${p => p.theme.color.backgroundLighter};
@@ -56,22 +88,14 @@ const ContextBlockRoot = styled(FlexColumn)`
 	overflow: hidden;
 `;
 
-interface ContextBlockPanelProps {
-	isActive: boolean,
-	heightInPixels?: number;
-	isPadded: boolean;
-	isDualMode: boolean;
+interface SingleModeContextPanelProps {
+	paddingStyle?: string;
 }
 
-const ContextBlockPanel = styled.div <ContextBlockPanelProps>`
-	padding: ${p => p.isPadded ? edgePaddingValue : 0};
-	display: ${p => p.isActive ? 'block' : 'none'};
-	cursor: ${p => p.isDualMode ? 'unset' : 'pointer'};
-`;
-
-const ContextBlockDependentPanel = styled(ContextBlockPanel)`
-	height: ${p => p.heightInPixels}px;
-	overflow-y: auto;
+const SingleModeContextPanel = styled.div <SingleModeContextPanelProps>`
+	padding: ${p => p.paddingStyle || edgePaddingValue};
+	overflow: hidden;
+	flex: 1;
 `;
 
 const contextIndicatorLength = 24;
