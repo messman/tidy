@@ -6,7 +6,7 @@ import { ComponentLayoutProvider } from '@/areas/layout/component-layout';
 import { LocalStorageThemeProvider } from '@/core/style/theme';
 import { AllResponseProvider } from '@/services/data/data';
 import { LocalDataPhraseProvider } from '@/services/data/data-local';
-import { defaultLowerBreakpoints, FlexRoot, WindowDimensionsProvider, WindowLayoutProvider } from '@messman/react-common';
+import { defaultLowerBreakpoints, DocumentVisibilityProvider, FlexRoot, WindowDimensionsProvider, WindowLayoutProvider } from '@messman/react-common';
 
 export const Wrapper: React.FC = (props) => {
 	return (
@@ -20,21 +20,23 @@ export const Wrapper: React.FC = (props) => {
 
 const Providers: React.FC = (props) => {
 	return (
-		<LocalStorageThemeProvider>
-			<WindowDimensionsProvider>
-				<WindowLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
-					<ComponentLayoutProvider>
-						<LocalDataPhraseProvider>
-							<AllResponseProvider>
-								<PopupProvider>
-									{props.children}
-								</PopupProvider>
-							</AllResponseProvider>
-						</LocalDataPhraseProvider>
-					</ComponentLayoutProvider>
-				</WindowLayoutProvider>
-			</WindowDimensionsProvider>
-		</LocalStorageThemeProvider>
+		<DocumentVisibilityProvider>
+			<LocalStorageThemeProvider>
+				<WindowDimensionsProvider>
+					<WindowLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
+						<ComponentLayoutProvider>
+							<LocalDataPhraseProvider>
+								<AllResponseProvider>
+									<PopupProvider>
+										{props.children}
+									</PopupProvider>
+								</AllResponseProvider>
+							</LocalDataPhraseProvider>
+						</ComponentLayoutProvider>
+					</WindowLayoutProvider>
+				</WindowDimensionsProvider>
+			</LocalStorageThemeProvider>
+		</DocumentVisibilityProvider>
 	);
 };
 

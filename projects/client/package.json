@@ -33,7 +33,7 @@
 	},
 	"homepage": "https://github.com/messman/tidy#readme",
 	"dependencies": {
-		"@messman/react-common": "^1.2.0",
+		"@messman/react-common": "^1.2.2",
 		"luxon": "^1.24.0",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AllResponse, AllResponseData, deserialize, Info } from 'tidy-shared';
 import { DEFINE } from '@/services/define';
-import { clampPromise, PromiseOutput, useChangeEffect, usePromise } from '@messman/react-common';
+import { clampPromise, PromiseOutput, StalePromiseTimerComponent, StalePromiseTimerOutput, useDocumentVisibility, useRenderDebug, useStalePromiseTimer } from '@messman/react-common';
 import { CONSTANT } from '../constant';
 import { useLocalDataPhrase } from './data-local';
 
@@ -18,30 +18,63 @@ const AllResponseContext = React.createContext<PromiseOutput<AllResponseSuccess>
 
 export const AllResponseProvider: React.FC = (props) => {
 
+	const documentVisibility = useDocumentVisibility();
 	const [localDataPhrase] = useLocalDataPhrase();
+
+	const [currentPromiseLocalDataPhrase, setCurrentPromiseLocalDataPhrase] = React.useState(localDataPhrase);
 
 	const promiseFunc = React.useMemo(() => {
 		return createPromiseFunc(localDataPhrase);
 	}, [localDataPhrase]);
 
-	const promiseState = usePromise({
-		isStarted: true,
-		promiseFunc: promiseFunc
+	const promiseTimer: StalePromiseTimerOutput<AllResponseSuccess> = useStalePromiseTimer({
+		initialAction: StalePromiseTimerComponent.promise,
+		timerTimeout: CONSTANT.dataRefreshTimeout,
+		isTimerTruthy: documentVisibility,
+		timerCallback: () => {
+			console.log('TIMER DONE');
+		},
+		promiseFunc: promiseFunc,
 	});
 
-	useChangeEffect(() => {
-		const keepDataAndError = CONSTANT.clearDataOnNewFetch ? null : undefined;
+	const { timer, promise, lastCompleted } = promiseTimer;
 
-		promiseState.reset({
-			isStarted: true,
-			promiseFunc: createPromiseFunc(localDataPhrase),
-			data: keepDataAndError,
-			error: keepDataAndError
-		});
-	}, [localDataPhrase, promiseFunc]);
+	useRenderDebug('Data', { timer, promise, lastCompleted, localDataPhrase });
+
+	React.useEffect(() => {
+		if (localDataPhrase !== currentPromiseLocalDataPhrase) {
+			setCurrentPromiseLocalDataPhrase(localDataPhrase);
+
+			// Reset
+			const keepDataAndError = CONSTANT.clearDataOnNewFetch ? null : undefined;
+
+			// Stop the timer, start the promise.
+			if (timer.isStarted) {
+				timer.reset({
+					isStarted: false
+				});
+			}
+			promise.reset({
+				isStarted: true,
+				promiseFunc: createPromiseFunc(localDataPhrase),
+				data: keepDataAndError,
+				error: keepDataAndError
+			});
+		}
+		else if (!timer.isStarted && !promise.isStarted) {
+			if (lastCompleted === StalePromiseTimerComponent.timer) {
+				window.location.reload();
+			}
+			else if (!localDataPhrase) {
+				timer.reset({
+					isStarted: true
+				});
+			}
+		}
+	}, [promise, timer, lastCompleted, localDataPhrase, promiseFunc]);
 
 	return (
-		<AllResponseContext.Provider value={promiseState}>
+		<AllResponseContext.Provider value={promiseTimer.promise}>
 			{props.children}
 		</AllResponseContext.Provider>
 	);

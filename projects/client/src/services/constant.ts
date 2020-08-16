@@ -6,7 +6,7 @@ export const CONSTANT = {
 	alertMessages: [] as string[],
 
 	/** Minimum time to wait for fetch response. */
-	fetchMinTimeout: seconds(.5),
+	fetchMinTimeout: seconds(.2),
 	/** Maximum time to wait for fetch response. */
 	fetchMaxTimeout: seconds(20),
 	/** Time before max where an update is shown to the user to reassure them. */
@@ -14,12 +14,10 @@ export const CONSTANT = {
 	/** Minimum time to wait for local data fetch response. */
 	localTestDataMinTimeout: seconds(0),
 	/** Time to wait since last successful fetch before automatically fetching again. */
-	dataRefreshTimeout: minutes(8),
-	/** If we need to data refresh and are coming back from a hidden state, this time acts as a buffer to avoid UI collisions. */
-	dataRefreshVisibilityBuffer: seconds(1),
+	dataRefreshTimeout: minutes(10),
 
-	elementSizeSmallThrottleTimeout: seconds(.1),
-	elementSizeLargeThrottleTimeout: seconds(.2),
+	elementSizeSmallThrottleTimeout: seconds(0),
+	elementSizeLargeThrottleTimeout: seconds(0),
 
 	clearDataOnNewFetch: false,
 

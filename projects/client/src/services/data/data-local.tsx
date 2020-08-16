@@ -13,7 +13,7 @@ export const LocalDataPhraseProvider: React.FC = (props) => {
 
 	const localDataPhraseState = localStorage.useLocalStorage<string | null>(key, (value) => {
 		if (DEFINE.isDevelopment && !!DEFINE.localTestData) {
-			if (value !== undefined && DEFINE.localTestData[value!]) {
+			if (value !== undefined && (value === null || DEFINE.localTestData[value!])) {
 				return value;
 			}
 			return Object.keys(DEFINE.localTestData)[0];
