@@ -18,7 +18,7 @@ export const MockSummary: React.FC<SummaryProps> = (props) => {
 	}
 
 	return (
-		<Area color='lightpink' maxHeight={250}>
+		<Area color='lightpink' maxHeight={180}>
 			<Text>Summary Horizontal</Text>
 		</Area>
 	);

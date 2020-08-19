@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { SunEvent, WeatherStatus } from 'tidy-shared';
-import { edgePaddingValue } from '@/core/style/common';
+import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon } from '@/core/symbol/icon';
@@ -10,8 +10,8 @@ import { TextUnit } from '@/core/symbol/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 import { filterWeather, processWeatherForDisplay } from '@/services/weather/weather-process';
-import { Flex, FlexColumn, FlexRow } from '@messman/react-common';
-import { TimelineBaseProps, TimelineEntryContainer, weatherCutoffHoursFromReference } from '../bar/timeline-bar-common';
+import { Flex, FlexColumn } from '@messman/react-common';
+import { TimelineBaseProps, weatherCutoffHoursFromReference } from '../bar/timeline-bar-common';
 
 interface TimelineWeatherProps extends TimelineBaseProps { }
 
@@ -58,20 +58,13 @@ export const TimelineWeather: StyledFC<TimelineWeatherProps> = (props) => {
 	});
 
 	return (
-		<FlexRow alignItems='center' flex='1 0 auto'>
-			<TimelineWeatherContainer>
+		<FlexColumn flex='1 0 auto' justifyContent='center'>
+			<Flex flex='.7 0 7.5rem'>
 				{weatherEntries}
-			</TimelineWeatherContainer>
-		</FlexRow>
+			</Flex>
+		</FlexColumn>
 	);
 };
-
-const weatherContainerHeight = '8rem';
-const weatherEntriesHeight = '1rem';
-
-const TimelineWeatherContainer = styled(Flex)`
-	height: ${weatherContainerHeight};
-`;
 
 interface TimelineWeatherEntryProps {
 	startTime: DateTime;
@@ -90,40 +83,51 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 
 
 	return (
-		<TimelineEntryContainer alignItems='center' left={left} top={weatherEntriesHeight}>
-			<FlexColumn>
-				<NonBreakingPadding>
-					<Center>
-						<Icon type={icon} defaultColor={iconColor} height={titleHeight} />
-					</Center>
-				</NonBreakingPadding>
-				<NonBreakingPadding>
-					<Center>
-						<Text>
-							{tempText}&deg;
+		<WeatherTimelineEntryContainer justifyContent='space-around' alignItems='center' left={left} >
+			<NonBreakingPadding>
+				<Center>
+					<Icon type={icon} defaultColor={iconColor} height={titleHeight} />
+				</Center>
+			</NonBreakingPadding>
+			<NonBreakingPadding>
+				<Center>
+					<Text>
+						{tempText}&deg;
 					</Text>
-					</Center>
-				</NonBreakingPadding>
-				<NonBreakingPadding>
-					<Center>
-						<Text>
-							<TextUnit text={windText} unit='mph' />
-						</Text>
-						<SmallText>
-							{windDirectionUnit}
-						</SmallText>
-					</Center>
-				</NonBreakingPadding>
-			</FlexColumn>
-		</TimelineEntryContainer>
+				</Center>
+			</NonBreakingPadding>
+			<NonBreakingPadding>
+				<Center>
+					<Text>
+						<TextUnit text={windText} unit='mph' />
+					</Text>
+					<SmallText>
+						{windDirectionUnit}
+					</SmallText>
+				</Center>
+			</NonBreakingPadding>
+		</WeatherTimelineEntryContainer>
 	);
 };
+
+export interface WeatherTimelineEntryContainer {
+	left: number,
+}
+
+export const WeatherTimelineEntryContainer = styled(FlexColumn) <WeatherTimelineEntryContainer>`
+	position: absolute;
+	top: 0;
+	left: ${p => p.left}px;
+	width: 0;
+	height: 100%;
+	padding: ${flowPaddingValue} 0;
+`;
 
 const Center = styled.div`
 	text-align: center;
 `;
 
-const NonBreakingPadding = styled(Flex)`
+const NonBreakingPadding = styled.div`
 	white-space: nowrap;
 	margin: calc(${edgePaddingValue} / 3) 0;
 `;

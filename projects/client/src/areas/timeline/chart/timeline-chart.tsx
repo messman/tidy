@@ -39,11 +39,11 @@ export const TimelineChart: React.FC<TimelineChartProps> = (props) => {
 		outputPaddingBottom: timelineChartPaddingBottom
 	});
 
-	// Use flex 2 1 0, which means "grow 2x as much as siblings, and allow me to shrink too".
+	// Use flex X Y Z, which means "grow X as much as siblings, and allow me to shrink too".
 	// Our ResizeContainer should size from the parent via Flex.
 	return (
 		<>
-			<ResizeContainer ref={ref} flex='3 1 150px'>
+			<ResizeContainer ref={ref} flex='2.5 1 150px'>
 				{tideChart}
 			</ResizeContainer>
 		</>

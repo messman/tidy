@@ -61,9 +61,8 @@ const CurrentTimeLine = styled.div<CurrentTimeLineProps>`
 	left: ${p => p.leftOffset}px;
 	width: 2px;
 	height: 100%;
-	background-color: ${p => p.theme.color.disabled};
+	background-color: ${p => p.theme.color.context};
 	border-radius: 2px;
-	opacity: .7;
 `;
 
 
@@ -73,6 +72,5 @@ const CurrentTimeLineLegend = styled.div<CurrentTimeLineProps>`
 	text-transform: uppercase;
 	right: calc(100% - ${p => p.leftOffset}px);
 	margin-right: ${edgePaddingValue};
-	color: ${p => p.theme.color.disabled};
-	opacity: .7;
+	color: ${p => p.theme.color.context};
 `;

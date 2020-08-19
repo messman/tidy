@@ -20,7 +20,7 @@ interface TimelineBarLineProps {
 	lineWidth: number;
 }
 
-const barLineThickness = 6;
+const barLineThickness = 4;
 
 export const TimelineBarLine = styled.div<TimelineBarLineProps>`
 	position: relative;
