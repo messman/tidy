@@ -139,7 +139,7 @@ const InvalidCenter: React.FC<InvalidCenterProps> = (props) => {
 	return (
 		<InvalidCenterWrapper alignItems='center' onClick={onClick}>
 			<Flex>
-				<Icon type={iconTypes.alert} defaultColor={theme.color.error} height={titleHeight} />
+				<Icon type={iconTypes.alert} fillColor={theme.color.error} height={titleHeight} />
 				<PaddedSubtitle>{firstMessage}</PaddedSubtitle>
 				{otherMessagesText}
 				{clickInstruction}

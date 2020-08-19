@@ -73,7 +73,7 @@ export const Popup: React.FC = (props) => {
 		popupBody = (
 			<FlexColumn alignItems='center' justifyContent='space-evenly'>
 				<PopupBody flex='none' onClick={onClick}>
-					<Icon type={iconTypes.alert} defaultColor={alertColor} height={titleHeight} />
+					<Icon type={iconTypes.alert} fillColor={alertColor} height={titleHeight} />
 					<PaddedSubtitle>{title}</PaddedSubtitle>
 					<PaddedText>{text}</PaddedText>
 					<SmallText>{buttonText}</SmallText>

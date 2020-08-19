@@ -275,7 +275,7 @@ export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = (pr
 				Predicted {firstRender} and {secondRender}.
 			</TextPara>
 			<TextPara>
-				{dailyWeatherDisplay.longStatusText}.
+				Predicted weather: {dailyWeatherDisplay.longStatusText}.
 			</TextPara>
 		</Margin>
 	);

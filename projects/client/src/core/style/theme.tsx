@@ -63,9 +63,9 @@ const darkTheme: Theme = {
 		tide: '#145C9E',
 		sun: '#DEB317',
 		weather: '#1282A2',
-		context: '#A63446',
+		context: '#7E1D2D',
 		warning: '#DEB317',
-		error: '#A63446',
+		error: '#7E1D2D',
 		backgroundTimelineDay: '#111111',
 		weatherIconGray: '#B3B3B3'
 	},
@@ -85,6 +85,8 @@ const lightTheme: Theme = {
 		backgroundLightest: '#DDDDDD',
 		textAndIcon: '#1F1F1F',
 		disabled: '#737373',
+		context: '#D94059',
+		error: '#D94059',
 		backgroundTimelineDay: '#F0F0F0',
 		weatherIconGray: '#A8A8A8'
 	}
