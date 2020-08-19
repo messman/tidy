@@ -112,8 +112,11 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 				<FlexRow>
 					<FlexRowMargin alignItems='center'>
 						<TextInline>
-							{maxTempText}&deg;/{minTempText}&deg;
+							{maxTempText}&deg;
 						</TextInline>
+						<DisabledTextInline>
+							{minTempText}&deg;
+						</DisabledTextInline>
 					</FlexRowMargin>
 					<FlexRowMargin alignItems='center' flex='none'>
 
@@ -137,6 +140,11 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 		</div>
 	);
 };
+
+const DisabledTextInline = styled(TextInline)`
+	color: ${p => p.theme.color.disabled};
+	padding-left: ${edgePaddingValue};
+`;
 
 const FlexRowMargin = styled(FlexRow)`
 	display: flex;
@@ -251,8 +259,8 @@ export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = (pr
 	const lowestTide = day.tides.lowest;
 	const highestTide = day.tides.highest;
 
-	const lowestRender = <>lowest tide of the day at <TimeTextUnit dateTime={lowestTide.time} /> (<TideHeightTextUnit height={lowestTide.height} />)</>;
-	const highestRender = <>highest tide of the day at <TimeTextUnit dateTime={highestTide.time} /> (<TideHeightTextUnit height={highestTide.height} />)</>;
+	const lowestRender = <>lowest tide of the day at <TimeTextUnit dateTime={lowestTide.time} /> <NonBreakingSpan>(<TideHeightTextUnit height={lowestTide.height} />)</NonBreakingSpan></>;
+	const highestRender = <>highest tide of the day at <TimeTextUnit dateTime={highestTide.time} /> <NonBreakingSpan>(<TideHeightTextUnit height={highestTide.height} />)</NonBreakingSpan></>;
 
 	const lowestIsBeforeHighest = lowestTide.time < highestTide.time;
 	const firstRender = lowestIsBeforeHighest ? lowestRender : highestRender;
@@ -272,3 +280,7 @@ export const ForecastEntrySecondary: React.FC<ForecastEntrySecondaryProps> = (pr
 		</Margin>
 	);
 };
+
+const NonBreakingSpan = styled.span`
+	white-space: nowrap;
+`;
