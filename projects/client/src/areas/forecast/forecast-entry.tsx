@@ -3,7 +3,6 @@ import * as React from 'react';
 import { TideEvent } from 'tidy-shared';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
-import { useCurrentTheme } from '@/core/style/theme';
 import { SmallText, subtitleHeight, TextInline, TextPara } from '@/core/symbol/text';
 import { TimeDurationTextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
 import { useTideChart } from '@/core/tide/tide-chart';
@@ -27,7 +26,6 @@ const daylightTideLeniency = minutes(30);
 
 /** Primary entry for a day's forecast. Shows the temperature info, daylight time, a center tide chart, and tide highs/lows. */
 export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props) => {
-	const theme = useCurrentTheme();
 	const { day, dailyWeatherDisplay, containerWidth, absoluteTideHeightRange, showFullDay } = props;
 
 	let tides = day.tides;
@@ -119,7 +117,7 @@ export const ForecastEntryPrimary: React.FC<ForecastEntryPrimaryProps> = (props)
 					</FlexRowMargin>
 					<FlexRowMargin alignItems='center' flex='none'>
 
-						<SpacedIcon type={icon} fill={theme.color.weather} height={subtitleHeight} spacing='default' />
+						<SpacedIcon type={icon} height={subtitleHeight} spacing='default' />
 						<TextInline>
 							{shortStatusText}
 						</TextInline>

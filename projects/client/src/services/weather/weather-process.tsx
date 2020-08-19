@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { DailyWeather, WeatherStatus, WeatherStatusType, weatherStatusTypeDescription, WindDirection } from 'tidy-shared';
-import { iconTypes, SVGIconType } from '@/core/symbol/icon';
+import { IconType, iconTypes } from '@/core/symbol/icon';
 
 export function filterWeather(statuses: WeatherStatus[], referenceTime: DateTime, cutOffHoursFromReference: number, cutoffDate: DateTime): WeatherStatus[] {
 	// Filter out status if it's too close to our reference time or after our cutoff.
@@ -20,7 +20,7 @@ export interface WeatherDisplay {
 	tempText: string;
 	windText: string;
 	windDirectionUnit: string;
-	icon: SVGIconType;
+	icon: IconType;
 	shortStatusText: string;
 	pressureText: string;
 }
@@ -50,7 +50,7 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 export interface DailyWeatherDisplay {
 	minTempText: string;
 	maxTempText: string;
-	icon: SVGIconType;
+	icon: IconType;
 	shortStatusText: string;
 	longStatusText: string;
 }
@@ -76,8 +76,8 @@ export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): Daily
 }
 
 export interface WeatherStatusIcon {
-	day: SVGIconType,
-	night: SVGIconType;
+	day: IconType;
+	night: IconType;
 }
 export type WeatherStatusIconMap = Record<keyof typeof WeatherStatusType, WeatherStatusIcon>;
 export const weatherStatusTypeIcon: WeatherStatusIconMap = {

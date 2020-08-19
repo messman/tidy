@@ -52,7 +52,7 @@ export const SummaryTitle: React.FC<SummaryTitleProps> = (props) => {
 		text = `It's ${nextTideName} tide.`;
 	}
 
-	const icon = iconType ? <SpacedIcon type={iconType} fill={theme.color.tide} height={subtitleHeight} spacing='close' spaceDirection='left' /> : null;
+	const icon = iconType ? <SpacedIcon type={iconType} defaultColor={theme.color.tide} height={subtitleHeight} spacing='close' spaceDirection='left' /> : null;
 
 	let expandedText: JSX.Element | null = null;
 	if (props.showExpandedText) {

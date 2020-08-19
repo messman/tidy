@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { styled, StyledFC } from '@/core/style/styled';
+import { Theme, useCurrentTheme } from '../style/theme';
 
 export type SVGIconType = React.FC<React.SVGAttributes<SVGElement>>;
 
-const Sunset = require('@/static/icons/sunset.svg').default as SVGIconType;
-const Sunrise = require('@/static/icons/sunrise.svg').default as SVGIconType;
 const Sun = require('@/static/icons/sun.svg').default as SVGIconType;
 const Moon = require('@/static/icons/moon.svg').default as SVGIconType;
 const CloudySun = require('@/static/icons/cloudy-sun.svg').default as SVGIconType;
@@ -38,31 +37,40 @@ const ArrowDown = require('@/static/icons/arrow-down.svg').default as SVGIconTyp
 const ArrowUp = require('@/static/icons/arrow-up.svg').default as SVGIconType;
 const Pressure = require('@/static/icons/pressure.svg').default as SVGIconType;
 
+export type DefaultThemeColorPicker = (t: Theme) => string;
+
+function defaultTo(icon: SVGIconType, colorPicker: DefaultThemeColorPicker): [SVGIconType, DefaultThemeColorPicker] {
+	return [icon, colorPicker];
+}
+
+const defaultGray: DefaultThemeColorPicker = (t: Theme) => t.color.weatherIconGray;
+
+export type IconType = SVGIconType | [SVGIconType, DefaultThemeColorPicker];
+
 export const iconTypes = {
-	sunset: Sunset,
-	sunrise: Sunrise,
 	sun: Sun,
-	moon: Moon,
-	cloudySun: CloudySun,
-	cloudyMoon: CloudyMoon,
-	cloud: Cloud,
-	clouds: Clouds,
-	wind: Wind,
-	cloudyWind: CloudyWind,
-	snowflake: Snowflake,
-	hail: Hail,
-	rain: Rain,
-	rainSun: RainSun,
-	rainMoon: RainMoon,
-	lightning: Lightning,
-	lightningSun: LightningSun,
-	lightningMoon: LightningMoon,
-	fog: Fog,
+	moon: defaultTo(Moon, defaultGray),
+	cloudySun: defaultTo(CloudySun, defaultGray),
+	cloudyMoon: defaultTo(CloudyMoon, defaultGray),
+	cloud: defaultTo(Cloud, defaultGray),
+	clouds: defaultTo(Clouds, defaultGray),
+	wind: defaultTo(Wind, defaultGray),
+	cloudyWind: defaultTo(CloudyWind, defaultGray),
+	snowflake: defaultTo(Snowflake, defaultGray),
+	hail: defaultTo(Hail, defaultGray),
+	rain: defaultTo(Rain, defaultGray),
+	rainSun: defaultTo(RainSun, defaultGray),
+	rainMoon: defaultTo(RainMoon, defaultGray),
+	lightning: defaultTo(Lightning, defaultGray),
+	lightningSun: defaultTo(LightningSun, defaultGray),
+	lightningMoon: defaultTo(LightningMoon, defaultGray),
+	fog: defaultTo(Fog, defaultGray),
 	weatherAlert: WeatherAlert,
 	question: Question,
 	temperatureHot: TemperatureHot,
 	temperature: Temperature,
 	temperatureCold: TemperatureCold,
+
 	alert: Alert,
 	calendar: Calendar,
 	clipboard: Clipboard,
@@ -76,25 +84,47 @@ export const iconTypes = {
 };
 
 export interface IconProps {
-	type: SVGIconType,
-	fill?: string,
+	type: IconType,
+	/** If set, overrides the default text icon color for icons that allow it. */
+	defaultColor?: string;
+	/** If set, overrides all colors in the icon. */
+	fillColor?: string;
 	width?: string,
 	height?: string;
 }
 
 export const Icon: StyledFC<IconProps> = (props) => {
 
-	// Get the width and height props separately. If we use spread, 
-	const { type, fill, width, height } = props;
+	/*
+		Fill and color:
+		SVGs are exported from Sketch. We want the icons to have multiple colors, where one of those colors is dynamic
+		(can be changed by CSS). If we used CSS Fill, it would change all our multiple colors; so instead, we use the 'currentColor'.
+		During build, we use the replaceAttrValues option of svgr (https://github.com/gregberge/svgr/issues/163) to replace all 
+		'#000' colors with 'currentColor'. Then, here, we set the currentColor via CSS 'color'.
+		So in summary: Fill will override all the colors coming from Sketch; color will just set the one color we want to change.
+	*/
+
+	const theme = useCurrentTheme();
+	const { type, defaultColor, fillColor, width, height } = props;
+
+	let color = defaultColor;
+
+	let SVGIcon: SVGIconType = null!;
+	if (Array.isArray(type)) {
+		const [wrappedType, defaultColor] = type;
+		SVGIcon = wrappedType;
+		color = defaultColor(theme) || color;
+	}
+	else {
+		SVGIcon = type;
+	}
+
 	// Note - Safari SVG does not accept 'rem' width/height - so use percent and scale using wrapper.
 	const setValue = !!width ? 'width' : 'height';
 	const iconProp = { [setValue]: '100%' };
 
-	const SVGIcon = type;
-
-
 	return (
-		<SVGWrapper className={props.className} svgFill={fill} wrapperWidth={width} wrapperHeight={height}>
+		<SVGWrapper className={props.className} svgColor={color} svgFill={fillColor} wrapperWidth={width} wrapperHeight={height}>
 			<SVGIcon {...iconProp} />
 		</SVGWrapper>
 	);
@@ -103,6 +133,7 @@ export const Icon: StyledFC<IconProps> = (props) => {
 interface SVGWrapperProps {
 	wrapperWidth?: string,
 	wrapperHeight?: string,
+	svgColor?: string;
 	svgFill?: string;
 }
 
@@ -112,6 +143,9 @@ const SVGWrapper = styled.span<SVGWrapperProps>`
 	height: ${p => p.wrapperHeight || 'unset'}; 
 
 	svg, svg path {
-		fill: ${p => (p.svgFill || p.theme.color.textAndIcon)};
+		color: ${p => (p.svgColor || p.theme.color.textAndIcon)};
+		${p => p.svgFill && ({
+		fill: p.svgFill!
+	})}
 	}
 `;

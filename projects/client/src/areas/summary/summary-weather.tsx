@@ -39,7 +39,7 @@ const SummaryWeatherPrimary: React.FC = () => {
 	const iconHeight = titleHeight;
 
 	const useDayIcon = !all.current.sun.next.isSunrise;
-	const { tempText, windText, windDirectionUnit, icon, pressureText } = processWeatherForDisplay(all.current.weather, useDayIcon);
+	const { tempText, windText, windDirectionUnit, icon, shortStatusText, pressureText } = processWeatherForDisplay(all.current.weather, useDayIcon);
 
 	// NOTE - have to use flex='0' here, even though we don't rely on it anywhere else. 
 	return (
@@ -47,27 +47,27 @@ const SummaryWeatherPrimary: React.FC = () => {
 			<Flex flex='0'>
 				<TextInline>
 					<PaddedFlexRow alignItems='center'>
-						<SpacedIcon type={iconTypes.temperature} fill={iconColor} height={iconHeight} />
+						<SpacedIcon type={iconTypes.temperature} defaultColor={iconColor} height={iconHeight} />
 						{tempText}&deg;
 					</PaddedFlexRow>
 				</TextInline>
 				<PushedDownTextInline>
 					<PaddedFlexRow alignItems='center'>
-						<SpacedIcon type={icon} fill={iconColor} height={iconHeight} />
-						{'Few Clouds'}
+						<SpacedIcon type={icon} height={iconHeight} />
+						{shortStatusText}
 					</PaddedFlexRow>
 				</PushedDownTextInline>
 			</Flex>
 			<Flex flex='0'>
 				<TextInline>
 					<FlexRow alignItems='center'>
-						<SpacedIcon type={iconTypes.wind} fill={iconColor} height={iconHeight} />
+						<SpacedIcon type={iconTypes.wind} fillColor={iconColor} height={iconHeight} />
 						<TextUnit text={windText} unit={`mph ${windDirectionUnit}`} />
 					</FlexRow>
 				</TextInline>
 				<PushedDownTextInline>
 					<FlexRow alignItems='center'>
-						<SpacedIcon type={iconTypes.pressure} fill={iconColor} height={iconHeight} />
+						<SpacedIcon type={iconTypes.pressure} defaultColor={iconColor} height={iconHeight} />
 						<TextUnit text={pressureText} unit='mb' space={3} />
 					</FlexRow>
 				</PushedDownTextInline>

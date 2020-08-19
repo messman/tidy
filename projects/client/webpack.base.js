@@ -62,6 +62,8 @@ const baseWebpackOptions = {
 					{
 						loader: '@svgr/webpack',
 						options: {
+							// Allows us to customize the icons using 'color'. See icon code.
+							replaceAttrValues: { '#000': 'currentColor' },
 							dimensions: false,
 							svgoConfig: {
 								plugins: {

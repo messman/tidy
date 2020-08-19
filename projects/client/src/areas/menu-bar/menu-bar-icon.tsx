@@ -32,7 +32,7 @@ export const MenuBarIcon: React.FC<MenuBarIconProps> = (props) => {
 	return (
 		<IconPadding>
 			<Clickable onClick={props.onClick} title={props.title} disabled={props.isDisabled}>
-				<Icon type={props.type} fill={fillColor} height={subtitleHeight} />
+				<Icon type={props.type} defaultColor={fillColor} height={subtitleHeight} />
 				{title}
 			</Clickable>
 		</IconPadding>

@@ -43,6 +43,9 @@ export interface Theme {
 
 		/** Color used specifically for separation of timeline days */
 		backgroundTimelineDay: string,
+
+		/** Color used specifically for grays in weather icons to match better with backgrounds. */
+		weatherIconGray: string,
 	};
 	fontFamily: string;
 }
@@ -58,12 +61,13 @@ const darkTheme: Theme = {
 		link: '#2575BF',
 		disabled: '#6B6B6B',
 		tide: '#145C9E',
-		sun: '#CBA415',
+		sun: '#DEB317',
 		weather: '#1282A2',
 		context: '#A63446',
-		warning: '#CBA415',
+		warning: '#DEB317',
 		error: '#A63446',
-		backgroundTimelineDay: '#111111'
+		backgroundTimelineDay: '#111111',
+		weatherIconGray: '#B3B3B3'
 	},
 	fontFamily: `'Work Sans', sans-serif;`
 };
@@ -82,6 +86,7 @@ const lightTheme: Theme = {
 		textAndIcon: '#1F1F1F',
 		disabled: '#737373',
 		backgroundTimelineDay: '#F0F0F0',
+		weatherIconGray: '#A8A8A8'
 	}
 };
 

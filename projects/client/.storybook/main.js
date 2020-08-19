@@ -33,6 +33,8 @@ module.exports = {
 					{
 						loader: '@svgr/webpack',
 						options: {
+							// Allows us to customize the icons using 'color'. See icon code.
+							replaceAttrValues: { '#000': 'currentColor' },
 							dimensions: false,
 							svgoConfig: {
 								plugins: {
@@ -46,7 +48,7 @@ module.exports = {
 		config.resolve.extensions.push('.ts', '.tsx');
 
 		// Taken from regular webpack build
-		config.resolve.alias['@'] = path.resolve(__dirname, '../src')
+		config.resolve.alias['@'] = path.resolve(__dirname, '../src');
 
 		config.plugins.push(new webpack.DefinePlugin({ __DEFINE__: DEFINE }));
 

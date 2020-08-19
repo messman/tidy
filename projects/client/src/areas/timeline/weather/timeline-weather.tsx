@@ -88,12 +88,13 @@ const TimelineWeatherEntry: React.FC<TimelineWeatherEntryProps> = (props) => {
 
 	const { tempText, windText, windDirectionUnit, icon } = processWeatherForDisplay(weatherStatus, useDayIcon);
 
+
 	return (
 		<TimelineEntryContainer alignItems='center' left={left} top={weatherEntriesHeight}>
 			<FlexColumn>
 				<NonBreakingPadding>
 					<Center>
-						<Icon type={icon} fill={iconColor} height={titleHeight} />
+						<Icon type={icon} defaultColor={iconColor} height={titleHeight} />
 					</Center>
 				</NonBreakingPadding>
 				<NonBreakingPadding>
