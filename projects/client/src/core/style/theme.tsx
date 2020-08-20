@@ -60,14 +60,16 @@ const darkTheme: Theme = {
 		textAndIcon: '#C0C0C0',
 		link: '#2575BF',
 		disabled: '#6B6B6B',
-		tide: '#145C9E',
-		sun: '#DEB317',
-		weather: '#1282A2',
+
+		tide: '#346EA4',
+		sun: '#C8A218',
+		weather: '#32938D',
+
 		context: '#434343',
 		warning: '#DEB317',
 		error: '#7E1D2D',
 		backgroundTimelineDay: '#111111',
-		weatherIconGray: '#B3B3B3'
+		weatherIconGray: '#DEDEDE'
 	},
 	fontFamily: `'Work Sans', sans-serif;`
 };
@@ -81,14 +83,14 @@ const lightTheme: Theme = {
 
 		// Overrides
 		background: '#F7F7F7',
-		backgroundLighter: '#EFEFEF',
+		backgroundLighter: '#ECECEC',
 		backgroundLightest: '#DDDDDD',
 		textAndIcon: '#1F1F1F',
 		disabled: '#737373',
 		context: '#C4C4C4',
 		error: '#E34E66',
-		backgroundTimelineDay: '#F0F0F0',
-		weatherIconGray: '#A8A8A8'
+		backgroundTimelineDay: '#EFEFEF',
+		weatherIconGray: '#BBBBBB'
 	}
 };
 
