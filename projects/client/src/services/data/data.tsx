@@ -29,7 +29,7 @@ export const AllResponseProvider: React.FC = (props) => {
 
 	const promiseTimer: StalePromiseTimerOutput<AllResponseSuccess> = useStalePromiseTimer({
 		initialAction: StalePromiseTimerComponent.promise,
-		timerTimeout: CONSTANT.dataRefreshTimeout,
+		timerTimeout: CONSTANT.appRefreshTimeout,
 		isTimerTruthy: documentVisibility,
 		timerCallback: () => {
 			console.log('TIMER DONE');

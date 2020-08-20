@@ -28,7 +28,7 @@ app.use(function (_request: Request, response: Response, _next: NextFunction) {
 
 // Error handler
 app.use(function (error: Error, _request: Request, response: Response, _next: NextFunction) {
-	console.error(error.stack);
+	console.error(error);
 	response.status(500).send('Server Error');
 });
 

@@ -1,10 +1,8 @@
-import { Application, NextFunction, Request, Response } from 'express';
-import { createWellsConfiguration, getAllForConfiguration } from 'tidy-server';
+import { Application, Request, Response } from 'express';
+import { APIConfiguration, createWellsConfiguration, getAllForConfiguration } from 'tidy-server';
 import { AllResponse, createReplacer } from 'tidy-shared';
 import { processEnv } from './env';
-
-const isCaching: boolean = true;
-const cacheExpirationMilliseconds: number = 1000 * 60 * 2; // 2 minutes
+import { createResponseMemory, ResponseMemory, ResponseMemoryStats } from './response-memory';
 
 interface TestEnv {
 	OpenWeatherDebugAPIKey: string;
@@ -24,16 +22,8 @@ function log(...args: any[]): void {
 	console.log('>', ...args);
 }
 
-export function configureApp(app: Application): void {
-	const stats: StatsResponse = {
-		totalCacheBreaks: 0,
-		recentCacheHits: 0,
-		totalCacheHits: 0,
-		totalHits: 0
-	};
 
-	let last: AllResponse | null = null;
-	let cacheExpirationTime: number = -1;
+export function configureApp(app: Application): void {
 
 	/*
 		As discussed in tidy-shared, Dates are serialized to strings and not deserialized back to Dates.
@@ -53,69 +43,66 @@ export function configureApp(app: Application): void {
 	*/
 	app.set('json replacer', createReplacer());
 
-	app.get('/latest', async (_: Request, response: Response<AllResponse>, next: NextFunction) => {
-		stats.totalHits++;
-		if (isCaching) {
-			const now = Date.now();
+	/*
+		Versioning and caching
+		The client-side application is set up to refresh itself after a set time (e.g., 10 minutes).
+		When the app refreshes, it will download the latest JS with the latest versioned API URL.
+		For the time before the app refresh but after the new server is published, we need to still support the older API.
+		The older API will not use cached responses.
+	*/
 
-			// Check in cache.
-			if (last && (now < cacheExpirationTime)) {
-				stats.recentCacheHits++;
-				stats.totalCacheHits++;
+	const previousMemory: ResponseMemory<AllResponse> = createResponseMemory({
+		isCaching: true,
+		expiration: minutes(2)
+	});
 
-				log(`Latest cached - ${cacheExpirationTime - now}ms remaining`);
-				return response.json(last);
-			}
-			else {
-				stats.totalCacheBreaks++;
-				stats.recentCacheHits = 0;
-			}
+	const memory: ResponseMemory<AllResponse> = createResponseMemory({
+		isCaching: true,
+		expiration: minutes(2)
+	});
+
+	// Previous
+	app.get('/latest', async (_: Request, response: Response<AllResponse>) => {
+
+		const hit = previousMemory.registerHit();
+		if (hit.cacheItemValue) {
+			log(`Latest (previous) cached - ${hit.timeRemainingInCache}ms remaining`);
+			return response.json(hit.cacheItemValue);
 		}
 
-		let newest: AllResponse = null!;
-		let hasErrors = false;
-		try {
-			newest = await getResponse();
-			hasErrors = !!newest.error;
-			if (hasErrors) {
-				const allErrors = newest.error!.errors.map((issue) => {
-					return issue.dev?.message || issue.userMessage;
-				}).join(' | ');
-				log('Errors:', allErrors);
-			}
-			else {
-				last = newest;
-			}
-		}
-		catch (e) {
-			console.error(e);
-			return next(new Error('Error retrieving data.'));
-		}
-		cacheExpirationTime = Date.now() + cacheExpirationMilliseconds;
+		const configuration = createWellsConfiguration();
+		configuration.configuration.time.shortTermDataFetchHours = 48;
+		configuration.configuration.weather.hoursGapBetweenWeatherData = 2;
 
-		const errorText = hasErrors ? ' with errors' : '';
-		const cachingText = !hasErrors && isCaching ? ` caching for ${cacheExpirationMilliseconds}ms` : ' not caching';
-		log(`Latest${errorText} -${cachingText}`);
-
+		const newest = await getResponse(configuration, 'tidy-server-previous', previousMemory);
 		return response.json(newest);
 	});
 
-	app.get('/last', async (_: Request, response: Response<LastResponse>) => {
-		if (!last) {
-			return response.json({
-				allResponse: null,
-				cacheTimeRemaining: 0
-			});
+	// CURRENT
+	app.get('/v3.5.0/latest', async (_: Request, response: Response<AllResponse>) => {
+
+		const hit = memory.registerHit();
+		if (hit.cacheItemValue) {
+			log(`Latest cached - ${hit.timeRemainingInCache}ms remaining`);
+			return response.json(hit.cacheItemValue);
 		}
 
-		return response.json({
-			allResponse: last,
-			cacheTimeRemaining: Date.now() - cacheExpirationTime
-		});
+		const newest = await getResponse(createWellsConfiguration(), 'tidy-server', memory);
+		return response.json(newest);
 	});
 
-	app.get('/stats', async (_: Request, res: Response<StatsResponse>) => {
-		return res.json(stats);
+
+	app.get('/last', async (_: Request, response: Response<AllResponse | null>) => {
+		const hit = memory.registerHit();
+		if (hit.cacheItemValue) {
+			log(`Last cached - ${hit.timeRemainingInCache}ms remaining`);
+			return response.json(hit.cacheItemValue);
+		}
+		return response.json(null);
+	});
+
+	app.get('/stats', async (_: Request, res: Response<ResponseMemoryStats>) => {
+		return res.json(memory.stats);
 	});
 
 	app.get('/', async (_: Request, res: Response) => {
@@ -123,12 +110,11 @@ export function configureApp(app: Application): void {
 	});
 }
 
-async function getResponse(): Promise<AllResponse> {
-	const configuration = createWellsConfiguration();
-	return await getAllForConfiguration(configuration, {
+async function getResponse(configuration: APIConfiguration, logPrefix: string, memory: ResponseMemory<AllResponse>): Promise<AllResponse> {
+	const response = await getAllForConfiguration(configuration, {
 		logging: {
 			isActive: true,
-			prefix: 'tidy-server'
+			prefix: logPrefix
 		},
 		data: {
 			seed: null
@@ -137,16 +123,26 @@ async function getResponse(): Promise<AllResponse> {
 			weather: openWeatherDebugAPIKey
 		}
 	});
+
+	if (!!response.error) {
+		const allErrors = response.error!.errors.map((issue) => {
+			return issue.dev?.message || issue.userMessage;
+		}).join(' | ');
+		log('Errors:', allErrors);
+		memory.setCacheItemValue(null);
+		log('Returning with errors - not caching');
+	}
+	else {
+		memory.setCacheItemValue(response);
+		log(memory.isCaching ? `Returning and caching for ${memory.cacheExpiration}ms` : 'Returning - not caching');
+	}
+	return response;
 }
 
-interface LastResponse {
-	allResponse: AllResponse | null,
-	cacheTimeRemaining: number;
+function seconds(seconds: number): number {
+	return seconds * 1000;
 }
 
-interface StatsResponse {
-	totalCacheBreaks: number,
-	recentCacheHits: number,
-	totalCacheHits: number,
-	totalHits: number,
+function minutes(minutes: number): number {
+	return seconds(minutes * 60);
 }

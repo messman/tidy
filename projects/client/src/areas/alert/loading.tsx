@@ -46,8 +46,8 @@ export const Loading: React.FC<LoadingProps> = (props) => {
 	// If the application set a pop-up...
 	if (isOverlayActive) {
 
-		const { tide, sun, weather, context } = theme.color;
-		const colorOrder = [tide, sun, weather, context];
+		const { tide, sun, weather } = theme.color;
+		const colorOrder = [tide, sun, weather];
 		const loadingDots = colorOrder.map((color, i) => {
 
 			const invertedIndex = (colorOrder.length - 1) - i;

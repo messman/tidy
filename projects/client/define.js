@@ -18,10 +18,12 @@ module.exports = async function getDefine(isDevelopment) {
 		fetchUrl: JSON.stringify(null),
 	};
 
+	let fetchUrlBase = null;
+
 	if (isDevelopment) {
 		const tidyServer = require('tidy-server');
 		const tidyShared = require('tidy-shared');
-		DEFINE.fetchUrl = JSON.stringify('http://192.168.86.40:8000/latest');
+		fetchUrlBase = 'http://192.168.86.40:8000';
 
 		/*
 			Below is code to create test data right now as part of the build process.
@@ -45,8 +47,12 @@ module.exports = async function getDefine(isDevelopment) {
 		console.log(`Done adding local test data`);
 	}
 	else {
-		DEFINE.fetchUrl = JSON.stringify('https://agm-tidy-server.herokuapp.com/latest');
+		fetchUrlBase = 'https://agm-tidy-server.herokuapp.com';
 	}
+
+	// Version of the server API to use.
+	const serverVersion = 'v3.5.0';
+	DEFINE.fetchUrl = JSON.stringify(`${fetchUrlBase}/${serverVersion}/latest`);
 
 	return DEFINE;
 };

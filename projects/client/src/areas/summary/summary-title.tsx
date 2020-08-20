@@ -60,7 +60,7 @@ export const SummaryTitle: React.FC<SummaryTitleProps> = (props) => {
 
 		expandedText = (
 			<Text>
-				Wells, Maine | <TimeTextUnit dateTime={info.referenceTime} />
+				Wells, Maine&nbsp;&nbsp;<TimeTextUnit dateTime={info.referenceTime} />
 			</Text>
 		);
 	}

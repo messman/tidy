@@ -13,8 +13,8 @@ export const CONSTANT = {
 	fetchStillWaitingTimeout: seconds(10),
 	/** Minimum time to wait for local data fetch response. */
 	localTestDataMinTimeout: seconds(0),
-	/** Time to wait since last successful fetch before automatically fetching again. */
-	dataRefreshTimeout: minutes(10),
+	/** Time to wait since last successful fetch before either fetching again or restarting the application. */
+	appRefreshTimeout: minutes(10),
 
 	elementSizeSmallThrottleTimeout: seconds(0),
 	elementSizeLargeThrottleTimeout: seconds(0),
