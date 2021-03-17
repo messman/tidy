@@ -14,6 +14,7 @@ module.exports = async () => {
 		output: {
 			// https://webpack.js.org/guides/caching/
 			filename: '[name].[contenthash].js',
+			path: path.resolve(__dirname, '../../docs') // GitHub Pages
 		},
 
 		optimization: {

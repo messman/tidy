@@ -1,11 +1,10 @@
 {
 	"name": "tidy-server",
-	"version": "3.5.0",
+	"version": "3.6.0",
 	"description": "Server-side code for tidy.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"link": "npm link tidy-shared",
 		"build": "ts-webpack-builder --isDevelopmentForDebug",
 		"build-production": "ts-webpack-builder --isDevelopment=false",
 		"build-test": "npm run build && npm run test",
@@ -18,20 +17,21 @@
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"peerDependencies": {
-		"luxon": "^1.24.1"
+		"luxon": "^1.26.0"
 	},
 	"dependencies": {
-		"node-fetch": "^2.6.0",
+		"tidy-shared": "file:../shared",
+		"node-fetch": "^2.6.1",
 		"seedrandom": "^3.0.5"
 	},
 	"devDependencies": {
-		"@messman/ts-webpack-builder": "^1.5.2",
-		"@types/luxon": "^1.24.3",
-		"@types/node": "^12.12.54",
-		"@types/node-fetch": "^2.5.6",
-		"@types/seedrandom": "^2.4.28",
-		"luxon": "^1.24.1",
-		"typescript": "^3.9.7"
+		"@messman/ts-webpack-builder": "^2.0.1",
+		"@types/luxon": "^1.26.2",
+		"@types/node": "^14.14.34",
+		"@types/node-fetch": "^2.5.8",
+		"@types/seedrandom": "^3.0.0",
+		"luxon": "^1.26.0",
+		"typescript": "^4.2.3"
 	},
 	"repository": {
 		"type": "git",

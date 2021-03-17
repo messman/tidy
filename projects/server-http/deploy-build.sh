@@ -17,6 +17,7 @@ echo $SHARED_PATH
 # Build server library
 echo 'Build Server Library'
 cd ../server
+npm uninstall tidy-shared # Remove the file link
 npm install
 npm install ../shared/$SHARED_PATH --no-save
 npm run build-production
@@ -26,6 +27,7 @@ echo $SERVER_PATH
 # Install shared and server into server-http
 echo 'Install Libraries'
 cd ../server-http
+npm uninstall tidy-shared tidy-server # Remove the file links
 npm install ../shared/$SHARED_PATH ../server/$SERVER_PATH --no-save
 
 # Build

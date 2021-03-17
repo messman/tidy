@@ -70,7 +70,10 @@ The projects are:
 
 I don't intend to publish any of these as packages. They are bound together using `npm`'s linking tools, and built with a personal `ts-webpack-builder` project that abstracts common configuration for TypeScript and Webpack libraries.
 
-So right now, you probably can't build the project because `ts-webpack-builder` is not easily to you.
+## Deploy
+
+Deployment for the server is currently set up for Heroku. See the root `package.json`.
+Deployment for the client is currently set up for GitHub Pages. The production build of the client outputs to the `docs` directory. Custom domain is set up through CloudFlare.
 
 ## Tech Challenges
 
@@ -82,9 +85,9 @@ Eventually, I settled on `npm link`, but there were some problems I encountered:
 
 - Every time you `npm install`, you must re-link your projects (with a command like `npm link tidy-shared && npm link tidy-server`), which gets old.
 - Sometimes I run into issues with VSCode's ability to detect the symlink folders and provide accurate TypeScript typings.
-- It annoys me that there's no reference to the other packages in the `package.json` file. 
+- It annoys me that there's no explicit reference to the other packages in the `package.json` file. 
 
-Enter `npm install [file]`, which at least solves one of those issues.
+I recently changed to using the explicit `"dep": "file:../dep"` relative file path install feature of `package.json` instead. With this pattern, the relative dependency is not deleted on installs. In production, however, we don't want to simply install the relative dependency - we want to use the production-bundled dependency. To manage this, we change the Heroku deploy build script to first **uninstall** the relative dependency to remove it from `package.json`, then run the install.
 
 ### Dependencies
 

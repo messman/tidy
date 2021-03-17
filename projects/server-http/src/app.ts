@@ -51,31 +51,9 @@ export function configureApp(app: Application): void {
 		The older API will not use cached responses.
 	*/
 
-	const previousMemory: ResponseMemory<AllResponse> = createResponseMemory({
-		isCaching: true,
-		expiration: minutes(2)
-	});
-
 	const memory: ResponseMemory<AllResponse> = createResponseMemory({
 		isCaching: true,
 		expiration: minutes(2)
-	});
-
-	// Previous
-	app.get('/latest', async (_: Request, response: Response<AllResponse>) => {
-
-		const hit = previousMemory.registerHit();
-		if (hit.cacheItemValue) {
-			log(`Latest (previous) cached - ${hit.timeRemainingInCache}ms remaining`);
-			return response.json(hit.cacheItemValue);
-		}
-
-		const configuration = createWellsConfiguration();
-		configuration.configuration.time.shortTermDataFetchHours = 48;
-		configuration.configuration.weather.hoursGapBetweenWeatherData = 2;
-
-		const newest = await getResponse(configuration, 'tidy-server-previous', previousMemory);
-		return response.json(newest);
 	});
 
 	// CURRENT
@@ -90,7 +68,6 @@ export function configureApp(app: Application): void {
 		const newest = await getResponse(createWellsConfiguration(), 'tidy-server', memory);
 		return response.json(newest);
 	});
-
 
 	app.get('/last', async (_: Request, response: Response<AllResponse | null>) => {
 		const hit = memory.registerHit();

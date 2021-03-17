@@ -31,9 +31,6 @@ export const AllResponseProvider: React.FC = (props) => {
 		initialAction: StalePromiseTimerComponent.promise,
 		timerTimeout: CONSTANT.appRefreshTimeout,
 		isTimerTruthy: documentVisibility,
-		timerCallback: () => {
-			console.log('TIMER DONE');
-		},
 		promiseFunc: promiseFunc,
 	});
 
