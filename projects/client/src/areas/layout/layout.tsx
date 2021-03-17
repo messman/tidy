@@ -5,7 +5,7 @@ import { Summary, SummaryProps } from '@/areas/summary/summary';
 import { Timeline, TimelineProps } from '@/areas/timeline/timeline';
 import { OverflowAutoFlexRow, RegularWidthFlexColumn, ScreenWidthFlexColumn } from '@/core/layout/common';
 import { Overlay } from '@/core/layout/overlay';
-import { DefaultLayoutBreakpoint, FlexColumn, FlexRow, useWindowLayout } from '@messman/react-common';
+import { DefaultLayoutBreakpoint, FlexColumn, FlexRow, useWindowMediaLayout } from '@messman/react-common';
 import { useComponentLayout } from './component-layout';
 
 export const ApplicationResponsiveLayout: React.FC = () => {
@@ -30,7 +30,7 @@ interface ResponsiveLayoutProps {
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = (props) => {
 	const { Summary, Timeline, Forecast, Settings } = props;
 
-	const windowLayout = useWindowLayout();
+	const windowLayout = useWindowMediaLayout();
 	const [componentLayout] = useComponentLayout();
 
 	// TODO - When moving from compact to non-compact, React tree is destroyed.

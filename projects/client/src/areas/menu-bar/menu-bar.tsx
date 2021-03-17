@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useComponentLayout } from '@/areas/layout/component-layout';
 import { styled } from '@/core/style/styled';
 import { iconTypes } from '@/core/symbol/icon';
-import { DefaultLayoutBreakpoint, FlexColumn, FlexParent, FlexRow, LayoutOrientation, useWindowLayout } from '@messman/react-common';
+import { DefaultLayoutBreakpoint, FlexColumn, FlexParent, FlexRow, LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';
 import { AllResponseClipboardIcon } from './clipboard';
 import { MenuBarIcon } from './menu-bar-icon';
 
@@ -24,7 +24,7 @@ const MenuBarLeftContainer = styled(FlexRow)`
 /** MenuBar that wraps the other components of the application. */
 export const MenuBar: React.FC = (props) => {
 
-	const windowLayout = useWindowLayout();
+	const windowLayout = useWindowMediaLayout();
 
 	// If in the compact view, spread out the icons to take up all the horizontal space.
 	// Otherwise, concentrate the icons together. (Code not currently used because only one icon is visible.)
@@ -58,7 +58,7 @@ export const MenuBar: React.FC = (props) => {
 
 const MenuBarInner: React.FC = () => {
 
-	const windowLayout = useWindowLayout();
+	const windowLayout = useWindowMediaLayout();
 	const [componentLayout, setComponentLayout] = useComponentLayout();
 
 	const isCompact = windowLayout.widthBreakpoint === DefaultLayoutBreakpoint.compact;

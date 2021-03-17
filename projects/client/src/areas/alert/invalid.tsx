@@ -5,7 +5,7 @@ import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, iconTypes } from '@/core/symbol/icon';
 import { SmallText, Subtitle, Text, titleHeight } from '@/core/symbol/text';
 import { CONSTANT } from '@/services/constant';
-import { DefaultLayoutBreakpoint, Flex, FlexRow, useWindowLayout } from '@messman/react-common';
+import { DefaultLayoutBreakpoint, Flex, FlexRow, useWindowMediaLayout } from '@messman/react-common';
 
 export interface InvalidCheckProps {
 	/** Used for testing. Messages about the application as a whole. */
@@ -64,7 +64,7 @@ export class InvalidCheck extends React.Component<InvalidCheckProps, InvalidChec
 const InvalidCheckParser: React.FC<InvalidCheckProps> = (props) => {
 
 	// Get our responsive layout so we can check its validity.
-	const windowLayout = useWindowLayout();
+	const windowLayout = useWindowMediaLayout();
 
 	let invalidMessages: string[] = [];
 	let isAllowRefreshClick = false;
