@@ -1,7 +1,6 @@
 const path = require('path');
-
+const updateWebpackConfig = require('./webpack-common');
 const CopyPlugin = require('copy-webpack-plugin');
-const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 
 // Cleans a directory
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -29,52 +28,26 @@ const baseWebpackOptions = {
 
 		alias: {
 			'@': path.resolve(__dirname, './src'),
+		},
 
-			// Used to resolve issues when peer dependencies are needed from local dependencies (tidy-shared)
-			// See https://stackoverflow.com/q/57231161
-			'luxon': path.resolve('node_modules', 'luxon'),
-		}
+		// See https://webpack.js.org/configuration/resolve/#resolve
+		/*
+			Discussion on symlinks:
+			https://github.com/webpack/webpack/issues/554
+			https://github.com/webpack/webpack/issues/985
+			(MIT) https://github.com/niieani/webpack-dependency-suite/blob/master/plugins/root-most-resolve-plugin.ts
+			https://github.com/npm/npm/issues/14325#issuecomment-285566020
+			https://stackoverflow.com/a/57231875
+
+			The gist: Only one copy of a package will be used,
+			unless the package versions are different.
+		*/
+		symlinks: false,
+		modules: [path.resolve('node_modules')]
 	},
 
 	module: {
-		rules: [
-			// All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader' and then 'babel-loader'.
-			// ts-loader: convert typescript to javascript (tsconfig.json)
-			// babel-loader: converts javascript to javascript (es5) (.babelrc)
-			{
-				test: /\.tsx?$/,
-				use: [
-					{
-						loader: 'babel-loader'
-					},
-					{
-						loader: 'ts-loader',
-						options: {
-							getCustomTransformers: () => ({ before: [createStyledComponentsTransformer()] }),
-							onlyCompileBundledFiles: true
-						}
-					}
-				]
-			},
-			{
-				test: /\.svg$/,
-				use: [
-					{
-						loader: '@svgr/webpack',
-						options: {
-							// Allows us to customize the icons using 'color'. See icon code.
-							replaceAttrValues: { '#000': 'currentColor' },
-							dimensions: false,
-							svgoConfig: {
-								plugins: {
-									removeViewBox: false
-								}
-							}
-						}
-					}
-				]
-			}
-		]
+		rules: []
 	},
 
 	plugins: [
@@ -88,6 +61,9 @@ const baseWebpackOptions = {
 		})
 	]
 };
+
+// Apply module rules (shared with Storybook).
+updateWebpackConfig(baseWebpackOptions, false, false);
 
 module.exports = {
 	html: htmlPluginOptions,

@@ -1,5 +1,5 @@
-import { AllResponse } from "./all-response";
 import { DateTime } from 'luxon';
+import { AllResponse } from './all-response';
 
 /*
 	Problem: when JS dates are stringified, they become ISO-8601 date time strings. (2020-05-09T03:59:59.999...)
@@ -12,7 +12,7 @@ import { DateTime } from 'luxon';
 		is checked by the deserializer to know when to parse as a date.
 	3. Just have a special deserializer that looks for ISO 8601. 
 
-	2 and 3 are essentially the same tactic. Both are not ideal, but 2 is easier than 2, because 3 alone
+	2 and 3 are essentially the same tactic. Both are not ideal, but 2 is easier than 3, because 3 alone
 	requires using a regex for ISO 8601 which might be unreliable.
 
 	The only downside to 2 is that you might not always have control over the serialization.
@@ -54,7 +54,7 @@ export function createReplacer(dateMarkOverride?: string): (key: string, value: 
 			return dateMark + value;
 		}
 		return value;
-	}
+	};
 }
 
 /**
@@ -84,5 +84,5 @@ export function createReviver(parseToDateTime: boolean, dateMarkOverride?: strin
 			return parseToDateTime ? DateTime.fromISO(dateStringValue, { setZone: true }) : dateStringValue;
 		}
 		return value;
-	}
+	};
 }

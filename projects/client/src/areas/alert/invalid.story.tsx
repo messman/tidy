@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LocalStorageThemeProvider } from '@/core/style/theme';
 import { TextPara } from '@/core/symbol/text';
 import { decorateWith } from '@/test/storybook/decorate';
-import { defaultLowerBreakpoints, Flex, FlexRoot, WindowDimensionsProvider, WindowLayoutProvider } from '@messman/react-common';
+import { defaultLowerBreakpoints, Flex, FlexRoot, WindowDimensionsProvider, WindowMediaLayoutProvider } from '@messman/react-common';
 import { boolean, text } from '@storybook/addon-knobs';
 import { ThemePicker } from '../settings/theme-picker';
 import { InvalidCheck } from './invalid';
@@ -16,11 +16,11 @@ const WrapperDecorator = (story: () => JSX.Element) => {
 	return (
 		<LocalStorageThemeProvider>
 			<WindowDimensionsProvider>
-				<WindowLayoutProvider lowerBreakpoints={defaultLowerBreakpoints}>
+				<WindowMediaLayoutProvider lowerBreakpoints={defaultLowerBreakpoints} breakpointUnit='px'>
 					<FlexRoot>
 						{story()}
 					</FlexRoot>
-				</WindowLayoutProvider>
+				</WindowMediaLayoutProvider>
 			</WindowDimensionsProvider>
 		</LocalStorageThemeProvider>
 	);

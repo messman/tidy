@@ -15,7 +15,7 @@
 		"luxon": "^1.26.0"
 	},
 	"devDependencies": {
-		"@messman/ts-webpack-builder": "^2.0.1",
+		"@messman/ts-webpack-builder": "^2.0.2",
 		"@types/luxon": "^1.26.2",
 		"luxon": "^1.26.0",
 		"trash-cli": "^4.0.0",

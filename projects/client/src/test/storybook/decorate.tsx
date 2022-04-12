@@ -3,13 +3,12 @@ import { themes, useLocalStorageTheme } from '@/core/style/theme';
 import { Wrapper } from '@/entry/wrapper';
 import { useLocalDataPhrase } from '@/services/data/data-local';
 import { DEFINE } from '@/services/define';
-import { select, withKnobs } from '@storybook/addon-knobs';
+import { select } from '@storybook/addon-knobs';
 
 export interface StoryComponent {
 	(): JSX.Element,
-	story?: {
-		decorators?: any[];
-	};
+	storyName?: string;
+	decorators?: any[];
 }
 
 export function decorateWith(Component: React.FC, decorators: any[]) {
@@ -34,9 +33,7 @@ export function decorateWith(Component: React.FC, decorators: any[]) {
 	};
 
 	const storyComponent = story as StoryComponent;
-	storyComponent.story = {
-		decorators: [...decorators, withKnobs]
-	};
+	storyComponent.decorators = decorators;
 	return storyComponent;
 };
 
