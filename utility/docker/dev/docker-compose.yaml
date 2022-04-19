@@ -90,5 +90,5 @@ volumes:
   volume-wbt-devcode-modules-iso:
   volume-wbt-devcode-modules-server:
   volume-wbt-devcode-modules-server-http:
-  volume-strudel-dev-seq:
-  volume-strudel-dev-verdaccio:
+  volume-wbt-dev-seq:
+  volume-wbt-dev-verdaccio:

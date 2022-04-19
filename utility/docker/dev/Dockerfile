@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y zsh
 
 # Add a .zshrc file so we don't go insane
 # Note: we had to exclude this file from the dockerignore.
-COPY ./root/utility/docker/dev/.zshrc /root/.zshrc
+COPY ./utility/docker/dev/.zshrc /root/.zshrc
 
 # Tell VSCode that we want our default shell to be zsh.
 ENV SHELL /bin/zsh
