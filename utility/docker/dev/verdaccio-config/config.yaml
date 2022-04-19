@@ -1,0 +1,25 @@
+storage: /verdaccio/storage
+middlewares:
+  audit:
+    enabled: true
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+packages:
+  "@messman/wbt*":
+    access: $anonymous
+    publish: $anonymous
+    unpublish: $anonymous
+  "@*/*":
+    access: $anonymous
+    publish: $authenticated
+    proxy: npmjs
+  "**":
+    access: $anonymous
+    publish: $authenticated
+    proxy: npmjs
+web: 
+  enable: true  
+  title: WBT - Verdaccio
+  primary_color: "#18AFAF"
+  darkMode: true

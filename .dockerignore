@@ -1,0 +1,5 @@
+# Used with the Dockerfiles in utility/docker
+*
+
+# Add back the zshrc files so they can be copied
+!utility/docker/dev/.zshrc

@@ -1,0 +1,96 @@
+# Source: https://stackoverflow.com/questions/46692341/express-nginx-cant-serve-static-files
+# and: https://stackoverflow.com/a/15467555/8436941
+# https://gkedge.gitbooks.io/react-router-in-the-real/content/nginx.html
+# https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms
+
+server {
+	listen ${WBT_NGINX_SERVER_LISTEN};
+	#server_name example.com;
+
+	# For logging errors.
+	# https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/#passing-request-headers
+	proxy_set_header Host $host;
+	proxy_set_header X-Real-IP $remote_addr;
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	proxy_set_header X-Forwarded-Proto $scheme;
+	proxy_bind $server_addr;
+	
+	# For Docker - resolves names to other containers, if needed.
+	resolver 127.0.0.11;
+
+	# ALWAYS specify one root outside of all locations.
+	root /usr/share/nginx/wbt/dist;
+
+	# location: https://nginx.org/en/docs/http/ngx_http_core_module.html#location
+	# ^ Rules for matching locations aren't what you think.
+
+	# Icons (SVG, from assets)
+	location ^~ /icons/ {
+		root /usr/share/nginx/wbt/;
+		# TODO: undo this in production
+		add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+	}
+	location ^~ /api/ {
+		# Forward to the devcode container.
+		proxy_pass 'http://devcode:${WBT_DEVCODE_SERVER_PORT}/api/';
+	}
+	# Any routes with extension. Like *.*
+	location ~ ^\/.+\..+$ {
+		# Use default route. If not found, 404
+	}
+	# Anything else
+	location ~ ^.+$ {
+		# Use default route. If not found, index.html
+		try_files $uri /index.html;
+	}
+}
+
+server {
+	listen ${WBT_NGINX_COSMOS_LISTEN};
+	#server_name example.com;
+
+	# For logging errors.
+	# https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/#passing-request-headers
+	proxy_set_header Host $host;
+	proxy_set_header X-Real-IP $remote_addr;
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	proxy_set_header X-Forwarded-Proto $scheme;
+	proxy_bind $server_addr;
+	
+	# For Docker - resolves names to other containers, if needed.
+	resolver 127.0.0.11;
+
+	# ALWAYS specify one root outside of all locations.
+	root /usr/share/nginx/wbt/dist;
+
+	# location: https://nginx.org/en/docs/http/ngx_http_core_module.html#location
+	# ^ Rules for matching locations aren't what you think.
+
+	# Icons (SVG, from assets)
+	location ^~ /icons/ {
+		root /usr/share/nginx/wbt/;
+		# TODO: undo this in production
+		add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+	}
+	location ^~ /socket.io/ {
+		# Cosmos has socket.io.
+		# We need to do some special config: https://www.nginx.com/blog/websocket-nginx/
+		# See also https://gist.github.com/uorat/10b15a32f3ffa3f240662b9b0fefe706
+		proxy_pass 'http://devcode:${WBT_DEVCODE_COSMOS_PORT}/socket.io/';
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "Upgrade";
+		proxy_set_header Host $host;
+	}
+	# Anything else
+	location ~ ^(.+)$ {
+		# Forward to the devcode container.
+		proxy_pass 'http://devcode:${WBT_DEVCODE_COSMOS_PORT}$1';
+	}
+}
