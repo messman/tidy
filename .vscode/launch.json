@@ -5,27 +5,23 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch via NPM",
 			"type": "node",
 			"request": "launch",
-			"port": 9229,
-			"autoAttachChildProcesses": true,
-			"cwd": "${workspaceFolder}/server",
-			"program": "${workspaceFolder}/server/test/test.ts",
+			"name": "WBT Server",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"cwd": "${workspaceFolder}/projects/server",
 			"runtimeExecutable": "npm",
 			"runtimeArgs": [
 				"run-script",
-				"debug"
+				"start"
 			],
-			"stopOnEntry": false,
 			"sourceMaps": true,
 			"outFiles": [
-				"${workspaceFolder}/server/test/**/*.js",
-				"${workspaceFolder}/server/dist/**/*.js"
+				"${workspaceFolder}/projects/server/dist/**/*.js",
 			],
-			"skipFiles": [
-				"<node_internals>/**"
-			]
+			"killBehavior": "forceful"
 		},
 	]
 }

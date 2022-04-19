@@ -9,7 +9,7 @@ services:
     container_name: wbt-devcode
     build:
       context: ../../../ # host machine's top workspace folder (wbt-github)
-      dockerfile: ./root/utility/docker/dev/Dockerfile
+      dockerfile: ./utility/docker/dev/Dockerfile
       args:
         - ARG_VERDACCIO_PORT=4873
     environment:
@@ -22,14 +22,14 @@ services:
       # Match up 'wells-beach-time-git' directory to 'src'.
       # Everything under that, including .git and .vscode, are in the container.
       # TODO: Hide secrets
-      - ../../../../:/usr/src
+      - ../../../:/usr/src
       # List the node_modules below so they are saved in volumes, not on the host.
-      - volume-wbt-devcode-modules-assets:/usr/src/root/projects/assets/node_modules
-      - volume-wbt-devcode-modules-build:/usr/src/root/utility/build/node_modules
-      - volume-wbt-devcode-modules-client:/usr/src/root/projects/client/node_modules
-      - volume-wbt-devcode-modules-iso:/usr/src/root/projects/iso/node_modules
-      - volume-wbt-devcode-modules-server:/usr/src/root/projects/server/node_modules
-      - volume-wbt-devcode-modules-server-http:/usr/src/root/projects/server-http/node_modules
+      - volume-wbt-devcode-modules-assets:/usr/src/projects/assets/node_modules
+      - volume-wbt-devcode-modules-build:/usr/src/utility/build/node_modules
+      - volume-wbt-devcode-modules-client:/usr/src/projects/client/node_modules
+      - volume-wbt-devcode-modules-iso:/usr/src/projects/iso/node_modules
+      - volume-wbt-devcode-modules-server:/usr/src/projects/server/node_modules
+      - volume-wbt-devcode-modules-server-http:/usr/src/projects/server-http/node_modules
     ports:
       - "8003:8003" # Server
       - "8004:58888" # Cosmos

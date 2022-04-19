@@ -1,5 +1,8 @@
 {
 	"importSorter.generalConfiguration.sortOnBeforeSave": true,
 	"appService.showBuildDuringDeployPrompt": false,
-	"appService.defaultWebAppToDeploy": "None"
+	"appService.defaultWebAppToDeploy": "None",
+	"cSpell.words": [
+		"Devcode"
+	]
 }
