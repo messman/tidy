@@ -1,10 +1,10 @@
 // TODO - make it fail when fetch is not imported. For some reason it doesn't warn.
-import * as fetch from "node-fetch";
-import { Issue, errorIssue } from "tidy-shared";
+import * as fetch from 'node-fetch';
+import { errorIssue, Issue } from '@messman/wbt-iso';
 
 export interface FetchResponse<T> {
 	result: T | null,
-	issues: Issue[] | null
+	issues: Issue[] | null;
 }
 
 /**
@@ -20,7 +20,7 @@ export async function getJSON<T>(url: string, name: string, headers: {} | null):
 		return {
 			result: null,
 			issues: [errorIssue(userMessage, devMessage, data)],
-		}
+		};
 	}
 
 	try {
@@ -28,7 +28,7 @@ export async function getJSON<T>(url: string, name: string, headers: {} | null):
 			headers: headers ? new fetch.Headers(headers) : undefined
 		});
 		if (res.ok) {
-			const json = await res.json();
+			const json = await res.json() as T | null;
 			return {
 				result: json,
 				issues: null,

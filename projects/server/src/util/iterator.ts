@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Change, Measurement } from 'tidy-shared';
+import { Change, Measurement } from '@messman/wbt-iso';
 
 /** Weather data is a span of time - usually the time given plus a number of hours. */
 export interface TimeSpan {

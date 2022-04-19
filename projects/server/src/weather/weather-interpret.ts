@@ -1,4 +1,4 @@
-import { Change, DailyWeather, Measurement, WeatherStatus } from 'tidy-shared';
+import { Change, DailyWeather, Measurement, WeatherStatus } from '@messman/wbt-iso';
 import { AllIssue } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';
 import { createTimeIterator } from '../util/iterator';

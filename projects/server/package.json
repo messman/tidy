@@ -1,7 +1,7 @@
 {
-	"name": "tidy-server",
-	"version": "3.6.0",
-	"description": "Server-side code for tidy.",
+	"name": "@messman/wbt-server",
+	"version": "4.0.0",
+	"description": "Server-side code for WBT.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
@@ -17,25 +17,26 @@
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"peerDependencies": {
-		"luxon": "^1.26.0"
+		"luxon": "^2.3.2"
 	},
 	"dependencies": {
-		"tidy-shared": "file:../shared",
-		"node-fetch": "^2.6.1",
+		"@messman/wbt-iso": "*",
+		"node-fetch": "^3.2.3",
 		"seedrandom": "^3.0.5"
 	},
 	"devDependencies": {
 		"@messman/ts-webpack-builder": "^2.0.1",
-		"@types/luxon": "^1.26.2",
-		"@types/node": "^14.14.34",
+		"@types/luxon": "^2.3.1",
+		"@types/node": "^17.0.25",
 		"@types/node-fetch": "^2.5.8",
 		"@types/seedrandom": "^3.0.0",
-		"luxon": "^1.26.0",
+		"luxon": "^2.3.2",
 		"typescript": "^4.2.3"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/messman/tidy.git"
+		"url": "git+https://github.com/messman/tidy.git",
+		"directory": "projects/server"
 	},
 	"bugs": {
 		"url": "https://github.com/messman/tidy/issues"

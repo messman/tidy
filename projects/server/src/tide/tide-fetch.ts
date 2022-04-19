@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { errorIssue, TideEvent, TideStatus } from 'tidy-shared';
+import { errorIssue, TideEvent, TideStatus } from '@messman/wbt-iso';
 import { mergeIssues } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';
 import { FetchResponse, getJSON } from '../util/fetch';

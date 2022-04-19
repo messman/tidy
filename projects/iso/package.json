@@ -1,7 +1,7 @@
 {
-	"name": "tidy-shared",
-	"version": "3.6.0",
-	"description": "Shared code between client and server for tidy.",
+	"name": "@messman/wbt-iso",
+	"version": "4.0.0",
+	"description": "Shared code between client and server for WBT.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
@@ -12,19 +12,19 @@
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"peerDependencies": {
-		"luxon": "^1.26.0"
+		"luxon": "^2.3.2"
 	},
 	"devDependencies": {
 		"@messman/ts-webpack-builder": "^2.0.2",
-		"@types/luxon": "^1.26.2",
-		"luxon": "^1.26.0",
-		"trash-cli": "^4.0.0",
+		"@types/luxon": "^2.3.1",
+		"luxon": "^2.3.2",
+		"trash-cli": "^5.0.0",
 		"typescript": "^4.2.3"
 	},
-	"dependencies": {},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/messman/tidy.git"
+		"url": "git+https://github.com/messman/tidy.git",
+		"directory": "projects/iso"
 	},
 	"bugs": {
 		"url": "https://github.com/messman/tidy/issues"

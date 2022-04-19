@@ -1,7 +1,8 @@
 {
-	"extends": "../../tsconfig-base.json",
+	"extends": "../../shared/configs/tsconfig-base.json",
 	"compilerOptions": {
-		"outDir": "./dist"
+		"outDir": "./dist",
+		"sourceRoot": "/usr/src/projects/iso/src"
 	},
 	"include": [
 		"src/**/*"

@@ -1,5 +1,5 @@
 {
-	"name": "tidy-client",
+	"name": "@messman/wbt-client",
 	"version": "3.6.0",
 	"description": "A mobile-first web app that uses NOAA data to show a simple view of tide information.",
 	"main": "webpack.config.js",

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { DailyWeather, WeatherStatus } from 'tidy-shared';
+import { DailyWeather, WeatherStatus } from '@messman/wbt-iso';
 import { AllIssue } from '../all/all-merge';
 
 export interface IntermediateWeatherValues extends AllIssue {

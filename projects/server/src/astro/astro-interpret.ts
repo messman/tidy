@@ -1,4 +1,4 @@
-import { SunEvent } from 'tidy-shared';
+import { SunEvent } from '@messman/wbt-iso';
 import { ForDay } from '../all/all';
 import { AllIssue } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';

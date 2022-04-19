@@ -1,6 +1,6 @@
 # tidy-server
 
-This library contains the functionality for creating test data and retrieving actual data used for the front-end of `tidy`.
+This library contains the functionality for creating test data and retrieving actual data used for the front-end of WBT.
 
 ## Build
 

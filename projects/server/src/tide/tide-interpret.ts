@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { AllCurrentTides, TideEvent, TideEventRange, TideExtremes, TideStatus } from 'tidy-shared';
+import { AllCurrentTides, TideEvent, TideEventRange, TideExtremes, TideStatus } from '@messman/wbt-iso';
 import { ForDay } from '../all/all';
 import { AllIssue } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';

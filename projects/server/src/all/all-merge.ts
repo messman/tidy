@@ -1,6 +1,6 @@
 /* Holds common functionality for merging our different API areas. */
 
-import { AllDailyDay, DailyWeather, Errors, Issue, SunEvent, TideEventRange, Warnings } from 'tidy-shared';
+import { AllDailyDay, DailyWeather, Errors, Issue, SunEvent, TideEventRange, Warnings } from '@messman/wbt-iso';
 import { fetchAstro } from '../astro/astro-fetch';
 import { IntermediateAstroValues } from '../astro/astro-intermediate';
 import { interpretAstro, InterpretedAstro } from '../astro/astro-interpret';
