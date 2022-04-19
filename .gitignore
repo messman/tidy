@@ -5,7 +5,7 @@ deploy-*.txt
 
 node_modules
 dist
-build
+dist-icons
 npm-debug.log
 
 **/test/**/*.js

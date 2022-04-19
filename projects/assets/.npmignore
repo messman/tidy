@@ -1,0 +1,4 @@
+# Everything (except: package.json, README, CHANGLEOG, LICENSE)
+**/*
+# Include the dist
+!dist/**/*

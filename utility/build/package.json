@@ -1,0 +1,22 @@
+{
+	"name": "@messman/wbt-build",
+	"version": "1.0.0",
+	"description": "Wells Beach Time monorepo builder",
+	"main": "dist/index.js",
+	"scripts": {},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/messman/tidy.git",
+		"directory": "utility/build"
+	},
+	"author": "Andrew Messier",
+	"license": "UNLICENSED",
+	"bugs": {
+		"url": "https://github.com/messman/tidy/issues"
+	},
+	"homepage": "https://github.com/messman/tidy#readme",
+	"devDependencies": {
+		"@messman/node-mono-builder": "^1.0.1"
+	},
+	"dependencies": {}
+}

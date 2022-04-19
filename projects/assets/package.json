@@ -1,0 +1,45 @@
+{
+	"name": "@messman/wbt-assets",
+	"version": "1.0.0",
+	"description": "Shared client-side assets for WBT.",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "ts-webpack-builder",
+		"build-watch": "ts-webpack-builder --watch",
+		"build-production": "npm run clean && ts-webpack-builder --isDevelopment=false",
+		"clean": "rm -rf ./dist"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/messman/tidy.git",
+		"directory": "projects/assets"
+	},
+	"author": "Andrew Messier",
+	"license": "UNLICENSED",
+	"bugs": {
+		"url": "https://github.com/messman/tidy/issues"
+	},
+	"homepage": "https://github.com/messman/tidy#readme",
+	"peerDependencies": {
+		"react": "^17.0.1",
+		"react-dom": "^17.0.1"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.15.5",
+		"@babel/preset-env": "^7.15.4",
+		"@babel/preset-react": "^7.14.5",
+		"@messman/ts-webpack-builder": "^2.1.0",
+		"@svgr/webpack": "^5.5.0",
+		"@types/react": "^17.0.20",
+		"@types/react-dom": "^17.0.9",
+		"@types/react-router-dom": "^5.1.8",
+		"babel-loader": "^8.2.2",
+		"file-loader": "^6.2.0",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"svgo-loader": "^3.0.0",
+		"typescript": "^4.4.2"
+	},
+	"dependencies": {}
+}
