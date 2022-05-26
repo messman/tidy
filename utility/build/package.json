@@ -17,6 +17,5 @@
 	"homepage": "https://github.com/messman/tidy#readme",
 	"devDependencies": {
 		"@messman/node-mono-builder": "^1.0.1"
-	},
-	"dependencies": {}
+	}
 }

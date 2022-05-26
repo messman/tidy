@@ -4,6 +4,8 @@
 	"appService.defaultWebAppToDeploy": "None",
 	"cSpell.words": [
 		"Astro",
-		"Devcode"
+		"Devcode",
+		"OPENWEATHER",
+		"pino"
 	]
 }

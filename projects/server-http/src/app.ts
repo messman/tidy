@@ -1,47 +1,14 @@
-import { Application, Request, Response } from 'express';
-import { APIConfiguration, createWellsConfiguration, getAllForConfiguration } from 'tidy-server';
-import { AllResponse, createReplacer } from 'tidy-shared';
-import { processEnv } from './env';
+import { Application, json, NextFunction, Request, Response, Router, urlencoded } from 'express';
+import { AllResponse } from '@messman/wbt-iso';
+import { APIConfiguration, createWellsConfiguration, getAllForConfiguration } from '@messman/wbt-server';
+import { settings } from './env';
+import { baseLogger } from './logger';
 import { createResponseMemory, ResponseMemory, ResponseMemoryStats } from './response-memory';
 
-interface TestEnv {
-	OpenWeatherDebugAPIKey: string;
-}
-let openWeatherDebugAPIKey: string | null = processEnv.KEY_OPEN_WEATHER || null;
-if (!openWeatherDebugAPIKey && processEnv.NODE_ENV === 'dev') {
-	try {
-		const env: TestEnv = require('../test-env.json');
-		openWeatherDebugAPIKey = env.OpenWeatherDebugAPIKey;
-	}
-	catch (e) {
-		log(e);
-	}
-}
-
-function log(...args: any[]): void {
-	console.log('>', ...args);
-}
-
-
-export function configureApp(app: Application): void {
-
-	/*
-		As discussed in tidy-shared, Dates are serialized to strings and not deserialized back to Dates.
-		There is a serialize/deserialize function pair that handles this issue.
-
-		See 
-		https://itnext.io/how-json-stringify-killed-my-express-server-d8d0565a1a61
-		https://github.com/expressjs/express/pull/2422
-
-		There is a way to set a custom stringify replacer, but for all endpoints, not just one.
-		If you want to do just one, you have to use send instead of json and serialize yourself.
-		This isn't impossible - source code is here:
-		https://github.com/expressjs/express/blob/master/lib/response.js#L239
-		and also mentioned in Medium article above.
-
-		For this app, we'll just do it globally.
-	*/
-	app.set('json replacer', createReplacer());
+export function configureApi(app: Application): void {
+	const router = Router();
+	router.use(json());
+	router.use(urlencoded({ extended: false }));
 
 	/*
 		Versioning and caching
@@ -56,12 +23,11 @@ export function configureApp(app: Application): void {
 		expiration: minutes(2)
 	});
 
-	// CURRENT
-	app.get('/v3.5.0/latest', async (_: Request, response: Response<AllResponse>) => {
+	router.get('/latest', async (_: Request, response: Response<AllResponse>) => {
 
 		const hit = memory.registerHit();
 		if (hit.cacheItemValue) {
-			log(`Latest cached - ${hit.timeRemainingInCache}ms remaining`);
+			baseLogger.info(`Latest cached - ${hit.timeRemainingInCache}ms remaining`);
 			return response.json(hit.cacheItemValue);
 		}
 
@@ -69,22 +35,29 @@ export function configureApp(app: Application): void {
 		return response.json(newest);
 	});
 
-	app.get('/last', async (_: Request, response: Response<AllResponse | null>) => {
+	router.get('/last', async (_: Request, response: Response<AllResponse | null>) => {
 		const hit = memory.registerHit();
 		if (hit.cacheItemValue) {
-			log(`Last cached - ${hit.timeRemainingInCache}ms remaining`);
+			baseLogger.info(`Last cached - ${hit.timeRemainingInCache}ms remaining`);
 			return response.json(hit.cacheItemValue);
 		}
 		return response.json(null);
 	});
 
-	app.get('/stats', async (_: Request, res: Response<ResponseMemoryStats>) => {
+	router.get('/stats', async (_: Request, res: Response<ResponseMemoryStats>) => {
 		return res.json(memory.stats);
 	});
 
-	app.get('/', async (_: Request, res: Response) => {
+	router.get('/', async (_: Request, res: Response) => {
 		return res.json({ status: 'ready' });
 	});
+
+	// 404 handler
+	router.use(function (_request: Request, response: Response, _next: NextFunction) {
+		response.status(404).send('Not Found');
+	});
+
+	app.use('/api', router);
 }
 
 async function getResponse(configuration: APIConfiguration, logPrefix: string, memory: ResponseMemory<AllResponse>): Promise<AllResponse> {
@@ -97,7 +70,7 @@ async function getResponse(configuration: APIConfiguration, logPrefix: string, m
 			seed: null
 		},
 		keys: {
-			weather: openWeatherDebugAPIKey
+			weather: settings.KEY_OPEN_WEATHER!
 		}
 	});
 
@@ -105,13 +78,13 @@ async function getResponse(configuration: APIConfiguration, logPrefix: string, m
 		const allErrors = response.error!.errors.map((issue) => {
 			return issue.dev?.message || issue.userMessage;
 		}).join(' | ');
-		log('Errors:', allErrors);
+		baseLogger.info('Errors:', allErrors);
 		memory.setCacheItemValue(null);
-		log('Returning with errors - not caching');
+		baseLogger.info('Returning with errors - not caching');
 	}
 	else {
 		memory.setCacheItemValue(response);
-		log(memory.isCaching ? `Returning and caching for ${memory.cacheExpiration}ms` : 'Returning - not caching');
+		baseLogger.info(memory.isCaching ? `Returning and caching for ${memory.cacheExpiration}ms` : 'Returning - not caching');
 	}
 	return response;
 }

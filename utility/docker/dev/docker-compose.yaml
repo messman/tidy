@@ -35,7 +35,6 @@ services:
       - "8004:58888" # Cosmos
     depends_on:
       - seq
-      - postgres
   verdaccio:
     container_name: wbt-dev-verdaccio
     # https://verdaccio.org/docs/docker
