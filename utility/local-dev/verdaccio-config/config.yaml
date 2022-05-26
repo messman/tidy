@@ -1,3 +1,4 @@
+# See #REF_DEV_VERDACCIO
 storage: /verdaccio/storage
 middlewares:
   audit:
@@ -6,7 +7,7 @@ uplinks:
   npmjs:
     url: https://registry.npmjs.org/
 packages:
-  "@messman/wbt*":
+  "@wbtdevlocal/*":
     access: $anonymous
     publish: $anonymous
     unpublish: $anonymous
@@ -21,5 +22,5 @@ packages:
 web: 
   enable: true  
   title: WBT - Verdaccio
-  primary_color: "#18AFAF"
+  primary_color: "#3794EB"
   darkMode: true

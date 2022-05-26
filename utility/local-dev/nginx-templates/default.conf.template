@@ -1,11 +1,10 @@
-# Source: https://stackoverflow.com/questions/46692341/express-nginx-cant-serve-static-files
-# and: https://stackoverflow.com/a/15467555/8436941
-# https://gkedge.gitbooks.io/react-router-in-the-real/content/nginx.html
-# https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms
+# Sources
+# - https://stackoverflow.com/a/15467555/8436941
+# - https://gkedge.gitbooks.io/react-router-in-the-real/content/nginx.html
+# - https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms
 
 server {
 	listen ${WBT_NGINX_SERVER_LISTEN};
-	#server_name example.com;
 
 	# For logging errors.
 	# https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/#passing-request-headers
@@ -27,15 +26,14 @@ server {
 	# Icons (SVG, from assets)
 	location ^~ /icons/ {
 		root /usr/share/nginx/wbt/;
-		# TODO: undo this in production
 		add_header 'Access-Control-Allow-Origin' '*';
-        add_header 'Access-Control-Allow-Credentials' 'true';
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+		add_header 'Access-Control-Allow-Credentials' 'true';
+		add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+		add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
 	}
 	location ^~ /api/ {
-		# Forward to the devcode container.
-		proxy_pass 'http://devcode:${WBT_DEVCODE_SERVER_PORT}/api/';
+		# Forward to the codebase container.
+		proxy_pass 'http://codebase:${WBT_CODEBASE_SERVER_PORT}/api/';
 	}
 	# Any routes with extension. Like *.*
 	location ~ ^\/.+\..+$ {
@@ -50,7 +48,6 @@ server {
 
 server {
 	listen ${WBT_NGINX_COSMOS_LISTEN};
-	#server_name example.com;
 
 	# For logging errors.
 	# https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/#passing-request-headers
@@ -72,7 +69,6 @@ server {
 	# Icons (SVG, from assets)
 	location ^~ /icons/ {
 		root /usr/share/nginx/wbt/;
-		# TODO: undo this in production
 		add_header 'Access-Control-Allow-Origin' '*';
         add_header 'Access-Control-Allow-Credentials' 'true';
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
@@ -82,7 +78,7 @@ server {
 		# Cosmos has socket.io.
 		# We need to do some special config: https://www.nginx.com/blog/websocket-nginx/
 		# See also https://gist.github.com/uorat/10b15a32f3ffa3f240662b9b0fefe706
-		proxy_pass 'http://devcode:${WBT_DEVCODE_COSMOS_PORT}/socket.io/';
+		proxy_pass 'http://codebase:${WBT_CODEBASE_COSMOS_PORT}/socket.io/';
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection "Upgrade";
@@ -90,7 +86,7 @@ server {
 	}
 	# Anything else
 	location ~ ^(.+)$ {
-		# Forward to the devcode container.
-		proxy_pass 'http://devcode:${WBT_DEVCODE_COSMOS_PORT}$1';
+		# Forward to the codebase container.
+		proxy_pass 'http://codebase:${WBT_CODEBASE_COSMOS_PORT}$1';
 	}
 }

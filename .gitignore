@@ -4,10 +4,27 @@ NOTES.txt
 deploy-*.txt
 local-machine
 
+# For dev.
+local-machine
+
+# Common dev note files.
+todo*.txt
+notes*.txt
+
+# Secrets
+*-secret.*
+*.secret.*
+deploy-*
+*secret.json
+
+# Build directories.
 node_modules
 dist
+dist-client
 dist-icons
 prod-dist
+
+# NPM logs.
 npm-debug.log
 *-secret.*
 
@@ -16,16 +33,12 @@ npm-debug.log
 
 **/ts-build
 
-*secret.json
-
-**/azure-deploy/*.js
-
 # Output of 'npm pack'
 *.tgz
 
 # OS hidden folders
 .DS_Store
-.Trash-0
+**/.Trash-0
 
 # Logs
 *.log

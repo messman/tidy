@@ -1,8 +1,8 @@
 # Tidy
 
-**Status:** _Version 3 Redesign MVP_ - usable, but still very much a work in progress.
+**Status:** _Version 4 Redesign In-Progress_
 
-A mobile-first web app that uses free & public U.S. government data to show a simple view of tide, weather, and sunlight information.
+A mobile-first web app that uses free & public U.S. government and private data to show a simple view of tide, weather, and sunlight information.
 Currently, this application only works for **Wells, Maine**. It was made primarily for my parents, who live in Wells. It is open to use by all.
 
 ## Features

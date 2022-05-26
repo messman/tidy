@@ -3,7 +3,7 @@ const nmb = require('@messman/node-mono-builder');
 
 /** @type {nmb.Schema} */
 const schema = {
-	pathRoot: '../../projects',
+	pathRoot: '../../../projects',
 	projects: {
 		'assets': {
 			path: './assets',
