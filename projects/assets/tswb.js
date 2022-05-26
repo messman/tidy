@@ -10,7 +10,7 @@ const updateWebpackConfig = require('./webpack-config.js');
  * @type { Partial<LibraryBuildOptions> }
  */
 const options = {
-	libraryName: '@messman/strudel-assets',
+	libraryName: '@wbtdevlocal/assets',
 	isNode: false,
 	webpackConfigTransform: (webpackConfig, buildOptions) => {
 		updateWebpackConfig(webpackConfig, buildOptions.isDevelopment);

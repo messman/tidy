@@ -1,5 +1,7 @@
 # Build
 
+See `#REF_DEV_VERDACCIO` for some context.
+
 ## Quick Commands
 
 ```sh

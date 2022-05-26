@@ -8,21 +8,20 @@ services:
   devcode:
     container_name: wbt-devcode
     build:
-      context: ../../../ # host machine's top workspace folder (wbt-github)
-      dockerfile: ./utility/docker/dev/Dockerfile
+      context: ../../ # host machine's top workspace folder
+      dockerfile: ./utility/local-dev/local-dev.Dockerfile
       args:
         - ARG_VERDACCIO_PORT=4873
     environment:
       - NODE_ENV=dev
-      - PORT=8003
+      - PORT=8000
       - WBT_SEQ_URL=http://wbt-dev-seq:5341
       - VERDACCIO_PORT=4873
     tty: true # Keep this on. Otherwise, it will end immediately.
     volumes:
-      # Match up 'wells-beach-time-git' directory to 'src'.
+      # Match up top-level directory to 'src'.
       # Everything under that, including .git and .vscode, are in the container.
-      # TODO: Hide secrets
-      - ../../../:/usr/src
+      - ../../:/usr/src
       # List the node_modules below so they are saved in volumes, not on the host.
       - volume-wbt-devcode-modules-assets:/usr/src/projects/assets/node_modules
       - volume-wbt-devcode-modules-build:/usr/src/utility/build/node_modules
@@ -31,12 +30,13 @@ services:
       - volume-wbt-devcode-modules-server:/usr/src/projects/server/node_modules
       - volume-wbt-devcode-modules-server-http:/usr/src/projects/server-http/node_modules
     ports:
-      - "8003:8003" # Server
-      - "8004:58888" # Cosmos
+      - "8093:8000" # Server
+      - "8094:58888" # Cosmos
     depends_on:
       - seq
   verdaccio:
     container_name: wbt-dev-verdaccio
+    # See #REF_DEV_VERDACCIO
     # https://verdaccio.org/docs/docker
     image: verdaccio/verdaccio
     volumes:
@@ -50,35 +50,29 @@ services:
     image: datalust/seq:latest
     volumes:
       - volume-wbt-dev-seq:/data
-    # TODO: add a 'restart-policy' here?
     environment:
       - ACCEPT_EULA=Y
     ports:
-      - "5431:5431" # This should not be required, since containers have all ports open to each other.
-      - "8001:80" # http://localhost:8001
+      - "8091:80"
   nginx:
     container_name: wbt-dev-nginx
     # https://hub.docker.com/_/nginx
     image: nginx:1.19.6-alpine
     environment:
       - WBT_NGINX_SERVER_LISTEN=80
-      - WBT_DEVCODE_SERVER_PORT=8003
+      - WBT_DEVCODE_SERVER_PORT=8093
       - WBT_NGINX_COSMOS_LISTEN=81
       - WBT_DEVCODE_COSMOS_PORT=5000
     volumes:
       # Set configuration for reverse proxy. (See https://hub.docker.com/_/nginx)
       - ./nginx-templates:/etc/nginx/templates
       # Static Files
-      # Note! If one of these directories is not binding, it might be because 
-      # A parent directory is being deleted druing a build. Once gone, the connection
-      # is severed. For example - previously we tried to bind icon files via ..../dist/icons:....,
-      # but when we built the icons "dist" was deleted and it never re-bound. The actual directory
-      # can be deleted - just not any parent.
+      # Note! don't nest directories, as it messes up bindings when directories get deleted.
       - ../../../projects/client/dist:/usr/share/nginx/wbt/dist
       - ../../../projects/assets/dist-icons:/usr/share/nginx/wbt/icons
     ports:
-      - "8000:80" # users connect to 8000 for server
-      - "8002:81" # users connect to 8002 for cosmos
+      - "8090:80" # App
+      - "8092:81" # Cosmos
     depends_on:
       - devcode
 volumes:
