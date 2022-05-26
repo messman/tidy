@@ -3,7 +3,7 @@
 // https://github.com/microsoft/vscode-dev-containers/blob/main/containers/docker-existing-docker-compose/.devcontainer/devcontainer.json
 {
 	"name": "WBT Devcode",
-	"dockerComposeFile": "../utility/docker/dev/docker-compose.yaml",
+	"dockerComposeFile": "../utility/local-dev/docker-compose.yaml",
 	"service": "devcode",
 	"workspaceFolder": "/usr/src",
 	// Set *default* container specific settings.json values on container create.
@@ -33,7 +33,7 @@
 	// Uncomment the next line if you want start specific services in your Docker Compose config.
 	// "runServices": [],
 	// Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-	"shutdownAction": "none",
+	"shutdownAction": "none"
 	// Uncomment the next line to run commands after the container is created - for example installing curl.
 	// "postCreateCommand": "apt-get update && apt-get install -y curl",
 	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.

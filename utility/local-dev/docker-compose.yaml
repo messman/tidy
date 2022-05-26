@@ -43,7 +43,7 @@ services:
       - ./verdaccio-config:/verdaccio/conf
       - volume-wbt-dev-verdaccio:/verdaccio/storage
     ports:
-      - "8005:4873" # Verdaccio UI
+      - "8095:4873" # Verdaccio UI
   seq:
     container_name: wbt-dev-seq
     # https://docs.datalust.co/docs/getting-started-with-docker
