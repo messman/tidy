@@ -121,7 +121,7 @@ docker-compose -f docker-compose.yaml up -d
 docker-compose -f docker-compose.yaml build
 
 # Connect to the container for development.
-docker exec -it wbt-dev-codebase /bin/zsh --login
+docker exec -it wbt-devcode /bin/zsh --login
 
 # Stop the docker containers.
 docker-compose -f docker-compose.yaml down
