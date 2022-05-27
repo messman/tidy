@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { decorate } from '@/test/storybook/decorate';
-import { TitleInline, titleHeight, SubtitleInline, subtitleHeight, TextInline, textHeight, SmallTextInline, smallTextHeight, SubTextInline, subTextHeight } from '@/core/symbol/text';
-import { iconTypes, Icon } from '@/core/symbol/icon';
-import { styled } from '../style/styled';
+import { Icon, iconTypes } from '@/core/symbol/icon';
+import { smallTextHeight, SmallTextInline, subTextHeight, SubTextInline, subtitleHeight, SubtitleInline, textHeight, TextInline, titleHeight, TitleInline } from '@/core/symbol/text';
+import { CosmosFixture } from '@/test';
 import { flowPaddingValue } from '../style/common';
+import { styled } from '../style/styled';
 
-export default { title: 'core/symbol' };
-
-export const TestTextWithIcons = decorate(() => {
-
+export default CosmosFixture.create(() => {
 	const iconType = iconTypes.calendar;
 
 	return (
@@ -17,34 +14,36 @@ export const TestTextWithIcons = decorate(() => {
 				<TitleInline>
 					<Icon type={iconType} height={titleHeight} />
 					Title
-					</TitleInline>
+				</TitleInline>
 			</Padding>
 			<Padding>
 				<SubtitleInline>
 					<Icon type={iconType} height={subtitleHeight} />
 					Subtitle
-					</SubtitleInline>
+				</SubtitleInline>
 			</Padding>
 			<Padding>
 				<TextInline>
 					<Icon type={iconType} height={textHeight} />
 					Text
-					</TextInline>
+				</TextInline>
 			</Padding>
 			<Padding>
 				<SmallTextInline>
 					<Icon type={iconType} height={smallTextHeight} />
 					SmallText
-					</SmallTextInline>
+				</SmallTextInline>
 			</Padding>
 			<Padding>
 				<SubTextInline>
 					<Icon type={iconType} height={subTextHeight} />
 					SubText
-					</SubTextInline>
+				</SubTextInline>
 			</Padding>
 		</>
 	);
+}, {
+	hasMargin: true
 });
 
 const Padding = styled.div`

@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { decorate } from '@/test/storybook/decorate';
-import { Title, Subtitle, Text, TextInline, SmallText, SubText } from '@/core/symbol/text';
+import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
+import { SmallText, SubText, Subtitle, Text, TextInline, Title } from '@/core/symbol/text';
+import { CosmosFixture } from '@/test';
 
-export default { title: 'core/style' };
-
-export const TestTheme = decorate(() => {
-
+export default CosmosFixture.create(() => {
 	const theme = useCurrentTheme();
 
 	return (
@@ -25,6 +22,8 @@ export const TestTheme = decorate(() => {
 			<TextColorBox backgroundColor={theme.color.backgroundTimelineDay}>Timeline Day Background</TextColorBox>
 		</>
 	);
+}, {
+	hasMargin: true
 });
 
 interface ColorBoxProps {

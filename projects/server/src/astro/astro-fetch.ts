@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { SunEvent } from '@messman/wbt-iso';
+import { SunEvent } from '@wbtdevlocal/iso';
 import { APIConfigurationContext } from '../all/context';
 import { RunFlags } from '../util/run-flags';
 import { IntermediateAstroValues } from './astro-intermediate';

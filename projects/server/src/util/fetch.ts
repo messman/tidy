@@ -1,6 +1,6 @@
 // TODO - make it fail when fetch is not imported. For some reason it doesn't warn.
 import * as fetch from 'node-fetch';
-import { errorIssue, Issue } from '@messman/wbt-iso';
+import { errorIssue, Issue } from '@wbtdevlocal/iso';
 
 export interface FetchResponse<T> {
 	result: T | null,

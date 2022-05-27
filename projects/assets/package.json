@@ -1,5 +1,5 @@
 {
-	"name": "@messman/wbt-assets",
+	"name": "@wbtdevlocal/assets",
 	"version": "4.0.0",
 	"description": "Shared client-side assets for WBT.",
 	"main": "dist/index.js",

@@ -1,5 +1,5 @@
 {
-	"name": "@messman/wbt-server-http",
+	"name": "@wbtdevlocal/server-http",
 	"version": "4.0.0",
 	"description": "The HTTP server for WBT.",
 	"main": "dist/index.js",
@@ -12,8 +12,8 @@
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"dependencies": {
-		"@messman/wbt-iso": "*",
-		"@messman/wbt-server": "*",
+		"@wbtdevlocal/iso": "*",
+		"@wbtdevlocal/server": "*",
 		"express": "^4.17.1",
 		"luxon": "^2.3.2",
 		"pino": "^7.10.0",

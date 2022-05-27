@@ -1,4 +1,4 @@
-import { SunEvent } from '@messman/wbt-iso';
+import { SunEvent } from '@wbtdevlocal/iso';
 import { AllIssue } from '../all/all-merge';
 
 export interface IntermediateAstroValues extends AllIssue {

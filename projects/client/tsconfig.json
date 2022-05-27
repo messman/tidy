@@ -1,13 +1,12 @@
 {
-	"extends": "../../tsconfig-base.json",
+	"extends": "../../shared/configs/tsconfig-base.json",
 	"compilerOptions": {
 		"declaration": false,
 		"declarationMap": false,
 		"lib": [
 			"DOM",
-			"ES2017"
+			"ES2021"
 		],
-		"target": "ES2015",
 		"jsx": "react",
 		"outDir": "./ts-build",
 		"baseUrl": ".",

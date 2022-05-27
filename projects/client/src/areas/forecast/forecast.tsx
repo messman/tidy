@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { AllDailyDay } from 'tidy-shared';
 import { Toggle } from '@/core/common/toggle';
 import { ContextBlock } from '@/core/layout/context-block';
 import { edgePaddingValue } from '@/core/style/common';
@@ -11,6 +10,7 @@ import { localStorage } from '@/services/data/local-storage';
 import { getDateDayOfWeek } from '@/services/time';
 import { DailyWeatherDisplay, processDailyWeatherForDisplay } from '@/services/weather/weather-process';
 import { Flex, useControlledElementSize } from '@messman/react-common';
+import { AllDailyDay } from '@wbtdevlocal/iso';
 import { ForecastEntryPrimary, ForecastEntrySecondary } from './forecast-entry';
 
 export interface ForecastProps {

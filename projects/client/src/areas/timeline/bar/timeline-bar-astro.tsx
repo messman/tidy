@@ -1,5 +1,5 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
-import { DateTime } from 'tidy-shared/node_modules/@types/luxon';
 import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Text } from '@/core/symbol/text';

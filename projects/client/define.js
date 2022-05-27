@@ -1,3 +1,4 @@
+// @ts-check
 module.exports = async function getDefine(isDevelopment) {
 
 	const buildTime = (new Date()).getTime();
@@ -15,15 +16,16 @@ module.exports = async function getDefine(isDevelopment) {
 
 		// Overwritten by dev/prod builds
 		localTestData: JSON.stringify(null),
-		fetchUrl: JSON.stringify(null),
+		apiRoot: JSON.stringify(null)
 	};
 
-	let fetchUrlBase = null;
+	// Version of the server API to use.
+	const apiPath = `/api/v4-0`;
 
 	if (isDevelopment) {
-		const tidyServer = require('tidy-server');
-		const tidyShared = require('tidy-shared');
-		fetchUrlBase = 'http://192.168.86.40:8000';
+		const tidyServer = require('@wbtdevlocal/server');
+		const tidyShared = require('@wbtdevlocal/iso');
+		DEFINE.apiRoot = JSON.stringify(apiPath);
 
 		/*
 			Below is code to create test data right now as part of the build process.
@@ -47,12 +49,9 @@ module.exports = async function getDefine(isDevelopment) {
 		console.log(`Done adding local test data`);
 	}
 	else {
-		fetchUrlBase = 'https://agm-tidy-server.herokuapp.com';
+		// Production
+		DEFINE.apiRoot = JSON.stringify(`https://wellsbeachtime-api-v4-0.herokuapp.com${apiPath}`);
 	}
-
-	// Version of the server API to use.
-	const serverVersion = 'v3.5.0';
-	DEFINE.fetchUrl = JSON.stringify(`${fetchUrlBase}/${serverVersion}/latest`);
 
 	return DEFINE;
 };

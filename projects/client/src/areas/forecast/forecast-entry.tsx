@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { TideEvent } from 'tidy-shared';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
 import { SmallText, subtitleHeight, TextInline, TextPara } from '@/core/symbol/text';
@@ -11,6 +10,7 @@ import { SpacedIcon } from '@/core/weather/weather-common';
 import { CONSTANT } from '@/services/constant';
 import { timeToPixelsWithConstant } from '@/services/time';
 import { Flex, FlexRow, minutes } from '@messman/react-common';
+import { TideEvent } from '@wbtdevlocal/iso';
 import { getMinMaxEvents } from '../../core/tide/tide-chart';
 import { ForecastContextBlockProps } from './forecast';
 

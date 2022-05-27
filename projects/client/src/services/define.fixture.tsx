@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { TextPara } from '@/core/symbol/text';
-import { DEFINE } from '@/services/define';
-import { decorate } from '@/test/storybook/decorate';
+import { DEFINE, useDefine } from '@/services/define';
+import { CosmosFixture } from '@/test';
 import { useAllResponse } from './data/data';
 
-export default { title: 'services' };
-
-export const TestDefine = decorate(() => {
+export default CosmosFixture.create(() => {
 
 	const allResponseState = useAllResponse();
+	const define = useDefine();
+	console.log(define);
+
 
 	let referenceTime: string = '...';
 	if (allResponseState.data) {
@@ -19,8 +20,10 @@ export const TestDefine = decorate(() => {
 		<>
 			<TextPara>Build Time: {DEFINE.buildTime} ({new Date(DEFINE.buildTime).toISOString()})</TextPara>
 			<TextPara>Build Version: {DEFINE.buildVersion}</TextPara>
-			<TextPara>Fetch URL: {DEFINE.fetchUrl}</TextPara>
+			<TextPara>API Root: {DEFINE.apiRoot}</TextPara>
 			<TextPara>Local Test Data Reference Time: {referenceTime}</TextPara>
 		</>
 	);
+}, {
+	hasMargin: true
 });

@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { styled } from '@/core/style/styled';
 import { Subtitle } from '@/core/symbol/text';
-import { decorate } from '@/test/storybook/decorate';
+import { CosmosFixture } from '@/test';
 import { DefaultLayoutBreakpoint, LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';
 
-export default { title: 'services/layout' };
-
-export const TestResponsive = decorate(() => {
-
+export default CosmosFixture.create(() => {
 	const windowLayout = useWindowMediaLayout();
 	let invalidSubtitle: JSX.Element | null = null;
 	if (windowLayout.heightBreakpoint < DefaultLayoutBreakpoint.regular) {
@@ -22,8 +19,9 @@ export const TestResponsive = decorate(() => {
 			{invalidSubtitle}
 		</>
 	);
+}, {
+	hasMargin: true
 });
-
 
 const InvalidSubtitle = styled(Subtitle)`
 	color: ${p => p.theme.color.warning};

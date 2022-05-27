@@ -1,6 +1,6 @@
 import express = require('express');
 import { NextFunction, Request, Response } from 'express';
-import { createReplacer } from '@messman/wbt-iso';
+import { createReplacer } from '@wbtdevlocal/iso';
 import { configureApi } from './app';
 import { settings } from './env';
 import { baseLogger } from './logger';
@@ -35,7 +35,7 @@ if (!settings.isDev) {
 	Routing:
 
 	The nginx proxy handles routing. This server is but one piece.
-	1. /icons/ - URLS (SVG assets from @messman/wbt-assets)
+	1. /icons/ - URLS (SVG assets from @wbtdevlocal/assets)
 	2. /api/ - (this server)
 	3. *.* - static files (from client)
 	4. * - fallthrough to index.html (client-side routing)

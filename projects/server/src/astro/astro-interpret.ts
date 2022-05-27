@@ -1,4 +1,4 @@
-import { SunEvent } from '@messman/wbt-iso';
+import { SunEvent } from '@wbtdevlocal/iso';
 import { ForDay } from '../all/all';
 import { AllIssue } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';

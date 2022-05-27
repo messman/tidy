@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { SunEvent, WeatherStatus } from 'tidy-shared';
 import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
 import { styled, StyledFC } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
@@ -11,6 +10,7 @@ import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 import { filterWeather, processWeatherForDisplay } from '@/services/weather/weather-process';
 import { Flex, FlexColumn } from '@messman/react-common';
+import { SunEvent, WeatherStatus } from '@wbtdevlocal/iso';
 import { TimelineBaseProps, weatherCutoffHoursFromReference } from '../bar/timeline-bar-common';
 
 interface TimelineWeatherProps extends TimelineBaseProps { }
