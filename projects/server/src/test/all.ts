@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { DailyWeather, SunEvent, TideEvent, TideStatus, warningIssue, Warnings, WeatherStatus, WeatherStatusType, WindDirection } from '@messman/wbt-iso';
+import { DailyWeather, SunEvent, TideEvent, TideStatus, warningIssue, Warnings, WeatherStatus, WeatherStatusType, WindDirection } from '@wbtdevlocal/iso';
 import { AllMergeFunc, mergeWarnings } from '../all/all-merge';
 import { APIConfigurationContext } from '../all/context';
 import { IntermediateAstroValues } from '../astro/astro-intermediate';

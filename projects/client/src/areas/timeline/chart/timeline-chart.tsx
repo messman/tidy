@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { AllResponseData, Info } from 'tidy-shared';
 import { styled } from '@/core/style/styled';
 import { useTideChart } from '@/core/tide/tide-chart';
 import { CONSTANT } from '@/services/constant';
 import { timeToPixels } from '@/services/time';
 import { Flex, useControlledElementSize } from '@messman/react-common';
+import { AllResponseData, Info } from '@wbtdevlocal/iso';
 import { TimelineBaseProps } from '../bar/timeline-bar-common';
 
 export interface TimelineChartProps extends TimelineBaseProps {

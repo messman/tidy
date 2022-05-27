@@ -1,5 +1,5 @@
 {
-	"name": "@messman/wbt-iso",
+	"name": "@wbtdevlocal/iso",
 	"version": "4.0.0",
 	"description": "Shared code between client and server for WBT.",
 	"main": "dist/index.js",

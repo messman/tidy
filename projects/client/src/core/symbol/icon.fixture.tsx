@@ -1,12 +1,9 @@
 import * as React from 'react';
-import { decorate } from '@/test/storybook/decorate';
+import { Icon, iconTypes } from '@/core/symbol/icon';
 import { Text } from '@/core/symbol/text';
-import { iconTypes, Icon } from '@/core/symbol/icon';
+import { CosmosFixture } from '@/test';
 
-export default { title: 'core/symbol' };
-
-export const TestIcon = decorate(() => {
-
+export default CosmosFixture.create(() => {
 	const iconList = Object.keys(iconTypes).map((iconName) => {
 		const icon = iconTypes[iconName as keyof typeof iconTypes];
 
@@ -23,4 +20,6 @@ export const TestIcon = decorate(() => {
 			{iconList}
 		</>
 	);
+}, {
+	hasMargin: true
 });

@@ -1,0 +1,62 @@
+{
+	"watchDirs": [
+		"./src"
+	],
+	"webpack": {
+		"reloadOnFail": false
+	},
+	"dom": {
+		"containerQuerySelector": "#react-root"
+	},
+	"ui": {
+		"responsivePreview": {
+			"devices": [
+				{
+					"label": "Mobile Min (iPhone SE)",
+					"width": 320,
+					"height": 568
+				},
+				{
+					"label": "Mobile Regular (iPhone X)",
+					"width": 375,
+					"height": 812
+				},
+				{
+					"label": "iPhone 11",
+					"width": 414,
+					"height": 896
+				},
+				{
+					"label": "Mobile Large",
+					"width": 576,
+					"height": 812
+				},
+				{
+					"label": "Tablet (iPad Mini 4)",
+					"width": 768,
+					"height": 1024
+				},
+				{
+					"label": "Desktop",
+					"width": 992,
+					"height": 1100
+				},
+				{
+					"label": "iPad Pro",
+					"width": 1024,
+					"height": 1366
+				},
+				{
+					"label": "Wide",
+					"width": 1200,
+					"height": 1500
+				},
+				{
+					"label": "Max",
+					"width": 1500,
+					"height": 1800
+				}
+			]
+		}
+	}
+}

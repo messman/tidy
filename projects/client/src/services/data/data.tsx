@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { AllResponse, AllResponseData, deserialize, Info } from 'tidy-shared';
 import { DEFINE } from '@/services/define';
 import { clampPromise, PromiseOutput, StalePromiseTimerComponent, StalePromiseTimerOutput, useDocumentVisibility, useStalePromiseTimer } from '@messman/react-common';
+import { AllResponse, AllResponseData, deserialize, Info } from '@wbtdevlocal/iso';
 import { CONSTANT } from '../constant';
 import { useLocalDataPhrase } from './data-local';
 
@@ -118,7 +118,7 @@ export function hasAllResponseData(allResponsePromise: PromiseOutput<AllResponse
 
 async function fetchAllResponse(): Promise<AllResponse> {
 
-	const url = DEFINE.fetchUrl;
+	const url = `${DEFINE.apiRoot}/latest`;
 
 	try {
 		const response = await fetch(url);
@@ -141,7 +141,7 @@ async function fetchAllResponse(): Promise<AllResponse> {
 	}
 	catch (err) {
 		if (!(err instanceof Error)) {
-			err = new Error(err);
+			err = new Error(err as string);
 		}
 		console.error(url, err);
 		throw err;

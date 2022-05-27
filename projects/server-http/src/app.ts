@@ -1,6 +1,6 @@
 import { Application, json, NextFunction, Request, Response, Router, urlencoded } from 'express';
-import { AllResponse } from '@messman/wbt-iso';
-import { APIConfiguration, createWellsConfiguration, getAllForConfiguration } from '@messman/wbt-server';
+import { AllResponse } from '@wbtdevlocal/iso';
+import { APIConfiguration, createWellsConfiguration, getAllForConfiguration } from '@wbtdevlocal/server';
 import { settings } from './env';
 import { baseLogger } from './logger';
 import { createResponseMemory, ResponseMemory, ResponseMemoryStats } from './response-memory';
@@ -31,7 +31,7 @@ export function configureApi(app: Application): void {
 			return response.json(hit.cacheItemValue);
 		}
 
-		const newest = await getResponse(createWellsConfiguration(), 'tidy-server', memory);
+		const newest = await getResponse(createWellsConfiguration(), '@wbtdevlocal/server', memory);
 		return response.json(newest);
 	});
 

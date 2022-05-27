@@ -1,4 +1,4 @@
-import { AllResponse } from 'tidy-shared';
+import { AllResponse } from '@wbtdevlocal/iso';
 import { createWellsConfiguration, getAllForConfiguration, getAllTestForConfiguration, RunFlags } from '../../dist/index';
 import { TestEnv } from '../test';
 

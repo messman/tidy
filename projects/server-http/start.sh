@@ -16,11 +16,19 @@ echo Starting... check seq.
 #		Likely, it will not; this means it is one of the two pino-seq processes that
 #		is responsible for the warning. TODO - solve this issue.
 
-#
-#	Start app, \
-#		and send STDERR (Error messages, which pino doesn't usually handle) to Seq as Error \
-#		and send STDOUT (at least, the ones pino doesn't already capture) to Seq as Information
-#
-node ./dist/index.js \
-	2> >(pino-seq --logOtherAs Error --serverUrl ${WBT_SEQ_URL}) \
-	> >(pino-seq --logOtherAs Information --serverUrl ${WBT_SEQ_URL})
+if [[ -v WBT_SEQ_URL ]]
+then
+	#
+	#	Start app, \
+	#		and send STDERR (Error messages, which pino doesn't usually handle) to Seq as Error \
+	#		and send STDOUT (at least, the ones pino doesn't already capture) to Seq as Information
+	#
+	echo "using Seq..."
+	node ./dist/index.js \
+		2> >(npx pino-seq --logOtherAs Error --serverUrl ${WBT_SEQ_URL}) \
+		> >(npx pino-seq --logOtherAs Information --serverUrl ${WBT_SEQ_URL})
+else
+	# Ignore Seq (useful when Seq is deployed separately)
+	echo "without Seq..."
+	node ./dist/index.js
+fi

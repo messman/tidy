@@ -1,22 +1,18 @@
-import * as React from 'react';
-import { decorate } from '@/test/storybook/decorate';
-import { iconTypes, Icon } from '@/core/symbol/icon';
-import { flowPaddingValue } from '../style/common';
-import { TextUnit, TimeTextUnit, TimeDurationTextUnit } from './text-unit';
-import { Text, textHeight } from './text';
-import { styled } from '../style/styled';
 import { DateTime } from 'luxon';
-
-export default { title: 'core/symbol' };
+import * as React from 'react';
+import { Icon, iconTypes } from '@/core/symbol/icon';
+import { CosmosFixture } from '@/test';
+import { flowPaddingValue } from '../style/common';
+import { styled } from '../style/styled';
+import { Text, textHeight } from './text';
+import { TextUnit, TimeDurationTextUnit, TimeTextUnit } from './text-unit';
 
 const localDateTime = DateTime.local();
 
-export const TestTextUnit = decorate(() => {
-
+export default CosmosFixture.create(() => {
 	const minutesOnlyFromLocal = localDateTime.plus({ minutes: 28 });
 	const hoursOnlyFromLocal = localDateTime.plus({ hours: 7 });
 	const fromLocal = localDateTime.plus({ hours: 2, minutes: 28 });
-
 
 	return (
 		<>
@@ -49,6 +45,8 @@ export const TestTextUnit = decorate(() => {
 			</Padding>
 		</>
 	);
+}, {
+	hasMargin: true
 });
 
 const Padding = styled.div`

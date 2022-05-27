@@ -1,5 +1,5 @@
 {
-	"name": "@messman/wbt-build",
+	"name": "@wbtdevlocal/build",
 	"version": "1.0.0",
 	"description": "Wells Beach Time monorepo builder",
 	"main": "dist/index.js",

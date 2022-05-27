@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { TideEvent, TideEventRange, TideStatus } from 'tidy-shared';
 import { createChartLine, makeRect, Point } from '@/services/draw/bezier';
+import { TideEvent, TideEventRange, TideStatus } from '@wbtdevlocal/iso';
 import { FillSVG, StrokeSVG } from './tide-common';
 
 export interface TideChartInput {

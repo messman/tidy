@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { WeatherStatusType, weatherStatusTypeDescription, WindDirection } from 'tidy-shared';
 import { ContextBlock } from '@/core/layout/context-block';
 import { edgePaddingValue } from '@/core/style/common';
 import { styled } from '@/core/style/styled';
@@ -11,6 +10,7 @@ import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';
 import { Flex, FlexRow } from '@messman/react-common';
+import { WeatherStatusType, weatherStatusTypeDescription, WindDirection } from '@wbtdevlocal/iso';
 
 export interface SummaryWeatherProps {
 	isDualMode: boolean;

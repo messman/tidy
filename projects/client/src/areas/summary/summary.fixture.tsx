@@ -2,13 +2,10 @@ import * as React from 'react';
 import { ResponsiveLayout } from '@/areas/layout/layout';
 import { MockForecast, MockSettings, MockTimeline } from '@/areas/layout/layout-mock';
 import { MenuBar } from '@/areas/menu-bar/menu-bar';
-import { decorate } from '@/test/storybook/decorate';
+import { CosmosFixture } from '@/test';
 import { Summary } from './summary';
 
-export default { title: 'areas/summary' };
-
-export const TestSummary = decorate(() => {
-
+export default CosmosFixture.create(() => {
 	return (
 		<MenuBar>
 			<ResponsiveLayout
@@ -19,4 +16,6 @@ export const TestSummary = decorate(() => {
 			/>
 		</MenuBar>
 	);
+}, {
+	hasMargin: true
 });

@@ -24,7 +24,7 @@ services:
       - ../../:/usr/src
       # List the node_modules below so they are saved in volumes, not on the host.
       - volume-wbt-devcode-modules-assets:/usr/src/projects/assets/node_modules
-      - volume-wbt-devcode-modules-build:/usr/src/utility/build/node_modules
+      - volume-wbt-devcode-modules-build:/usr/src/utility/local-dev/build/node_modules
       - volume-wbt-devcode-modules-client:/usr/src/projects/client/node_modules
       - volume-wbt-devcode-modules-iso:/usr/src/projects/iso/node_modules
       - volume-wbt-devcode-modules-server:/usr/src/projects/server/node_modules
@@ -68,8 +68,8 @@ services:
       - ./nginx-templates:/etc/nginx/templates
       # Static Files
       # Note! don't nest directories, as it messes up bindings when directories get deleted.
-      - ../../../projects/client/dist:/usr/share/nginx/wbt/dist
-      - ../../../projects/assets/dist-icons:/usr/share/nginx/wbt/icons
+      - ../../projects/client/dist:/usr/share/nginx/wbt/dist
+      - ../../projects/assets/dist-icons:/usr/share/nginx/wbt/icons
     ports:
       - "8090:80" # App
       - "8092:81" # Cosmos

@@ -1,5 +1,5 @@
 import { DateTime, DateTimeOptions } from 'luxon';
-import { errorIssue, WeatherStatusType, WindDirection } from '@messman/wbt-iso';
+import { errorIssue, WeatherStatusType, WindDirection } from '@wbtdevlocal/iso';
 import { APIConfigurationContext } from '../all/context';
 import { FetchResponse, getJSON } from '../util/fetch';
 import { createServerLog, serverLog } from '../util/log';

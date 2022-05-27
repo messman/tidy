@@ -1,15 +1,11 @@
 import * as React from 'react';
 import { Text } from '@/core/symbol/text';
-import { decorate } from '@/test/storybook/decorate';
-import { boolean } from '@storybook/addon-knobs';
+import { Cosmos, CosmosFixture } from '@/test';
 import { styled } from '../style/styled';
 import { ContextBlock } from './context-block';
 
-export default { title: 'core/layout' };
-
-export const TestContextBlock = decorate(() => {
-
-	const isDualMode = boolean('Is Dual Mode', false);
+export default CosmosFixture.create(() => {
+	const isDualMode = Cosmos.useControlValue('Is Dual Mode', false);
 
 	return (
 		<div>
@@ -20,6 +16,8 @@ export const TestContextBlock = decorate(() => {
 			/>
 		</div>
 	);
+}, {
+	hasMargin: true
 });
 
 const MockPrimary: React.FC = () => {

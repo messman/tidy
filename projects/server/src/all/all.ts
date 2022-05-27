@@ -1,4 +1,4 @@
-import { AllResponse, Info } from '@messman/wbt-iso';
+import { AllResponse, Info } from '@wbtdevlocal/iso';
 import { allTestMerge } from '../test/all';
 import { serverLog } from '../util/log';
 import { defaultRunFlags, RunFlags } from '../util/run-flags';
