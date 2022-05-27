@@ -224,7 +224,7 @@ export function createWeatherData(configContext: APIConfigurationContext, runFla
 		}),
 		visibility: hourlyWeatherData(2, 20, defaultPrecision, true, .2)
 	};
-	const shortTermWeather: WeatherStatus<DateTime, number>[] = hourly.temp.map((temp, i) => {
+	const shortTermWeather: WeatherStatus[] = hourly.temp.map((temp, i) => {
 		return {
 			time: temp.span.begin,
 			temp: temp.value,

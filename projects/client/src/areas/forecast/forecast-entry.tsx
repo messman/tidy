@@ -200,7 +200,7 @@ const SunBarLine = styled.div<SunBarLineProps>`
 `;
 
 
-function createPositionedExtremaInfo(events: TideEvent<DateTime>[], startTime: DateTime, endTime: DateTime): [JSX.Element[], 'space-around' | 'space-between'] {
+function createPositionedExtremaInfo(events: TideEvent[], startTime: DateTime, endTime: DateTime): [JSX.Element[], 'space-around' | 'space-between'] {
 	let tideExtrema = events.map((event) => {
 		const key = `extreme_${event.time.valueOf()}`;
 		return <TideExtreme key={key} event={event} isShown={true} />;
@@ -218,7 +218,7 @@ function createPositionedExtremaInfo(events: TideEvent<DateTime>[], startTime: D
 }
 
 interface TideExtremeProps {
-	event: TideEvent<DateTime>;
+	event: TideEvent;
 	isShown: boolean;
 }
 

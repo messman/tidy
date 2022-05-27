@@ -1,32 +1,32 @@
 import { DateTime } from 'luxon';
 import { WeatherStatusType } from './weather-status-type';
 
-export interface WeatherStatus<TDate = DateTime, TMeasurement = Measurement> {
+export interface WeatherStatus {
 	/** Time of the weather status. */
-	time: TDate;
+	time: DateTime;
 	/** The description of the weather at the time. */
 	status: WeatherStatusType;
 	/** The temperature, in degrees fahrenheit. */
-	temp: TMeasurement;
+	temp: Measurement;
 	/** The temperature "feels like", in degrees fahrenheit. */
-	tempFeelsLike: TMeasurement;
+	tempFeelsLike: Measurement;
 	/** The wind speed, in miles per hour. */
-	wind: TMeasurement;
+	wind: Measurement;
 	/** The wind direction. */
 	windDirection: WindDirection;
 	/** The dew point, in degrees fahrenheit. */
-	dewPoint: TMeasurement;
+	dewPoint: Measurement;
 	/** Atmospheric pressure, in millibars. */
-	pressure: TMeasurement;
+	pressure: Measurement;
 	/** Percent cloud cover. */
-	cloudCover: TMeasurement;
+	cloudCover: Measurement;
 	/** Visibility in miles. */
-	visibility: TMeasurement;
+	visibility: Measurement;
 }
 
-export interface DailyWeather<TDate = DateTime> {
+export interface DailyWeather {
 	/** The date of the weather status. */
-	day: TDate;
+	day: DateTime;
 	/** The description of the weather on the day. */
 	status: WeatherStatusType;
 	/** Minimum expected temperature. */

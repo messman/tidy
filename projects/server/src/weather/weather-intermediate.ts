@@ -1,11 +1,10 @@
-import { DateTime } from 'luxon';
 import { DailyWeather, WeatherStatus } from '@wbtdevlocal/iso';
 import { AllIssue } from '../all/all-merge';
 
 export interface IntermediateWeatherValues extends AllIssue {
-	currentWeather: WeatherStatus<DateTime, number>;
-	shortTermWeather: WeatherStatus<DateTime, number | null>[];
-	longTermWeather: DailyWeather<DateTime>[];
+	currentWeather: WeatherStatus;
+	shortTermWeather: WeatherStatus[];
+	longTermWeather: DailyWeather[];
 }
 
 export function createEmptyIntermediateWeather(): IntermediateWeatherValues {
