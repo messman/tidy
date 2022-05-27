@@ -1,29 +1,36 @@
 import { DateTime } from 'luxon';
 
-export interface TideStatus<TDate = DateTime> {
+export interface CurrentTides {
+	/** The height, in feet. */
+	height: number,
+	/** The range of tides - will always have two events - previous and next. */
+	range: TideEventRange;
+}
+
+export interface TideStatus {
 	/** The time of the event. */
-	time: TDate,
+	time: DateTime,
 	/** The height, in feet. */
 	height: number;
 }
 
-export interface TideEvent<TDate = DateTime> extends TideStatus<TDate> {
+export interface TideEvent extends TideStatus {
 	/** Whether the tide was low or not. */
 	isLow: boolean;
 }
 
-export interface TideExtremes<TDate = DateTime> {
+export interface TideExtremes {
 	/** Event with the lowest height. Excludes outside events. */
-	lowest: TideEvent<TDate>,
+	lowest: TideEvent,
 	/** Event with the highest height. Excludes outside events. */
-	highest: TideEvent<TDate>;
+	highest: TideEvent;
 }
 
-export interface TideEventRange<TDate = DateTime> extends TideExtremes<TDate> {
+export interface TideEventRange extends TideExtremes {
 	/** Events in the range, in order by date from earliest to latest. **/
-	events: TideEvent<TDate>[];
+	events: TideEvent[];
 	/** For continuity in graphing - in order by date from earliest to latest */
-	outsidePrevious: TideEvent<TDate>[],
+	outsidePrevious: TideEvent[],
 	/** For continuity in graphing - in order by date from earliest to latest */
-	outsideNext: TideEvent<TDate>[];
+	outsideNext: TideEvent[];
 }

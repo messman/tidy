@@ -1,8 +1,7 @@
-export * from './all/all-response';
-export * from './all/info';
-export * from './all/issue';
-export * from './all/serialization';
-export * from './astro/astro-event';
-export * from './tide/tide-event';
-export * from './weather/weather-status';
-export * from './weather/weather-status-type';
+export * from './api/error';
+export * from './api/request-response';
+export * from './api/routes';
+export * from './api/serialization';
+
+export * from './areas';
+export * from './utility';
