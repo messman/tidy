@@ -1,6 +1,5 @@
 // @ts-check
 const webpack = require('webpack');
-const getDefine = require('./define');
 
 /**
  * @param {webpack.Configuration} webpackConfig
@@ -22,11 +21,17 @@ module.exports = function updateWebpackConfig(webpackConfig, isDevelopment) {
 		internal AST: https://github.com/syntax-tree/xast
 
 	*/
-	function replaceSVGPathFillWithCurrentColor(ast, _params, info) {
+	function replaceSVGPathFillWithCurrentColor(ast, params, info) {
 		if (!ast) {
 			console.log('No AST', ast, info);
 			return;
 		}
+
+		if (!params['_wbt']) {
+			params['_wbt'] = { firstTime: true };
+		}
+		const storage = params['_wbt'];
+
 		/*
 			Note, May 2021: 
 			As seen in the code elsewhere in this file, we run this replacement 
@@ -45,7 +50,15 @@ module.exports = function updateWebpackConfig(webpackConfig, isDevelopment) {
 		const isPath = ast[elementKey] === 'path';
 		const attrs = ast[attributesKey];
 		if ((!isSvg && !isPath) || !attrs) {
-			console.log('Issue with replace fill attribute - is this icon constructed correctly?', svgFile, { isOldParser });
+
+			// Write to console for a developer to inspect.
+			// If this happens, it means the SVG is not constructed how we expected above.
+			// Only print for the first instance (since this will otherwise log for every element of the SVG) and only the first time through.
+			if (isOldParser && !storage[svgFile]) {
+				storage[svgFile] = 1;
+				const trimmedFileName = svgFile.substring(svgFile.indexOf('icons/') + 6);
+				console.log('Complex structure: \'' + trimmedFileName + '\'');
+			}
 			return;
 		}
 
@@ -214,7 +227,4 @@ module.exports = function updateWebpackConfig(webpackConfig, isDevelopment) {
 			]
 		},
 	];
-
-	const DEFINE = getDefine(isDevelopment);
-	webpackConfig.plugins.push(new webpack.DefinePlugin({ __DEFINE__: DEFINE }));
 };
