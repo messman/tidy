@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text } from '@/core/symbol/text';
+import { Text } from '@/core/text';
 import { CosmosFixture } from '@/test';
 import { Flex } from '@messman/react-common';
 import { MenuBar } from './menu-bar';

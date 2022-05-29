@@ -7,7 +7,7 @@ export interface TwelveHourTime {
 }
 
 export function getTimeTwelveHour(date: DateTime): TwelveHourTime {
-	let hours = date.hour;
+	let hours = date.hour as number;
 	let minutes = date.minute;
 	let ampm: 'PM' | 'AM' = hours >= 12 ? 'PM' : 'AM';
 	hours = hours % 12;

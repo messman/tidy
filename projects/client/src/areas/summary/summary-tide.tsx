@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { ContextBlock } from '@/core/layout/context-block';
 import { flowPaddingValue } from '@/core/style/common';
-import { css, styled } from '@/core/style/styled';
-import { SmallText, Text } from '@/core/symbol/text';
-import { TimeTextUnit } from '@/core/symbol/text-unit';
+import { SmallText, Text } from '@/core/text';
+import { TimeTextUnit } from '@/core/text-unit';
+import { css, styled } from '@/core/theme/styled';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';

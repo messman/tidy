@@ -3,8 +3,8 @@ import { ForecastProps } from '@/areas/forecast/forecast';
 import { SettingsProps } from '@/areas/settings/settings';
 import { SummaryProps } from '@/areas/summary/summary';
 import { TimelineProps } from '@/areas/timeline/timeline';
-import { styled } from '@/core/style/styled';
-import { Text } from '@/core/symbol/text';
+import { Text } from '@/core/text';
+import { styled } from '@/core/theme/styled';
 import { Flex } from '@messman/react-common';
 
 export const MockSummary: React.FC<SummaryProps> = (props) => {

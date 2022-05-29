@@ -1,27 +1,27 @@
 import * as React from 'react';
-import { TextPara } from '@/core/symbol/text';
+import { ParagraphBodyText } from '@/core/text';
 import { DEFINE, useDefine } from '@/services/define';
 import { CosmosFixture } from '@/test';
-import { useAllResponse } from './data/data';
+import { useBatchLatestResponse } from './data/data';
 
 export default CosmosFixture.create(() => {
 
-	const allResponseState = useAllResponse();
+	const { success } = useBatchLatestResponse();
 	const define = useDefine();
 	console.log(define);
 
 
 	let referenceTime: string = '...';
-	if (allResponseState.data) {
-		referenceTime = allResponseState.data.info.referenceTime.toISO()!;
+	if (success) {
+		referenceTime = success.meta.referenceTime.toISO()!;
 	}
 
 	return (
 		<>
-			<TextPara>Build Time: {DEFINE.buildTime} ({new Date(DEFINE.buildTime).toISOString()})</TextPara>
-			<TextPara>Build Version: {DEFINE.buildVersion}</TextPara>
-			<TextPara>API Root: {DEFINE.apiRoot}</TextPara>
-			<TextPara>Local Test Data Reference Time: {referenceTime}</TextPara>
+			<ParagraphBodyText>Build Time: {DEFINE.buildTime} ({new Date(DEFINE.buildTime).toISOString()})</ParagraphBodyText>
+			<ParagraphBodyText>Build Version: {DEFINE.buildVersion}</ParagraphBodyText>
+			<ParagraphBodyText>API Root: {DEFINE.apiRoot}</ParagraphBodyText>
+			<ParagraphBodyText>Local Test Data Reference Time: {referenceTime}</ParagraphBodyText>
 		</>
 	);
 }, {

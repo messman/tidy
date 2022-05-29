@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { createChartLine, makeRect, Point } from '@/services/draw/bezier';
-import { TideEvent, TideEventRange, TideStatus } from '@wbtdevlocal/iso';
+import * as iso from '@wbtdevlocal/iso';
 import { FillSVG, StrokeSVG } from './tide-common';
 
 export interface TideChartInput {
 	/** Range for which we are creating a chart. */
-	tideEventRange: TideEventRange;
+	tideEventRange: iso.Tide.TideEventRange;
 	/** If true, the outside tide events will be considered in sizing the chart. Use true if you are showing some of the area outside the range. */
 	includeOutsideRange: boolean;
 	/** Start time, informing the left side visibility of our chart. */
@@ -42,7 +42,7 @@ export function useTideChart(input: TideChartInput): JSX.Element | null {
 	]);
 }
 
-function computeTideChartOutput(tideEventRange: TideEventRange, includeOutsideRange: boolean, startTime: DateTime, endTime: DateTime, outputWidth: number, outputHeight: number, outputPaddingTop: number, outputPaddingBottom: number): JSX.Element | null {
+function computeTideChartOutput(tideEventRange: iso.Tide.TideEventRange, includeOutsideRange: boolean, startTime: DateTime, endTime: DateTime, outputWidth: number, outputHeight: number, outputPaddingTop: number, outputPaddingBottom: number): JSX.Element | null {
 	// May be we don't have width or height yet because it's being computed with a ref. 
 	if (outputWidth < 1 || outputHeight < 1) {
 		return null;
@@ -79,7 +79,7 @@ function computeTideChartOutput(tideEventRange: TideEventRange, includeOutsideRa
 	);
 }
 
-function tideEventRangeToPoint(tideEventRange: TideEventRange): Point[] {
+function tideEventRangeToPoint(tideEventRange: iso.Tide.TideEventRange): Point[] {
 	const points = [
 		...tideEventRange.outsidePrevious.map(tideStatusToPoint),
 		...tideEventRange.events.map(tideStatusToPoint),
@@ -90,7 +90,7 @@ function tideEventRangeToPoint(tideEventRange: TideEventRange): Point[] {
 	});
 }
 
-function tideStatusToPoint(status: TideStatus | null | undefined): Point | null {
+function tideStatusToPoint(status: iso.Tide.TideStatus | null | undefined): Point | null {
 	if (!status) {
 		return null;
 	}
@@ -100,15 +100,15 @@ function tideStatusToPoint(status: TideStatus | null | undefined): Point | null 
 	};
 }
 
-export function getMinMaxEvents(events: TideEvent[]): [TideEvent, TideEvent] {
+export function getMinMaxEvents(events: iso.Tide.TideEvent[]): [iso.Tide.TideEvent, iso.Tide.TideEvent] {
 	if (!events || !events.length) {
 		throw new Error('Cannot get min and max of empty array');
 	}
 	let minHeight: number = Infinity;
 	let maxHeight: number = -Infinity;
 
-	let minEvent: TideEvent = null!;
-	let maxEvent: TideEvent = null!;
+	let minEvent: iso.Tide.TideEvent = null!;
+	let maxEvent: iso.Tide.TideEvent = null!;
 
 	events.forEach(function (t) {
 		if (t.height < minHeight) {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextPara } from '@/core/symbol/text';
+import { TextPara } from '@/core/text';
 import { Cosmos, CosmosFixture } from '@/test';
 import { Flex } from '@messman/react-common';
 import { ThemePicker } from '../settings/theme-picker';

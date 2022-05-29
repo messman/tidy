@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SmallText, Subtitle, Text, TextInline } from '@/core/symbol/text';
+import { SmallText, Subtitle, Text, TextInline } from '@/core/text';
 import { CosmosFixture } from '@/test';
 import { Flex, FlexColumn, FlexRoot, FlexRow } from '@messman/react-common';
 import { styled } from '../style/styled';

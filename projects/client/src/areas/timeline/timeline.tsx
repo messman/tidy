@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { edgePaddingValue } from '@/core/style/common';
-import { styled } from '@/core/style/styled';
+import { styled } from '@/core/theme/styled';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { pixelsToTime } from '@/services/time';

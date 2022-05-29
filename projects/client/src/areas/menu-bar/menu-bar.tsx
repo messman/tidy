@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useComponentLayout } from '@/areas/layout/component-layout';
-import { styled } from '@/core/style/styled';
 import { iconTypes } from '@/core/symbol/icon';
+import { styled } from '@/core/theme/styled';
 import { DefaultLayoutBreakpoint, FlexColumn, FlexParent, FlexRow, LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';
 import { AllResponseClipboardIcon } from './clipboard';
 import { MenuBarIcon } from './menu-bar-icon';

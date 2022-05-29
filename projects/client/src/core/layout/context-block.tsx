@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
-import { styled } from '@/core/style/styled';
+import { styled } from '@/core/theme/styled';
 import { FlexColumn, FlexRow } from '@messman/react-common';
 
 export interface ContextBlockProps {

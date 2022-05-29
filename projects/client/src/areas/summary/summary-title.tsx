@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useCurrentTheme } from '@/core/style/theme';
 import { iconTypes, SVGIconType } from '@/core/symbol/icon';
-import { subtitleHeight, SubtitleInline, Text } from '@/core/symbol/text';
-import { TimeTextUnit } from '@/core/symbol/text-unit';
+import { subtitleHeight, SubtitleInline, Text } from '@/core/text';
+import { TimeTextUnit } from '@/core/text-unit';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { percentTimeBetween } from '@/services/time';

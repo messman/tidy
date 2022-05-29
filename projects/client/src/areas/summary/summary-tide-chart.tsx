@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
-import { css, styled } from '@/core/style/styled';
+import { css, styled } from '@/core/theme/styled';
 import { useTideChart } from '@/core/tide/tide-chart';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';

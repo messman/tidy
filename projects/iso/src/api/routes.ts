@@ -1,4 +1,5 @@
-import { ApiRoute, ApiRouteEmpty, HttpMethod } from './request-response';
+import { Batch } from '../areas';
+import { ApiRoute, HttpMethod } from './request-response';
 
 /**
  * The list of all API Routes available to the client.
@@ -15,7 +16,7 @@ import { ApiRoute, ApiRouteEmpty, HttpMethod } from './request-response';
  */
 export const apiRoutes = {
 	batch: {
-		latest: get('/batch/latest') as ApiRouteEmpty,
+		latest: get('/batch/latest') as Batch.LatestAPI.Batch.Latest.Route,
 	}
 };
 

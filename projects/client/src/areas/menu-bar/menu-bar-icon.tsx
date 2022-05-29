@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { edgePaddingValue } from '@/core/style/common';
-import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, SVGIconType } from '@/core/symbol/icon';
-import { SubText, subtitleHeight } from '@/core/symbol/text';
+import { SubText, subtitleHeight } from '@/core/text';
+import { styled } from '@/core/theme/styled';
 
 export interface MenuBarIconProps extends React.HTMLAttributes<HTMLButtonElement> {
 	/** Icon type to use. */

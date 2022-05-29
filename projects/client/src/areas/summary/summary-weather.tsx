@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ContextBlock } from '@/core/layout/context-block';
 import { edgePaddingValue } from '@/core/style/common';
-import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { iconTypes } from '@/core/symbol/icon';
-import { Text, TextInline, titleHeight } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
+import { Text, TextInline, titleHeight } from '@/core/text';
+import { styled } from '@/core/theme/styled';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';

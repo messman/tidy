@@ -1,0 +1,9 @@
+{
+	"Insert import for @wbtdevlocal/iso": {
+		"prefix": "iso",
+		"body": [
+			"import * as iso from '@wbtdevlocal/iso';$2"
+		],
+		"description": "Insert import for @wbtdevlocal/iso"
+	},
+}
