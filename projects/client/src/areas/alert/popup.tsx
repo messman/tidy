@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Overlay } from '@/core/layout/overlay';
 import { addMargin, borderRadiusStyle, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
-import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, iconTypes } from '@/core/symbol/icon';
-import { SmallText, Subtitle, Text, titleHeight } from '@/core/symbol/text';
+import { SmallText, Subtitle, Text, titleHeight } from '@/core/text';
+import { styled } from '@/core/theme/styled';
 import { CONSTANT } from '@/services/constant';
 import { useAllResponse } from '@/services/data/data';
 import { Flex, FlexColumn } from '@messman/react-common';

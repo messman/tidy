@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@/core/style/styled';
+import { styled } from '@/core/theme/styled';
 import { useTideChart } from '@/core/tide/tide-chart';
 import { CONSTANT } from '@/services/constant';
 import { timeToPixels } from '@/services/time';

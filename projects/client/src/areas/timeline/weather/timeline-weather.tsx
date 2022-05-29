@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
-import { styled, StyledFC } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
 import { Icon } from '@/core/symbol/icon';
-import { SmallText, Text, titleHeight } from '@/core/symbol/text';
 import { TextUnit } from '@/core/symbol/text-unit';
+import { SmallText, Text, titleHeight } from '@/core/text';
+import { styled, StyledFC } from '@/core/theme/styled';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';
 import { filterWeather, processWeatherForDisplay } from '@/services/weather/weather-process';

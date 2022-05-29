@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { SmallText } from '@/core/symbol/text';
-import { TimeTextUnit } from '@/core/symbol/text-unit';
+import { SmallText } from '@/core/text';
+import { TimeTextUnit } from '@/core/text-unit';
+import { styled } from '@/core/theme/styled';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';

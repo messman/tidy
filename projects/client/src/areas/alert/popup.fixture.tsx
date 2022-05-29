@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text } from '@/core/symbol/text';
+import { Text } from '@/core/text';
 import { Cosmos, CosmosFixture } from '@/test';
 import { PopupType, usePopup } from './popup';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
+import { styled } from '@/core/theme/styled';
 import { FlexRoot } from '@messman/react-common';
 
 export interface OverlayProps {

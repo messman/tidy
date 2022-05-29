@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContextConsumer } from '@messman/react-common';
-import { AllResponse, deserialize } from '@wbtdevlocal/iso';
+import * as iso from '@wbtdevlocal/iso';
 
 /*
 	These definitions are set in the webpack config and resolved at build time.
@@ -9,11 +9,11 @@ import { AllResponse, deserialize } from '@wbtdevlocal/iso';
 declare let __DEFINE__: { [key: string]: any; };
 
 let localTestDataSerialized = __DEFINE__.localTestData as { [phrase: string]: string; } | null;
-let localTestData: { [phrase: string]: AllResponse; } | null = null;
+let localTestData: { [phrase: string]: iso.Batch.LatestAPI.Batch.Latest.Response; } | null = null;
 if (localTestDataSerialized) {
 	localTestData = {};
 	Object.keys(localTestDataSerialized).forEach((key) => {
-		localTestData![key] = deserialize(localTestDataSerialized![key]);
+		localTestData![key] = iso.deserialize(localTestDataSerialized![key]);
 	});
 }
 

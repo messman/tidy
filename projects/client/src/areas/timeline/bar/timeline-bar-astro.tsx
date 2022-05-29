@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { styled } from '@/core/style/styled';
 import { useCurrentTheme } from '@/core/style/theme';
-import { Text } from '@/core/symbol/text';
-import { TimeTextUnit } from '@/core/symbol/text-unit';
+import { Text } from '@/core/text';
+import { TimeTextUnit } from '@/core/text-unit';
+import { styled } from '@/core/theme/styled';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getDateDayOfWeek, pixelsToTime, timeToPixels } from '@/services/time';
 import { renderCutoffHours, textCutoffHours, TimelineBarLine, TimelineBaseProps, TimelineDotEntry } from './timeline-bar-common';

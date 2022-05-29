@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { ErrorBoundary } from '@/core/error/error-boundary';
 import { ApplicationLayoutContainer } from '@/core/layout/layout';
 import { ViewLoadingBarStatusProvider } from '@/core/layout/view-loader/view-loading-bar';
@@ -13,13 +12,11 @@ import { lowerBreakpoints } from '@/services/layout/window-layout';
 import { MockApiProvider, useMockApi } from '@/services/network/request-fetch-provider.test';
 import { provider, ProviderComposer, ProviderWithProps } from '@/services/provider-utility';
 import { DocumentVisibilityProvider, WindowMediaLayoutProvider } from '@messman/react-common';
-import * as iso from '@wbtdevlocal/bridge-iso';
+import * as iso from '@wbtdevlocal/iso';
 import { useControlSelect, useControlValue } from './cosmos';
-import { createTestServerError } from './data';
-import { TestOverlay } from './test-overlay';
+import { createTestServerError } from './data/test-data-utility';
 
 export interface FixtureProps {
-	overlay?: JSX.Element;
 	hasMargin?: true;
 	providers?: ProviderWithProps[];
 }
@@ -28,14 +25,7 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 	return () => {
 		const { overlay, hasMargin, providers: additionalProviders } = props;
 
-
 		const providers: ProviderWithProps[] = [
-			/*
-			Note: MemoryRouter has specific options that can be passed.
-			Use MemoryRouter to avoid saving to history object.
-			*/
-			provider(MemoryRouter, {}),
-
 			provider(CosmosDefineProvider, {}),
 			provider(DocumentVisibilityProvider, {}),
 			provider(ThemeContextProvider, {}),
@@ -52,7 +42,7 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 
 		return (
 			<ProviderComposer providers={providers}>
-				<TestWrapper overlay={overlay || null} hasMargin={!!hasMargin} >
+				<TestWrapper hasMargin={!!hasMargin} >
 					<ErrorBoundary>
 						<Component />
 					</ErrorBoundary>
@@ -62,20 +52,16 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 	};
 }
 
-
 interface TestWrapperProps {
-	overlay: JSX.Element | null;
 	hasMargin: boolean;
 }
 
 const TestWrapper: React.FC<TestWrapperProps> = (props) => {
-	const { overlay, hasMargin } = props;
+	const { hasMargin } = props;
 
 	const mockApi = useMockApi();
 
 	const isElevatedBackground = useControlValue('Global - Elevated Background', false);
-
-	const isTestOverlayActive = useControlValue('Global - Test Overlay', false);
 
 	const [themeIndex, setThemeIndex] = useThemeIndex();
 	const selectedThemeIndex = useControlSelect('Global - Theme', themeOptions, themes[themeIndex].themeInfo.name);
@@ -107,7 +93,6 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 	return (
 		<>
 			{render}
-			<TestOverlay content={overlay} isActive={isTestOverlayActive} />
 		</>
 	);
 };

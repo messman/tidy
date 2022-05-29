@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { addMargin, flowPaddingValue, Link } from '@/core/style/common';
-import { styled } from '@/core/style/styled';
-import { Text, textHeight, TitleInline } from '@/core/symbol/text';
+import { Text, textHeight, TitleInline } from '@/core/text';
+import { styled } from '@/core/theme/styled';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { useLocalDataPhrase } from '@/services/data/data-local';
-import { DEFINE } from '@/services/define';
+import { useDefine } from '@/services/define';
 import { Flex, FlexRow } from '@messman/react-common';
 import { ThemePicker } from './theme-picker';
 
@@ -15,13 +15,15 @@ export interface SettingsProps {
 
 export const Settings: React.FC<SettingsProps> = () => {
 
+	const { localTestData, buildTime, buildVersion } = useDefine();
+
 	const allResponseState = useAllResponse();
 	if (!hasAllResponseData(allResponseState)) {
 		return null;
 	}
 
 	let localDataPicker: JSX.Element | null = null;
-	if (!!DEFINE.localTestData) {
+	if (!!localTestData) {
 		localDataPicker = <LocalDataPicker />;
 	}
 
@@ -53,8 +55,8 @@ export const Settings: React.FC<SettingsProps> = () => {
 						<TextTitle>Built</TextTitle>
 					</Flex>
 					<Flex flex={2}>
-						<Text>{DEFINE.buildVersion}</Text>
-						<Text>{DateTime.fromMillis(DEFINE.buildTime).toLocaleString()}</Text>
+						<Text>{buildVersion}</Text>
+						<Text>{DateTime.fromMillis(buildTime).toLocaleString()}</Text>
 					</Flex>
 				</FlexRow>
 			</Margin>
@@ -92,11 +94,13 @@ const TextTitle = styled(Text)`
 
 const LocalDataPicker: React.FC = () => {
 
+	const { localTestData } = useDefine();
+
 	const [localDataPhrase, setLocalDataPhrase] = useLocalDataPhrase();
 	const notUsingLocalDataPhrase = 'REAL';
 
 	const localDataOptions = [notUsingLocalDataPhrase];
-	Object.keys(DEFINE.localTestData!).forEach((phrase) => {
+	Object.keys(localTestData!).forEach((phrase) => {
 		localDataOptions.push(phrase);
 	});
 

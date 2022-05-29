@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { getTimeTwelveHour } from '@/services/time';
-import { styled } from '../style/styled';
-import { SmallTextInline, TextInline } from './text';
+import { fontStyleDeclarations } from './text';
+import { styled } from './theme/styled';
 
 export interface TextUnitProps {
 	text: string,
@@ -22,15 +22,18 @@ export const TextUnit: React.FC<TextUnitProps> = (props) => {
 	);
 };
 
-const NonBreakingTextInline = styled(TextInline)`
+const NonBreakingTextInline = styled.div`
+	${fontStyleDeclarations.body};
 	white-space: nowrap;
+	display: inline;
 `;
 
 interface UnitProps {
 	space: number;
 }
 
-const Unit = styled(SmallTextInline) <UnitProps>`
+const Unit = styled.div<UnitProps>`
+	${fontStyleDeclarations.bodySmall};
 	vertical-align: baseline;
 	margin-left: ${p => p.space}rem;
 `;

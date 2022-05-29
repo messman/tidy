@@ -1,18 +1,16 @@
-import { DateTime, DurationObject } from 'luxon';
+import { DateTime, DurationLikeObject } from 'luxon';
 import * as React from 'react';
-import { styled } from '@/core/style/styled';
-import { TextPara } from '@/core/symbol/text';
-import { TimeTextUnit } from '@/core/symbol/text-unit';
-import { decorate } from '@/test/storybook/decorate';
+import { ParagraphBodyText } from '@/core/text';
+import { TimeTextUnit } from '@/core/text-unit';
+import { styled } from '@/core/theme/styled';
+import { CosmosFixture } from '@/test';
 import { getDurationDescription } from './time';
 
-export default { title: 'services' };
-
-export const TestTime = decorate(() => {
+export default CosmosFixture.create(() => {
 
 	const fromTime = DateTime.local();
 
-	const durations: DurationObject[] = [
+	const durations: DurationLikeObject[] = [
 		{ hours: 0, minutes: 15, seconds: 0 },
 		{ hours: 0, minutes: 0, seconds: 9 },
 		{ hours: 0, minutes: 0, seconds: 300 },
@@ -52,7 +50,7 @@ export const TestTime = decorate(() => {
 
 	return (
 		<>
-			<TextPara>From: <TimeTextUnit dateTime={fromTime} /></TextPara>
+			<ParagraphBodyText>From: <TimeTextUnit dateTime={fromTime} /></ParagraphBodyText>
 			<StyledTable>
 				<thead>
 					<tr>
@@ -67,6 +65,9 @@ export const TestTime = decorate(() => {
 			</StyledTable>
 		</>
 	);
+
+}, {
+	hasMargin: true
 });
 
 const StyledTable = styled.table`

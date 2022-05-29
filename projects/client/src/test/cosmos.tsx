@@ -5,7 +5,7 @@ import { styled } from '@/core/styled/styled';
 import { MockApiOutput, useMockApi } from '@/services/network/request-fetch-provider.test';
 import { useEventCallback } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
-import * as iso from '@wbtdevlocal/bridge-iso';
+import * as iso from '@wbtdevlocal/iso';
 import { IconInputType } from '../core/icon/icon';
 import { SpinnerIcon } from '../core/icon/icon-spinner';
 import { createTestServerError } from './data';

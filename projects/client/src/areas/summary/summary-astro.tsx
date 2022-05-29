@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { ContextBlock } from '@/core/layout/context-block';
 import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
-import { css, styled } from '@/core/style/styled';
-import { SmallText, Text } from '@/core/symbol/text';
 import { TimeDurationTextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
+import { SmallText, Text } from '@/core/text';
+import { css, styled } from '@/core/theme/styled';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getDurationDescription, percentTimeBetween } from '@/services/time';

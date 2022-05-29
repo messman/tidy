@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@/core/style/styled';
+import { styled } from '@/core/theme/styled';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { pixelsPerDay, timeToPixels } from '@/services/time';
 import { TimelineBaseProps } from './bar/timeline-bar-common';

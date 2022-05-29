@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { edgePaddingValue } from '@/core/style/common';
-import { styled } from '@/core/style/styled';
-import { SmallText } from '@/core/symbol/text';
+import { SmallText } from '@/core/text';
+import { styled } from '@/core/theme/styled';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { Flex, FlexColumn, FlexRow } from '@messman/react-common';
 import { SummaryAstro } from './summary-astro';
