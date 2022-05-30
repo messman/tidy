@@ -45,7 +45,6 @@ export enum SVGIconTypeName {
 	actionCheck,
 	actionClose,
 	actionFilter,
-	actionLike,
 	actionMinus,
 
 	// Arrow
@@ -63,6 +62,9 @@ export enum SVGIconTypeName {
 
 	// Brand
 	brandUmbrella,
+
+	// Decoration
+	decorationLike,
 
 	// Expression
 	expressionHappy,
