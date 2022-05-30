@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { StyledComponent } from 'styled-components';
-import { FlexRow } from '@messman/react-common';
 import { Block } from '../theme/box';
 import { ComponentSize } from '../theme/font';
 import { StyledFC } from '../theme/styled';

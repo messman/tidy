@@ -69,8 +69,8 @@ const ToggleContainer = styled.div<{ isDisabled: boolean; value: boolean; }>`
 	border-radius: 4rem;
 	box-sizing: border-box;
 	border: ${onePxRem}rem solid transparent;
-	border-color: ${p => p.isDisabled ? p.theme.disabled.distinct : (p.value ? p.theme.common.status.success : p.theme.outlineSubtle)};
-	background-color: ${p => p.isDisabled ? p.theme.disabled.subtle : (p.value ? p.theme.common.status.success : p.theme.formElementInset)};
+	border-color: ${p => p.isDisabled ? p.theme.form.textDisabled : (p.value ? p.theme.common.status.success : p.theme.outlineSubtle)};
+	background-color: ${p => p.isDisabled ? p.theme.form.disabled : (p.value ? p.theme.common.status.success : p.theme.form.background)};
 	cursor: ${p => p.isDisabled ? 'not-allowed' : 'pointer'};
 	position: relative;
 	transition: border-color, background-color ${AnimationDuration.b_zip} ease;
@@ -83,7 +83,7 @@ const ToggleIndicator = styled.div<{ isDisabled: boolean; value: boolean; }>`
 	position: absolute;
 	top: ${circleMargin}rem;
 	left: ${p => p.value ? `${circleOnLeft}rem` : `${circleMargin}rem`};
-	background-color: ${p => p.isDisabled ? p.theme.disabled.distinct : p.theme.common.lightest};
+	background-color: ${p => p.isDisabled ? p.theme.form.textDisabled : '#FFF'};
 	box-shadow: ${p => p.isDisabled ? 'none' : p.theme.shadow.e_raised};
 	transition: all ${AnimationDuration.b_zip} ease;
 	transition-property: box-shadow, left, background-color;

@@ -8,7 +8,6 @@ import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { getDurationDescription, percentTimeBetween } from '@/services/time';
-import { Flex, FlexRow } from '@messman/react-common';
 
 export interface SummaryTideProps {
 	isDualMode: boolean;

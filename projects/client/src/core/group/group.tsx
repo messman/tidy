@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { Flex } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
 import { containers } from '../container';
 import { IconInputType, SizedIcon, SizedIconArrowChevronInline } from '../icon/icon';
 import { ellipsisStyle, fontStyleDeclarations } from '../text';
 import { Block, borderRadiusStyle, Spacing } from '../theme/box';
+import { Theme } from '../theme/color';
 import { FontWeight } from '../theme/font';
 import { css, styled } from '../theme/styled';
-import { Theme } from '../theme/theme';
 
 export interface GroupEntryProps {
 	/** Hover title - should be provided when content may cause ellipses. */
@@ -122,11 +121,11 @@ interface GroupKeyValueFlexRowProps {
 
 const flexRowClickableStyle = css`
 	&:hover {
-		background-color: ${p => p.theme.group.hover};
+		background-color: ${p => p.theme.form.hover};
 	}
 
 	&:active {
-		background-color: ${p => p.theme.group.active};
+		background-color: ${p => p.theme.form.active};
 	}
 `;
 
@@ -149,7 +148,8 @@ const PaddedFlexRowForGroup = styled.div`
 `;
 
 // Need to set min-width: 0 to support ellipses (https://stackoverflow.com/a/63557515)
-const GroupFlexAroundKeyValue = styled(Flex)`
+const GroupFlexAroundKeyValue = styled.div`
+	flex: 1;
 	min-width: 0;
 `;
 
@@ -160,7 +160,7 @@ const GroupFlexAroundKeyValue = styled(Flex)`
 const HorizontalSubtleLine = styled.div`
 	width: 100%;
 	height: 1px;
-	background-color: ${p => p.theme.group.border};
+	background-color: ${p => p.theme.outlineDistinct};
 `;
 
 /*
@@ -178,7 +178,6 @@ const keyValueContainerLineStyle = css`
 
 const groupContainerStyle = css`
 	${borderRadiusStyle}
-	border: 1px solid ${p => p.theme.group.border};
 	${containers.background};
 	overflow: hidden;
 `;
@@ -217,7 +216,7 @@ export interface GroupTextProps {
 }
 
 function getColor(theme: Theme, isDisabled: boolean, isButton: boolean, isDangerButton: boolean): string {
-	return isDisabled ? theme.textDisabled : (isButton ? (isDangerButton ? theme.common.status.error : theme.brand.a.main) : theme.textDistinct);
+	return isDisabled ? theme.form.textDisabled : (isButton ? (isDangerButton ? theme.common.status.error : theme.common.brand1.main) : theme.textDistinct);
 }
 
 /** The label (left text) piece of a KeyValue. */
@@ -230,14 +229,14 @@ export const GroupKeyLabel = styled.span<GroupTextProps>`
 `;
 
 const GroupSizedInlineArrow = styled(SizedIconArrowChevronInline) <GroupTextProps>`
-	color: ${p => p.isDisabled ? p.theme.textDisabled : p.theme.textSubtle};
+	color: ${p => p.isDisabled ? p.theme.form.textDisabled : p.theme.textSubtle};
 	flex-shrink: 0;
 `;
 
 /** The right text piece of a KeyValue. */
 export const GroupValue = styled.div<GroupTextProps>`
 	${fontStyleDeclarations.body};
-	color: ${p => p.isDisabled ? p.theme.textDisabled : p.theme.textSubtle};
+	color: ${p => p.isDisabled ? p.theme.form.textDisabled : p.theme.textSubtle};
 	font-weight: ${p => (p.hasOnClick && !p.isDisabled) ? FontWeight.medium : FontWeight.regular};
 	${ellipsisStyle}
 `;

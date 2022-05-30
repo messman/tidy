@@ -6,7 +6,6 @@ import { styled } from '@/core/theme/styled';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { useLocalDataPhrase } from '@/services/data/data-local';
 import { useDefine } from '@/services/define';
-import { Flex, FlexRow } from '@messman/react-common';
 import { ThemePicker } from './theme-picker';
 
 export interface SettingsProps {

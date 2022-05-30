@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
 import { icons } from '@wbtdevlocal/assets';
-import { SectionHeader } from '../section/section';
+import { fontStyleDeclarations } from '../text';
 import { Block, Padding } from '../theme/box';
+import { styled } from '../theme/styled';
 import { GroupButton, GroupContainer, GroupKeyValue, GroupRaisedContainer } from './group';
 
 export default CosmosFixture.create(() => {
@@ -28,11 +29,11 @@ export default CosmosFixture.create(() => {
 
 			<SectionHeader>With Icons</SectionHeader>
 			<GroupContainer>
-				<GroupKeyValue label='Icon A' icon={icons.demoCube}>Looks Good</GroupKeyValue>
-				<GroupKeyValue label='Chat' icon={icons.communicationChat} onClick={onClick}>5 Messages</GroupKeyValue>
-				<GroupKeyValue label='Clickable' icon={icons.communicationAvatar} isDisabled onClick={onClick}>Disabled Clickable</GroupKeyValue>
+				<GroupKeyValue label='Icon A' icon={icons.navigationDashboard}>Looks Good</GroupKeyValue>
+				<GroupKeyValue label='Chat' icon={icons.statusSuccessOutline} onClick={onClick}>5 Messages</GroupKeyValue>
+				<GroupKeyValue label='Clickable' icon={icons.actionFilter} isDisabled onClick={onClick}>Disabled Clickable</GroupKeyValue>
 				<GroupButton label='Button Clickable' icon={icons.actionAdd} onClick={onClick} />
-				<GroupKeyValue label='Something Else' icon={icons.contentFolder}>Bueno</GroupKeyValue>
+				<GroupKeyValue label='Something Else' icon={icons.navigationUrl}>Bueno</GroupKeyValue>
 			</GroupContainer>
 			<Block.Elf24 />
 
@@ -62,3 +63,7 @@ export default CosmosFixture.create(() => {
 }, {
 
 });
+
+const SectionHeader = styled.div`
+	${fontStyleDeclarations.heading3};
+`;

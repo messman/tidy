@@ -121,7 +121,7 @@ export const paragraphMarginStyle = css`
  * p-tag, margin, subtle text color, body style.
  * Defined here because of how common it is.
  */
-export const ParagraphBodyText = styled.p`
+export const Paragraph = styled.p`
 	margin: 0;
 	${fontStyleDeclarations.body};
 	color: ${p => p.theme.textSubtle};

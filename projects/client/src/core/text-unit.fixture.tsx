@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { Icon, iconTypes } from '@/core/symbol/icon';
+import { SizedIcon } from '@/core/icon/icon';
 import { CosmosFixture } from '@/test';
-import { flowPaddingValue } from '../style/common';
-import { styled } from '../style/styled';
-import { Text, textHeight } from './text';
+import { icons } from '@wbtdevlocal/assets';
+import { Paragraph } from './text';
 import { TextUnit, TimeDurationTextUnit, TimeTextUnit } from './text-unit';
+import { Block } from './theme/box';
 
 const localDateTime = DateTime.local();
 
@@ -16,39 +16,30 @@ export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<Padding>
-				<TextUnit text='9:45' unit='AM' />
-			</Padding>
-			<Padding>
-				<TimeTextUnit dateTime={localDateTime} />
-			</Padding>
-			<Padding>
-				<Text>
-					You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={minutesOnlyFromLocal} /> of sunlight.
-				</Text>
-				<Text>
-					You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={hoursOnlyFromLocal} /> of sunlight.
-				</Text>
-				<Text>
-					You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={fromLocal} /> of sunlight.
-				</Text>
-			</Padding>
-			<Padding>
-				<Text>
-					<Icon type={iconTypes.wind} height={textHeight} /> <TextUnit text='22' unit='mph ESE' />
-				</Text>
-			</Padding>
-			<Padding>
-				<Text>
-					<TextUnit text='8' unit='ft' />, <TextUnit text='24' unit='m' />, <TextUnit text='8:00' unit='PM' />
-				</Text>
-			</Padding>
+			<TextUnit text='9:45' unit='AM' />
+			<Block.Dog16 />
+			<TimeTextUnit dateTime={localDateTime} />
+			<Block.Dog16 />
+			<Paragraph>
+				You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={minutesOnlyFromLocal} /> of sunlight.
+			</Paragraph>
+			<Paragraph>
+				You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={hoursOnlyFromLocal} /> of sunlight.
+			</Paragraph>
+			<Paragraph>
+				You can expect <TimeDurationTextUnit startTime={localDateTime} endTime={fromLocal} /> of sunlight.
+			</Paragraph>
+			<Block.Dog16 />
+			<Paragraph>
+				<SizedIcon type={icons.weatherWind} size='medium' /> <TextUnit text='22' unit='mph ESE' />
+			</Paragraph>
+			<Block.Dog16 />
+			<Paragraph>
+				<TextUnit text='8' unit='ft' />, <TextUnit text='24' unit='m' />, <TextUnit text='8:00' unit='PM' />
+			</Paragraph>
+			<Block.Dog16 />
 		</>
 	);
 }, {
 	hasMargin: true
 });
-
-const Padding = styled.div`
-	margin: ${flowPaddingValue};
-`;

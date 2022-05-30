@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { routes } from '../services/routing/routing';
-import { OutLink, RouterLink, RouterRouteLink } from './link';
+import { Cosmos, CosmosFixture } from '@/test';
+import { OutLink } from './link';
 import { fontStyleDeclarations } from './text';
 import { Block } from './theme/box';
 import { styled } from './theme/styled';
-import { Cosmos, CosmosFixture } from '@/test';
 
 export default CosmosFixture.create(() => {
 
@@ -17,8 +16,6 @@ export default CosmosFixture.create(() => {
 			And so <OutLink href='https://google.com'>{linkText}</OutLink> Hopefully everything looks good like this and there are no special adjustments to make.
 			<a>This is a regular link.</a>
 			Hopefully everything looks good like this and there are no special adjustments to make.
-			And, for good measure, here is a regular link of <RouterLink href='/'>{linkText}</RouterLink> That
-			won't work right now but <RouterRouteLink route={routes.development.auth} /> will still render okay I hope.
 		</>
 	);
 
@@ -56,10 +53,6 @@ export default CosmosFixture.create(() => {
 			<CapitalText>
 				{linkTextRender}
 			</CapitalText>
-			<Block.Dog16 />
-			<BlockquoteText>
-				{linkTextRender}
-			</BlockquoteText>
 		</>
 	);
 }, {
@@ -91,10 +84,6 @@ const BodySmallText = styled.span`
 const SmallText = styled.span`
 	${fontStyleDeclarations.small};
 	color: ${p => p.theme.textSubtle};
-`;
-
-const BlockquoteText = styled.span`
-	${fontStyleDeclarations.blockquote};
 `;
 
 const CapitalText = styled.span`

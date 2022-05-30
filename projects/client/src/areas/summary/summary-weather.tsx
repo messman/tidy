@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ContextBlock } from '@/core/layout/context-block';
 import { edgePaddingValue } from '@/core/style/common';
-import { useCurrentTheme } from '@/core/style/theme';
 import { iconTypes } from '@/core/symbol/icon';
 import { TextUnit } from '@/core/symbol/text-unit';
 import { Text, TextInline, titleHeight } from '@/core/text';
@@ -9,7 +8,6 @@ import { styled } from '@/core/theme/styled';
 import { SpacedIcon } from '@/core/weather/weather-common';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { processWeatherForDisplay } from '@/services/weather/weather-process';
-import { Flex, FlexRow } from '@messman/react-common';
 import { WeatherStatusType, weatherStatusTypeDescription, WindDirection } from '@wbtdevlocal/iso';
 
 export interface SummaryWeatherProps {
@@ -83,7 +81,7 @@ const PaddedFlexRow = styled(FlexRow)`
 `;
 
 const PushedDownTextInline = styled(TextInline)`
-	margin-top: ${edgePaddingValue};
+	margin-top: ${Spacing.dog16};
 `;
 
 const SummaryWeatherSecondary: React.FC = () => {

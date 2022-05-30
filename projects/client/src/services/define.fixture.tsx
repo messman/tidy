@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ParagraphBodyText } from '@/core/text';
+import { Paragraph } from '@/core/text';
 import { DEFINE, useDefine } from '@/services/define';
 import { CosmosFixture } from '@/test';
 import { useBatchLatestResponse } from './data/data';
@@ -18,10 +18,10 @@ export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<ParagraphBodyText>Build Time: {DEFINE.buildTime} ({new Date(DEFINE.buildTime).toISOString()})</ParagraphBodyText>
-			<ParagraphBodyText>Build Version: {DEFINE.buildVersion}</ParagraphBodyText>
-			<ParagraphBodyText>API Root: {DEFINE.apiRoot}</ParagraphBodyText>
-			<ParagraphBodyText>Local Test Data Reference Time: {referenceTime}</ParagraphBodyText>
+			<Paragraph>Build Time: {DEFINE.buildTime} ({new Date(DEFINE.buildTime).toISOString()})</Paragraph>
+			<Paragraph>Build Version: {DEFINE.buildVersion}</Paragraph>
+			<Paragraph>API Root: {DEFINE.apiRoot}</Paragraph>
+			<Paragraph>Local Test Data Reference Time: {referenceTime}</Paragraph>
 		</>
 	);
 }, {

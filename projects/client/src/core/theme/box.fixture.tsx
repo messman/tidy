@@ -1,9 +1,9 @@
-import { CosmosFixture } from '@/test';
 import * as React from 'react';
+import { CosmosFixture } from '@/test';
 import { fontStyleDeclarations } from '../text';
 import { Spacing } from './box';
+import { Theme } from './color';
 import { styled } from './styled';
-import { Theme } from './theme';
 
 export default CosmosFixture.create(() => {
 
@@ -12,7 +12,6 @@ export default CosmosFixture.create(() => {
 			<SpacingEntry name='ant' size={Spacing.ant04} pickColor={(t) => t.common.system.blue.a_main} />
 			<SpacingEntry name='bat' size={Spacing.bat08} pickColor={(t) => t.common.system.green.a_main} />
 			<SpacingEntry name='cat' size={Spacing.cat12} pickColor={(t) => t.common.system.orange.a_main} />
-			<SpacingEntry name='dog' size={Spacing.dog16} pickColor={(t) => t.common.system.purple.a_main} />
 			<SpacingEntry name='elf' size={Spacing.elf24} pickColor={(t) => t.common.system.red.a_main} />
 			<SpacingEntry name='fan' size={Spacing.fan32} pickColor={(t) => t.common.system.yellow.a_main} />
 			<SpacingEntry name='guy' size={Spacing.guy40} pickColor={(t) => t.common.system.blue.a_main} />

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
+import { borderRadiusStyle, Spacing } from '@/core/theme/box';
 import { css, styled } from '@/core/theme/styled';
 import { useTideChart } from '@/core/tide/tide-chart';
 import { CONSTANT } from '@/services/constant';
-import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { useBatchLatestResponse } from '@/services/data/data';
 import { pixelsToTime, timeToPixels } from '@/services/time';
-import { Flex, useControlledElementSize } from '@messman/react-common';
+import { useControlledElementSize } from '@messman/react-common';
 
 export interface SummaryTideChartProps {
 }
@@ -15,22 +15,21 @@ const chartPaddingBottom = 20;
 
 export const SummaryTideChart: React.FC<SummaryTideChartProps> = () => {
 
-	const allResponseState = useAllResponse();
+	const { success } = useBatchLatestResponse();
 	const [ref, size] = useControlledElementSize(CONSTANT.elementSizeLargeThrottleTimeout);
-	if (!hasAllResponseData(allResponseState)) {
+	if (!success) {
 		return null;
 	}
-	const { all, info } = allResponseState.data!;
-	const { tides } = all.predictions;
+	const { meta, predictions } = success;
 
 	const offsetToReferenceTime = size.width / 2;
-	const startTime = pixelsToTime(info.referenceTime, -offsetToReferenceTime);
-	const stopTime = pixelsToTime(info.referenceTime, offsetToReferenceTime);
+	const startTime = pixelsToTime(meta.referenceTime, -offsetToReferenceTime);
+	const stopTime = pixelsToTime(meta.referenceTime, offsetToReferenceTime);
 
 	const width = timeToPixels(startTime, stopTime);
 
 	const tideChart = useTideChart({
-		tideEventRange: tides,
+		tideEventRange: predictions.tides,
 		includeOutsideRange: false,
 		startTime: startTime,
 		endTime: stopTime,
@@ -41,7 +40,7 @@ export const SummaryTideChart: React.FC<SummaryTideChartProps> = () => {
 	});
 
 	return (
-		<ResizeContainer ref={ref} flex={1}>
+		<ResizeContainer ref={ref}>
 			<TopBar />
 			<BottomBar />
 			<CurrentLine />
@@ -50,11 +49,12 @@ export const SummaryTideChart: React.FC<SummaryTideChartProps> = () => {
 	);
 };
 
-const ResizeContainer = styled(Flex)`
+const ResizeContainer = styled.div`
+	flex: 1;
 	/** Don't allow our chart lines to go outside this container. */
 	overflow: hidden;
 	${borderRadiusStyle};
-	margin: ${edgePaddingValue};
+	margin: ${Spacing.dog16};
 `;
 
 const barWidth = 18;
@@ -65,7 +65,7 @@ const barStyles = css`
 	left: calc(50% - ${barWidth / 2}px);
 	width: ${barWidth}px;
 	height: ${lineWidth}px;
-	background-color: ${p => p.theme.color.backgroundLighter};
+	background-color: #FFF;
 `;
 
 const TopBar = styled.div`
@@ -79,7 +79,7 @@ const CurrentLine = styled.div`
 	left: calc(50% - ${lineWidth / 2}px);
 	width: ${lineWidth}px;
 	height: calc(100% - ${chartPaddingTop + chartPaddingBottom}px);
-	background-color: ${p => p.theme.color.backgroundLighter};
+	background-color: #FFF;
 `;
 
 const BottomBar = styled.div`

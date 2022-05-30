@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { TextPara } from '@/core/text';
+import { Paragraph } from '@/core/text';
 import { Cosmos, CosmosFixture } from '@/test';
-import { Flex } from '@messman/react-common';
 import { ThemePicker } from '../settings/theme-picker';
 import { InvalidCheck } from './invalid';
 
@@ -55,9 +54,9 @@ const ErrorThrower: React.FC = () => {
 
 	return (
 		<div onClick={onClick}>
-			<TextPara>
+			<Paragraph>
 				Click here to cause an error!
-			</TextPara>
+			</Paragraph>
 		</div>
 	);
 };

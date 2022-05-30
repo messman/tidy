@@ -3,7 +3,7 @@ import { styled } from '@/core/theme/styled';
 import { useTideChart } from '@/core/tide/tide-chart';
 import { CONSTANT } from '@/services/constant';
 import { timeToPixels } from '@/services/time';
-import { Flex, useControlledElementSize } from '@messman/react-common';
+import { useControlledElementSize } from '@messman/react-common';
 import { AllResponseData, Info } from '@wbtdevlocal/iso';
 import { TimelineBaseProps } from '../bar/timeline-bar-common';
 

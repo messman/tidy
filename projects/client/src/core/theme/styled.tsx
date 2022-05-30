@@ -1,6 +1,6 @@
 import * as React from 'react';
 import baseStyled, { css as baseCss, FlattenInterpolation, ThemedCssFunction, ThemedStyledInterface, ThemeProps } from 'styled-components';
-import { Theme } from './theme';
+import { Theme } from './color';
 
 export { ThemeProvider, keyframes } from 'styled-components';
 export type { StyledComponent } from 'styled-components';

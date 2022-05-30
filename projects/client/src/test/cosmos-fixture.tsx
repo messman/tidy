@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { ErrorBoundary } from '@/core/error/error-boundary';
 import { ApplicationLayoutContainer } from '@/core/layout/layout';
-import { ViewLoadingBarStatusProvider } from '@/core/layout/view-loader/view-loading-bar';
-import { OverlayControlProvider } from '@/core/overlay/control/overlay-controller';
-import { OverlayPortalRootProvider } from '@/core/overlay/control/overlay-portal';
 import { Spacing } from '@/core/theme/box';
-import { css, styled } from '@/core/theme/styled';
+import { styled } from '@/core/theme/styled';
 import { ThemeContextProvider, themes, useThemeIndex } from '@/core/theme/theme';
 import { CosmosDefineProvider } from '@/services/define.fixture-shared';
 import { lowerBreakpoints } from '@/services/layout/window-layout';
@@ -13,7 +10,7 @@ import { MockApiProvider, useMockApi } from '@/services/network/request-fetch-pr
 import { provider, ProviderComposer, ProviderWithProps } from '@/services/provider-utility';
 import { DocumentVisibilityProvider, WindowMediaLayoutProvider } from '@messman/react-common';
 import * as iso from '@wbtdevlocal/iso';
-import { useControlSelect, useControlValue } from './cosmos';
+import { useControlSelect } from './cosmos';
 import { createTestServerError } from './data/test-data-utility';
 
 export interface FixtureProps {
@@ -23,16 +20,13 @@ export interface FixtureProps {
 
 export function create(Component: React.FC, props: FixtureProps): React.FC {
 	return () => {
-		const { overlay, hasMargin, providers: additionalProviders } = props;
+		const { hasMargin, providers: additionalProviders } = props;
 
 		const providers: ProviderWithProps[] = [
 			provider(CosmosDefineProvider, {}),
 			provider(DocumentVisibilityProvider, {}),
 			provider(ThemeContextProvider, {}),
-			provider(OverlayControlProvider, {}),
-			provider(OverlayPortalRootProvider, {}),
 			provider(WindowMediaLayoutProvider, { lowerBreakpoints: lowerBreakpoints, breakpointUnit: 'rem' as const }),
-			provider(ViewLoadingBarStatusProvider, {}),
 			provider(MockApiProvider, {}),
 		];
 
@@ -61,8 +55,6 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 
 	const mockApi = useMockApi();
 
-	const isElevatedBackground = useControlValue('Global - Elevated Background', false);
-
 	const [themeIndex, setThemeIndex] = useThemeIndex();
 	const selectedThemeIndex = useControlSelect('Global - Theme', themeOptions, themes[themeIndex].themeInfo.name);
 	React.useEffect(() => {
@@ -88,7 +80,7 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 	if (hasMargin) {
 		render = <Margin>{render}</Margin>;
 	};
-	render = <Background isElevatedBackground={isElevatedBackground}>{render}</Background>;
+	render = <ApplicationLayoutContainer>{render}</ApplicationLayoutContainer>;
 
 	return (
 		<>
@@ -96,14 +88,6 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 		</>
 	);
 };
-
-const elevatedBackgroundStyle = css`
-	background-color: ${p => p.theme.subtleFill.g_overlay};
-`;
-
-const Background = styled(ApplicationLayoutContainer) <{ isElevatedBackground: boolean; }>`
-	${p => p.isElevatedBackground ? elevatedBackgroundStyle : null}
-`;
 
 const Margin = styled.div`
 	margin: ${Spacing.elf24};

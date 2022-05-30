@@ -1,8 +1,8 @@
-import { CosmosFixture } from '@/test';
 import * as React from 'react';
+import { CosmosFixture } from '@/test';
 import { containers } from './container';
-import { ParagraphBodyText } from './text';
-import { borderRadiusStyle, Spacing, spacingShort } from './theme/box';
+import { Paragraph } from './text';
+import { borderRadiusStyle, Spacing } from './theme/box';
 import { styled, ThemedCSS } from './theme/styled';
 
 export default CosmosFixture.create(() => {
@@ -32,16 +32,16 @@ const StyleTest: React.FC<StyleTestProps> = (props) => {
 
 	return (
 		<Container containerStyle={containerStyle}>
-			<ParagraphBodyText>
+			<Paragraph>
 				This is the '{children}' container.
-			</ParagraphBodyText>
+			</Paragraph>
 		</Container>
 	);
 };
 
 const Container = styled.div<StyleTestProps>`
 	${p => p.containerStyle}
-	margin: ${spacingShort.vertical.dog16};
+	margin: ${Spacing.dog16} 0;
 	padding: ${Spacing.dog16};
 	${borderRadiusStyle}
 

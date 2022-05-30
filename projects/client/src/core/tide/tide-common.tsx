@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { CONSTANT } from '@/services/constant';
 import { SVGPath } from '@/services/draw/bezier';
-import { css, styled } from '../style/styled';
-import { TextUnit } from '../symbol/text-unit';
+import { TextUnit } from '../text-unit';
+import { css, styled } from '../theme/styled';
 
 const svgStyle = css`
 	position: absolute;
@@ -16,7 +15,7 @@ export const FillSVG = styled(SVGPath)`
 	${svgStyle}
 
 	width: ${p => p.destRect.right - p.destRect.left}px;
-	fill: ${p => p.theme.color.tide};
+	fill: ${p => p.theme.badge.water};
 	opacity: .2;
 `;
 
@@ -24,18 +23,19 @@ export const StrokeSVG = styled(SVGPath)`
 	${svgStyle}
 
 	width: ${p => p.destRect.right - p.destRect.left}px;
-	stroke: ${p => p.theme.color.tide};
+	stroke: ${p => p.theme.badge.water};
 	stroke-width: 6px;
 	fill: transparent;
 `;
 
 export interface TideHeightTextUnitProps {
 	height: number;
+	precision: number;
 	isEstimate?: boolean;
 }
 
 export const TideHeightTextUnit: React.FC<TideHeightTextUnitProps> = (props) => {
-	let text = props.height.toFixed(CONSTANT.tideHeightPrecision);
+	let text = props.height.toFixed(props.precision);
 	if (props.isEstimate) {
 		text = '~' + text;
 	}

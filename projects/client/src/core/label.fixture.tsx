@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { Cosmos, CosmosFixture } from '@/test';
 import { IconLabel, LabelText } from './label';
 import { SubtleLine } from './layout/line/line';
 import { Block } from './theme/box';
-import { Cosmos, CosmosFixture } from '@/test';
 
 export default CosmosFixture.create(() => {
 
@@ -21,10 +21,6 @@ export default CosmosFixture.create(() => {
 				Small Label Text
 			</LabelText>
 			<Block.Dog16 />
-			<LabelText size='tiny'>
-				Tiny Label Text
-			</LabelText>
-			<Block.Dog16 />
 			<SubtleLine />
 			<Block.Dog16 />
 			<IconLabel size='medium' leftIcon={leftIcon} rightIcon={rightIcon} justifyContent={justifyContent}>
@@ -33,10 +29,6 @@ export default CosmosFixture.create(() => {
 			<Block.Dog16 />
 			<IconLabel size='small' leftIcon={leftIcon} rightIcon={rightIcon} justifyContent={justifyContent}>
 				Small Label Text
-			</IconLabel>
-			<Block.Dog16 />
-			<IconLabel size='tiny' leftIcon={leftIcon} rightIcon={rightIcon} justifyContent={justifyContent}>
-				Tiny Label Text
 			</IconLabel>
 		</>
 	);
