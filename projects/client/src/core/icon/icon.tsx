@@ -56,7 +56,6 @@ export const SizedIcon = styled(Icon) <SizedIconProps>`
 export const iconHeights: Record<ComponentSize, string> = {
 	medium: '1.5rem',
 	small: '1.25rem',
-	tiny: '1rem',
 };
 
 export const EmptyIcon = styled.span`

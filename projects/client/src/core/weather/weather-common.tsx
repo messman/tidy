@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Icon } from '../symbol/icon';
+import { SizedIcon } from '../icon/icon';
 
 const iconSpace = {
 	close: .2,
@@ -12,7 +12,7 @@ export interface SpacedIconProps {
 	spaceDirection?: 'left' | 'right';
 }
 
-export const SpacedIcon = styled(Icon)<SpacedIconProps>((props) => {
+export const SpacedIcon = styled(SizedIcon)<SpacedIconProps>((props) => {
 	const ruleName = `margin-${props.spaceDirection}`;
 	return {
 		[ruleName]: `${iconSpace[props.spacing as keyof typeof iconSpace]}rem`

@@ -1,6 +1,6 @@
 import { DateTime, DurationLikeObject } from 'luxon';
 import * as React from 'react';
-import { ParagraphBodyText } from '@/core/text';
+import { Paragraph } from '@/core/text';
 import { TimeTextUnit } from '@/core/text-unit';
 import { styled } from '@/core/theme/styled';
 import { CosmosFixture } from '@/test';
@@ -50,7 +50,7 @@ export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<ParagraphBodyText>From: <TimeTextUnit dateTime={fromTime} /></ParagraphBodyText>
+			<Paragraph>From: <TimeTextUnit dateTime={fromTime} /></Paragraph>
 			<StyledTable>
 				<thead>
 					<tr>
@@ -76,7 +76,7 @@ const StyledTable = styled.table`
 	border-collapse: collapse;
 
 	td {
-		border: 1px solid ${p => p.theme.color.textAndIcon};
+		border: 1px solid ${p => p.theme.textDistinct};
 		padding: .3rem;
 	}
 `;

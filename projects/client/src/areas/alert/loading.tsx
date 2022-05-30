@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { Overlay } from '@/core/layout/overlay';
 import { addPadding, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
-import { useCurrentTheme } from '@/core/style/theme';
 import { Subtitle, Text } from '@/core/text';
 import { keyframes, styled } from '@/core/theme/styled';
 import { CONSTANT } from '@/services/constant';
 import { useAllResponse } from '@/services/data/data';
-import { Flex, FlexColumn } from '@messman/react-common';
 import { PopupType, usePopup } from './popup';
 
 export interface LoadingProps {
@@ -116,7 +114,7 @@ const LoadingBody = styled(Flex)`
 	/* Prevents crazy resizing scenarios. */
 	min-width: 16rem;
 	max-width: 24rem;
-	margin: ${edgePaddingValue};
+	margin: ${Spacing.dog16};
 	text-align: center;
 `;
 

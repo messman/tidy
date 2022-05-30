@@ -4,7 +4,7 @@ import { styled } from '@/core/theme/styled';
 import { CONSTANT } from '@/services/constant';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { pixelsToTime } from '@/services/time';
-import { DefaultLayoutBreakpoint, FlexColumn, useControlledElementSize, useWindowDimensions } from '@messman/react-common';
+import { useControlledElementSize, useWindowDimensions } from '@messman/react-common';
 import { TimelineBar } from './bar/timeline-bar';
 import { TimelineChart } from './chart/timeline-chart';
 import { TimelineBackground } from './timeline-background';
@@ -71,6 +71,6 @@ const CurrentTimeLineLegend = styled.div<CurrentTimeLineProps>`
 	top: 4px;
 	text-transform: uppercase;
 	right: calc(100% - ${p => p.leftOffset}px);
-	margin-right: ${edgePaddingValue};
+	margin-right: ${Spacing.dog16};
 	color: ${p => p.theme.color.context};
 `;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { icons, SVGIconTypeName, SVGIconTypeUrl } from '@wbtdevlocal/assets';
-import { isInEnum, mapEnumValue } from '@wbtdevlocal/bridge-iso';
+import { isInEnum, mapEnumValue } from '@wbtdevlocal/iso';
 import { styled, StyledFC } from '../theme/styled';
 
 interface SVGLoadState {
@@ -79,7 +79,7 @@ export const UrlIcon: StyledFC<UrlIconProps> = (props) => {
 	const { isError, svg } = state;
 
 	if (isError || !svg) {
-		const LoadingComponent = icons.demoDiamond; // TODO - get a dedicated static loading SVG
+		const LoadingComponent = icons.actionAdd; // TODO - get a dedicated static loading SVG
 		return <LoadingComponent className={className} />;
 	}
 

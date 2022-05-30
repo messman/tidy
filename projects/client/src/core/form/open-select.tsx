@@ -70,5 +70,5 @@ export const OpenSelectValue: React.FC<OpenSelectValueProps> = (props) => {
 };
 
 const PrimarySizedCheckIcon = styled(SizedIcon)`
-	color: ${p => p.theme.brand.a.main};
+	color: ${p => p.theme.common.brand1.main};
 `;

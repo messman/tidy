@@ -1,42 +1,17 @@
 import * as React from 'react';
-import { FlexRow } from '@messman/react-common';
-import {
-	BaseButton, BaseButtonWrapper, baseButtonStyles, buttonShadowStyles, ButtonProps, colorStyles, BrandButtonA, StandardButton, WrapperButton
-} from './button';
-import { IconInputType } from './icon/icon';
-import { Block, spacingShort } from './theme/box';
-import { styled } from './theme/styled';
 import { Cosmos, CosmosFixture } from '@/test';
-import { ParagraphBodyText } from './text';
-
-const ExampleCustomButton = styled(BaseButtonWrapper)`
-	${baseButtonStyles}
-	${buttonShadowStyles}
-	${colorStyles.green}
-`;
+import { IconInputType } from '../icon/icon';
+import { Paragraph } from '../text';
+import { Block, Spacing } from '../theme/box';
+import { styled } from '../theme/styled';
+import { BaseButton, ButtonProps, StandardButton, WrapperButton } from './button';
 
 const buttons: [React.FC<ButtonProps>, string, string][] = [
-	[
-		BrandButtonA,
-		'Brand Button',
-		`
-			This button is the most dominant button in the hierarchy.
-		`
-	],
-	[
-		ExampleCustomButton,
-		'Example Button',
-		`
-			Here's an example of the Brand Button in another color.
-			This is done by creating a new button with the base styles of the Brand Button.
-			Using a different color with the Brand Button should be very rare.
-		`
-	],
 	[
 		StandardButton,
 		'Standard Button',
 		`
-			The standard button is second-highest in hierarchy. It is used to communicate
+			The standard button is used to communicate
 			an action the user likely wants to take in line with the purpose of the page.
 		`
 	],
@@ -126,9 +101,9 @@ const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
 	return (
 		<VerticalMargin>
 			<p>
-				<ParagraphBodyText>Here are some examples of the '{children}' style.</ParagraphBodyText>
+				<Paragraph>Here are some examples of the '{children}' style.</Paragraph>
 			</p>
-			<FlexRow alignItems='center'>
+			<ButtonRow>
 				<ButtonType isLoading={isLoading} leftIcon={leftIcon} rightIcon={rightIcon} onClick={noClick}>
 					{children}
 				</ButtonType>
@@ -140,17 +115,18 @@ const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
 				<ButtonType size='small' isLoading={isLoading} leftIcon={leftIcon} rightIcon={rightIcon} onClick={noClick}>
 					Small
 				</ButtonType>
-				<Block.Dog16 />
-				<ButtonType size='tiny' isLoading={isLoading} leftIcon={leftIcon} rightIcon={rightIcon} onClick={noClick}>
-					Tiny
-				</ButtonType>
-			</FlexRow>
+			</ButtonRow>
 		</VerticalMargin>
 	);
 };
 
 const VerticalMargin = styled.div`
-	margin: ${spacingShort.vertical.dog16};
+	margin: ${Spacing.dog16} 0;
+`;
+
+const ButtonRow = styled.div`
+	display: flex;
+	align-items: center;
 `;
 
 const ButtonStretchGroup: React.FC<ButtonGroupProps> = (props) => {
@@ -165,15 +141,12 @@ const ButtonStretchGroup: React.FC<ButtonGroupProps> = (props) => {
 				Small
 			</ButtonType>
 			<Block.Dog16 />
-			<ButtonType size='tiny' leftIcon={leftIcon} rightIcon={rightIcon} justifyContent='space-between' onClick={noClick}>
-				Tiny
-			</ButtonType>
 		</VerticalMarginStretch>
 	);
 };
 
 const VerticalMarginStretch = styled.div`
-	margin: ${spacingShort.vertical.dog16};
+	margin: ${Spacing.dog16} 0;
 	${BaseButton} {
 		width: 100%;
 	}

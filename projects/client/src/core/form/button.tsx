@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { FlexRow } from '@messman/react-common';
-import { SizedIcon } from './icon/icon';
-import { SpinnerIcon } from './icon/icon-spinner';
-import { IconLabel, IconLabelProps, labelSizeStyles, LabelText } from './label';
-import { borderRadiusStyle, Spacing } from './theme/box';
-import { outlineStyle } from './theme/common';
-import { ComponentSize } from './theme/font';
-import { css, styled, StyledFC } from './theme/styled';
+import { SizedIcon } from '../icon/icon';
+import { SpinnerIcon } from '../icon/icon-spinner';
+import { IconLabel, IconLabelProps, labelSizeStyles, LabelText } from '../label';
+import { borderRadiusStyle, Spacing } from '../theme/box';
+import { outlineStyle } from '../theme/common';
+import { ComponentSize } from '../theme/font';
+import { css, styled, StyledFC } from '../theme/styled';
 
 const buttonPaddings: Record<ComponentSize, string> = {
 	medium: `${Spacing.bat08} ${Spacing.dog16}`,
@@ -68,7 +67,7 @@ export const BaseButtonWrapper: StyledFC<ButtonProps> = (props) => {
 			<ZeroVisibilityWrapper>
 				{iconLabelRender}
 			</ZeroVisibilityWrapper>
-			<AbsoluteFlexRow justifyContent='center' alignItems='center'>
+			<AbsoluteFlexRow>
 				<LabelText size={componentSize}>
 					<SizedIcon size={componentSize} type={SpinnerIcon} />
 				</LabelText>
@@ -88,12 +87,15 @@ const ZeroVisibilityWrapper = styled.div`
 	visibility: hidden;
 `;
 
-const AbsoluteFlexRow = styled(FlexRow)`
+const AbsoluteFlexRow = styled.div`
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 `;
 
 
@@ -108,13 +110,10 @@ export const ButtonFullWidthContainer = styled.div`
 	${BaseButton} {
 		width: 100%;
 	}
-
 	${BaseButton} + ${BaseButton} {
 		margin-top: ${Spacing.bat08};
 	}
-
 `;
-
 
 export const baseButtonStyles = css<ButtonProps>`
 	${buttonResetStyles}
@@ -126,9 +125,9 @@ export const baseButtonStyles = css<ButtonProps>`
 	${p => labelSizeStyles[p.size || 'medium']};
 
 	:disabled {
-		color: ${p => p.theme.textDisabled};
+		color: ${p => p.theme.form.textDisabled};
 		${LabelText} {
-			color: ${p => p.theme.textDisabled};
+			color: ${p => p.theme.form.textDisabled};
 		}
 	}
 `;
@@ -150,59 +149,26 @@ export const buttonShadowStyles = css`
 
 export const colorStyles = {
 	brandA: css`
-		background-color: ${p => p.theme.brand.a.main};
+		background-color: ${p => p.theme.button.base};
 		${LabelText} {
-			color: ${p => p.theme.common.textOnBrandFill};
+			color: #FFFFFF;
+		}
+
+		:hover {
+			background-color: ${p => p.theme.button.hover};
+		}
+		:active {
+			background-color: ${p => p.theme.button.active};
 		}
 
 		:disabled {
 			${LabelText} {
-				color: ${p => p.theme.textDisabled};
+				color: ${p => p.theme.form.textDisabled};
 			}
-			background-color: ${p => p.theme.disabled.distinct};
+			background-color: ${p => p.theme.form.disabled};
 		}
 	`,
-	green: css`
-		background-color: ${p => p.theme.common.system.green.a_main};
-		${LabelText} {
-			color: ${p => p.theme.common.textOnBrandFill};
-		}
-		
-		:disabled {
-			${LabelText} {
-				color: ${p => p.theme.textDisabled};
-			}
-			background-color: ${p => p.theme.disabled.distinct};
-		}
-	`,
-	blue: css`
-		background-color: ${p => p.theme.common.system.blue.a_main};
-		${LabelText} {
-			color: ${p => p.theme.common.textOnBrandFill};
-		}
-		
-		:disabled {
-			${LabelText} {
-				color: ${p => p.theme.textDisabled};
-			}
-			background-color: ${p => p.theme.disabled.distinct};
-		}
-	`
 };
-
-// :hover {
-// 	background-color: ${p => p.theme.common.system.green.c_lighter};
-// }
-// :active {
-// 	background-color: ${p => p.theme.common.system.green.b_darker};
-// }
-// :hover {
-// 	background-color: ${p => p.theme.common.system.blue.c_lighter};
-// }
-// :active {
-// 	background-color: ${p => p.theme.common.system.blue.b_darker};
-// }
-
 
 /*
 	How to create your own button:
@@ -210,30 +176,10 @@ export const colorStyles = {
 	- Create the button from `styled(BaseButtonWrapper)` with your style at the end of the list
 */
 
-
-export const BrandButtonA = styled(BaseButtonWrapper)`
-	${baseButtonStyles};
-	${buttonShadowStyles};
-	${colorStyles.brandA};
-`;
-
 export const StandardButton = styled(BaseButtonWrapper)`
 	${baseButtonStyles}
 	${buttonShadowStyles}
-
-	border-color: ${p => p.theme.outlineDistinct};
-	background-color: ${p => p.theme.subtleFill.c_button};
-	${LabelText} {
-		color: ${p => p.theme.brand.a.main};
-	}
-
-	:disabled {
-		${LabelText} {
-			color: ${p => p.theme.textDisabled};
-		}
-		background-color: ${p => p.theme.disabled.subtle};
-		border-color: ${p => p.theme.disabled.distinct};
-	}
+	${colorStyles.brandA};
 `;
 
 export const WrapperButton = styled(BaseButtonWrapper)`
@@ -243,6 +189,6 @@ export const WrapperButton = styled(BaseButtonWrapper)`
 	margin: 0;
 	background-color: transparent;
 	${LabelText} {
-		color: ${p => p.theme.brand.a.main};
+		color: ${p => p.theme.common.brand1.main};
 	}
 `;

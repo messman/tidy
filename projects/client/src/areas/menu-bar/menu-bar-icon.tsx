@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { edgePaddingValue } from '@/core/style/common';
-import { useCurrentTheme } from '@/core/style/theme';
 import { Icon, SVGIconType } from '@/core/symbol/icon';
 import { SubText, subtitleHeight } from '@/core/text';
 import { styled } from '@/core/theme/styled';
@@ -40,7 +39,7 @@ export const MenuBarIcon: React.FC<MenuBarIconProps> = (props) => {
 };
 
 const SubTextPadding = styled.div`
-	padding-top: calc(${edgePaddingValue} / 3);
+	padding-top: calc(${Spacing.dog16} / 3);
 
 	/* Used for future visible-title rendering. */
 	min-width: 4rem;
@@ -55,6 +54,6 @@ const Clickable = styled.button`
 
 const IconPadding = styled.span`
 	display: inline-block;
-	padding: ${edgePaddingValue};
+	padding: ${Spacing.dog16};
 	text-align: center;
 `;

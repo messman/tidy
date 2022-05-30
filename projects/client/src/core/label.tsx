@@ -7,7 +7,6 @@ import { styled, StyledFC, ThemedCSS } from './theme/styled';
 export const labelSizeStyles: Record<ComponentSize, ThemedCSS> = {
 	medium: fontStyleDeclarations.body,
 	small: fontStyleDeclarations.small,
-	tiny: fontStyleDeclarations.tiny,
 };
 
 export interface LabelTextProps {

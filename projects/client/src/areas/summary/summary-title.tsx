@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useCurrentTheme } from '@/core/style/theme';
 import { iconTypes, SVGIconType } from '@/core/symbol/icon';
 import { subtitleHeight, SubtitleInline, Text } from '@/core/text';
 import { TimeTextUnit } from '@/core/text-unit';

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled } from '@/core/theme/styled';
-import { FlexColumn } from '@messman/react-common';
 import { TimelineBarAstro } from './timeline-bar-astro';
 import { TimelineBaseProps } from './timeline-bar-common';
 import { TimelineBarTide } from './timeline-bar-tide';

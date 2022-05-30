@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import { IconInputType } from '@/core/icon/icon';
-import { iconTypes } from '@wbtdevlocal/assets';
+import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 
-export function filterWeather(statuses: WeatherStatus[], referenceTime: DateTime, cutOffHoursFromReference: number, cutoffDate: DateTime): WeatherStatus[] {
+export function filterWeather(statuses: iso.Weather.WeatherStatus[], referenceTime: DateTime, cutOffHoursFromReference: number, cutoffDate: DateTime): iso.Weather.WeatherStatus[] {
 	// Filter out status if it's too close to our reference time or after our cutoff.
 	// Note - only weather deals with the reference time. Other bars may use start time.
 	const referenceTimePlusCutoff = referenceTime.plus({ hours: cutOffHoursFromReference });
@@ -12,25 +12,20 @@ export function filterWeather(statuses: WeatherStatus[], referenceTime: DateTime
 	});
 }
 
-/** Gets the key/name, like 'unknown'. */
-function getWeatherStatusKey(status: WeatherStatusType): keyof typeof WeatherStatusType {
-	return WeatherStatusType[status] as keyof typeof WeatherStatusType;
-}
-
 export interface WeatherDisplay {
 	tempText: string;
 	windText: string;
 	windDirectionUnit: string;
-	icon: IconType;
+	icon: IconInputType;
 	shortStatusText: string;
 	pressureText: string;
 }
 
-export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIcon: boolean): WeatherDisplay {
+export function processWeatherForDisplay(weatherStatus: iso.Weather.WeatherStatus, useDayIcon: boolean): WeatherDisplay {
 
 	const { temp, status, wind, windDirection, pressure } = weatherStatus;
 
-	const weatherStatusKey = getWeatherStatusKey(status);
+	const weatherStatusKey = iso.keyForEnumValue(iso.Weather.WeatherStatusType, status);
 	// Use that key to get the icons (day and night).
 	const weatherStatusIcon = weatherStatusTypeIcon[weatherStatusKey];
 	// Choose between day and night based on the sun event.
@@ -39,9 +34,9 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 	const weatherDisplay: WeatherDisplay = {
 		tempText: Math.round(temp.entity!).toString(),
 		windText: Math.round(wind.entity!).toString(),
-		windDirectionUnit: WindDirection[windDirection],
+		windDirectionUnit: iso.Weather.WindDirection[windDirection],
 		icon: weatherStatusIconForTime,
-		shortStatusText: weatherStatusTypeDescription[weatherStatusKey].short,
+		shortStatusText: iso.Weather.weatherStatusTypeDescription[weatherStatusKey].short,
 		pressureText: Math.round(pressure.entity!).toString()
 	};
 
@@ -51,143 +46,144 @@ export function processWeatherForDisplay(weatherStatus: WeatherStatus, useDayIco
 export interface DailyWeatherDisplay {
 	minTempText: string;
 	maxTempText: string;
-	icon: IconType;
+	icon: IconInputType;
 	shortStatusText: string;
 	longStatusText: string;
 }
 
-export function processDailyWeatherForDisplay(dailyWeather: DailyWeather): DailyWeatherDisplay {
+export function processDailyWeatherForDisplay(dailyWeather: iso.Weather.DailyWeather): DailyWeatherDisplay {
 
 	const { minTemp, maxTemp, status } = dailyWeather;
 
-	const weatherStatusKey = getWeatherStatusKey(status);
+	const weatherStatusKey = iso.keyForEnumValue(iso.Weather.WeatherStatusType, status);
 	// Use that key to get the icons (day and night).
 	const weatherStatusIcon = weatherStatusTypeIcon[weatherStatusKey];
-	// FOr the day, always use the day icon.
+	// For the day, always use the day icon.
 	const weatherStatusIconForTime = weatherStatusIcon.day;
 
+	const description = iso.Weather.weatherStatusTypeDescription[weatherStatusKey];
 
 	return {
 		minTempText: Math.round(minTemp).toString(),
 		maxTempText: Math.round(maxTemp).toString(),
 		icon: weatherStatusIconForTime,
-		shortStatusText: weatherStatusTypeDescription[weatherStatusKey].short,
-		longStatusText: weatherStatusTypeDescription[weatherStatusKey].long,
+		shortStatusText: description.short,
+		longStatusText: description.long,
 	};
 }
 
 export interface WeatherStatusIcon {
-	day: IconType;
-	night: IconType;
+	day: IconInputType;
+	night: IconInputType;
 }
-export type WeatherStatusIconMap = Record<keyof typeof WeatherStatusType, WeatherStatusIcon>;
+export type WeatherStatusIconMap = Record<keyof typeof iso.Weather.WeatherStatusType, WeatherStatusIcon>;
 export const weatherStatusTypeIcon: WeatherStatusIconMap = {
 	unknown: {
-		day: iconTypes.question,
-		night: iconTypes.question
+		day: icons.weatherQuestion,
+		night: icons.weatherQuestion
 	},
 	clear: {
-		day: iconTypes.sun,
-		night: iconTypes.moon
+		day: icons.weatherSun,
+		night: icons.weatherMoon
 	},
 	clear_hot: {
-		day: iconTypes.temperatureHot,
-		night: iconTypes.temperatureHot
+		day: icons.weatherTemperatureHot,
+		night: icons.weatherTemperatureHot
 	},
 	clear_cold: {
-		day: iconTypes.temperatureCold,
-		night: iconTypes.temperatureCold
+		day: icons.weatherTemperatureCold,
+		night: icons.weatherTemperatureCold
 	},
 	clouds_few: {
-		day: iconTypes.cloudySun,
-		night: iconTypes.cloudyMoon
+		day: icons.weatherCloudySun,
+		night: icons.weatherCloudyMoon
 	},
 	clouds_some: {
-		day: iconTypes.cloudySun,
-		night: iconTypes.cloudyMoon
+		day: icons.weatherCloudySun,
+		night: icons.weatherCloudyMoon
 	},
 	clouds_most: {
-		day: iconTypes.cloud,
-		night: iconTypes.cloud
+		day: icons.weatherCloud,
+		night: icons.weatherCloud
 	},
 	clouds_over: {
-		day: iconTypes.clouds,
-		night: iconTypes.clouds
+		day: icons.weatherClouds,
+		night: icons.weatherClouds
 	},
 	rain_drizzle: {
-		day: iconTypes.rainSun,
-		night: iconTypes.rainMoon
+		day: icons.weatherRainSun,
+		night: icons.weatherRainMoon
 	},
 	rain_light: {
-		day: iconTypes.rainSun,
-		night: iconTypes.rainMoon
+		day: icons.weatherRainSun,
+		night: icons.weatherRainMoon
 	},
 	rain_medium: {
-		day: iconTypes.rain,
-		night: iconTypes.rain
+		day: icons.weatherRain,
+		night: icons.weatherRain
 	},
 	rain_heavy: {
-		day: iconTypes.rain,
-		night: iconTypes.rain
+		day: icons.weatherRain,
+		night: icons.weatherRain
 	},
 	rain_freeze: {
-		day: iconTypes.hail,
-		night: iconTypes.hail
+		day: icons.weatherHail,
+		night: icons.weatherHail
 	},
 	snow_light: {
-		day: iconTypes.snowflake,
-		night: iconTypes.snowflake
+		day: icons.weatherSnowflake,
+		night: icons.weatherSnowflake
 	},
 	snow_medium: {
-		day: iconTypes.snowflake,
-		night: iconTypes.snowflake
+		day: icons.weatherSnowflake,
+		night: icons.weatherSnowflake
 	},
 	snow_heavy: {
-		day: iconTypes.snowflake,
-		night: iconTypes.snowflake
+		day: icons.weatherSnowflake,
+		night: icons.weatherSnowflake
 	},
 	snow_sleet: {
-		day: iconTypes.snowflake,
-		night: iconTypes.snowflake
+		day: icons.weatherSnowflake,
+		night: icons.weatherSnowflake
 	},
 	snow_rain: {
-		day: iconTypes.snowflake,
-		night: iconTypes.snowflake
+		day: icons.weatherSnowflake,
+		night: icons.weatherSnowflake
 	},
 	thun_light: {
-		day: iconTypes.lightningSun,
-		night: iconTypes.lightningMoon
+		day: icons.weatherLightningSun,
+		night: icons.weatherLightningMoon
 	},
 	thun_medium: {
-		day: iconTypes.lightning,
-		night: iconTypes.lightning
+		day: icons.weatherLightning,
+		night: icons.weatherLightning
 	},
 	thun_heavy: {
-		day: iconTypes.lightning,
-		night: iconTypes.lightning
+		day: icons.weatherLightning,
+		night: icons.weatherLightning
 	},
 	intense_storm: {
-		day: iconTypes.weatherAlert,
-		night: iconTypes.weatherAlert
+		day: icons.statusAlertSolid,
+		night: icons.statusAlertSolid
 	},
 	intense_other: {
-		day: iconTypes.weatherAlert,
-		night: iconTypes.weatherAlert
+		day: icons.statusAlertSolid,
+		night: icons.statusAlertSolid
 	},
 	dust: {
-		day: iconTypes.weatherAlert,
-		night: iconTypes.weatherAlert
+		day: icons.statusAlertSolid,
+		night: icons.statusAlertSolid
 	},
 	smoke: {
-		day: iconTypes.weatherAlert,
-		night: iconTypes.weatherAlert
+		day: icons.statusAlertSolid,
+		night: icons.statusAlertSolid
 	},
 	haze: {
-		day: iconTypes.fog,
-		night: iconTypes.fog
+		day: icons.weatherFog,
+		night: icons.weatherFog
 	},
 	fog: {
-		day: iconTypes.fog,
-		night: iconTypes.fog
+		day: icons.weatherFog,
+		night: icons.weatherFog
 	}
 };

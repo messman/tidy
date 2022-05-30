@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { useCurrentTheme } from '@/core/style/theme';
 import { TimeTextUnit } from '@/core/text-unit';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
 import { timeToPixels } from '@/services/time';

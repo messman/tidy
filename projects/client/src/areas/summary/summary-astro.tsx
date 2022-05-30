@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { ContextBlock } from '@/core/layout/context-block';
-import { edgePaddingValue, flowPaddingValue } from '@/core/style/common';
-import { TimeDurationTextUnit, TimeTextUnit } from '@/core/symbol/text-unit';
-import { SmallText, Text } from '@/core/text';
+import { Paragraph } from '@/core/text';
+import { TimeDurationTextUnit, TimeTextUnit } from '@/core/text-unit';
+import { Spacing } from '@/core/theme/box';
 import { css, styled } from '@/core/theme/styled';
 import { CONSTANT } from '@/services/constant';
-import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+import { useBatchLatestResponse } from '@/services/data/data';
 import { getDurationDescription, percentTimeBetween } from '@/services/time';
-import { Flex, useControlledElementSize } from '@messman/react-common';
+import { useControlledElementSize } from '@messman/react-common';
 
 export interface SummaryAstroProps {
 	isDualMode: boolean;
@@ -25,35 +25,35 @@ export const SummaryAstro: React.FC<SummaryAstroProps> = (props) => {
 
 const SummaryAstroPrimary: React.FC = () => {
 
-	const allResponseState = useAllResponse();
-	if (!hasAllResponseData(allResponseState)) {
+	const { success } = useBatchLatestResponse();
+	if (!success) {
 		return null;
 	}
-	const { all, info } = allResponseState.data!;
+	const { daily, meta } = success;
 	// Instead of using the current info, which is relative to the reference time, use the current day.
-	const [sunrise, sunset] = all.daily.days[0].sun;
+	const [sunrise, sunset] = daily.days[0].sun;
 
-	const timePercent = percentTimeBetween(info.referenceTime, sunrise.time, sunset.time);
+	const timePercent = percentTimeBetween(meta.referenceTime, sunrise.time, sunset.time);
 
 	return (
-		<Flex>
+		<>
 			<SummaryAstroSunBar percent={timePercent} />
 			<Left>
-				<SmallText>SUNRISE</SmallText>
-				<Text>
+				<Paragraph>SUNRISE</Paragraph>
+				<Paragraph>
 					<TimeTextUnit dateTime={sunrise.time} />
-				</Text>
+				</Paragraph>
 			</Left>
 			<Center>
 				<TimeDurationTextUnit startTime={sunrise.time} endTime={sunset.time} />
 			</Center>
 			<Right>
-				<SmallText>SUNSET</SmallText>
-				<Text>
+				<Paragraph>SUNSET</Paragraph>
+				<Paragraph>
 					<TimeTextUnit dateTime={sunset.time} />
-				</Text>
+				</Paragraph>
 			</Right>
-		</Flex>
+		</>
 	);
 };
 
@@ -156,7 +156,7 @@ const SummaryAstroSunBar: React.FC<SummaryAstroSunBarProps> = (props) => {
 const SunBarContainer = styled.div`
 	position: relative;
 	/* Brings the content inside away from the edge of the context block. */
-	margin: calc(${edgePaddingValue} / 2) calc(${flowPaddingValue} * 3);
+	margin: ${Spacing.dog16};
 	/* This is just what looked good. */
 	height: 4rem;
 `;
@@ -174,13 +174,13 @@ const sunBarStartEndStyle = css`
 const SunBarStart = styled.div`
 	${sunBarStartEndStyle}
 	left: -${startEndCircleRadius}px;
-	background-color: ${p => p.theme.color.sun};
+	background-color: ${p => p.theme.common.content.sun};
 `;
 
 const SunBarEnd = styled.div`
 	${sunBarStartEndStyle}
 	right: -${startEndCircleRadius}px;
-	background-color: ${p => p.theme.color.backgroundLightest};
+	background-color: #FFF;
 `;
 
 interface SunPathProps {
@@ -210,10 +210,10 @@ const SunPath = styled.div<SunPathProps>`
 	border-radius: 50%;
 	transform: rotateZ(${p => p.rotationDegree}deg);
 
-	border-top-color: ${p => p.theme.color.sun};
-	border-left-color: ${p => p.theme.color.sun};
-	border-right-color: ${p => p.theme.color.backgroundLightest};
-	border-bottom-color: ${p => p.theme.color.backgroundLightest};
+	border-top-color: ${p => p.theme.common.content.sun};
+	border-left-color: ${p => p.theme.common.content.sun};
+	border-right-color: #FFF;
+	border-bottom-color: #FFF;
 `;
 
 const HiddenSunPath = styled.div<SunPathProps>`
@@ -238,31 +238,31 @@ const HiddenSunPath = styled.div<SunPathProps>`
 		left: ${p => (p.circleRadius - sunRadius - sunPathThickness)}px;
 		width: ${sunRadius * 2}px;
 		height: ${sunRadius * 2}px;
-		background-color: ${p => p.theme.color.sun};
+		background-color: ${p => p.theme.common.content.sun};
 		border-radius: 50%;
 	}
 `;
 
 const SummaryAstroSecondary: React.FC = () => {
-	const allResponseState = useAllResponse();
-	if (!hasAllResponseData(allResponseState)) {
+	const { success } = useBatchLatestResponse();
+	if (!success) {
 		return null;
 	}
 
-	const { all, info } = allResponseState.data!;
-	const sun = all.current.sun;
+	const { meta, current, daily } = success;
+	const sun = current.sun;
 
-	const [sunrise, sunset] = all.daily.days[0].sun;
+	const [sunrise, sunset] = daily.days[0].sun;
 	const peak = sunrise.time.plus({ seconds: sunset.time.diff(sunrise.time, 'seconds').seconds / 2 });
-	const peakDurationText = getDurationDescription(info.referenceTime, peak);
-	const peakPhrase = info.referenceTime > peak ? `The sun was at its peak ${peakDurationText} ago` : `The sun will peak in ${peakDurationText}`;
+	const peakDurationText = getDurationDescription(meta.referenceTime, peak);
+	const peakPhrase = meta.referenceTime > peak ? `The sun was at its peak ${peakDurationText} ago` : `The sun will peak in ${peakDurationText}`;
 
 	const nextSunText = sun.next.isSunrise ? 'rise' : 'set';
-	const nextSunDurationText = getDurationDescription(info.referenceTime, sun.next.time);
+	const nextSunDurationText = getDurationDescription(meta.referenceTime, sun.next.time);
 
 	return (
-		<Text>
+		<Paragraph>
 			{peakPhrase} at <TimeTextUnit dateTime={peak} />. The sun will {nextSunText} in {nextSunDurationText}.
-		</Text>
+		</Paragraph>
 	);
 };

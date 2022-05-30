@@ -127,14 +127,14 @@ export const baseLightTheme: Theme = {
 		background: '#F5F8FA',
 		hover: '#E3EDF5',
 		active: '#D7E3ED',
+		disabled: '#D4D4D4',
+		textDisabled: '#A6A6A6',
 	},
 
 	button: {
 		base: '#3794EB',
 		hover: '#4DA5F6',
 		active: '#1A7BD6',
-		disabled: '#D4D4D4',
-		disabledText: '#A6A6A6',
 	},
 
 	shadow: createShadowElevationSet({
@@ -235,14 +235,14 @@ export interface Theme {
 		background: string;
 		hover: string;
 		active: string;
+		disabled: string;
+		textDisabled: string;
 	},
 
 	button: {
 		base: string;
 		hover: string;
 		active: string;
-		disabled: string;
-		disabledText: string;
 	};
 
 	shadow: ShadowElevationSet;

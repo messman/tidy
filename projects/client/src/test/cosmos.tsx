@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as Cosmos from 'react-cosmos/fixture';
-import { BaseButton, StandardButton } from '@/core/button';
-import { styled } from '@/core/styled/styled';
+import { BaseButton, StandardButton } from '@/core/form/button';
+import { styled } from '@/core/theme/styled';
 import { MockApiOutput, useMockApi } from '@/services/network/request-fetch-provider.test';
 import { useEventCallback } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { IconInputType } from '../core/icon/icon';
 import { SpinnerIcon } from '../core/icon/icon-spinner';
-import { createTestServerError } from './data';
+import { createTestServerError } from './data/test-data-utility';
 
 export interface TestButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
@@ -199,8 +199,7 @@ export function useTestTimeout(callback: () => void): TestTimeoutOutput {
 enum TestIcon {
 	none,
 	empty,
-	demoCube,
-	demoCircle,
+	decorationLike,
 	arrowLeft,
 	arrowRight,
 	arrowChevronLeft,
@@ -216,10 +215,8 @@ export function useControlSelectIcon(label: string, initial?: keyof typeof testI
 			return null;
 		case TestIcon.empty:
 			return 'empty';
-		case TestIcon.demoCube:
-			return icons.demoCube;
-		case TestIcon.demoCircle:
-			return icons.demoCircle;
+		case TestIcon.decorationLike:
+			return icons.decorationLike;
 		case TestIcon.arrowLeft:
 			return icons.arrowLeft;
 		case TestIcon.arrowRight:

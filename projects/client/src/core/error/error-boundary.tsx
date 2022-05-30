@@ -1,6 +1,6 @@
-import { LayoutBreakpointRem } from '@/services/layout/window-layout';
 import * as React from 'react';
-import { ButtonFullWidthContainer, StandardButton } from '../button';
+import { LayoutBreakpointRem } from '@/services/layout/window-layout';
+import { ButtonFullWidthContainer, StandardButton } from '../form/button';
 import { fontStyleDeclarations } from '../text';
 import { Block, Spacing } from '../theme/box';
 import { styled } from '../theme/styled';

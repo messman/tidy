@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { addPadding, edgePaddingValue, flowPaddingValue } from '@/core/style/common';
-import { useCurrentTheme } from '@/core/style/theme';
-import { Icon, iconTypes } from '@/core/symbol/icon';
-import { SmallText, Subtitle, Text, titleHeight } from '@/core/text';
+import { SizedIcon } from '@/core/icon/icon';
+import { Paragraph } from '@/core/text';
+import { Spacing } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
 import { CONSTANT } from '@/services/constant';
-import { DefaultLayoutBreakpoint, Flex, FlexRow, useWindowMediaLayout } from '@messman/react-common';
+import { isInvalidLayout } from '@/services/layout/window-layout';
+import { useWindowMediaLayout } from '@messman/react-common';
+import { icons } from '@wbtdevlocal/assets';
 
 export interface InvalidCheckProps {
 	/** Used for testing. Messages about the application as a whole. */
@@ -84,7 +85,7 @@ const InvalidCheckParser: React.FC<InvalidCheckProps> = (props) => {
 		// Honestly, we may never even get here. Internet Explorer may cause the application to fail before we ever run this check. Nice to keep just in case, though.
 		invalidMessages = [`It looks like you're using Internet Explorer`, 'Internet Explorer is not supported for this application.', 'Please, we beg you - use a more modern browser.'];
 	}
-	else if (props.isForceInvalidLayout || windowLayout.heightBreakpoint < DefaultLayoutBreakpoint.regular) {
+	else if (props.isForceInvalidLayout || isInvalidLayout(windowLayout)) {
 		invalidMessages = ['Your screen size and/or rotation are invalid for this application', 'Consider rotating your device or using a different device.'];
 		isAllowRefreshClick = true;
 	}
@@ -107,15 +108,13 @@ export interface InvalidCenterProps {
 
 const InvalidCenter: React.FC<InvalidCenterProps> = (props) => {
 
-	const theme = useCurrentTheme();
-
 	// First message will get a larger size.
 	const [firstMessage, ...otherMessages] = props.messages;
 
 	// Other messages become regular text.
 	const otherMessagesText = otherMessages.map((m) => {
 		return (
-			<Text key={m}>{m}</Text>
+			<Paragraph key={m}>{m}</Paragraph>
 		);
 	});
 
@@ -126,7 +125,7 @@ const InvalidCenter: React.FC<InvalidCenterProps> = (props) => {
 			window.location.reload();
 		};
 		clickInstruction = (
-			<PaddedSmallText>Click/tap here to reset the application if you believe this message is incorrect.</PaddedSmallText>
+			<Paragraph>Click/tap here to reset the application if you believe this message is incorrect.</Paragraph>
 		);
 	}
 
@@ -137,22 +136,25 @@ const InvalidCenter: React.FC<InvalidCenterProps> = (props) => {
 			- Inner Flex that is centered and is sized to its contents
 	*/
 	return (
-		<InvalidCenterWrapper alignItems='center' onClick={onClick}>
-			<Flex>
-				<Icon type={iconTypes.alert} fillColor={theme.color.error} height={titleHeight} />
-				<PaddedSubtitle>{firstMessage}</PaddedSubtitle>
+		<InvalidCenterWrapper onClick={onClick}>
+			<div>
+				<ErrorAlertIcon type={icons.statusErrorOutline} size='medium' />
+				<Paragraph>{firstMessage}</Paragraph>
 				{otherMessagesText}
 				{clickInstruction}
-			</Flex>
+			</div>
 		</InvalidCenterWrapper>
 	);
 };
 
-const InvalidCenterWrapper = styled(FlexRow)`
-	/* Pad to ensure the inner Flex content doesn't run up against the edge. */
-	padding: calc(${edgePaddingValue} * 3);
+const InvalidCenterWrapper = styled.div`
+	display: flex;
+	align-items: center;
+
+	padding: ${Spacing.dog16};
 	text-align: center;
 `;
 
-const PaddedSubtitle = addPadding(Subtitle, flowPaddingValue);
-const PaddedSmallText = addPadding(SmallText, flowPaddingValue);
+const ErrorAlertIcon = styled(SizedIcon)`
+	color: ${p => p.theme.common.system.red.a_main};
+`;

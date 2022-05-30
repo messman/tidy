@@ -3,7 +3,6 @@ import { edgePaddingValue } from '@/core/style/common';
 import { SmallText } from '@/core/text';
 import { styled } from '@/core/theme/styled';
 import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { Flex, FlexColumn, FlexRow } from '@messman/react-common';
 import { SummaryAstro } from './summary-astro';
 import { SummaryTide } from './summary-tide';
 import { SummaryTideChart } from './summary-tide-chart';
@@ -83,21 +82,21 @@ export const Summary: React.FC<SummaryProps> = (props) => {
 };
 
 const HorizontalPadding = styled.div`
-	width: ${edgePaddingValue};
+	width: ${Spacing.dog16};
 	height: 1rem;
 `;
 
 const HorizontalContainer = styled(FlexColumn)`
-	margin: ${edgePaddingValue} 0;
+	margin: ${Spacing.dog16} 0;
 `;
 
 const VerticalPadding = styled.div`
-	height: ${edgePaddingValue};
+	height: ${Spacing.dog16};
 	width: 1rem;
 `;
 
 const VerticalContainer = styled.div`
-	margin: 0 ${edgePaddingValue};
+	margin: 0 ${Spacing.dog16};
 `;
 
 const CenterSmallText = styled(SmallText)`
