@@ -23,7 +23,6 @@ export const actionCheckBold = create('actionCheckBold', require('@/static/icons
 export const actionCheck = create('actionCheck', require('@/static/icons/action/check.svg'));
 export const actionClose = create('actionClose', require('@/static/icons/action/close.svg'));
 export const actionFilter = create('actionFilter', require('@/static/icons/action/filter.svg'));
-export const actionLike = create('actionLike', require('@/static/icons/action/like.svg'));
 export const actionMinus = create('actionMinus', require('@/static/icons/action/minus.svg'));
 
 // Arrow
@@ -41,6 +40,9 @@ export const arrowUp = create('arrowUp', require('@/static/icons/arrow/up.svg'))
 
 // Brand
 export const brandUmbrella = create('brandUmbrella', require('@/static/icons/brand/umbrella.svg'));
+
+// Decoration
+export const decorationLike = create('decorationLike', require('@/static/icons/decoration/like.svg'));
 
 // Expression
 export const expressionHappy = create('expressionHappy', require('@/static/icons/expression/happy.svg'));
