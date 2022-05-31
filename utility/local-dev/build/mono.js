@@ -17,9 +17,6 @@ const schema = {
 		'server': {
 			path: './server',
 		},
-		'server-http': {
-			path: './server-http',
-		},
 	}
 };
 /** @type {string[]} */
