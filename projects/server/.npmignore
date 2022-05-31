@@ -1,3 +1,0 @@
-# https://npm.github.io/publishing-pkgs-docs/publishing/the-npmignore-file.html
-**/*
-!dist/**/*
