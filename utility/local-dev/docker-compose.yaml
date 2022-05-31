@@ -28,7 +28,6 @@ services:
       - volume-wbt-devcode-modules-client:/usr/src/projects/client/node_modules
       - volume-wbt-devcode-modules-iso:/usr/src/projects/iso/node_modules
       - volume-wbt-devcode-modules-server:/usr/src/projects/server/node_modules
-      - volume-wbt-devcode-modules-server-http:/usr/src/projects/server-http/node_modules
     ports:
       - "8093:8000" # Server
       - "8094:58888" # Cosmos
@@ -82,6 +81,5 @@ volumes:
   volume-wbt-devcode-modules-client:
   volume-wbt-devcode-modules-iso:
   volume-wbt-devcode-modules-server:
-  volume-wbt-devcode-modules-server-http:
   volume-wbt-dev-seq:
   volume-wbt-dev-verdaccio:

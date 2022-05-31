@@ -12,7 +12,6 @@ alias cd-build='cd /usr/src/utility/local-dev/build'
 alias cd-assets='cd /usr/src/projects/assets'
 alias cd-client='cd /usr/src/projects/client'
 alias cd-server='cd /usr/src/projects/server'
-alias cd-server-http='cd /usr/src/projects/server-http'
 alias cd-iso='cd /usr/src/projects/iso'
 setopt EXTENDED_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST

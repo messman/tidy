@@ -8,7 +8,7 @@ notes*.txt
 # Secrets
 *-secret.*
 *.secret.*
-deploy-*
+deploy-*.txt
 
 # Build directories.
 node_modules
