@@ -1,5 +1,5 @@
 import { ClientErrorForm, RequestResultError } from '@/services/network/request';
-import { ServerErrorFormParent } from '@wbtdevlocal/iso';
+import * as iso from '@wbtdevlocal/iso';
 
 export interface RequestResultErrorParseOutput {
 	title: string;
@@ -24,7 +24,7 @@ export function parseRequestResultError(result: RequestResultError, isDevelopmen
 	}
 	else if (server) {
 		const { form, id } = server;
-		const parentName = ServerErrorFormParent[form.parent];
+		const parentName = iso.ServerErrorFormParent[form.parent];
 
 		title = form.description;
 		detail = `${form.statusCode} ${parentName}_${form.name} #${id}`;
