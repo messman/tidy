@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { icons, SVGIconTypeName, SVGIconTypeUrl } from '@wbtdevlocal/assets';
-import { isInEnum, mapEnumValue } from '@wbtdevlocal/iso';
+import * as iso from '@wbtdevlocal/iso';
 import { styled, StyledFC } from '../theme/styled';
 
 interface SVGLoadState {
@@ -28,8 +28,8 @@ export const UrlIcon: StyledFC<UrlIconProps> = (props) => {
 		let isUnmounted = false;
 
 		// Look for a url.
-		if (isInEnum(SVGIconTypeName, value)) {
-			const url = mapEnumValue(SVGIconTypeName, SVGIconTypeUrl, value);
+		if (iso.isInEnum(SVGIconTypeName, value)) {
+			const url = iso.mapEnumValue(SVGIconTypeName, SVGIconTypeUrl, value);
 			if (url) {
 				/*
 					Need to test?
