@@ -1,131 +1,131 @@
-import * as React from 'react';
-import { ContextBlock } from '@/core/layout/context-block';
-import { edgePaddingValue } from '@/core/style/common';
-import { iconTypes } from '@/core/symbol/icon';
-import { TextUnit } from '@/core/symbol/text-unit';
-import { Text, TextInline, titleHeight } from '@/core/text';
-import { styled } from '@/core/theme/styled';
-import { SpacedIcon } from '@/core/weather/weather-common';
-import { hasAllResponseData, useAllResponse } from '@/services/data/data';
-import { processWeatherForDisplay } from '@/services/weather/weather-process';
-import { WeatherStatusType, weatherStatusTypeDescription, WindDirection } from '@wbtdevlocal/iso';
+// import * as React from 'react';
+// import { ContextBlock } from '@/core/layout/context-block';
+// import { edgePaddingValue } from '@/core/style/common';
+// import { iconTypes } from '@/core/symbol/icon';
+// import { TextUnit } from '@/core/symbol/text-unit';
+// import { Text, TextInline, titleHeight } from '@/core/text';
+// import { styled } from '@/core/theme/styled';
+// import { SpacedIcon } from '@/core/weather/weather-common';
+// import { hasAllResponseData, useAllResponse } from '@/services/data/data';
+// import { processWeatherForDisplay } from '@/services/weather/weather-process';
+// import { WeatherStatusType, weatherStatusTypeDescription, WindDirection } from '@wbtdevlocal/iso';
 
-export interface SummaryWeatherProps {
-	isDualMode: boolean;
-}
+// export interface SummaryWeatherProps {
+// 	isDualMode: boolean;
+// }
 
-export const SummaryWeather: React.FC<SummaryWeatherProps> = (props) => {
-	return (
-		<ContextBlock
-			primary={<SummaryWeatherPrimary />}
-			secondary={<SummaryWeatherSecondary />}
-			isDualMode={props.isDualMode}
-		/>
-	);
-};
+// export const SummaryWeather: React.FC<SummaryWeatherProps> = (props) => {
+// 	return (
+// 		<ContextBlock
+// 			primary={<SummaryWeatherPrimary />}
+// 			secondary={<SummaryWeatherSecondary />}
+// 			isDualMode={props.isDualMode}
+// 		/>
+// 	);
+// };
 
-const SummaryWeatherPrimary: React.FC = () => {
+// const SummaryWeatherPrimary: React.FC = () => {
 
-	const allResponseState = useAllResponse();
-	const theme = useCurrentTheme();
+// 	const allResponseState = useAllResponse();
+// 	const theme = useCurrentTheme();
 
-	if (!hasAllResponseData(allResponseState)) {
-		return null;
-	}
-	const { all } = allResponseState.data!;
-	const iconColor = theme.color.weather;
-	const iconHeight = titleHeight;
+// 	if (!hasAllResponseData(allResponseState)) {
+// 		return null;
+// 	}
+// 	const { all } = allResponseState.data!;
+// 	const iconColor = theme.color.weather;
+// 	const iconHeight = titleHeight;
 
-	const useDayIcon = !all.current.sun.next.isSunrise;
-	const { tempText, windText, windDirectionUnit, icon, shortStatusText, pressureText } = processWeatherForDisplay(all.current.weather, useDayIcon);
+// 	const useDayIcon = !all.current.sun.next.isSunrise;
+// 	const { tempText, windText, windDirectionUnit, icon, shortStatusText, pressureText } = processWeatherForDisplay(all.current.weather, useDayIcon);
 
-	// NOTE - have to use flex='0' here, even though we don't rely on it anywhere else. 
-	return (
-		<FlexRow justifyContent='space-around'>
-			<Flex flex='0'>
-				<TextInline>
-					<PaddedFlexRow alignItems='center'>
-						<SpacedIcon type={iconTypes.temperature} defaultColor={iconColor} height={iconHeight} />
-						{tempText}&deg;
-					</PaddedFlexRow>
-				</TextInline>
-				<PushedDownTextInline>
-					<PaddedFlexRow alignItems='center'>
-						<SpacedIcon type={icon} height={iconHeight} />
-						{shortStatusText}
-					</PaddedFlexRow>
-				</PushedDownTextInline>
-			</Flex>
-			<Flex flex='0'>
-				<TextInline>
-					<FlexRow alignItems='center'>
-						<SpacedIcon type={iconTypes.wind} fillColor={iconColor} height={iconHeight} />
-						<TextUnit text={windText} unit={`mph ${windDirectionUnit}`} />
-					</FlexRow>
-				</TextInline>
-				<PushedDownTextInline>
-					<FlexRow alignItems='center'>
-						<SpacedIcon type={iconTypes.pressure} defaultColor={iconColor} height={iconHeight} />
-						<TextUnit text={pressureText} unit='mb' space={3} />
-					</FlexRow>
-				</PushedDownTextInline>
-			</Flex>
-		</FlexRow>
-	);
-};
+// 	// NOTE - have to use flex='0' here, even though we don't rely on it anywhere else. 
+// 	return (
+// 		<FlexRow justifyContent='space-around'>
+// 			<Flex flex='0'>
+// 				<TextInline>
+// 					<PaddedFlexRow alignItems='center'>
+// 						<SpacedIcon type={iconTypes.temperature} defaultColor={iconColor} height={iconHeight} />
+// 						{tempText}&deg;
+// 					</PaddedFlexRow>
+// 				</TextInline>
+// 				<PushedDownTextInline>
+// 					<PaddedFlexRow alignItems='center'>
+// 						<SpacedIcon type={icon} height={iconHeight} />
+// 						{shortStatusText}
+// 					</PaddedFlexRow>
+// 				</PushedDownTextInline>
+// 			</Flex>
+// 			<Flex flex='0'>
+// 				<TextInline>
+// 					<FlexRow alignItems='center'>
+// 						<SpacedIcon type={iconTypes.wind} fillColor={iconColor} height={iconHeight} />
+// 						<TextUnit text={windText} unit={`mph ${windDirectionUnit}`} />
+// 					</FlexRow>
+// 				</TextInline>
+// 				<PushedDownTextInline>
+// 					<FlexRow alignItems='center'>
+// 						<SpacedIcon type={iconTypes.pressure} defaultColor={iconColor} height={iconHeight} />
+// 						<TextUnit text={pressureText} unit='mb' space={3} />
+// 					</FlexRow>
+// 				</PushedDownTextInline>
+// 			</Flex>
+// 		</FlexRow>
+// 	);
+// };
 
-const PaddedFlexRow = styled(FlexRow)`
-	padding-right: .8rem;
-	/* Prevent multi-word short statuses from wrapping. */
-	white-space: nowrap;
-`;
+// const PaddedFlexRow = styled(FlexRow)`
+// 	padding-right: .8rem;
+// 	/* Prevent multi-word short statuses from wrapping. */
+// 	white-space: nowrap;
+// `;
 
-const PushedDownTextInline = styled(TextInline)`
-	margin-top: ${Spacing.dog16};
-`;
+// const PushedDownTextInline = styled(TextInline)`
+// 	margin-top: ${Spacing.dog16};
+// `;
 
-const SummaryWeatherSecondary: React.FC = () => {
+// const SummaryWeatherSecondary: React.FC = () => {
 
-	const allResponseState = useAllResponse();
-	if (!hasAllResponseData(allResponseState)) {
-		return null;
-	}
+// 	const allResponseState = useAllResponse();
+// 	if (!hasAllResponseData(allResponseState)) {
+// 		return null;
+// 	}
 
-	const { all } = allResponseState.data!;
+// 	const { all } = allResponseState.data!;
 
-	const { temp, tempFeelsLike, windDirection, cloudCover, status, visibility } = all.current.weather;
+// 	const { temp, tempFeelsLike, windDirection, cloudCover, status, visibility } = all.current.weather;
 
-	// status long description, cloud cover, Feels like, wind direction, visibility
+// 	// status long description, cloud cover, Feels like, wind direction, visibility
 
-	// Get the key, like 'unknown'.
-	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
-	// Use that key to get the icons (day and night).
-	const weatherStatusDescription = weatherStatusTypeDescription[weatherStatusKey].long;
+// 	// Get the key, like 'unknown'.
+// 	const weatherStatusKey = WeatherStatusType[status] as keyof typeof WeatherStatusType;
+// 	// Use that key to get the icons (day and night).
+// 	const weatherStatusDescription = weatherStatusTypeDescription[weatherStatusKey].long;
 
-	const cloudCoverText = Math.round(cloudCover.entity! * 100);
+// 	const cloudCoverText = Math.round(cloudCover.entity! * 100);
 
-	const tempRounded = Math.round(temp.entity!);
-	let tempFeelsLikeComponent: JSX.Element | null = null;
-	if (tempFeelsLike.entity) {
-		const tempFeelsLikeRounded = Math.round(tempFeelsLike.entity);
-		if (tempRounded !== tempFeelsLikeRounded) {
-			tempFeelsLikeComponent = <TextInline>Feels like {tempFeelsLikeRounded}&deg;.&nbsp;</TextInline>;
-		}
-	}
+// 	const tempRounded = Math.round(temp.entity!);
+// 	let tempFeelsLikeComponent: JSX.Element | null = null;
+// 	if (tempFeelsLike.entity) {
+// 		const tempFeelsLikeRounded = Math.round(tempFeelsLike.entity);
+// 		if (tempRounded !== tempFeelsLikeRounded) {
+// 			tempFeelsLikeComponent = <TextInline>Feels like {tempFeelsLikeRounded}&deg;.&nbsp;</TextInline>;
+// 		}
+// 	}
 
-	const windOriginationText = WindDirection[windDirection];
+// 	const windOriginationText = WindDirection[windDirection];
 
-	let visibilityText: JSX.Element | null = null;
-	const visibilityEntity = visibility.entity;
-	if (visibilityEntity) {
-		visibilityText = <> Visibility is {visibilityEntity.toFixed(1)} miles.</>;
-	}
+// 	let visibilityText: JSX.Element | null = null;
+// 	const visibilityEntity = visibility.entity;
+// 	if (visibilityEntity) {
+// 		visibilityText = <> Visibility is {visibilityEntity.toFixed(1)} miles.</>;
+// 	}
 
-	return (
-		<Text>
-			{weatherStatusDescription}.
-			Cloud cover at {cloudCoverText}%. {tempFeelsLikeComponent}Wind from the {windOriginationText}.
-			{visibilityText}
-		</Text>
-	);
-};
+// 	return (
+// 		<Text>
+// 			{weatherStatusDescription}.
+// 			Cloud cover at {cloudCoverText}%. {tempFeelsLikeComponent}Wind from the {windOriginationText}.
+// 			{visibilityText}
+// 		</Text>
+// 	);
+// };
