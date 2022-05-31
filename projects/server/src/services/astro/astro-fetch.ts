@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { SunEvent } from '@wbtdevlocal/iso';
+import * as iso from '@wbtdevlocal/iso';
 import { APIConfigurationContext } from '../all/context';
 import { RunFlags } from '../util/run-flags';
 import { IntermediateAstroValues } from './astro-intermediate';
@@ -10,10 +10,8 @@ import { IntermediateAstroValues } from './astro-intermediate';
 
 	If we need an API, consider https://sunrise-sunset.org/api (free) or time-and-date (paid)
 
-
 	Concepts in the below code:
 	- Julian Day: days since noon, Jan 1, 4713 BC on the Julian calendar
-
 */
 
 export async function fetchAstro(configContext: APIConfigurationContext, _: RunFlags): Promise<IntermediateAstroValues> {
@@ -23,7 +21,7 @@ export async function fetchAstro(configContext: APIConfigurationContext, _: RunF
 	const endDay = configContext.context.maxLongTermDataFetch;
 	const daysBetween = endDay.diff(startDay, 'days').days;
 
-	const sunEvents: SunEvent[] = [];
+	const sunEvents: iso.Astro.SunEvent[] = [];
 
 	for (let i = 0; i < daysBetween; i++) {
 		const day = startDay.plus({ days: i });
@@ -37,7 +35,7 @@ export async function fetchAstro(configContext: APIConfigurationContext, _: RunF
 	};
 }
 
-function getSunEventsForDay(day: DateTime, latitude: number, longitude: number): SunEvent[] {
+function getSunEventsForDay(day: DateTime, latitude: number, longitude: number): iso.Astro.SunEvent[] {
 	const julianDay = getJulianDay(day);
 	const timezoneOffset = day.offset / 60; // To get hours
 
