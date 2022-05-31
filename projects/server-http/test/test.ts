@@ -10,6 +10,6 @@ export function log(object: any): void {
 export interface TestEnv {
 	OpenWeatherDebugAPIKey: string;
 }
-const env: TestEnv = require('./test-env.json');
+const env: TestEnv = require('./env-secret.json');
 
 run(env);
