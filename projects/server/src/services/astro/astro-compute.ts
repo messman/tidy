@@ -1,8 +1,12 @@
 import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
-import { APIConfigurationContext } from '../all/context';
-import { RunFlags } from '../util/run-flags';
-import { IntermediateAstroValues } from './astro-intermediate';
+import { LogContext } from '../logging/pino';
+import { AstroConfig } from './astro-config';
+
+export interface ComputedAstro {
+	/** Sunrise and Sunset events. */
+	sunEvents: iso.Astro.SunEvent[];
+}
 
 /*
 	For now, while we are only supporting sunrise / sunset, we do the calculation manually without the assistance of an API.
@@ -14,11 +18,11 @@ import { IntermediateAstroValues } from './astro-intermediate';
 	- Julian Day: days since noon, Jan 1, 4713 BC on the Julian calendar
 */
 
-export async function fetchAstro(configContext: APIConfigurationContext, _: RunFlags): Promise<IntermediateAstroValues> {
+export async function computeAstro(_ctx: LogContext, config: AstroConfig): Promise<ComputedAstro> {
 
-	const { latitude, longitude } = configContext.configuration.location;
-	const startDay = configContext.context.astro.minimumSunDataFetch;
-	const endDay = configContext.context.maxLongTermDataFetch;
+	const { latitude, longitude } = config.base.input;
+	const startDay = config.astro.live.minimumSunDataFetch;
+	const endDay = config.base.live.maxLongTermDataFetch;
 	const daysBetween = endDay.diff(startDay, 'days').days;
 
 	const sunEvents: iso.Astro.SunEvent[] = [];
@@ -29,8 +33,6 @@ export async function fetchAstro(configContext: APIConfigurationContext, _: RunF
 		sunEvents.push(...daySunEvents);
 	}
 	return {
-		errors: null,
-		warnings: null,
 		sunEvents: sunEvents
 	};
 }
@@ -48,7 +50,7 @@ function getSunEventsForDay(day: DateTime, latitude: number, longitude: number):
 	return [sunriseEvent, sunsetEvent];
 }
 
-function createSunEventFromOutput(isSunrise: boolean, day: DateTime, julianDay: number, output: SunriseSunsetOutput): SunEvent {
+function createSunEventFromOutput(isSunrise: boolean, day: DateTime, julianDay: number, output: SunriseSunsetOutput): iso.Astro.SunEvent {
 	const dayOffset = output.julianDay - julianDay;
 	return {
 		isSunrise: isSunrise,

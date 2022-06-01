@@ -1,10 +1,14 @@
-import { SunEvent } from '@wbtdevlocal/iso';
-import { ForDay } from '../all/all';
-import { AllIssue } from '../all/all-merge';
-import { APIConfigurationContext } from '../all/context';
-import { IntermediateAstroValues } from './astro-intermediate';
+import * as iso from '@wbtdevlocal/iso';
+import { LogContext } from '../logging/pino';
+import { TestSeed } from '../test/randomize';
+import { ForDay } from '../types';
+import { computeAstro, ComputedAstro } from './astro-compute';
+import { createComputedAstro } from './astro-compute-create';
+import { AstroConfig } from './astro-config';
 
-export interface InterpretedAstro extends AllIssue {
+import SunEvent = iso.Astro.SunEvent;
+
+export interface AstroContent {
 	previousEvent: SunEvent,
 	nextEvent: SunEvent,
 	shortTermEvents: SunEvent[],
@@ -13,24 +17,22 @@ export interface InterpretedAstro extends AllIssue {
 
 // Assumption made: we will always get sun events in pairs - sunrise and sunset - for each day.
 
-export function interpretAstro(configurationContext: APIConfigurationContext, intermediateAstro: IntermediateAstroValues): InterpretedAstro {
+export async function readAstroContent(ctx: LogContext, config: AstroConfig): Promise<AstroContent> {
+	const computed = await computeAstro(ctx, config);
+	return createContent(config, computed);
+}
 
-	// If we have any errors from the data at the start, get out now.
-	if (intermediateAstro.errors) {
-		return {
-			errors: intermediateAstro.errors,
-			warnings: intermediateAstro.warnings,
-			previousEvent: null!,
-			nextEvent: null!,
-			shortTermEvents: null!,
-			longTermEvents: null!
-		};
-	}
+export function createAstroContent(_ctx: LogContext, config: AstroConfig, seed: TestSeed): AstroContent {
+	const computed = createComputedAstro(config, seed);
+	return createContent(config, computed);
+}
 
-	const referenceTime = configurationContext.context.referenceTimeInZone;
+function createContent(config: AstroConfig, computed: ComputedAstro): AstroContent {
+
+	const referenceTime = config.base.live.referenceTimeInZone;
 	const referenceDay = referenceTime.startOf('day');
-	const shortTermLimit = configurationContext.context.maxShortTermDataFetch.endOf('day');
-	const longTermLimit = configurationContext.context.maxLongTermDataFetch;
+	const shortTermLimit = config.base.live.maxShortTermDataFetch.endOf('day');
+	const longTermLimit = config.base.live.maxLongTermDataFetch;
 
 	let previousEvent: SunEvent = null!;
 	let nextEvent: SunEvent = null!;
@@ -38,7 +40,7 @@ export function interpretAstro(configurationContext: APIConfigurationContext, in
 	const longTermEvents: ForDay<SunEvent[]>[] = [];
 	let currentDayLongTermEvents: SunEvent[] = [];
 
-	intermediateAstro.sunEvents.forEach((s) => {
+	computed.sunEvents.forEach((s) => {
 		// Get the time in our time zone in a DateTime object.
 		const eventTime = s.time;
 		// Figure out if it's an event adjacent to our reference time.
@@ -71,8 +73,6 @@ export function interpretAstro(configurationContext: APIConfigurationContext, in
 	});
 
 	return {
-		errors: null,
-		warnings: intermediateAstro.warnings,
 		previousEvent: previousEvent,
 		nextEvent: nextEvent,
 		shortTermEvents: shortTermEvents,

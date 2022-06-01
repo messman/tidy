@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { Change, Measurement } from '@wbtdevlocal/iso';
 
 /** Weather data is a span of time - usually the time given plus a number of hours. */
 export interface TimeSpan {
@@ -19,10 +18,6 @@ export interface TimeIterator<B> {
 export interface IterableTimeData<T> {
 	value: T,
 	span: TimeSpan,
-}
-
-export function createTimeChangeIterator(data: IterableTimeData<number>[], includeChange: boolean): TimeIterator<Measurement> {
-	return createBaseTimeIterator(data, includeChange ? createMeasurementOutput : createChangelessMeasurementOutput);
 }
 
 export function createTimeIterator<T>(data: IterableTimeData<T>[]): TimeIterator<T> {
@@ -85,34 +80,6 @@ function createBaseTimeIterator<A, B>(data: IterableTimeData<A>[], createOutput:
 	return {
 		next: next,
 		reset: reset
-	};
-}
-
-
-function createMeasurementOutput(previous: IterableTimeData<number> | null, next: IterableTimeData<number> | null): Measurement {
-	if (!next) {
-		return {
-			entity: null,
-			change: Change.unknown
-		};
-	}
-	if (!previous) {
-		return {
-			entity: next.value,
-			change: Change.unknown
-		};
-	}
-
-	return {
-		entity: next.value,
-		change: (next.value > previous.value ? Change.higher : (next.value === previous.value ? Change.same : Change.lower))
-	};
-}
-
-function createChangelessMeasurementOutput(_: IterableTimeData<number> | null, next: IterableTimeData<number> | null): Measurement {
-	return {
-		entity: next ? next.value : null,
-		change: undefined
 	};
 }
 

@@ -1,10 +1,18 @@
 import { DateTime, DateTimeOptions } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
-import { APIConfigurationContext } from '../all/context';
-import { FetchResponse, getJSON } from '../util/fetch';
-import { createServerLog, serverLog } from '../util/log';
-import { RunFlags } from '../util/run-flags';
-import { createEmptyIntermediateWeather, IntermediateWeatherValues } from './weather-intermediate';
+import { serverErrors, ServerPromise } from '../../api/error';
+import { settings } from '../../env';
+import { LogContext } from '../logging/pino';
+import { makeRequest } from '../network/request';
+import { WeatherConfig } from './weather-config';
+
+import WeatherStatusType = iso.Weather.WeatherStatusType;
+
+export interface FetchedWeather {
+	currentWeather: iso.Weather.WeatherStatus;
+	shortTermWeather: iso.Weather.WeatherStatus[];
+	longTermWeather: iso.Weather.DailyWeather[];
+}
 
 /*
 	Uses OpenWeather's free 'One Call API', which replaced multiple calls to the NWS API.
@@ -16,114 +24,86 @@ import { createEmptyIntermediateWeather, IntermediateWeatherValues } from './wea
 	https://api.openweathermap.org/data/2.5/onecall?lat=43.294&lon=-70.568&appid=APIKEY&units=imperial
 
 */
-
-export async function fetchWeather(configContext: APIConfigurationContext, runFlags: RunFlags): Promise<IntermediateWeatherValues> {
-
-	// Make our initial request to get our API URL from the latitude and longitude
-	const { latitude, longitude } = configContext.configuration.location;
-
-	const openWeatherResponse = await getOpenWeatherData(latitude, longitude, configContext, runFlags);
-	if (openWeatherResponse.issues) {
-		return Object.assign({}, createEmptyIntermediateWeather(), {
-			errors: {
-				errors: openWeatherResponse.issues
-			}
-		});
-	}
-
-	return openWeatherResponse.result!;
-}
-
 const openWeatherDataUrl = 'https://api.openweathermap.org/data/2.5/onecall?units=imperial&exclude=minutely';
 
-async function getOpenWeatherData(latitude: number, longitude: number, configContext: APIConfigurationContext, runFlags: RunFlags): Promise<FetchResponse<IntermediateWeatherValues>> {
+export async function fetchWeather(ctx: LogContext, config: WeatherConfig): ServerPromise<FetchedWeather> {
 
-	const logger = createServerLog(runFlags);
+	// Make our initial request to get our API URL from the latitude and longitude
+	const { latitude, longitude } = config.base.input;
 
 	// Maximum precision is 4 decimal points.
 	const fixedLatitude = parseFloat(latitude.toFixed(4));
 	const fixedLongitude = parseFloat(longitude.toFixed(4));
 
-	if (!runFlags.keys.weather) {
-		// Not set up correctly.
-		return {
-			issues: [errorIssue('Error retrieving weather information', 'No API Key provided for weather fetch')],
-			result: null
-		};
+	const apiKey = settings.KEY_OPEN_WEATHER;
+	if (!apiKey) {
+		return serverErrors.internal.service(ctx, 'Weather', {
+			hiddenArea: 'Weather fetch - missing API key'
+		});
 	}
 
 	// Don't include API key in log statement, just in case.
-	let url = `${openWeatherDataUrl}&lat=${fixedLatitude}&lon=${fixedLongitude}`;
-	logger('Starting weather fetch', url);
-	url += `&appid=${runFlags.keys.weather}`;
+	const url = `${openWeatherDataUrl}&lat=${fixedLatitude}&lon=${fixedLongitude}&appid=${apiKey}`;
 
-	const fetched = await getJSON<OpenWeatherResponse>(url, 'weather fetch', null);
-	logger('Finished weather fetch');
-	const { issues, result } = fetched;
-	if (issues) {
-		// Short-circuit, because it doesn't matter.
-		return fetched as unknown as FetchResponse<IntermediateWeatherValues>;
+	const response = await makeRequest<OpenWeatherResponse>(ctx, 'OpenWeather - fetch', url);
+	if (iso.isServerError(response)) {
+		return response;
 	}
 
-	const response = result!;
 	if (response.cod) {
 		// Likely an error.
-		return {
-			issues: [errorIssue('Error retrieving weather information', 'Error returned in weather fetch', { code: response.cod, message: response.message })],
-			result: null
-		};
+		return serverErrors.internal.service(ctx, 'Weather', {
+			hiddenArea: 'Weather fetch - error in response',
+			hiddenLog: { cod: response.cod, message: response.message }
+		});
 	}
 
 	// Per documentation - all times are Unix seconds UTC.
-	const zoneOptions: DateTimeOptions = { zone: configContext.configuration.location.timeZoneLabel };
+	const zoneOptions: DateTimeOptions = { zone: config.base.input.timeZoneLabel };
 
 	// Create functions to process the raw data by running conversions and adding precision.
-	const temperatureToPrecision = wrapForPrecision(x => x, configContext.configuration.weather.temperaturePrecision);
-	const toDefaultPrecision = wrapForPrecision(x => x, configContext.configuration.weather.defaultPrecision);
-	const percentToPrecision = wrapForPrecision(toPercent, configContext.configuration.weather.defaultPrecision + 2);
-	const metersToPrecisionMiles = wrapForPrecision(metersToMiles, configContext.configuration.weather.defaultPrecision);
-	const pressureToPrecisionMillibars = wrapForPrecision(pressureToMillibars, configContext.configuration.weather.defaultPrecision);
+	const { temperaturePrecision, defaultPrecision } = config.weather.input;
+	const temperatureToPrecision = wrapForPrecision(x => x, temperaturePrecision);
+	const toDefaultPrecision = wrapForPrecision(x => x, defaultPrecision);
+	const percentToPrecision = wrapForPrecision(toPercent, defaultPrecision + 2);
+	const metersToPrecisionMiles = wrapForPrecision(metersToMiles, defaultPrecision);
+	const pressureToPrecisionMillibars = wrapForPrecision(pressureToMillibars, defaultPrecision);
 
 	return {
-		issues: null,
-		result: {
-			errors: null,
-			warnings: null,
-			currentWeather: {
-				time: DateTime.fromSeconds(response.current.dt, zoneOptions),
-				temp: temperatureToPrecision(response.current.temp),
-				tempFeelsLike: temperatureToPrecision(response.current.feels_like),
-				wind: toDefaultPrecision(response.current.wind_speed),
-				windDirection: degreesToDirection(response.current.wind_deg),
-				pressure: pressureToPrecisionMillibars(response.current.pressure),
-				cloudCover: percentToPrecision(response.current.clouds),
-				visibility: metersToPrecisionMiles(response.current.visibility),
-				dewPoint: temperatureToPrecision(response.current.dew_point),
-				status: getStatusType(response.current.weather, runFlags)
-			},
-			shortTermWeather: response.hourly.map((hourly) => {
-				return {
-					time: DateTime.fromSeconds(hourly.dt, zoneOptions).startOf('hour'),
-					temp: temperatureToPrecision(hourly.temp),
-					tempFeelsLike: temperatureToPrecision(hourly.feels_like),
-					wind: toDefaultPrecision(hourly.wind_speed),
-					windDirection: degreesToDirection(hourly.wind_deg),
-					pressure: pressureToPrecisionMillibars(hourly.pressure),
-					cloudCover: percentToPrecision(hourly.clouds),
-					visibility: null,
-					dewPoint: temperatureToPrecision(hourly.dew_point),
-					status: getStatusType(hourly.weather, runFlags)
-				};
-			}),
-			longTermWeather: response.daily.map((daily) => {
-				return {
-					day: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
-					minTemp: temperatureToPrecision(daily.temp.min),
-					maxTemp: temperatureToPrecision(daily.temp.max),
-					status: getStatusType(daily.weather, runFlags)
-				};
-			}),
-		}
+		currentWeather: {
+			time: DateTime.fromSeconds(response.current.dt, zoneOptions),
+			temp: temperatureToPrecision(response.current.temp),
+			tempFeelsLike: temperatureToPrecision(response.current.feels_like),
+			wind: toDefaultPrecision(response.current.wind_speed),
+			windDirection: degreesToDirection(response.current.wind_deg),
+			pressure: pressureToPrecisionMillibars(response.current.pressure),
+			cloudCover: percentToPrecision(response.current.clouds),
+			visibility: metersToPrecisionMiles(response.current.visibility),
+			dewPoint: temperatureToPrecision(response.current.dew_point),
+			status: getStatusType(ctx, response.current.weather)
+		},
+		shortTermWeather: response.hourly.map((hourly) => {
+			return {
+				time: DateTime.fromSeconds(hourly.dt, zoneOptions).startOf('hour'),
+				temp: temperatureToPrecision(hourly.temp),
+				tempFeelsLike: temperatureToPrecision(hourly.feels_like),
+				wind: toDefaultPrecision(hourly.wind_speed),
+				windDirection: degreesToDirection(hourly.wind_deg),
+				pressure: pressureToPrecisionMillibars(hourly.pressure),
+				cloudCover: percentToPrecision(hourly.clouds),
+				visibility: null,
+				dewPoint: temperatureToPrecision(hourly.dew_point),
+				status: getStatusType(ctx, hourly.weather)
+			};
+		}),
+		longTermWeather: response.daily.map((daily) => {
+			return {
+				day: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
+				minTemp: temperatureToPrecision(daily.temp.min),
+				maxTemp: temperatureToPrecision(daily.temp.max),
+				status: getStatusType(ctx, daily.weather)
+			};
+		}),
 	};
 }
 
@@ -212,7 +192,7 @@ interface ValueConverter<O> {
 	(value: any): O;
 }
 
-function wrapForPrecision(valueConverter: ValueConverter<number>, precision: number) {
+function wrapForPrecision(valueConverter: ValueConverter<number>, precision: number): (value: number) => number {
 	return function (value: number) {
 		const convertedValue = valueConverter(value);
 		return parseFloat(convertedValue.toFixed(precision));
@@ -225,7 +205,7 @@ const toPercent: ValueConverter<number> = (value) => {
 };
 
 /** Converts angle degrees to cardinal directions. */
-const degreesToDirection: ValueConverter<WindDirection> = (value: number) => {
+const degreesToDirection: ValueConverter<iso.Weather.WindDirection> = (value: number) => {
 	// We are presuming that 0 degrees is N.
 	// 90 degrees is N to E, 45 is N to NE, 22.5 is N to NNE, 11.5 is to halfway between N and NNE.
 	// Use that logic to convert from number [0, 360] to direction.
@@ -234,7 +214,7 @@ const degreesToDirection: ValueConverter<WindDirection> = (value: number) => {
 	if (directionValue === 16) {
 		directionValue = 0;
 	}
-	return directionValue as WindDirection;
+	return directionValue as iso.Weather.WindDirection;
 };
 
 /** Converts meters to miles. */
@@ -247,21 +227,23 @@ const pressureToMillibars: ValueConverter<number> = (value) => {
 	return value;
 };
 
-function getStatusType(statuses: OpenWeatherWeatherStatus[], runFlags: RunFlags): WeatherStatusType {
+function getStatusType(ctx: LogContext, statuses: OpenWeatherWeatherStatus[]): WeatherStatusType {
+	const logger = ctx.logger;
+
 	if (!statuses.length) {
-		serverLog(runFlags, 'No statuses provided');
+		logger.warn('No weather statuses provided');
 	}
 	const statusNumbers = statuses.map((status) => {
 		return status.id;
 	});
 	if (statusNumbers.length > 1 || statusNumbers[0] === 0) {
-		serverLog(runFlags, 'Multiple statuses provided', statusNumbers);
+		logger.warn('Multiple weather statuses provided', { statusNumbers });
 	}
 	let statusNumber = statusNumbers[0];
 
 	const status = openWeatherStatusMap[statusNumber as keyof typeof openWeatherStatusMap] || WeatherStatusType.unknown;
 	if (status === WeatherStatusType.unknown) {
-		serverLog(runFlags, `Weather status is unknown due to mismatch of ID [${statusNumber}]`);
+		logger.warn('Weather status is unknown due to mismatch of ID', { id: statusNumber });
 	}
 	return status;
 }

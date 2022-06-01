@@ -1,11 +1,14 @@
-import pino from 'pino';
+import * as pino from 'pino';
+
+export interface LogContext {
+	logger: pino.Logger;
+}
 
 // Looking for how pino streams to seq? See the starting scripts.
 // Options: https://getpino.io/#/docs/api?id=options
 export const baseLogger = pino({
-	name: 'wbt-server-http',
+	name: 'strudel-server-web',
 	nestedKey: 'data',
-	level: process.env.NODE_ENV === 'dev' ? 'debug' : 'info',
 	hooks: {
 		// https://getpino.io/#/docs/api?id=logmethod
 		logMethod: function (inputArgs, method, _level) {

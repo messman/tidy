@@ -1,4 +1,4 @@
-import { baseLogger } from './logger';
+import { baseLogger } from './services/logging/pino';
 
 export interface ProcessEnv {
 	PORT: number;
@@ -36,3 +36,6 @@ export const settings: Settings = {
 };
 
 baseLogger.info('env - loaded', { TEST_VALUE: settings.TEST_VALUE });
+
+// Set our global logging level
+baseLogger.level = isDev ? 'debug' : 'info';

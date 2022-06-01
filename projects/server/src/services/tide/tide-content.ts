@@ -1,39 +1,41 @@
 import { DateTime } from 'luxon';
-import { AllCurrentTides, TideEvent, TideEventRange, TideExtremes, TideStatus } from '@wbtdevlocal/iso';
-import { ForDay } from '../all/all';
-import { AllIssue } from '../all/all-merge';
-import { APIConfigurationContext } from '../all/context';
-import { IntermediateTideValues } from './tide-intermediate';
+import * as iso from '@wbtdevlocal/iso';
+import { ServerPromise } from '../../api/error';
+import { LogContext } from '../logging/pino';
+import { TestSeed } from '../test/randomize';
+import { ForDay } from '../types';
+import { TideConfig } from './tide-config';
+import { FetchedTide, fetchTides } from './tide-fetch';
+import { createFetchedTide } from './tide-fetch-create';
 
-export interface InterpretedTides extends AllIssue {
-	currentTides: AllCurrentTides,
-	shortTermTides: TideEventRange,
-	longTermTideExtremes: TideExtremes,
-	longTermTides: ForDay<TideEventRange>[];
+export interface TideContent {
+	currentTides: iso.Tide.CurrentTides,
+	shortTermTides: iso.Tide.TideEventRange,
+	longTermTideExtremes: iso.Tide.TideExtremes,
+	longTermTides: ForDay<iso.Tide.TideEventRange>[];
 }
 
-export function interpretTides(configurationContext: APIConfigurationContext, intermediateTides: IntermediateTideValues): InterpretedTides {
-
-	if (intermediateTides.errors) {
-		return {
-			errors: intermediateTides.errors,
-			warnings: intermediateTides.warnings,
-			currentTides: null!,
-			shortTermTides: null!,
-			longTermTideExtremes: null!,
-			longTermTides: null!
-		};
+export async function readTideContent(ctx: LogContext, config: TideConfig): ServerPromise<TideContent> {
+	const fetchedTide = await fetchTides(ctx, config);
+	if (iso.isServerError(fetchedTide)) {
+		return fetchedTide;
 	}
+	return createContent(config, fetchedTide);
+}
 
-	const { pastEvents, current, futureEvents } = intermediateTides;
+export function createTideContent(_ctx: LogContext, config: TideConfig, seed: TestSeed): TideContent {
+	const computed = createFetchedTide(config, seed);
+	return createContent(config, computed);
+}
+
+function createContent(config: TideConfig, fetchedTide: FetchedTide): TideContent {
+	const { pastEvents, current, futureEvents } = fetchedTide;
 
 	const currentTides = interpretCurrent(pastEvents, current, futureEvents);
-	const shortTermTides = interpretShortTerm(configurationContext, pastEvents, futureEvents);
-	const [longTermTideExtremes, longTermTides] = interpretLongTerm(configurationContext, pastEvents, futureEvents);
+	const shortTermTides = interpretShortTerm(config, pastEvents, futureEvents);
+	const [longTermTideExtremes, longTermTides] = interpretLongTerm(config, pastEvents, futureEvents);
 
 	return {
-		errors: null,
-		warnings: intermediateTides.warnings,
 		currentTides: currentTides,
 		shortTermTides: shortTermTides,
 		longTermTideExtremes: longTermTideExtremes,
@@ -41,7 +43,7 @@ export function interpretTides(configurationContext: APIConfigurationContext, in
 	};
 }
 
-function interpretCurrent(pastEvents: TideEvent[], current: TideStatus, futureEvents: TideEvent[]): AllCurrentTides {
+function interpretCurrent(pastEvents: iso.Tide.TideEvent[], current: iso.Tide.TideStatus, futureEvents: iso.Tide.TideEvent[]): iso.Tide.CurrentTides {
 	// Get the previous and next tide relative to the reference time.
 	const previousTide = pastEvents[pastEvents.length - 1];
 	const outsidePreviousTide = pastEvents[pastEvents.length - 2];
@@ -64,7 +66,7 @@ function interpretCurrent(pastEvents: TideEvent[], current: TideStatus, futureEv
 
 }
 
-function interpretShortTerm(configurationContext: APIConfigurationContext, pastEvents: TideEvent[], futureEvents: TideEvent[]): TideEventRange {
+function interpretShortTerm(config: TideConfig, pastEvents: iso.Tide.TideEvent[], futureEvents: iso.Tide.TideEvent[]): iso.Tide.TideEventRange {
 
 	/*
 		Special case: usually this is a TideEventRange with only one previous and one next outside of range.
@@ -76,7 +78,7 @@ function interpretShortTerm(configurationContext: APIConfigurationContext, pastE
 	const outsideEventsLimit = 2;
 
 	// Get the "predictions", a.k.a. the short-term tides information.
-	const shortTermLimitDate = configurationContext.context.maxShortTermDataFetch;
+	const shortTermLimitDate = config.base.live.maxShortTermDataFetch;
 
 	// Go *a few* past so it looks continuous.
 	let outsideNextEventIndex: number = -1;
@@ -89,7 +91,7 @@ function interpretShortTerm(configurationContext: APIConfigurationContext, pastE
 		}
 		return false;
 	});
-	let outsideNextEvents: TideEvent[] = [];
+	let outsideNextEvents: iso.Tide.TideEvent[] = [];
 	if (outsideNextEventIndex >= 0) {
 		outsideNextEvents = futureEvents.slice(outsideNextEventIndex, Math.min(outsideNextEventIndex + outsideEventsLimit, futureEvents.length - 1));
 	}
@@ -105,14 +107,14 @@ function interpretShortTerm(configurationContext: APIConfigurationContext, pastE
 	};
 }
 
-function interpretLongTerm(configurationContext: APIConfigurationContext, pastEvents: TideEvent[], futureEvents: TideEvent[]): [TideExtremes, ForDay<TideEventRange>[]] {
+function interpretLongTerm(config: TideConfig, pastEvents: iso.Tide.TideEvent[], futureEvents: iso.Tide.TideEvent[]): [iso.Tide.TideExtremes, ForDay<iso.Tide.TideEventRange>[]] {
 
 	// Day matters in this section, so we use Luxon (for time zones).
 
 
 	const allEvents = [...pastEvents, ...futureEvents];
-	const eventsByDay: TideEvent[][] = [];
-	let currentEventsOfDay: TideEvent[] = [];
+	const eventsByDay: iso.Tide.TideEvent[][] = [];
+	let currentEventsOfDay: iso.Tide.TideEvent[] = [];
 	let previousEventDateTime: DateTime;
 
 	allEvents.forEach((t) => {
@@ -127,10 +129,10 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 		}
 	});
 
-	const longTermEventRanges: ForDay<TideEventRange>[] = [];
+	const longTermEventRanges: ForDay<iso.Tide.TideEventRange>[] = [];
 
-	const longTermLimitDay = configurationContext.context.maxLongTermDataFetch;
-	const referenceDay = configurationContext.context.referenceTimeInZone.startOf('day');
+	const longTermLimitDay = config.base.live.maxLongTermDataFetch;
+	const referenceDay = config.base.live.referenceTimeInZone.startOf('day');
 
 	eventsByDay.forEach((events, index) => {
 		const dayOfEvents = events[0].time.startOf('day');
@@ -166,8 +168,8 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 	let minHeight: number = Infinity;
 	let maxHeight: number = -Infinity;
 
-	let minEvent: TideEvent = null!;
-	let maxEvent: TideEvent = null!;
+	let minEvent: iso.Tide.TideEvent = null!;
+	let maxEvent: iso.Tide.TideEvent = null!;
 
 	longTermEventRanges.forEach(function (f) {
 		const r = f.entity;
@@ -190,15 +192,15 @@ function interpretLongTerm(configurationContext: APIConfigurationContext, pastEv
 	];
 }
 
-function getMinMaxEvents(events: TideEvent[]): [TideEvent, TideEvent] {
+function getMinMaxEvents(events: iso.Tide.TideEvent[]): [iso.Tide.TideEvent, iso.Tide.TideEvent] {
 	if (!events || !events.length) {
 		throw new Error('Cannot get min and max of empty array');
 	}
 	let minHeight: number = Infinity;
 	let maxHeight: number = -Infinity;
 
-	let minEvent: TideEvent = null!;
-	let maxEvent: TideEvent = null!;
+	let minEvent: iso.Tide.TideEvent = null!;
+	let maxEvent: iso.Tide.TideEvent = null!;
 
 	events.forEach(function (t) {
 		if (t.height < minHeight) {

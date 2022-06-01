@@ -1,39 +1,36 @@
-export interface ResponseMemoryInput {
-	isCaching: boolean;
+export interface ResponseCacheInput {
 	expiration: number;
 }
 
-export interface ResponseMemory<T> {
-	cacheItem: ResponseMemoryCacheItem<T> | null;
+export interface ResponseCache<T> {
+	cacheItem: ResponseCacheCacheItem<T> | null;
 	cacheExpiration: number;
-	stats: ResponseMemoryStats;
-	isCaching: boolean;
-	setIsCaching: (isCaching: boolean) => void;
+	stats: ResponseCacheStats;
 	setCacheItemValue: (item: T | null) => void;
 	getCacheTimeRemaining: () => number;
-	registerHit: () => ResponseMemoryHit<T>;
+	registerHit: () => ResponseCacheHit<T>;
 }
 
-export interface ResponseMemoryHit<T> {
+export interface ResponseCacheHit<T> {
 	cacheItemValue: T | null;
 	timeRemainingInCache: number;
 }
 
-export interface ResponseMemoryCacheItem<T> {
+export interface ResponseCacheCacheItem<T> {
 	value: T;
 	cachedAt: number;
 }
 
-export interface ResponseMemoryStats {
+export interface ResponseCacheStats {
 	totalCacheBreaks: number;
 	recentCacheHits: number;
 	totalCacheHits: number;
 	totalHits: number;
 }
 
-export function createResponseMemory<T>(input: ResponseMemoryInput): ResponseMemory<T> {
+export function createResponseCache<T>(input: ResponseCacheInput): ResponseCache<T> {
 
-	const state: ResponseMemory<T> = {
+	const state: ResponseCache<T> = {
 		cacheItem: null,
 		cacheExpiration: input.expiration,
 		stats: {
@@ -42,24 +39,12 @@ export function createResponseMemory<T>(input: ResponseMemoryInput): ResponseMem
 			totalCacheHits: 0,
 			totalHits: 0
 		},
-		isCaching: input.isCaching,
-		setIsCaching: setIsCaching,
 		setCacheItemValue: setCacheItemValue,
 		getCacheTimeRemaining: getCacheTimeRemaining,
 		registerHit: registerHit
 	};
 
-	function setIsCaching(newIsCaching: boolean): void {
-		if (!newIsCaching) {
-			setCacheItemValue(null);
-		}
-		state.isCaching = newIsCaching;
-	}
-
 	function setCacheItemValue(newItem: T | null): void {
-		if (!state.isCaching) {
-			return;
-		}
 		if (newItem) {
 			state.cacheItem = {
 				value: newItem!,
@@ -71,8 +56,8 @@ export function createResponseMemory<T>(input: ResponseMemoryInput): ResponseMem
 		}
 	}
 
-	function getCacheItem(): ResponseMemoryCacheItem<T> | null {
-		if (!state.isCaching || !state.cacheItem) {
+	function getCacheItem(): ResponseCacheCacheItem<T> | null {
+		if (!state.cacheItem) {
 			return null;
 		}
 		if (getCacheTimeRemaining() === 0) {
@@ -82,31 +67,31 @@ export function createResponseMemory<T>(input: ResponseMemoryInput): ResponseMem
 	}
 
 	function getCacheTimeRemaining() {
-		if (!state.isCaching || !state.cacheItem) {
+		if (!state.cacheItem) {
 			return 0;
 		}
 		return Math.max(0, (state.cacheItem.cachedAt + state.cacheExpiration) - Date.now());
 	}
 
-	function registerHit(): ResponseMemoryHit<T> {
-		const { stats, isCaching } = state;
+	function registerHit(): ResponseCacheHit<T> {
+		const { stats } = state;
 
 		let cacheItemValue: T | null = null;
 
 		stats.totalHits++;
-		if (isCaching) {
-			// Check in cache.
-			const cacheItem = getCacheItem();
-			if (cacheItem) {
-				cacheItemValue = cacheItem.value;
-				stats.recentCacheHits++;
-				stats.totalCacheHits++;
-			}
-			else {
-				stats.totalCacheBreaks++;
-				stats.recentCacheHits = 0;
-			}
+
+		// Check in cache.
+		const cacheItem = getCacheItem();
+		if (cacheItem) {
+			cacheItemValue = cacheItem.value;
+			stats.recentCacheHits++;
+			stats.totalCacheHits++;
 		}
+		else {
+			stats.totalCacheBreaks++;
+			stats.recentCacheHits = 0;
+		}
+
 		return {
 			cacheItemValue: cacheItemValue,
 			timeRemainingInCache: getCacheTimeRemaining()
