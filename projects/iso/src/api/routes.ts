@@ -16,7 +16,12 @@ import { ApiRoute, HttpMethod } from './request-response';
  */
 export const apiRoutes = {
 	batch: {
-		latest: get('/batch/latest') as Batch.LatestAPI.Batch.Latest.Route,
+		latest: {
+			read: get('/batch/latest') as Batch.LatestAPI.Read.Route
+		},
+		seed: {
+			read: get('/batch/seed/:seed') as Batch.SeedAPI.Read.Route,
+		}
 	}
 };
 

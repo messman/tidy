@@ -1,5 +1,11 @@
 import * as seedrandom from 'seedrandom';
 
+/** A seed value to use to get unique test data. Any falsy value will return the default random data; truthy data will make the data unique based on the truthy value. */
+export type TestSeed = number | string | null;
+export function combineSeed(initialSeed: string, testSeed: TestSeed): string {
+	return `${initialSeed}${testSeed ? testSeed : ''}`;
+}
+
 type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
 
 export interface Randomizer {
@@ -10,11 +16,11 @@ export interface Randomizer {
 	randomInt: OmitFirstArg<typeof randomInt>,
 	randomIntSet: OmitFirstArg<typeof randomIntSet>,
 	shake: OmitFirstArg<typeof shake>,
-	shakeSet: OmitFirstArg<typeof shakeSet>
+	shakeSet: OmitFirstArg<typeof shakeSet>;
 }
 
 interface RandomFunc {
-	(): number
+	(): number;
 }
 
 function makeFunctionSet<F extends (...args: any) => any>(f: F) {
@@ -24,7 +30,7 @@ function makeFunctionSet<F extends (...args: any) => any>(f: F) {
 			result.push(f(randomFunc, ...args as any[]));
 		}
 		return result;
-	}
+	};
 }
 
 export function randomizer(seed?: number | string): Randomizer {
@@ -42,7 +48,7 @@ export function randomizer(seed?: number | string): Randomizer {
 		randomIntSet: randomIntSet.bind(null, randomFunc),
 		shake: shake.bind(null, randomFunc),
 		shakeSet: shakeSet.bind(null, randomFunc)
-	}
+	};
 }
 
 /**
@@ -68,7 +74,7 @@ const randomFloatSet = makeFunctionSet(randomFloat);
 
 /** Gets an integer number between min and max. */
 function randomInt(randomFunc: RandomFunc, min: number, max: number, inclusive: boolean): number {
-	return Math.floor(randomFunc() * (max - min + (inclusive ? 1 : 0))) + min
+	return Math.floor(randomFunc() * (max - min + (inclusive ? 1 : 0))) + min;
 }
 const randomIntSet = makeFunctionSet(randomInt);
 

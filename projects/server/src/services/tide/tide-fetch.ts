@@ -1,11 +1,15 @@
 import { DateTime } from 'luxon';
-import { errorIssue, TideEvent, TideStatus } from '@wbtdevlocal/iso';
-import { mergeIssues } from '../all/all-merge';
-import { APIConfigurationContext } from '../all/context';
-import { FetchResponse, getJSON } from '../util/fetch';
-import { createServerLog, ServerLogger } from '../util/log';
-import { RunFlags } from '../util/run-flags';
-import { IntermediateTideValues } from './tide-intermediate';
+import * as iso from '@wbtdevlocal/iso';
+import { ServerPromise } from '../../api/error';
+import { LogContext } from '../logging/pino';
+import { makeRequest } from '../network/request';
+import { TideConfig } from './tide-config';
+
+export interface FetchedTide {
+	pastEvents: iso.Tide.TideEvent[],
+	current: iso.Tide.TideStatus,
+	futureEvents: iso.Tide.TideEvent[];
+}
 
 /*
 	From https://tidesandcurrents.noaa.gov/api/
@@ -15,14 +19,12 @@ import { IntermediateTideValues } from './tide-intermediate';
 	https://tidesandcurrents.noaa.gov/api/datagetter?application=messman_tidy&station=8419317&format=json&time_zone=lst_ldt&units=english&product=water_level&datum=mllw&date=latest
 */
 
-export async function fetchTides(configContext: APIConfigurationContext, runFlags: RunFlags): Promise<IntermediateTideValues> {
+export async function fetchTides(ctx: LogContext, config: TideConfig): ServerPromise<FetchedTide> {
 
-	const logger = createServerLog(runFlags);
-
-	const station = configContext.configuration.tides.station;
+	const station = config.tide.input.station;
 	// Add one day to our max time because we need tides for the day after in order to construct graph UI.
-	const maxTime = configContext.context.maxLongTermDataFetch.plus({ days: 1 });
-	const pastTime = configContext.context.tides.minimumTidesDataFetch;
+	const maxTime = config.base.live.maxLongTermDataFetch.plus({ days: 1 });
+	const pastTime = config.tide.live.minimumTidesDataFetch;
 
 	const startDateAsString = formatDateForRequest(pastTime);
 	const hoursBetween = Math.ceil(maxTime.diff(pastTime, 'hours').hours);
@@ -36,6 +38,11 @@ export async function fetchTides(configContext: APIConfigurationContext, runFlag
 		range: hoursBetween
 	} as NOAAPredictionInput));
 
+	const predictionResponse = await makeRequest<NOAAPredictionOutput>(ctx, 'Tides - prediction', createRequestUrl(predictionInput));
+	if (iso.isServerError(predictionResponse)) {
+		return predictionResponse;
+	}
+
 	const currentLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
 		station: station,
 		product: "water_level",
@@ -43,42 +50,29 @@ export async function fetchTides(configContext: APIConfigurationContext, runFlag
 		date: "latest"
 	} as NOAACurrentLevelInput));
 
-	const requests: [Promise<FetchResponse<NOAAPredictionOutput>>, Promise<FetchResponse<NOAACurrentLevelOutput>>] = [
-		makeJSONRequest(predictionInput, 'tide prediction', logger),
-		makeJSONRequest(currentLevelInput, 'tide level', logger)
-	];
-
-	const [predictionResponse, currentLevelResponse] = await Promise.all(requests);
-
-	const combinedIssues = mergeIssues([predictionResponse.issues, currentLevelResponse.issues]);
-	if (combinedIssues) {
-		return {
-			errors: {
-				errors: combinedIssues
-			},
-			warnings: null,
-			pastEvents: null!,
-			current: null!,
-			futureEvents: null!
-		};
+	const currentLevelResponse = await makeRequest<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(currentLevelInput));
+	if (iso.isServerError(currentLevelResponse)) {
+		return currentLevelResponse;
 	}
 
-	const currentLevelData = currentLevelResponse.result!.data[0];
-	const current: TideStatus = {
-		time: DateTimeFromNOAAString(currentLevelData.t, configContext.configuration.location.timeZoneLabel),
-		height: parseFloat(parseFloat(currentLevelData.v).toFixed(configContext.configuration.tides.tideHeightPrecision))
+	const { tideHeightPrecision } = config.tide.input;
+
+	const currentLevelData = currentLevelResponse.data[0];
+	const current: iso.Tide.TideStatus = {
+		time: DateTimeFromNOAAString(currentLevelData.t, config.base.input.timeZoneLabel),
+		height: parseFloat(parseFloat(currentLevelData.v).toFixed(tideHeightPrecision))
 	};
 
-	const pastEvents: TideEvent[] = [];
-	const futureEvents: TideEvent[] = [];
-	const referenceTime = configContext.context.referenceTimeInZone;
+	const pastEvents: iso.Tide.TideEvent[] = [];
+	const futureEvents: iso.Tide.TideEvent[] = [];
+	const referenceTime = config.base.live.referenceTimeInZone;
 
-	predictionResponse.result!.predictions.forEach((p) => {
+	predictionResponse.predictions.forEach((p) => {
 
-		const eventTime = DateTimeFromNOAAString(p.t, configContext.configuration.location.timeZoneLabel);
-		const event: TideEvent = {
+		const eventTime = DateTimeFromNOAAString(p.t, config.base.input.timeZoneLabel);
+		const event: iso.Tide.TideEvent = {
 			time: eventTime,
-			height: parseFloat(parseFloat(p.v).toFixed(configContext.configuration.tides.tideHeightPrecision)),
+			height: parseFloat(parseFloat(p.v).toFixed(tideHeightPrecision)),
 			isLow: p.type.toUpperCase() !== "H"
 		};
 
@@ -90,10 +84,7 @@ export async function fetchTides(configContext: APIConfigurationContext, runFlag
 		}
 	});
 
-
 	return {
-		errors: null,
-		warnings: null,
 		pastEvents: pastEvents,
 		current: current,
 		futureEvents: futureEvents
@@ -160,32 +151,6 @@ interface NOAACurrentLevelEntry {
 interface NOAARawErrorResponse {
 	error: {
 		message: string;
-	};
-}
-
-async function makeJSONRequest<T extends NOAARawErrorResponse>(options: any, name: string, logger: ServerLogger): Promise<FetchResponse<T>> {
-	const url = createRequestUrl(options);
-
-	logger('Starting request', url);
-	const fetched = await getJSON<T>(url, name, null);
-	logger('Finished request', url);
-
-	const { issues, result } = fetched;
-	if (issues) {
-		// Short-circuit, because it doesn't matter.
-		return fetched as unknown as FetchResponse<T>;
-	}
-
-	const errorMessage = result?.error?.message;
-	if (errorMessage) {
-		return {
-			issues: [errorIssue('Error retrieving tide information', errorMessage)],
-			result: null
-		};
-	}
-	return {
-		issues: null,
-		result: result!
 	};
 }
 

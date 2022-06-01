@@ -1,2 +1,3 @@
 export * as LatestAPI from './latest-api';
-export * from './latest-iso';
+export * as SeedAPI from './seed-api';
+export * from './batch';
