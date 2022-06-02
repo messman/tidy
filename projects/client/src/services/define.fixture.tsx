@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { Paragraph } from '@/core/text';
-import { DEFINE, useDefine } from '@/services/define';
 import { CosmosFixture } from '@/test';
-import { useBatchLatestResponse } from './data/data';
+import { useBatchContent } from './data/data';
+import { DEFINE } from './define';
 
 export default CosmosFixture.create(() => {
 
-	const { success } = useBatchLatestResponse();
-	const define = useDefine();
-	console.log(define);
+	const { success } = useBatchContent();
+	console.log(DEFINE);
 
 
 	let referenceTime: string = '...';

@@ -22,7 +22,7 @@ export const TextUnit: React.FC<TextUnitProps> = (props) => {
 	);
 };
 
-const NonBreakingTextInline = styled.div`
+const NonBreakingTextInline = styled.span`
 	${fontStyleDeclarations.body};
 	white-space: nowrap;
 	display: inline;
@@ -32,7 +32,8 @@ interface UnitProps {
 	space: number;
 }
 
-const Unit = styled.div<UnitProps>`
+const Unit = styled.span<UnitProps>`
+	display: inline-block;
 	${fontStyleDeclarations.bodySmall};
 	vertical-align: baseline;
 	margin-left: ${p => p.space}rem;

@@ -32,12 +32,12 @@ export function processWeatherForDisplay(weatherStatus: iso.Weather.WeatherStatu
 	const weatherStatusIconForTime = useDayIcon ? weatherStatusIcon.day : weatherStatusIcon.night;
 
 	const weatherDisplay: WeatherDisplay = {
-		tempText: Math.round(temp.entity!).toString(),
-		windText: Math.round(wind.entity!).toString(),
+		tempText: Math.round(temp).toString(),
+		windText: Math.round(wind).toString(),
 		windDirectionUnit: iso.Weather.WindDirection[windDirection],
 		icon: weatherStatusIconForTime,
 		shortStatusText: iso.Weather.weatherStatusTypeDescription[weatherStatusKey].short,
-		pressureText: Math.round(pressure.entity!).toString()
+		pressureText: Math.round(pressure).toString()
 	};
 
 	return weatherDisplay;

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { icons } from '@wbtdevlocal/assets';
-import { containers } from '../container';
 import { IconInputType, SizedIcon, SizedIconArrowChevronInline } from '../icon/icon';
 import { ellipsisStyle, fontStyleDeclarations } from '../text';
 import { Block, borderRadiusStyle, Spacing } from '../theme/box';
@@ -178,7 +177,8 @@ const keyValueContainerLineStyle = css`
 
 const groupContainerStyle = css`
 	${borderRadiusStyle}
-	${containers.background};
+	background-color: ${p => p.theme.form.background};
+	box-shadow: ${p => p.theme.shadow.a_background};
 	overflow: hidden;
 `;
 

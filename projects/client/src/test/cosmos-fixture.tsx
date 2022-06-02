@@ -4,7 +4,6 @@ import { ApplicationLayoutContainer } from '@/core/layout/layout';
 import { Spacing } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
 import { ThemeContextProvider, themes, useThemeIndex } from '@/core/theme/theme';
-import { CosmosDefineProvider } from '@/services/define.fixture-shared';
 import { lowerBreakpoints } from '@/services/layout/window-layout';
 import { MockApiProvider, useMockApi } from '@/services/network/request-fetch-provider.test';
 import { provider, ProviderComposer, ProviderWithProps } from '@/services/provider-utility';
@@ -23,7 +22,6 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 		const { hasMargin, providers: additionalProviders } = props;
 
 		const providers: ProviderWithProps[] = [
-			provider(CosmosDefineProvider, {}),
 			provider(DocumentVisibilityProvider, {}),
 			provider(ThemeContextProvider, {}),
 			provider(WindowMediaLayoutProvider, { lowerBreakpoints: lowerBreakpoints, breakpointUnit: 'rem' as const }),
@@ -78,7 +76,11 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 
 	let render = <>{props.children}</>;
 	if (hasMargin) {
-		render = <Margin>{render}</Margin>;
+		render = (
+			<Scroll>
+				<Margin>{render}</Margin>
+			</Scroll>
+		);
 	};
 	render = <ApplicationLayoutContainer>{render}</ApplicationLayoutContainer>;
 
@@ -88,6 +90,11 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 		</>
 	);
 };
+
+const Scroll = styled.div`
+	overflow: auto;
+	background-color: ${p => p.theme.gradient.cover};
+`;
 
 const Margin = styled.div`
 	margin: ${Spacing.elf24};
