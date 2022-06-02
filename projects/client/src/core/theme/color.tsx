@@ -105,6 +105,8 @@ export const baseLightTheme: Theme = {
 	 */
 	textSubtle: '#5D5D68',
 
+	textLink: '#3794EB',
+
 	/** A color distinct against the background, used for borders. */
 	outlineDistinct: '#96B2CC',
 	/** A color distinct against the background, used for borders. */
@@ -212,6 +214,8 @@ export interface Theme {
 	 * paragraphs or descriptive "body" text.
 	 */
 	textSubtle: string;
+
+	textLink: string;
 
 	/** A color distinct against the background, used for borders. */
 	outlineDistinct: string;

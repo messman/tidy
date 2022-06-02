@@ -61,7 +61,7 @@ export default CosmosFixture.create(() => {
 		</Padding.Dog16>
 	);
 }, {
-
+	hasMargin: true
 });
 
 const SectionHeader = styled.div`

@@ -13,19 +13,18 @@ export default CosmosFixture.create(() => {
 				<RedSmallIcon type={SVGIconTypeName.actionCheck} />
 			</div>
 			<div>
-				<SizedIcon size='medium' type={SVGIconTypeName.actionLike} />
+				<SizedIcon size='medium' type={SVGIconTypeName.decorationLike} />
 			</div>
 			<div>
-				<RedSmallIcon type={icons.demoCube} />
+				<RedSmallIcon type={icons.arrowRight} />
 			</div>
 			<div>
-				<RedLargeIcon type={icons.demoCube} />
+				<RedLargeIcon type={icons.navigationHome} />
 			</div>
 			<div>
 				<RedLargeIcon type={SpinnerIcon} />
 				<SizedIcon type={SpinnerIcon} size='medium' />
 				<SizedIcon type={SpinnerIcon} size='small' />
-				<SizedIcon type={SpinnerIcon} size='tiny' />
 			</div>
 		</>
 	);

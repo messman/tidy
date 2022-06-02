@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Subtitle } from '@/core/text';
+import { fontStyleDeclarations } from '@/core/text';
 import { styled } from '@/core/theme/styled';
 import { CosmosFixture } from '@/test';
-import { DefaultLayoutBreakpoint, LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';
-import { isInvalidLayout } from './window-layout';
+import { LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';
+import { isInvalidLayout, LayoutBreakpointRem } from './window-layout';
 
 export default CosmosFixture.create(() => {
 
@@ -15,9 +15,9 @@ export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<Subtitle>{LayoutOrientation[windowLayout.orientation]}</Subtitle>
-			<Subtitle>width - {DefaultLayoutBreakpoint[windowLayout.widthBreakpoint]} ({windowLayout.widthBreakpoint})</Subtitle>
-			<Subtitle>height - {DefaultLayoutBreakpoint[windowLayout.heightBreakpoint]} ({windowLayout.heightBreakpoint})</Subtitle>
+			<Text>{LayoutOrientation[windowLayout.orientation]}</Text>
+			<Text>width - {LayoutBreakpointRem[windowLayout.widthBreakpoint]} ({windowLayout.widthBreakpoint})</Text>
+			<Text>height - {LayoutBreakpointRem[windowLayout.heightBreakpoint]} ({windowLayout.heightBreakpoint})</Text>
 			{invalidText}
 		</>
 	);

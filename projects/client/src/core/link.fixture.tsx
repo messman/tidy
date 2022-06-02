@@ -11,9 +11,9 @@ export default CosmosFixture.create(() => {
 
 	const linkTextRender = (
 		<>
-			This is a paragraph of long text. <OutLink href='https://google.com'>{linkText}</OutLink> There is text above and
+			This is a paragraph of long text. <OutLink href='https://google.com' title='Google'>{linkText}</OutLink> There is text above and
 			below the links so that you can see how they look with the body text spacing.
-			And so <OutLink href='https://google.com'>{linkText}</OutLink> Hopefully everything looks good like this and there are no special adjustments to make.
+			And so <OutLink href='https://google.com' title='Google'>{linkText}</OutLink> Hopefully everything looks good like this and there are no special adjustments to make.
 			<a>This is a regular link.</a>
 			Hopefully everything looks good like this and there are no special adjustments to make.
 		</>

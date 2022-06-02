@@ -3,17 +3,18 @@ import { createContextConsumer } from '@messman/react-common';
 import * as iso from '@wbtdevlocal/iso';
 import { CONSTANT } from '../constant';
 import { useSafeTimer } from '../lifecycle/timer';
-import { RequestResultError } from '../network/request';
-import { useApiRequest } from '../network/request-hook';
+import { RequestResult, RequestResultError } from '../network/request';
+import { ApiRequestOptions, useApiRequest } from '../network/request-hook';
+import { useDataSeed } from './data-seed';
 
-const [BatchLatestResponseContextProvider, useBatchLatestResponseContext] = createContextConsumer<BatchLatestResponseOutput>(null!);
+const [BatchContentContextProvider, useBatchContentContext] = createContextConsumer<BatchLatestResponseOutput>(null!);
 
-export const useBatchLatestResponse = useBatchLatestResponseContext;
+export const useBatchContent = useBatchContentContext;
 
 export interface BatchLatestResponseState {
 	isLoading: boolean;
 	error: RequestResultError | null;
-	success: iso.Batch.LatestAPI.Batch.Latest.Response | null;
+	success: iso.Batch.BatchContent | null;
 }
 
 export interface BatchLatestResponseOutput extends BatchLatestResponseState {
@@ -21,6 +22,8 @@ export interface BatchLatestResponseOutput extends BatchLatestResponseState {
 }
 
 export const BatchLatestResponseProvider: React.FC = (props) => {
+
+	const [seed] = useDataSeed();
 
 	const [state, setState] = React.useState<BatchLatestResponseState>(() => {
 		return {
@@ -34,7 +37,7 @@ export const BatchLatestResponseProvider: React.FC = (props) => {
 		makeRequest();
 	});
 
-	const { start } = useApiRequest(iso.apiRoutes.batch.latest, (result) => {
+	function onResult(result: RequestResult<iso.Batch.LatestAPI.Read.Response | iso.Batch.SeedAPI.Read.Response>) {
 		if (!result.isSuccess) {
 			// Error handling
 			setState({
@@ -56,13 +59,23 @@ export const BatchLatestResponseProvider: React.FC = (props) => {
 
 		// Start timer for refresh
 		change(CONSTANT.appRefreshTimeout);
-	});
+	}
+
+	const { start: startLatest } = useApiRequest(iso.apiRoutes.batch.latest.read, onResult);
+	const { start: startSeed } = useApiRequest(iso.apiRoutes.batch.seed.read, onResult);
 
 	const makeRequest = React.useCallback(() => {
-		start({ body: null, path: null, query: null }, {
+		const requestOptions: ApiRequestOptions = {
 			min: CONSTANT.fetchMinTimeout,
 			max: CONSTANT.fetchMaxTimeout
-		});
+		};
+
+		if (seed) {
+			startSeed({ body: null, path: { seed: seed }, query: null }, requestOptions);
+		}
+		else {
+			startLatest({ body: null, path: null, query: null }, requestOptions);
+		}
 
 		setState((p) => {
 			return {
@@ -70,7 +83,7 @@ export const BatchLatestResponseProvider: React.FC = (props) => {
 				isLoading: true,
 			};
 		});
-	}, []);
+	}, [seed]);
 
 
 	const value = React.useMemo<BatchLatestResponseOutput>(() => {
@@ -130,9 +143,9 @@ export const BatchLatestResponseProvider: React.FC = (props) => {
 	// }, [promise, timer, lastCompleted, localDataPhrase, promiseFunc]);
 
 	return (
-		<BatchLatestResponseContextProvider value={value}>
+		<BatchContentContextProvider value={value}>
 			{props.children}
-		</BatchLatestResponseContextProvider>
+		</BatchContentContextProvider>
 	);
 };
 

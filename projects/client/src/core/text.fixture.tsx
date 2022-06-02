@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Cosmos, CosmosFixture } from '@/test';
-import { containers } from './container';
 import { ellipsisStyle, fontStyleDeclarations } from './text';
 import { Padding, Spacing } from './theme/box';
 import { css, styled } from './theme/styled';
@@ -87,7 +86,8 @@ interface EllipsesTextProps {
 }
 
 const EllipsesContainer = styled.div<EllipsesTextProps>`
-	${containers.card};
+	background-color: ${p => p.theme.gradient.cover};
+	box-shadow: ${p => p.theme.shadow.b_card};
 	padding: ${Spacing.dog16};
 	border: 1px solid ${p => p.theme.textSubtle};
 	width: ${p => p.$width};
