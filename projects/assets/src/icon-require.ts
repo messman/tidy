@@ -96,7 +96,9 @@ export enum SVGIconTypeName {
 	statusTriangle,
 
 	// Tide
+	tideDownLong,
 	tideDown,
+	tideUpLong,
 	tideUp,
 	tideWave,
 

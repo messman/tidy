@@ -17,6 +17,7 @@ export type ThemedProps<T> = ThemeProps<Theme> & T;
 export interface ClassNameProps {
 	className?: string;
 }
+// Note: when using this, you may need to use "as StyledComponent<'div', any, MyPropsInterface, never>" after
 export type StyledFC<P = {}> = React.FC<P & ClassNameProps>;
 
 export type StyledForwardRef<R, P = {}> = React.ForwardRefExoticComponent<React.PropsWithoutRef<P & ClassNameProps> & React.RefAttributes<R>>;

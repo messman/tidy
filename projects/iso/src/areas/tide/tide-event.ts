@@ -1,5 +1,23 @@
 import { DateTime } from 'luxon';
 
+export enum TideDivision {
+	low,
+	mid,
+	high
+}
+
+export enum TideDirection {
+	rising,
+	stable,
+	falling
+}
+
+export interface CurrentTide {
+	height: number,
+	division: TideDivision;
+	direction: TideDirection;
+}
+
 export interface CurrentTides {
 	/** The height, in feet. */
 	height: number,
