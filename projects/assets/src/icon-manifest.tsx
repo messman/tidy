@@ -74,7 +74,9 @@ export const statusCircle = create('statusCircle', require('@/static/icons/statu
 export const statusTriangle = create('statusTriangle', require('@/static/icons/status/triangle.svg'));
 
 // Tide
+export const tideDownLong = create('tideDownLong', require('@/static/icons/tide/down-long.svg'));
 export const tideDown = create('tideDown', require('@/static/icons/tide/down.svg'));
+export const tideUpLong = create('tideUpLong', require('@/static/icons/tide/up-long.svg'));
 export const tideUp = create('tideUp', require('@/static/icons/tide/up.svg'));
 export const tideWave = create('tideWave', require('@/static/icons/tide/wave.svg'));
 

@@ -52,7 +52,7 @@ const commonTheme: CommonTheme = {
 
 	content: {
 		background: '#489EEE',
-		sun: '#ECC741',
+		sun: '#F2DD1C',
 		moon: '#FAF1D0',
 		cloudLight: '#F4F4F4',
 		cloudDark: '#DFDFDF',
