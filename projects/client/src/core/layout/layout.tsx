@@ -13,6 +13,7 @@ export const overflowHiddenScrollStyle = css`
 /**
  * The top-level HTML element under the root.
  * Also used in the testing layout.
+ * flex direction: column.
  */
 export const ApplicationLayoutContainer = styled.div`
 	position: relative;

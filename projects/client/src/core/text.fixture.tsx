@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Cosmos, CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { ellipsisStyle, fontStyleDeclarations } from './text';
 import { Padding, Spacing } from './theme/box';
 import { css, styled } from './theme/styled';
@@ -54,24 +55,22 @@ export default {
 			</>
 		);
 	}, {
-		hasMargin: true
+		container: FixtureContainer.panelPadding
 	}),
 	'Text Ellipses': CosmosFixture.create(() => {
 
 		const textValue = Cosmos.useControlValue('Text', 'So here I am, just having a grand old time with some buddies, when all of a sudden');
-		const remWidth = Cosmos.useControlValue('Width (rem)', 20);
-		const remWidthValue = remWidth + 'rem';
 
 		return (
-			<EllipsesContainer $width={remWidthValue}>
+			<>
 				<LeadTextEllipses>(Lead) {textValue}</LeadTextEllipses>
 				<BodyTextEllipses>(Body) {textValue}</BodyTextEllipses>
 				<BodySmallTextEllipses>(Body Small) {textValue}</BodySmallTextEllipses>
 				<CapitalTextEllipses>(Capital) {textValue}</CapitalTextEllipses>
-			</EllipsesContainer>
+			</>
 		);
 	}, {
-		hasMargin: true
+		container: FixtureContainer.panelPadding
 	})
 };
 
@@ -80,18 +79,6 @@ const ComparedToBody: React.FC = () => {
 		<BodyText>Compared to body text.</BodyText>
 	);
 };
-
-interface EllipsesTextProps {
-	$width: string;
-}
-
-const EllipsesContainer = styled.div<EllipsesTextProps>`
-	background-color: ${p => p.theme.gradient.cover};
-	box-shadow: ${p => p.theme.shadow.b_card};
-	padding: ${Spacing.dog16};
-	border: 1px solid ${p => p.theme.textSubtle};
-	width: ${p => p.$width};
-`;
 
 const ellipsesStyles = css`
 	${ellipsisStyle}

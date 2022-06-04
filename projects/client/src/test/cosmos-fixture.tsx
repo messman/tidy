@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ErrorBoundary } from '@/core/error/error-boundary';
 import { ApplicationLayoutContainer } from '@/core/layout/layout';
+import { Panel, PanelPadding } from '@/core/layout/panel/panel';
 import { Spacing } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
 import { ThemeContextProvider, themes, useThemeIndex } from '@/core/theme/theme';
@@ -12,14 +13,25 @@ import * as iso from '@wbtdevlocal/iso';
 import { useControlSelect } from './cosmos';
 import { createTestServerError } from './data/test-data-utility';
 
+export enum FixtureContainer {
+	/** App background, no spacing, flex. Basically no special container. */
+	none,
+	/** Basically just like the default "none", but the background is the cover background and flex-direction is row. */
+	panelFullscreenFlex,
+	/** Probably what you want. A panel set against the app background, no spacing, no flex. For quick tests. */
+	panel,
+	/** Panel, but with padding already applied. For quick tests. */
+	panelPadding,
+}
+
 export interface FixtureProps {
-	hasMargin?: true;
+	container: FixtureContainer;
 	providers?: ProviderWithProps[];
 }
 
 export function create(Component: React.FC, props: FixtureProps): React.FC {
 	return () => {
-		const { hasMargin, providers: additionalProviders } = props;
+		const { container, providers: additionalProviders } = props;
 
 		const providers: ProviderWithProps[] = [
 			provider(DocumentVisibilityProvider, {}),
@@ -34,7 +46,7 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 
 		return (
 			<ProviderComposer providers={providers}>
-				<TestWrapper hasMargin={!!hasMargin} >
+				<TestWrapper container={container} >
 					<ErrorBoundary>
 						<Component />
 					</ErrorBoundary>
@@ -45,11 +57,11 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 }
 
 interface TestWrapperProps {
-	hasMargin: boolean;
+	container: FixtureContainer;
 }
 
 const TestWrapper: React.FC<TestWrapperProps> = (props) => {
-	const { hasMargin } = props;
+	const { container } = props;
 
 	const mockApi = useMockApi();
 
@@ -75,29 +87,48 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 	}, [timeout, responseOverride]);
 
 	let render = <>{props.children}</>;
-	if (hasMargin) {
-		render = (
-			<Scroll>
-				<Margin>{render}</Margin>
-			</Scroll>
-		);
-	};
-	render = <ApplicationLayoutContainer>{render}</ApplicationLayoutContainer>;
+	if (container !== FixtureContainer.none) {
+
+		if (container === FixtureContainer.panelFullscreenFlex) {
+			render = <PanelFullscreenFlexLayoutContainer>{render}</PanelFullscreenFlexLayoutContainer>;
+		}
+		else if (container === FixtureContainer.panel) {
+			render = (
+				<PanelContainer>
+					<Panel>
+						{render}
+					</Panel>
+				</PanelContainer>
+			);
+		}
+		else if (container === FixtureContainer.panelPadding) {
+			render = (
+				<PanelContainer>
+					<Panel>
+						<PanelPadding>
+							{render}
+						</PanelPadding>
+					</Panel>
+				</PanelContainer>
+			);
+		}
+	}
 
 	return (
-		<>
+		<ApplicationLayoutContainer>
 			{render}
-		</>
+		</ApplicationLayoutContainer>
 	);
 };
 
-const Scroll = styled.div`
-	overflow: auto;
+const PanelFullscreenFlexLayoutContainer = styled(ApplicationLayoutContainer)`
 	background-color: ${p => p.theme.gradient.cover};
+	flex-direction: row;
 `;
 
-const Margin = styled.div`
-	margin: ${Spacing.elf24};
+const PanelContainer = styled.div`
+	padding: ${Spacing.cat12};
+	overflow-y: auto;
 `;
 
 const themeOptions: { [key: string]: number; } = {};

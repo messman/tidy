@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Cosmos, CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { OutLink } from './link';
 import { fontStyleDeclarations } from './text';
 import { Block } from './theme/box';
@@ -56,7 +57,7 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });
 
 const LeadLargeText = styled.strong`

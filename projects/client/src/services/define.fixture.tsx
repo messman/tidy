@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Paragraph } from '@/core/text';
 import { CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { useBatchContent } from './data/data';
 import { DEFINE } from './define';
 
@@ -24,5 +25,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });

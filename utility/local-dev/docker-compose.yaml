@@ -30,7 +30,6 @@ services:
       - volume-wbt-devcode-modules-server:/usr/src/projects/server/node_modules
     ports:
       - "8093:8000" # Server
-      - "8094:58888" # Cosmos
     depends_on:
       - seq
   verdaccio:

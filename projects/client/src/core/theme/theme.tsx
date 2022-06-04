@@ -25,6 +25,7 @@ export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 	
 	body {
 		background-color: ${p => p.theme.gradient.light};
+		background: linear-gradient(172.75deg, ${p => p.theme.gradient.light} 10.5%, ${p => p.theme.gradient.dark} 84.5%);
 		color: ${p => p.theme.textDistinct};
 	}
 

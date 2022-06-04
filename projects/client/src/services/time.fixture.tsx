@@ -4,6 +4,7 @@ import { Paragraph } from '@/core/text';
 import { TimeTextUnit } from '@/core/text-unit';
 import { styled } from '@/core/theme/styled';
 import { CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { getDurationDescription } from './time';
 
 export default CosmosFixture.create(() => {
@@ -67,12 +68,10 @@ export default CosmosFixture.create(() => {
 	);
 
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });
 
 const StyledTable = styled.table`
-	width: 50%;
-	max-width: 800px;
 	border-collapse: collapse;
 
 	td {
