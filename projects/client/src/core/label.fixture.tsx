@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Cosmos, CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { IconLabel, LabelText } from './label';
 import { SubtleLine } from './layout/line/line';
 import { Block } from './theme/box';
@@ -33,5 +34,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });

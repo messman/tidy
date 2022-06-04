@@ -1,5 +1,6 @@
-import { CosmosFixture } from '@/test';
 import * as React from 'react';
+import { CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { GroupContainer, GroupKeyValue } from '../group/group';
 import { Block } from '../theme/box';
 import { GroupKeyValueToggle } from './toggle';
@@ -37,5 +38,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });

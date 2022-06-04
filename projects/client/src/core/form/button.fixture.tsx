@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Cosmos, CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { IconInputType } from '../icon/icon';
 import { Paragraph } from '../text';
 import { Block, Spacing } from '../theme/box';
@@ -53,7 +54,7 @@ export default {
 			</>
 		);
 	}, {
-		hasMargin: true
+		container: FixtureContainer.panelPadding
 	}),
 	'Stretched Button': CosmosFixture.create(() => {
 
@@ -83,7 +84,7 @@ export default {
 			</>
 		);
 	}, {
-		hasMargin: true
+		container: FixtureContainer.panelPadding
 	})
 };
 

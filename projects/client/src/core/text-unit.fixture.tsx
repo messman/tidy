@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { SizedIcon } from '@/core/icon/icon';
 import { CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { icons } from '@wbtdevlocal/assets';
 import { Paragraph } from './text';
 import { TextUnit, TimeDurationTextUnit, TimeTextUnit } from './text-unit';
@@ -41,5 +42,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });

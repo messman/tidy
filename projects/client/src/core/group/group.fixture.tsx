@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { icons } from '@wbtdevlocal/assets';
 import { fontStyleDeclarations } from '../text';
-import { Block, Padding } from '../theme/box';
+import { Block } from '../theme/box';
 import { styled } from '../theme/styled';
 import { GroupButton, GroupContainer, GroupKeyValue, GroupRaisedContainer } from './group';
 
@@ -15,7 +16,7 @@ export default CosmosFixture.create(() => {
 	const text = 'Longer Content That Takes Up More Space';
 
 	return (
-		<Padding.Dog16>
+		<>
 
 			<SectionHeader>Regular</SectionHeader>
 			<GroupContainer>
@@ -58,10 +59,10 @@ export default CosmosFixture.create(() => {
 			</GroupContainer>
 			<Block.Elf24 />
 
-		</Padding.Dog16>
+		</>
 	);
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });
 
 const SectionHeader = styled.div`

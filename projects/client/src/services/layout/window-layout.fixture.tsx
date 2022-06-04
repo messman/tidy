@@ -2,6 +2,7 @@ import * as React from 'react';
 import { fontStyleDeclarations } from '@/core/text';
 import { styled } from '@/core/theme/styled';
 import { CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';
 import { isInvalidLayout, LayoutBreakpointRem } from './window-layout';
 
@@ -21,7 +22,9 @@ export default CosmosFixture.create(() => {
 			{invalidText}
 		</>
 	);
-}, {});
+}, {
+	container: FixtureContainer.panelPadding
+});
 
 const Text = styled.div`
 	${fontStyleDeclarations.body};

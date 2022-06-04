@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { fontStyleDeclarations } from '../text';
 import { Spacing } from './box';
 import { Theme } from './color';
@@ -20,7 +21,7 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });
 
 interface SpacingEntryProps {

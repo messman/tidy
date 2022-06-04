@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
+import { FixtureContainer } from '@/test/cosmos-fixture';
 import { icons, SVGIconTypeName } from '@wbtdevlocal/assets';
 import { styled } from '../theme/styled';
 import { Icon, SizedIcon } from './icon';
@@ -29,7 +30,7 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	hasMargin: true
+	container: FixtureContainer.panelPadding
 });
 
 const RedIcon = styled(Icon)`
