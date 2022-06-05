@@ -101,9 +101,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
 	const { ButtonType, leftIcon, rightIcon, isLoading, children } = props;
 	return (
 		<VerticalMargin>
-			<p>
-				<Paragraph>Here are some examples of the '{children}' style.</Paragraph>
-			</p>
+			<Paragraph>Here are some examples of the '{children}' style.</Paragraph>
 			<ButtonRow>
 				<ButtonType isLoading={isLoading} leftIcon={leftIcon} rightIcon={rightIcon} onClick={noClick}>
 					{children}
