@@ -1,15 +1,10 @@
 import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
 import { ServerPromise } from '../../api/error';
+import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
 import { makeRequest } from '../network/request';
-import { TideConfig } from './tide-config';
-
-export interface FetchedTide {
-	pastEvents: iso.Tide.TideEvent[],
-	current: iso.Tide.TideStatus,
-	futureEvents: iso.Tide.TideEvent[];
-}
+import { FetchedTide, getStartOfDayBefore } from './tide-shared';
 
 /*
 	From https://tidesandcurrents.noaa.gov/api/
@@ -19,18 +14,22 @@ export interface FetchedTide {
 	https://tidesandcurrents.noaa.gov/api/datagetter?application=messman_tidy&station=8419317&format=json&time_zone=lst_ldt&units=english&product=water_level&datum=mllw&date=latest
 */
 
-export async function fetchTides(ctx: LogContext, config: TideConfig): ServerPromise<FetchedTide> {
+export async function readTides(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedTide> {
+	return await fetchTides(ctx, config);
+}
 
-	const station = config.tide.input.station;
-	// Add one day to our max time because we need tides for the day after in order to construct graph UI.
-	const maxTime = config.base.live.maxLongTermDataFetch.plus({ days: 1 });
-	const pastTime = config.tide.live.minimumTidesDataFetch;
+async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedTide> {
 
-	const startDateAsString = formatDateForRequest(pastTime);
-	const hoursBetween = Math.ceil(maxTime.diff(pastTime, 'hours').hours);
+	const { referenceTime, futureCutoff } = config;
+	const { tideStation } = iso.constant;
+
+	const pastCutoff = getStartOfDayBefore(referenceTime);
+
+	const startDateAsString = formatDateForRequest(pastCutoff);
+	const hoursBetween = Math.ceil(futureCutoff.diff(pastCutoff, 'hours').hours);
 
 	const predictionInput: NOAAPredictionInput = Object.assign({}, defaultNOAAInput, ({
-		station: station,
+		station: tideStation,
 		product: 'predictions',
 		datum: 'mllw', // From https://tidesandcurrents.noaa.gov/datum_options.html
 		interval: 'hilo', // hi/lo, not just 6 minute intervals
@@ -44,7 +43,7 @@ export async function fetchTides(ctx: LogContext, config: TideConfig): ServerPro
 	}
 
 	const currentLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
-		station: station,
+		station: tideStation,
 		product: "water_level",
 		datum: "mllw",
 		date: "latest"
@@ -55,45 +54,36 @@ export async function fetchTides(ctx: LogContext, config: TideConfig): ServerPro
 		return currentLevelResponse;
 	}
 
-	const { tideHeightPrecision } = config.tide.input;
-
 	const currentLevelData = currentLevelResponse.data[0];
-	const current: iso.Tide.TideStatus = {
-		time: DateTimeFromNOAAString(currentLevelData.t, config.base.input.timeZoneLabel),
-		height: parseFloat(parseFloat(currentLevelData.v).toFixed(tideHeightPrecision))
-	};
+	const currentTime = toDateTimeFromNOAAString(currentLevelData.t);
+	const currentHeight = parseHeight(currentLevelData.v);
 
-	const pastEvents: iso.Tide.TideEvent[] = [];
-	const futureEvents: iso.Tide.TideEvent[] = [];
-	const referenceTime = config.base.live.referenceTimeInZone;
-
+	const extrema: iso.Tide.ExtremeStamp[] = [];
 	predictionResponse.predictions.forEach((p) => {
-
-		const eventTime = DateTimeFromNOAAString(p.t, config.base.input.timeZoneLabel);
-		const event: iso.Tide.TideEvent = {
-			time: eventTime,
-			height: parseFloat(parseFloat(p.v).toFixed(tideHeightPrecision)),
-			isLow: p.type.toUpperCase() !== "H"
-		};
-
-		if (eventTime > referenceTime) {
-			futureEvents.push(event);
-		}
-		else {
-			pastEvents.push(event);
+		const time = toDateTimeFromNOAAString(p.t);
+		if (time < futureCutoff) {
+			extrema.push({
+				time: toDateTimeFromNOAAString(p.t),
+				height: parseHeight(p.v),
+				isLow: p.type.toUpperCase() !== "H"
+			});
 		}
 	});
 
 	return {
-		pastEvents: pastEvents,
-		current: current,
-		futureEvents: futureEvents
+		currentTime,
+		currentHeight,
+		extrema
 	};
 }
 
-function DateTimeFromNOAAString(time: string, zone: string): DateTime {
+function toDateTimeFromNOAAString(time: string): DateTime {
 	// 2013-08-08 15:00
-	return DateTime.fromFormat(time, 'yyyy-MM-dd HH:mm', { zone: zone });
+	return DateTime.fromFormat(time, 'yyyy-MM-dd HH:mm', { zone: iso.constant.timeZoneLabel });
+}
+
+function parseHeight(value: any): number {
+	return parseFloat(parseFloat(value).toFixed(1));
 }
 
 

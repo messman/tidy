@@ -1,5 +1,5 @@
 import { ApiRoute, BaseApiRequest, BaseApiResponse } from '../../api/request-response';
-import { BatchContent } from './batch';
+import { BatchContent } from './batch-iso';
 
 export namespace Read {
 	export type Route = ApiRoute<Request, Response>;

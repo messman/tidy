@@ -1,20 +1,19 @@
 import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
-import { quadraticFromPoints } from '../test/equation';
+import { BaseConfig } from '../config';
+import { linearFromPoints, quadraticFromPoints } from '../test/equation';
 import { combineSeed, Randomizer, randomizer, TestSeed } from '../test/randomize';
 import { IterableTimeData } from './iterator';
-import { WeatherConfig } from './weather-config';
-import { FetchedWeather } from './weather-fetch';
+import { FetchedWeather, fixFetchedWeather } from './weather-shared';
 
 /** Creates random weather data. Uses a seeded randomizer. */
-export function createFetchedWeather(config: WeatherConfig, seed: TestSeed): FetchedWeather {
+export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeather {
 	const weatherRandomizer = randomizer(combineSeed('_weather_', seed));
 
-	const { referenceTimeInZone, maxShortTermDataFetch, maxLongTermDataFetch } = config.base.live;
-	const { temperaturePrecision, defaultPrecision } = config.weather.input;
+	const { referenceTime, futureCutoff } = config;
 
-	const hourlyStartDateTime = referenceTimeInZone.startOf('hour').minus({ hours: 1 });
-	const hourlyEndDateTime = maxShortTermDataFetch;
+	const hourlyStartDateTime = referenceTime.startOf('hour').minus({ hours: 1 });
+	const hourlyEndDateTime = futureCutoff;
 
 	/*
 		We use some interesting techniques here to generate more realistic random data.
@@ -27,77 +26,143 @@ export function createFetchedWeather(config: WeatherConfig, seed: TestSeed): Fet
 		return quadraticShakeData(weatherRandomizer, hourlyStartDateTime, hourlyEndDateTime, 1, minY, maxY, precision, inclusive, shake);
 	}
 
-	const nWindDirection = Object.keys(iso.Weather.WindDirection).filter((k) => !isNaN(k as unknown as number)).length - 1;
-	const nWeatherStatusType = Object.keys(iso.Weather.WeatherStatusType).filter((k) => !isNaN(k as unknown as number)).length - 1;
+	const nWindDirection = iso.enumKeys(iso.Weather.WindDirection).length - 1;
+	const nWeatherStatusType = iso.enumKeys(iso.Weather.StatusType).length - 1;
 
-	const hourly = {
-		temp: hourlyWeatherData(40, 60, temperaturePrecision, true, .2),
-		tempFeelsLike: hourlyWeatherData(40, 60, temperaturePrecision, true, .2),
-		wind: hourlyWeatherData(0, 15, defaultPrecision, true, .2),
-		windDirection: hourlyWeatherData(0, nWindDirection, 0, false, .2).map((data) => {
-			return {
-				span: data.span,
-				value: data.value as iso.Weather.WindDirection
-			};
-		}),
-		pressure: hourlyWeatherData(1000, 1200, 0, true, .2),
-		dewPoint: hourlyWeatherData(20, 40, temperaturePrecision, true, .2),
-		cloudCover: hourlyWeatherData(0, 1, defaultPrecision + 2, true, .2),
-		status: hourlyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {
-			return {
-				span: data.span,
-				value: data.value as iso.Weather.WeatherStatusType
-			};
-		}),
-		visibility: hourlyWeatherData(2, 20, defaultPrecision, true, .2)
-	};
-	const shortTermWeather: iso.Weather.WeatherStatus[] = hourly.temp.map((temp, i) => {
+	const hourlyTemp = hourlyWeatherData(40, 60, 1, true, .2);
+	const hourlyTempFeelsLike = hourlyWeatherData(40, 60, 1, true, .2);
+	const hourlyWind = hourlyWeatherData(0, 15, 1, true, .2);
+	const hourlyWindDirection = hourlyWeatherData(0, nWindDirection, 0, false, .2).map((data) => {
+		return {
+			span: data.span,
+			value: data.value as iso.Weather.WindDirection
+		};
+	});
+	const hourlyPressure = hourlyWeatherData(1000, 1200, 0, true, .2);
+	const hourlyDewPoint = hourlyWeatherData(20, 40, 1, true, .2);
+	const hourlyCloudCover = hourlyWeatherData(0, 1, 3, true, .2);
+	const hourlyStatus = hourlyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {
+		return {
+			span: data.span,
+			value: data.value as iso.Weather.StatusType
+		};
+	});
+	const hourlyVisibility = hourlyWeatherData(2, 20, 1, true, .2).map((data) => {
+		if (data.value >= 19) {
+			return { ...data, value: null };
+		}
+		return data;
+	});
+	const hourlyHumidity = hourlyWeatherData(0, 1, 3, true, .2);
+	const hourlyUvi = hourlyWeatherData(1, 11, 1, true, .2);
+	const hourlyPop = hourlyWeatherData(0, 1, 3, true, .2);
+
+
+	const hourly = hourlyTemp.map<iso.Weather.Hourly>((temp, i) => {
 		return {
 			time: temp.span.begin,
 			temp: temp.value,
-			tempFeelsLike: hourly.tempFeelsLike[i].value,
-			wind: hourly.wind[i].value,
-			windDirection: hourly.windDirection[i].value,
-			dewPoint: hourly.dewPoint[i].value,
-			cloudCover: hourly.cloudCover[i].value,
-			status: hourly.status[i].value,
-			visibility: hourly.visibility[i].value,
-			pressure: hourly.pressure[i].value
+			tempFeelsLike: hourlyTempFeelsLike[i].value,
+			wind: hourlyWind[i].value,
+			windDirection: hourlyWindDirection[i].value,
+			dewPoint: hourlyDewPoint[i].value,
+			cloudCover: hourlyCloudCover[i].value,
+			status: hourlyStatus[i].value,
+			visibility: hourlyVisibility[i].value,
+			pressure: hourlyPressure[i].value,
+			humidity: hourlyHumidity[i].value,
+			uvi: hourlyUvi[i].value,
+			pop: hourlyPop[i].value
 		};
 	});
 
-	const dailyStartDateTime = referenceTimeInZone.startOf('day');
-	const dailyEndDateTime = maxLongTermDataFetch;
+	const dailyStartDateTime = referenceTime.startOf('day');
+	const dailyEndDateTime = futureCutoff;
+	const daysBetween = dailyEndDateTime.diff(dailyStartDateTime, 'days').days;
 
 	function dailyWeatherData(minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
 		return quadraticShakeData(weatherRandomizer, dailyStartDateTime, dailyEndDateTime, 24, minY, maxY, precision, inclusive, shake);
 	}
 
-	const daily = {
-		minTemp: dailyWeatherData(30, 50, temperaturePrecision, true, .2),
-		maxTemp: dailyWeatherData(50, 80, temperaturePrecision, true, .2),
-		status: dailyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {
-			return {
-				span: data.span,
-				value: data.value as iso.Weather.WeatherStatusType
-			};
-		}),
-	};
-
-	const longTermWeather: iso.Weather.DailyWeather[] = daily.minTemp.map((minTemp, i) => {
+	const dailyMinTemp = dailyWeatherData(30, 50, 1, true, .2);
+	const dailyMaxTemp = dailyWeatherData(50, 80, 1, true, .2);
+	const dailyEntry = dailyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {
 		return {
-			day: minTemp.span.begin,
+			span: data.span,
+			value: data.value as iso.Weather.StatusType
+		};
+	});
+	const dailyPop = dailyWeatherData(0, 1, 3, true, .2);
+
+	const daily = dailyMinTemp.map<iso.Weather.Day>((minTemp, i) => {
+		return {
+			time: minTemp.span.begin,
 			minTemp: minTemp.value,
-			maxTemp: daily.maxTemp[i].value,
-			status: daily.status[i].value,
+			maxTemp: dailyMaxTemp[i].value,
+			status: dailyEntry[i].value,
+			pop: dailyPop[i].value
 		};
 	});
 
-	return {
-		currentWeather: shortTermWeather[0],
-		shortTermWeather: shortTermWeather,
-		longTermWeather: longTermWeather
-	};
+	const nMoonPhase = iso.enumKeys(iso.Astro.MoonPhase).length - 1;
+	const dailyMoonPhaseIterable = dailyWeatherData(0, nMoonPhase, 0, true, 0);
+
+	const moonPhaseDaily = dailyMoonPhaseIterable.map<iso.Astro.MoonPhaseDay>((moonPhase, i) => {
+		const day = referenceTime.startOf('day').plus({ days: i });
+		return {
+			time: day,
+			moon: moonPhase.value as iso.Astro.MoonPhase,
+		};
+	});
+
+	/*
+		For creating test data for moonrise and moonset, see observations:
+		https://www.timeanddate.com/moon/usa/wells?month=6&year=2022
+
+		Sometimes the moonrise of today will set tomorrow / the moonset of today rose yesterday.
+		Try to get our data flipping between this case and the normal one.
+
+		A lunar day is always at least 24 hours - it just varies when we see rise and set.
+		It's more complicated than that, but that range is good enough for testing.
+	*/
+
+	// Time of lunar day that is between rise and set - (9 to 14) - linear
+	const minLunarShowMinutes = 9 * 60;
+	const maxLunarShowMinutes = 14 * 60;
+	const roughLunarDayMinutes = 25 * 60;
+
+	const startLunarShowMinutes = weatherRandomizer.randomInt(minLunarShowMinutes, maxLunarShowMinutes, true);
+	const stopLunarShowMinutes = weatherRandomizer.randomInt(minLunarShowMinutes, maxLunarShowMinutes, true);
+	const lunarShowMinutesFunc = linearFromPoints([0, startLunarShowMinutes], [daysBetween, stopLunarShowMinutes]);
+	let isRiseAtStart = weatherRandomizer.randomInt(0, 1, true) === 0;
+	let lunarTime = referenceTime.startOf('day').minus({ hours: weatherRandomizer.randomInt(1, 6, true) });
+
+	const lunar: iso.Astro.BodyEvent[] = [];
+	for (let i = 0; i < daysBetween; i++) {
+		const lunarShowMinutes = lunarShowMinutesFunc(i);
+		if (i !== 0 || isRiseAtStart) {
+			lunarTime = lunarTime.plus({ minutes: roughLunarDayMinutes - lunarShowMinutes });
+			lunar.push({
+				isRise: true,
+				time: lunarTime
+			});
+		}
+		else {
+			lunarTime = lunarTime.plus({ minutes: lunarShowMinutes });
+			lunar.push({
+				isRise: false,
+				time: lunarTime
+			});
+		}
+	}
+
+	return fixFetchedWeather(config, {
+		current: hourly[0],
+		hourly,
+		daily,
+		moonPhaseDaily,
+		lunar
+	});
 }
 
 function quadraticShakeData(randomizer: Randomizer, startDateTime: DateTime, endDateTime: DateTime, hoursGap: number, minY: number, maxY: number, precision: number, inclusive: boolean, shake: number): IterableTimeData<number>[] {
