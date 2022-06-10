@@ -1,4 +1,4 @@
-export enum WeatherStatusType {
+export enum StatusType {
 	unknown,
 	clear,
 	clear_hot,
@@ -27,12 +27,12 @@ export enum WeatherStatusType {
 	haze,
 	fog
 }
-export interface WeatherStatusDescription {
+export interface StatusDescription {
 	short: string;
 	long: string;
 }
-export type WeatherStatusDescriptionMap = Record<keyof typeof WeatherStatusType, WeatherStatusDescription>;
-export const weatherStatusTypeDescription: WeatherStatusDescriptionMap = {
+export type StatusDescriptionMap = Record<keyof typeof StatusType, StatusDescription>;
+export const statusTypeDescription: StatusDescriptionMap = {
 	unknown: {
 		short: 'Unknown',
 		long: 'Unknown'

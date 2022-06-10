@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon';
-import { WeatherStatusType } from './weather-status-type';
+import { StatusType } from './weather-status-type';
 
-export interface WeatherStatus {
+export interface CommonCurrentHourly {
 	/** Time of the weather status. */
 	time: DateTime;
 	/** The description of the weather at the time. */
-	status: WeatherStatusType;
+	status: StatusType;
 	/** The temperature, in degrees fahrenheit. */
 	temp: number;
 	/** The temperature "feels like", in degrees fahrenheit. */
@@ -16,23 +16,39 @@ export interface WeatherStatus {
 	windDirection: WindDirection;
 	/** The dew point, in degrees fahrenheit. */
 	dewPoint: number;
+	/** UV Index. */
+	uvi: number;
+	/** Percent (relative) humidity, [0, 1] */
+	humidity: number;
 	/** Atmospheric pressure, in millibars. */
 	pressure: number;
-	/** Percent cloud cover. */
+	/** Percent cloud cover, [0, 1] */
 	cloudCover: number;
-	/** Visibility in miles. */
+	/** Visibility in miles. Null if unknown or at max measured. */
 	visibility: number | null;
 }
 
-export interface DailyWeather {
-	/** The date of the weather status. */
-	day: DateTime;
+/** Contains information for current weather. */
+export interface Current extends CommonCurrentHourly {
+}
+
+/** Contains information for current and hourly weather. */
+export interface Hourly extends CommonCurrentHourly {
+	/** Probability of precipitation, [0, 1] */
+	pop: number;
+}
+
+export interface Day {
+	/** Time of the weather status. Start of the day. */
+	time: DateTime;
 	/** The description of the weather on the day. */
-	status: WeatherStatusType;
+	status: StatusType;
 	/** Minimum expected temperature. */
 	minTemp: number;
 	/** Maximum expected temperature. */
 	maxTemp: number;
+	/** Probability of precipitation, [0, 1] */
+	pop: number;
 }
 
 export enum WindDirection {

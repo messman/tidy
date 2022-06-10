@@ -1,12 +1,8 @@
 import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
+import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
-import { AstroConfig } from './astro-config';
-
-export interface ComputedAstro {
-	/** Sunrise and Sunset events. */
-	sunEvents: iso.Astro.SunEvent[];
-}
+import { ComputedAstro, getStartOfDayBefore } from './astro-shared';
 
 /*
 	For now, while we are only supporting sunrise / sunset, we do the calculation manually without the assistance of an API.
@@ -18,44 +14,42 @@ export interface ComputedAstro {
 	- Julian Day: days since noon, Jan 1, 4713 BC on the Julian calendar
 */
 
-export async function computeAstro(_ctx: LogContext, config: AstroConfig): Promise<ComputedAstro> {
+export function computeAstro(_ctx: LogContext, config: BaseConfig): ComputedAstro {
 
-	const { latitude, longitude } = config.base.input;
-	const startDay = config.astro.live.minimumSunDataFetch;
-	const endDay = config.base.live.maxLongTermDataFetch;
+	const { latitude, longitude } = iso.constant;
+	const { referenceTime, futureCutoff } = config;
+	const startDay = getStartOfDayBefore(referenceTime);
+	const endDay = futureCutoff;
 	const daysBetween = endDay.diff(startDay, 'days').days;
 
-	const sunEvents: iso.Astro.SunEvent[] = [];
+	const days: iso.Astro.SunDay[] = [];
 
 	for (let i = 0; i < daysBetween; i++) {
 		const day = startDay.plus({ days: i });
-		const daySunEvents = getSunEventsForDay(day, latitude, longitude);
-		sunEvents.push(...daySunEvents);
+		days.push(getSunEventsForDay(day, latitude, longitude));
 	}
+
 	return {
-		sunEvents: sunEvents
+		daily: days
 	};
 }
 
-function getSunEventsForDay(day: DateTime, latitude: number, longitude: number): iso.Astro.SunEvent[] {
+function getSunEventsForDay(day: DateTime, latitude: number, longitude: number): iso.Astro.SunDay {
 	const julianDay = getJulianDay(day);
 	const timezoneOffset = day.offset / 60; // To get hours
 
 	const rise = getSunriseSunset(true, julianDay, latitude, longitude, timezoneOffset);
-	const sunriseEvent = createSunEventFromOutput(true, day, julianDay, rise);
-
 	const set = getSunriseSunset(false, julianDay, latitude, longitude, timezoneOffset);
-	const sunsetEvent = createSunEventFromOutput(false, day, julianDay, set);
 
-	return [sunriseEvent, sunsetEvent];
+	return {
+		rise: getDateTimeFromOutput(day, julianDay, rise),
+		set: getDateTimeFromOutput(day, julianDay, set)
+	};
 }
 
-function createSunEventFromOutput(isSunrise: boolean, day: DateTime, julianDay: number, output: SunriseSunsetOutput): iso.Astro.SunEvent {
+function getDateTimeFromOutput(day: DateTime, julianDay: number, output: SunriseSunsetOutput): DateTime {
 	const dayOffset = output.julianDay - julianDay;
-	return {
-		isSunrise: isSunrise,
-		time: day.plus({ days: dayOffset, minutes: output.localMinutes })
-	};
+	return day.plus({ days: dayOffset, minutes: output.localMinutes });
 }
 
 // Original: getJD

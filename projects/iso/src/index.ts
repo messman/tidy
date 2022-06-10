@@ -5,3 +5,4 @@ export * from './api/serialization';
 
 export * from './areas';
 export * from './utility';
+export * from './constant';

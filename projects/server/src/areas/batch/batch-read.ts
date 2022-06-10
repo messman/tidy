@@ -1,106 +1,101 @@
 import * as iso from '@wbtdevlocal/iso';
 import { ServerPromise } from '../../api/error';
-import { AstroContent, createAstroContent, readAstroContent } from '../../services/astro/astro-content';
+import { computeAstro } from '../../services/astro/astro-compute';
+import { createAstro } from '../../services/astro/astro-compute-create';
+import { ComputedAstro, getCloseSunDays, getNextLunarDay, getSunRelativity } from '../../services/astro/astro-shared';
+import { BaseConfig, BaseInput, createBaseLiveConfig } from '../../services/config';
 import { LogContext } from '../../services/logging/pino';
 import { TestSeed } from '../../services/test/randomize';
-import { createTideContent, readTideContent, TideContent } from '../../services/tide/tide-content';
+import { readTides } from '../../services/tide/tide-fetch';
+import { createTides } from '../../services/tide/tide-fetch-create';
+import { FetchedTide, getTideMeasuredAndRelativity, getTideMinMax } from '../../services/tide/tide-shared';
 import { dateForZone } from '../../services/time';
-import { ForDay } from '../../services/types';
-import { createWeatherContent, readWeatherContent, WeatherContent } from '../../services/weather/weather-content';
-import { BatchConfig, createWellsConfig } from './context';
+import { readWeather } from '../../services/weather/weather-fetch';
+import { createWeather } from '../../services/weather/weather-fetch-create';
+import { FetchedWeather, filterHourlyWeather } from '../../services/weather/weather-shared';
+import { getBeachContent, getTideDays } from './beach';
 
 /** The main function. Calls APIs. */
 export async function readBatch(ctx: LogContext): ServerPromise<iso.Batch.BatchContent> {
+	const config = createConfig();
 
-	const config = createWellsConfig();
-
-	const tideContent = await readTideContent(ctx, config);
-	if (iso.isServerError(tideContent)) {
-		return tideContent;
+	const fetchedTide = await readTides(ctx, config);
+	if (iso.isServerError(fetchedTide)) {
+		return fetchedTide;
 	}
 
-	// Astro has no server errors.
-	const astroContent = await readAstroContent(ctx, config);
+	// Astro has no server errors or promise.
+	const computedAstro = computeAstro(ctx, config);
 
-	const weatherContent = await readWeatherContent(ctx, config);
-	if (iso.isServerError(weatherContent)) {
-		return weatherContent;
+	const fetchedWeather = await readWeather(ctx, config);
+	if (iso.isServerError(fetchedWeather)) {
+		return fetchedWeather;
 	}
 
-	return createBatchContent(ctx, config, tideContent, astroContent, weatherContent);
+	return createBatchContent(ctx, config, fetchedTide, computedAstro, fetchedWeather);
 }
 
 /** The main test function. */
 export async function readBatchWithSeed(ctx: LogContext, seed: TestSeed): Promise<iso.Batch.BatchContent> {
-	const config = createWellsConfig();
+	const config = createConfig();
 
-	const tideContent = createTideContent(ctx, config, seed);
-	const astroContent = createAstroContent(ctx, config, seed);
-	const weatherContent = createWeatherContent(ctx, config, seed);
+	const fetchedTide = createTides(config, seed);
+	const computedAstro = createAstro(config, seed);
+	const fetchedWeather = createWeather(config, seed);
 
-	return createBatchContent(ctx, config, tideContent, astroContent, weatherContent);
+	return createBatchContent(ctx, config, fetchedTide, computedAstro, fetchedWeather);
 }
 
-function createBatchContent(_ctx: LogContext, config: BatchConfig, tides: TideContent, astro: AstroContent, weather: WeatherContent): iso.Batch.BatchContent {
-	const meta: iso.Batch.Meta = {
-		referenceTime: config.base.live.referenceTimeInZone,
-		processingTime: dateForZone(new Date(), config.base.input.timeZoneLabel),
-		tideHeightPrecision: config.tide.input.tideHeightPrecision,
-		timeZone: config.base.input.timeZoneLabel
+function createConfig(): BaseConfig {
+	const input: BaseInput = {
+		referenceTime: new Date(),
+		futureDays: 7
 	};
+	const live = createBaseLiveConfig(input);
+	return {
+		...live,
+		input
+	};
+}
+
+function createBatchContent(_ctx: LogContext, config: BaseConfig, tide: FetchedTide, astro: ComputedAstro, weather: FetchedWeather): iso.Batch.BatchContent {
+	const meta: iso.Batch.Meta = {
+		referenceTime: config.referenceTime,
+		processingTime: dateForZone(new Date(), iso.constant.timeZoneLabel),
+	};
+
+	const [dailyMin, dailyMax] = getTideMinMax(tide.extrema);
+	const { measured, relativity } = getTideMeasuredAndRelativity(config, tide);
+
+	const [sunYesterday, sunToday, sunTomorrow] = getCloseSunDays(config, astro);
 
 	return {
 		meta,
-		current: {
+		beach: getBeachContent(config, tide, astro, weather),
+		tide: {
+			measured,
+			relativity,
+			daily: getTideDays(weather, tide.extrema),
+			dailyMin,
+			dailyMax
+		},
+		astro: {
 			sun: {
-				previous: astro.previousEvent,
-				next: astro.nextEvent
+				relativity: getSunRelativity(config, astro),
+				yesterday: sunYesterday,
+				today: sunToday,
+				tomorrow: sunTomorrow
 			},
-			weather: weather.currentWeather,
-			tides: tides.currentTides
+			moon: {
+				next: weather.lunar[0],
+				nextLunarDay: getNextLunarDay(weather),
+			}
 		},
-		predictions: {
-			cutoffDate: config.base.live.maxShortTermDataFetch,
-			sun: astro.shortTermEvents,
-			weather: weather.shortTermWeather,
-			tides: tides.shortTermTides
-		},
-		daily: {
-			cutoffDate: config.base.live.maxLongTermDataFetch,
-			tideExtremes: tides.longTermTideExtremes,
-			days: mergeForLongTerm(config, tides.longTermTides, astro.longTermEvents, weather.longTermWeather)
+		weather: {
+			current: weather.current,
+			hourly: weather.hourly.filter((entry) => {
+				return filterHourlyWeather(config, entry);
+			})
 		}
 	};
-}
-
-/** Merges different API areas for long-term data (daily weather, tides, etc). */
-function mergeForLongTerm(config: BatchConfig, tides: ForDay<iso.Tide.TideEventRange>[], sunEvents: ForDay<iso.Astro.SunEvent[]>[], weatherEvents: iso.Weather.DailyWeather[]): iso.Batch.DailyDay[] {
-
-	const referenceDay = config.base.live.referenceTimeInZone.startOf('day');
-	const dayMap: Map<number, iso.Batch.DailyDay> = new Map();
-
-	tides.forEach((t) => {
-		const day = referenceDay.plus({ days: t.day });
-		dayMap.set(t.day, {
-			date: day,
-			sun: null!,
-			weather: null!,
-			tides: t.entity
-		});
-	});
-	sunEvents.forEach((s) => {
-		const record = dayMap.get(s.day);
-		if (record) {
-			record.sun = s.entity;
-		}
-	});
-	weatherEvents.forEach((w) => {
-		const day = w.day.startOf('day').diff(referenceDay, 'days').days;
-		const record = dayMap.get(day);
-		if (record) {
-			record.weather = w;
-		}
-	});
-
-	return Array.from(dayMap.values());
 }

@@ -1,17 +1,20 @@
 import * as iso from '@wbtdevlocal/iso';
+import { BaseConfig } from '../config';
 import { linearFromPoints } from '../test/equation';
 import { combineSeed, randomizer, TestSeed } from '../test/randomize';
-import { ComputedAstro } from './astro-compute';
-import { AstroConfig } from './astro-config';
+import { ComputedAstro, getStartOfDayBefore } from './astro-shared';
 
-/** Creates random astro/sun data. Uses a seeded randomizer. */
-export function createComputedAstro(config: AstroConfig, seed: TestSeed): ComputedAstro {
+/**
+ * Creates random astro/sun data. Uses a seeded randomizer.
+ * 
+*/
+export function createAstro(config: BaseConfig, seed: TestSeed): ComputedAstro {
 	const sunRandomizer = randomizer(combineSeed('_sun_', seed));
 
-	let startDateTime = config.astro.live.minimumSunDataFetch;
-	const endDateTime = config.base.live.maxLongTermDataFetch;
-	// Add 2 to our days so we get sunrise and sunset on the end day (which was the start of that day).
-	const daysBetween = endDateTime.diff(startDateTime, 'days').days + 2;
+	const { referenceTime, futureCutoff } = config;
+	const startDay = getStartOfDayBefore(referenceTime);
+	const endDay = futureCutoff;
+	const daysBetween = endDay.diff(startDay, 'days').days;
 
 	// sunrise (function) - ([5:30,7] to [5:30,7]) - linear
 	const minSunriseMinutes = 5.5 * 60;
@@ -38,21 +41,16 @@ export function createComputedAstro(config: AstroConfig, seed: TestSeed): Comput
 	}
 
 	// Combine our events
-	const sunEvents: iso.Astro.SunEvent[] = [];
+	const days: iso.Astro.SunDay[] = [];
 	for (let i = 0; i < daysBetween; i++) {
-		const day = startDateTime.plus({ days: i });
-		sunEvents.push({
-			time: day.plus({ minutes: sunriseMinutes[i] }),
-			isSunrise: true,
-		});
-		sunEvents.push({
-			time: day.plus({ minutes: sunsetMinutes[i] }),
-			isSunrise: false,
+		const day = startDay.plus({ days: i });
+		days.push({
+			rise: day.plus({ minutes: sunriseMinutes[i] }),
+			set: day.plus({ minutes: sunsetMinutes[i] }),
 		});
 	}
 
 	return {
-
-		sunEvents: sunEvents
+		daily: days
 	};
 }
