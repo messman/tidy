@@ -13,13 +13,10 @@ export const WeatherIcon: StyledFC<IconProps> = (props) => {
 
 const WeatherIconContainer = styled.span`
 	display: inline-block;
-	background-color: ${p => p.theme.common.content.background};
+	background-color: ${p => p.theme.common.content.backgroundDay};
 	border-radius: 50%;
-
-	${Icon as any} {
-		width: 2rem;
-		height: 2rem;
-	}
+	width: 2rem;
+	height: 2rem;
 `;
 
 export interface DaylightIconProps {

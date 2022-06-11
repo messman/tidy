@@ -23,14 +23,14 @@ export const WeatherBadge: React.FC<WeatherBadgeProps> = (props) => {
 };
 
 export interface TideLevelBadgeProps {
-	level: iso.Tide.CurrentTide;
+	tide: iso.Tide.Stamp;
 }
 
 export const TideLevelBadge: React.FC<TideLevelBadgeProps> = (props) => {
-	const { children, level } = props;
+	const { children, tide } = props;
 	return (
 		<BadgeContainer>
-			<TideLevelIcon level={level} />
+			<TideLevelIcon tide={tide} />
 			<BadgeText>{children}</BadgeText>
 		</BadgeContainer>
 	);
