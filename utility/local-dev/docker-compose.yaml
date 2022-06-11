@@ -58,7 +58,7 @@ services:
     image: nginx:1.19.6-alpine
     environment:
       - WBT_NGINX_SERVER_LISTEN=80
-      - WBT_DEVCODE_SERVER_PORT=8093
+      - WBT_DEVCODE_SERVER_PORT=8000
       - WBT_NGINX_COSMOS_LISTEN=81
       - WBT_DEVCODE_COSMOS_PORT=5000
     volumes:

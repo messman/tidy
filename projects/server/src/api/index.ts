@@ -43,7 +43,7 @@ export function configureApi(app: Application): void {
 	// Note: error handler is in main application code.
 
 	// Route into the '/api/' path
-	app.use('/api', router);
+	app.use('/api/v4-0', router);
 }
 
 function attachRoutes(router: Router, customRoutes: CustomRouters) {
