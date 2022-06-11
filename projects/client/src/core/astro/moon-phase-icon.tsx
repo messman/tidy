@@ -24,12 +24,12 @@ const MoonPhaseIconContainer = styled.span`
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-	background-color: ${p => p.theme.common.content.backgroundNight};
+	background-color: ${p => p.theme.common.content.backgroundDay};
 	border-radius: 50%;
 	width: 2rem;
 	height: 2rem;
 	// Slightly smaller in comparison to weather icons; because moon takes up all space as a circle
-	padding: .125rem;
+	padding: .25rem;
 `;
 
 const moonPhaseIcon: Record<keyof typeof iso.Astro.MoonPhase, IconInputType> = {

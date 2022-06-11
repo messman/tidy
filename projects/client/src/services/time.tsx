@@ -1,5 +1,16 @@
 import { DateTime } from 'luxon';
 
+/** Gets text like 'Today' or 'Tomorrow' from the date provided, relative to the reference date. */
+export function getRelativeDayText(date: DateTime, reference: DateTime): string | null {
+	if (date.hasSame(reference, 'day')) {
+		return 'Today';
+	}
+	if (date.hasSame(reference.plus({ days: 1 }), 'day')) {
+		return 'Tomorrow';
+	}
+	return null;
+}
+
 export interface TwelveHourTime {
 	hour: string;
 	time: string; // like '1:34'

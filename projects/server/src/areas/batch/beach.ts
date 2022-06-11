@@ -310,6 +310,13 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: Co
 		const beachTimeDay = getFor(range.start);
 		beachTimeDay.ranges.push(range);
 	});
+	// Strip out anything incomplete.
+	Array.from(daysMap.keys()).forEach((key) => {
+		const beachTimeDay = daysMap.get(key);
+		if (!beachTimeDay || !beachTimeDay.astro || !beachTimeDay.weather || !beachTimeDay.astro.moon) {
+			daysMap.delete(key);
+		}
+	});
 
 	return {
 		current: currentBeachTime,

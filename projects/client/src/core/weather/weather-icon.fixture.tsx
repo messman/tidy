@@ -2,37 +2,34 @@ import * as React from 'react';
 import { CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
 import { icons } from '@wbtdevlocal/assets';
-import { DaylightIcon, WeatherIcon } from './weather-icon';
+import { BaseWeatherIcon } from './weather-icon';
 
 export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<WeatherIcon type={icons.weatherCloud} />
-			<WeatherIcon type={icons.weatherClouds} />
-			<WeatherIcon type={icons.weatherCloudyMoon} />
-			<WeatherIcon type={icons.weatherCloudySun} />
-			<WeatherIcon type={icons.weatherCloudyWind} />
-			<WeatherIcon type={icons.weatherFog} />
-			<WeatherIcon type={icons.weatherHail} />
-			<WeatherIcon type={icons.weatherLightningMoon} />
-			<WeatherIcon type={icons.weatherLightningSun} />
-			<WeatherIcon type={icons.weatherLightning} />
-			<WeatherIcon type={icons.weatherMoon} />
-			<WeatherIcon type={icons.weatherPressure} />
-			<WeatherIcon type={icons.weatherQuestion} />
-			<WeatherIcon type={icons.weatherRainMoon} />
-			<WeatherIcon type={icons.weatherRainSun} />
-			<WeatherIcon type={icons.weatherRain} />
-			<WeatherIcon type={icons.weatherSnowflake} />
-			<WeatherIcon type={icons.weatherSun} />
-			<WeatherIcon type={icons.weatherTemperatureCold} />
-			<WeatherIcon type={icons.weatherTemperatureHot} />
-			<WeatherIcon type={icons.weatherTemperature} />
-			<WeatherIcon type={icons.weatherWind} />
-
-			<DaylightIcon isDaytime={true} />
-			<DaylightIcon isDaytime={false} />
+			<BaseWeatherIcon type={icons.weatherCloud} />
+			<BaseWeatherIcon type={icons.weatherClouds} />
+			<BaseWeatherIcon type={icons.weatherCloudyMoon} />
+			<BaseWeatherIcon type={icons.weatherCloudySun} />
+			<BaseWeatherIcon type={icons.weatherCloudyWind} />
+			<BaseWeatherIcon type={icons.weatherFog} />
+			<BaseWeatherIcon type={icons.weatherHail} />
+			<BaseWeatherIcon type={icons.weatherLightningMoon} />
+			<BaseWeatherIcon type={icons.weatherLightningSun} />
+			<BaseWeatherIcon type={icons.weatherLightning} />
+			<BaseWeatherIcon type={icons.weatherMoon} />
+			<BaseWeatherIcon type={icons.weatherPressure} />
+			<BaseWeatherIcon type={icons.weatherQuestion} />
+			<BaseWeatherIcon type={icons.weatherRainMoon} />
+			<BaseWeatherIcon type={icons.weatherRainSun} />
+			<BaseWeatherIcon type={icons.weatherRain} />
+			<BaseWeatherIcon type={icons.weatherSnowflake} />
+			<BaseWeatherIcon type={icons.weatherSun} />
+			<BaseWeatherIcon type={icons.weatherTemperatureCold} />
+			<BaseWeatherIcon type={icons.weatherTemperatureHot} />
+			<BaseWeatherIcon type={icons.weatherTemperature} />
+			<BaseWeatherIcon type={icons.weatherWind} />
 		</>
 	);
 }, {
