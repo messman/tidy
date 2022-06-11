@@ -36,7 +36,7 @@ server {
 		add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
 	}
 	location ^~ /api/ {
-		# Forward to the devcode container.
+		# Forward to the server API.
 		proxy_pass 'http://devcode:${WBT_DEVCODE_SERVER_PORT}/api/';
 	}
 	# Any routes with extension. Like *.*
@@ -78,6 +78,10 @@ server {
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
         add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
 	}
+	location ^~ /api/ {
+		# Forward to the server API.
+		proxy_pass 'http://devcode:${WBT_DEVCODE_SERVER_PORT}/api/';
+	}
 	location ^~ /socket.io/ {
 		# Cosmos has socket.io.
 		# We need to do some special config: https://www.nginx.com/blog/websocket-nginx/
@@ -90,7 +94,7 @@ server {
 	}
 	# Anything else
 	location ~ ^(.+)$ {
-		# Forward to the devcode container.
+		# Forward to Cosmos.
 		proxy_pass 'http://devcode:${WBT_DEVCODE_COSMOS_PORT}$1';
 	}
 }
