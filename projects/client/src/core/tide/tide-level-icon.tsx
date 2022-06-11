@@ -6,27 +6,27 @@ import { fontStyleDeclarations } from '../text';
 import { styled, StyledFC } from '../theme/styled';
 
 export interface TideLevelIconProps {
-	level: iso.Tide.CurrentTide;
+	tide: iso.Tide.Stamp;
 }
 
 export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {
-	const { division, direction } = props.level;
+	const { division, direction } = props.tide;
 
 	let icon: JSX.Element | null = null;
 
-	if (direction === iso.Tide.TideDirection.stable) {
-		if (division === iso.Tide.TideDivision.low) {
+	if (direction === iso.Tide.Direction.turning) {
+		if (division === iso.Tide.Division.low) {
 			icon = <ExtremeText>LO</ExtremeText>;
 		}
-		else if (division === iso.Tide.TideDivision.high) {
+		else if (division === iso.Tide.Division.high) {
 			icon = <ExtremeText>HI</ExtremeText>;
 		}
-		else if (division === iso.Tide.TideDivision.mid) {
+		else if (division === iso.Tide.Division.mid) {
 			// Should never happen
 		}
 	}
-	else if (direction === iso.Tide.TideDirection.rising) {
-		if (division === iso.Tide.TideDivision.mid) {
+	else if (direction === iso.Tide.Direction.rising) {
+		if (division === iso.Tide.Division.mid) {
 			icon = <ArrowIcon type={icons.tideUpLong} />;
 		}
 		else {
@@ -34,8 +34,8 @@ export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {
 			icon = <ArrowIcon type={icons.tideUp} />;
 		}
 	}
-	else if (direction === iso.Tide.TideDirection.falling) {
-		if (division === iso.Tide.TideDivision.mid) {
+	else if (direction === iso.Tide.Direction.falling) {
+		if (division === iso.Tide.Division.mid) {
 			icon = <ArrowIcon type={icons.tideDownLong} />;
 		}
 		else {
@@ -56,9 +56,25 @@ export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {
 	);
 };
 
+export interface TideExtremeIconProps {
+	isLow: boolean;
+}
+
+export const TideExtremeIcon: StyledFC<TideExtremeIconProps> = (props) => {
+	const { isLow } = props;
+	return (
+		<TideLevelIconContainer>
+			<WaterIcon type={icons.tideWave} division={isLow ? iso.Tide.Division.low : iso.Tide.Division.high} />
+			<CenteringContainer>
+				<ExtremeText>{isLow ? 'LO' : 'HI'}</ExtremeText>
+			</CenteringContainer>
+		</TideLevelIconContainer>
+	);
+};
+
 const TideLevelIconContainer = styled.span`
 	display: inline-block;
-	background-color: ${p => p.theme.common.content.background};
+	background-color: ${p => p.theme.common.content.backgroundDay};
 	border-radius: 50%;
 
 	position: relative;
@@ -68,15 +84,15 @@ const TideLevelIconContainer = styled.span`
 	overflow: hidden;
 `;
 
-const waterOffsetPercent: Record<keyof typeof iso.Tide.TideDivision, string> = {
+const waterOffsetPercent: Record<keyof typeof iso.Tide.Division, string> = {
 	high: '6.25%',
 	mid: '34.375%',
 	low: '65.625%'
 };
 
-const WaterIcon = styled(Icon) <{ division: iso.Tide.TideDivision; }>`
+const WaterIcon = styled(Icon) <{ division: iso.Tide.Division; }>`
 	position: absolute;
-	top: ${p => iso.mapEnumValue(iso.Tide.TideDivision, waterOffsetPercent, p.division)};
+	top: ${p => iso.mapEnumValue(iso.Tide.Division, waterOffsetPercent, p.division)};
 	color: ${p => p.theme.badge.water};
 	width: 2rem;
 	height: 2rem;

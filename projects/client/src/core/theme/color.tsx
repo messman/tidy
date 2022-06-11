@@ -51,7 +51,8 @@ const commonTheme: CommonTheme = {
 	},
 
 	content: {
-		background: '#489EEE',
+		backgroundNight: '#155999',
+		backgroundDay: '#489EEE',
 		sun: '#F2DD1C',
 		moon: '#FAF1D0',
 		cloudLight: '#F4F4F4',
@@ -165,7 +166,8 @@ export interface CommonTheme {
 	brand1: ColorBrandSet;
 
 	content: {
-		background: string;
+		backgroundNight: string;
+		backgroundDay: string;
 		sun: string;
 		moon: string;
 		cloudLight: string;
