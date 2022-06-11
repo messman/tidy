@@ -7,9 +7,10 @@ import styled from 'styled-components';
 // import { ApplicationResponsiveLayout } from '@/areas/layout/layout';
 // import { MenuBar } from '@/areas/menu-bar/menu-bar';
 import { ThemeContextProvider } from '@/core/theme/theme';
-import { BatchLatestResponseProvider } from '@/services/data/data';
+import { BatchResponseProvider } from '@/services/data/data';
 import { DataSeedProvider } from '@/services/data/data-seed';
 import { lowerBreakpoints } from '@/services/layout/window-layout';
+import { RequestFetchProvider } from '@/services/network/request-fetch-provider';
 import { provider, ProviderComposer, ProviderWithProps } from '@/services/provider-utility';
 import { DocumentVisibilityProvider, WindowDimensionsProvider, WindowMediaLayoutProvider } from '@messman/react-common';
 
@@ -20,9 +21,9 @@ const App: React.FC = () => {
 		provider(ThemeContextProvider, {}),
 		provider(WindowDimensionsProvider, {}),
 		provider(WindowMediaLayoutProvider, { lowerBreakpoints: lowerBreakpoints, breakpointUnit: 'rem' as 'rem' }),
-		//provider(ComponentLayoutProvider, {}),
+		provider(RequestFetchProvider, {}),
 		provider(DataSeedProvider, {}),
-		provider(BatchLatestResponseProvider, {}),
+		provider(BatchResponseProvider, {}),
 	];
 
 	return (

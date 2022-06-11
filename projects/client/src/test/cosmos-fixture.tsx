@@ -5,13 +5,14 @@ import { Panel, PanelPadding } from '@/core/layout/panel/panel';
 import { Spacing } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
 import { ThemeContextProvider, themes, useThemeIndex } from '@/core/theme/theme';
+import { BatchResponseProvider } from '@/services/data/data';
+import { DataSeedProvider, useDataSeed } from '@/services/data/data-seed';
 import { lowerBreakpoints } from '@/services/layout/window-layout';
-import { MockApiProvider, useMockApi } from '@/services/network/request-fetch-provider.test';
+import { RequestFetchProvider } from '@/services/network/request-fetch-provider';
 import { provider, ProviderComposer, ProviderWithProps } from '@/services/provider-utility';
 import { DocumentVisibilityProvider, WindowMediaLayoutProvider } from '@messman/react-common';
 import * as iso from '@wbtdevlocal/iso';
-import { useControlSelect } from './cosmos';
-import { createTestServerError } from './data/test-data-utility';
+import { createControlSelectForEnum, useControlSelect } from './cosmos';
 
 export enum FixtureContainer {
 	/** App background, no spacing, flex. Basically no special container. */
@@ -37,7 +38,9 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 			provider(DocumentVisibilityProvider, {}),
 			provider(ThemeContextProvider, {}),
 			provider(WindowMediaLayoutProvider, { lowerBreakpoints: lowerBreakpoints, breakpointUnit: 'rem' as const }),
-			provider(MockApiProvider, {}),
+			provider(RequestFetchProvider, {}),
+			provider(DataSeedProvider, {}),
+			provider(BatchResponseProvider, {}),
 		];
 
 		if (additionalProviders) {
@@ -56,6 +59,9 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 	};
 }
 
+const seedOb = createControlSelectForEnum(iso.Batch.Seed) as unknown as Record<(keyof typeof iso.Batch.Seed) | '_real_', iso.Batch.Seed | null>;
+seedOb['_real_'] = null;
+
 interface TestWrapperProps {
 	container: FixtureContainer;
 }
@@ -63,7 +69,8 @@ interface TestWrapperProps {
 const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 	const { container } = props;
 
-	const mockApi = useMockApi();
+	//const mockApi = useMockApi();
+	const [seed, setSeed] = useDataSeed();
 
 	const [themeIndex, setThemeIndex] = useThemeIndex();
 	const selectedThemeIndex = useControlSelect('Global - Theme', themeOptions, themes[themeIndex].themeInfo.name);
@@ -73,18 +80,25 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 		}
 	}, [selectedThemeIndex]);
 
-	const timeout = useControlSelect('Global - Network Speed', networkSpeeds, 'Instant (0)');
-
-	const responseOverride = useControlSelect('Global - Override Response', globalResponses, 'No Override');
-
+	const selectedSeed = useControlSelect('Seed', seedOb, seed || '_real_');
 	React.useEffect(() => {
-		if (mockApi) {
-			mockApi.setOverrides({
-				timeout: timeout,
-				response: responseOverride
-			});
+		if (selectedSeed !== seed) {
+			setSeed(selectedSeed);
 		}
-	}, [timeout, responseOverride]);
+	}, [selectedSeed]);
+
+	// const timeout = useControlSelect('Global - Network Speed', networkSpeeds, 'Instant (0)');
+
+	// const responseOverride = useControlSelect('Global - Override Response', globalResponses, 'No Override');
+
+	// React.useEffect(() => {
+	// 	if (mockApi) {
+	// 		mockApi.setOverrides({
+	// 			timeout: timeout,
+	// 			response: responseOverride
+	// 		});
+	// 	}
+	// }, [timeout, responseOverride]);
 
 	let render = <>{props.children}</>;
 	if (container !== FixtureContainer.none) {
@@ -136,18 +150,18 @@ themes.forEach((theme, index) => {
 	themeOptions[theme.themeInfo.name] = index;
 });
 
-const networkSpeeds = iso.strict<number | null>()({
-	'Default': null,
-	'Instant (0)': 0,
-	'Quick (.1s)': 100,
-	'Medium (.5s)': 500,
-	'Slow (1s)': 1_000,
-	'Struggling (3s)': 3_000,
-	'Timeout': 60_000
-});
+// const networkSpeeds = iso.strict<number | null>()({
+// 	'Default': null,
+// 	'Instant (0)': 0,
+// 	'Quick (.1s)': 100,
+// 	'Medium (.5s)': 500,
+// 	'Slow (1s)': 1_000,
+// 	'Struggling (3s)': 3_000,
+// 	'Timeout': 60_000
+// });
 
-const globalResponses = iso.strict<iso.ServerError | false | null>()({
-	'No Override': null,
-	'Client Error': false,
-	'Server Error': createTestServerError(),
-});
+// const globalResponses = iso.strict<iso.ServerError | false | null>()({
+// 	'No Override': null,
+// 	'Client Error': false,
+// 	'Server Error': createTestServerError(),
+// });

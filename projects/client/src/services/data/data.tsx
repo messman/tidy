@@ -7,25 +7,25 @@ import { RequestResult, RequestResultError } from '../network/request';
 import { ApiRequestOptions, useApiRequest } from '../network/request-hook';
 import { useDataSeed } from './data-seed';
 
-const [BatchContentContextProvider, useBatchContentContext] = createContextConsumer<BatchLatestResponseOutput>(null!);
+const [BatchResponseContextProvider, useBatchResponseContext] = createContextConsumer<BatchResponseOutput>(null!);
 
-export const useBatchContent = useBatchContentContext;
+export const useBatchResponse = useBatchResponseContext;
 
-export interface BatchLatestResponseState {
+export interface BatchResponseState {
 	isLoading: boolean;
 	error: RequestResultError | null;
 	success: iso.Batch.BatchContent | null;
 }
 
-export interface BatchLatestResponseOutput extends BatchLatestResponseState {
+export interface BatchResponseOutput extends BatchResponseState {
 	restart: () => void;
 }
 
-export const BatchLatestResponseProvider: React.FC = (props) => {
+export const BatchResponseProvider: React.FC = (props) => {
 
 	const [seed] = useDataSeed();
 
-	const [state, setState] = React.useState<BatchLatestResponseState>(() => {
+	const [state, setState] = React.useState<BatchResponseState>(() => {
 		return {
 			isLoading: false,
 			error: null,
@@ -85,8 +85,13 @@ export const BatchLatestResponseProvider: React.FC = (props) => {
 		});
 	}, [seed]);
 
+	// Start it immediately or after any seed change.
+	console.log(seed);
+	React.useEffect(() => {
+		makeRequest();
+	}, [seed]);
 
-	const value = React.useMemo<BatchLatestResponseOutput>(() => {
+	const value = React.useMemo<BatchResponseOutput>(() => {
 		return {
 			...state,
 			restart: makeRequest
@@ -143,9 +148,9 @@ export const BatchLatestResponseProvider: React.FC = (props) => {
 	// }, [promise, timer, lastCompleted, localDataPhrase, promiseFunc]);
 
 	return (
-		<BatchContentContextProvider value={value}>
+		<BatchResponseContextProvider value={value}>
 			{props.children}
-		</BatchContentContextProvider>
+		</BatchResponseContextProvider>
 	);
 };
 

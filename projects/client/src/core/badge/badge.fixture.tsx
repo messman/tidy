@@ -2,7 +2,6 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
-import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { Block } from '../theme/box';
 import { BadgeCollection, DaylightBadge, TideLevelBadge, WeatherBadge } from './badge';
@@ -30,27 +29,36 @@ export default CosmosFixture.create(() => {
 			</TideLevelBadge>
 		);
 	});
-
 	return (
 		<>
 			<BadgeCollection>
-				<WeatherBadge icon={icons.weatherCloud}>Cloud</WeatherBadge>
-				<WeatherBadge icon={icons.weatherClouds}>Clouds</WeatherBadge>
-				<WeatherBadge icon={icons.weatherCloudyMoon}>Cloudy Moon</WeatherBadge>
-				<WeatherBadge icon={icons.weatherCloudySun}>Cloudy Sun</WeatherBadge>
-				<WeatherBadge icon={icons.weatherCloudyWind}>Cloudy Wind</WeatherBadge>
-				<WeatherBadge icon={icons.weatherFog}>Fog</WeatherBadge>
-				<WeatherBadge icon={icons.weatherHail}>Hail</WeatherBadge>
-				<WeatherBadge icon={icons.weatherLightningMoon}>Lightning Moon</WeatherBadge>
-				<WeatherBadge icon={icons.weatherLightningSun}>Lightning Sun</WeatherBadge>
-				<WeatherBadge icon={icons.weatherLightning}>Lightning</WeatherBadge>
-				<WeatherBadge icon={icons.weatherMoon}>Moon</WeatherBadge>
-				<WeatherBadge icon={icons.weatherRainMoon}>Rain Moon</WeatherBadge>
-				<WeatherBadge icon={icons.weatherRainSun}>Rain Sun</WeatherBadge>
-				<WeatherBadge icon={icons.weatherRain}>Rain</WeatherBadge>
-				<WeatherBadge icon={icons.weatherSnowflake}>Snowflake</WeatherBadge>
-				<WeatherBadge icon={icons.weatherSun}>Sun</WeatherBadge>
-				<WeatherBadge icon={icons.weatherWind}>Wind</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.unknown}>unknown</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.clear}>clear</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.clear_hot}>clear_hot</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.clear_cold}>clear_cold</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.clouds_few}>clouds_few</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.clouds_some}>clouds_some</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.clouds_most}>clouds_most</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.clouds_over}>clouds_over</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.rain_drizzle}>rain_drizzle</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.rain_light}>rain_light</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.rain_medium}>rain_medium</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.rain_heavy}>rain_heavy</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.rain_freeze}>rain_freeze</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.snow_light}>snow_light</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.snow_medium}>snow_medium</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.snow_heavy}>snow_heavy</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.snow_sleet}>snow_sleet</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.snow_rain}>snow_rain</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.thun_light}>thun_light</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.thun_medium}>thun_medium</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.thun_heavy}>thun_heavy</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.intense_storm}>intense_storm</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.intense_other}>intense_other</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.dust}>dust</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.smoke}>smoke</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.haze}>haze</WeatherBadge>
+				<WeatherBadge isDay={true} status={iso.Weather.StatusType.fog}>fog</WeatherBadge>
 			</BadgeCollection>
 			<Block.Elf24 />
 			<BadgeCollection>

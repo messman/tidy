@@ -1,0 +1,28 @@
+import * as React from 'react';
+import { icons } from '@wbtdevlocal/assets';
+import { Icon } from '../icon/icon';
+import { styled } from '../theme/styled';
+
+const WeatherIconContainer = styled.span`
+	display: inline-block;
+	background-color: ${p => p.theme.common.content.backgroundDay};
+	border-radius: 50%;
+	width: 2rem;
+	height: 2rem;
+`;
+
+export interface DaylightIconProps {
+	isDaytime: boolean;
+}
+
+export const DaylightIcon: React.FC<DaylightIconProps> = (props) => {
+	return (
+		<WeatherIconContainer>
+			<SunIcon type={props.isDaytime ? icons.weatherSundown : icons.weatherSunrise} />
+		</WeatherIconContainer>
+	);
+};
+
+const SunIcon = styled(Icon)`
+	color: ${p => p.theme.common.content.sun};
+`;

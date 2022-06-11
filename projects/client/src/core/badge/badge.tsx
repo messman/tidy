@@ -1,22 +1,21 @@
 import * as React from 'react';
 import * as iso from '@wbtdevlocal/iso';
-import { IconInputType } from '../icon/icon';
+import { DaylightIcon } from '../astro/daylight-icon';
 import { fontStyleDeclarations } from '../text';
 import { Spacing } from '../theme/box';
 import { FontWeight } from '../theme/font';
 import { styled } from '../theme/styled';
 import { TideLevelIcon } from '../tide/tide-level-icon';
-import { DaylightIcon, WeatherIcon } from '../weather/weather-icon';
+import { WeatherStatusIcon, WeatherStatusIconProps } from '../weather/weather-icon';
 
-export interface WeatherBadgeProps {
-	icon: IconInputType;
+export interface WeatherBadgeProps extends WeatherStatusIconProps {
 }
 
 export const WeatherBadge: React.FC<WeatherBadgeProps> = (props) => {
-	const { children, icon } = props;
+	const { children, status, isDay } = props;
 	return (
 		<BadgeContainer>
-			<WeatherIcon type={icon} />
+			<WeatherStatusIcon status={status} isDay={isDay} />
 			<BadgeText>{children}</BadgeText>
 		</BadgeContainer>
 	);

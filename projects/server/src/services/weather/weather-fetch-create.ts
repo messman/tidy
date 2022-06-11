@@ -105,13 +105,13 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	});
 
 	const nMoonPhase = iso.enumKeys(iso.Astro.MoonPhase).length - 1;
-	const dailyMoonPhaseIterable = dailyWeatherData(0, nMoonPhase, 0, true, 0);
+	const dailyMoonPhaseIterable = dailyWeatherData(0, nMoonPhase, 0, false, 0);
 
 	const moonPhaseDaily = dailyMoonPhaseIterable.map<iso.Astro.MoonPhaseDay>((moonPhase, i) => {
 		const day = referenceTime.startOf('day').plus({ days: i });
 		return {
 			time: day,
-			moon: moonPhase.value as iso.Astro.MoonPhase,
+			moon: Math.round(moonPhase.value) as iso.Astro.MoonPhase,
 		};
 	});
 

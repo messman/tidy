@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Paragraph } from '@/core/text';
 import { CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
-import { useBatchContent } from './data/data';
+import { useBatchResponse } from './data/data';
 import { DEFINE } from './define';
 
 export default CosmosFixture.create(() => {
 
-	const { success } = useBatchContent();
+	const { success } = useBatchResponse();
 	console.log(DEFINE);
 
 
