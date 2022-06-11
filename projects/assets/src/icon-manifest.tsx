@@ -52,6 +52,16 @@ export const expressionStraight = create('expressionStraight', require('@/static
 // Loader
 export const loaderQuarterTurn = create('loaderQuarterTurn', require('@/static/icons/loader/quarter-turn.svg'));
 
+// Moon
+export const moonFirstQuarter = create('moonFirstQuarter', require('@/static/icons/moon/first-quarter.svg'));
+export const moonFull = create('moonFull', require('@/static/icons/moon/full.svg'));
+export const moonNew = create('moonNew', require('@/static/icons/moon/new.svg'));
+export const moonThirdQuarter = create('moonThirdQuarter', require('@/static/icons/moon/third-quarter.svg'));
+export const moonWaningCrescent = create('moonWaningCrescent', require('@/static/icons/moon/waning-crescent.svg'));
+export const moonWaningGibbous = create('moonWaningGibbous', require('@/static/icons/moon/waning-gibbous.svg'));
+export const moonWaxingCrescent = create('moonWaxingCrescent', require('@/static/icons/moon/waxing-crescent.svg'));
+export const moonWaxingGibbous = create('moonWaxingGibbous', require('@/static/icons/moon/waxing-gibbous.svg'));
+
 // Navigation
 export const navigationDashboard = create('navigationDashboard', require('@/static/icons/navigation/dashboard.svg'));
 export const navigationDev = create('navigationDev', require('@/static/icons/navigation/dev.svg'));

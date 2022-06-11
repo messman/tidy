@@ -74,6 +74,16 @@ export enum SVGIconTypeName {
 	// Loader
 	loaderQuarterTurn,
 
+	// Moon
+	moonFirstQuarter,
+	moonFull,
+	moonNew,
+	moonThirdQuarter,
+	moonWaningCrescent,
+	moonWaningGibbous,
+	moonWaxingCrescent,
+	moonWaxingGibbous,
+
 	// Navigation
 	navigationDashboard,
 	navigationDev,
