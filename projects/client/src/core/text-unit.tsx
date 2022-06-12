@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { getTimeTwelveHour } from '@/services/time';
-import { fontStyleDeclarations } from './text';
 import { styled } from './theme/styled';
 
 export interface TextUnitProps {
@@ -23,7 +22,6 @@ export const TextUnit: React.FC<TextUnitProps> = (props) => {
 };
 
 const NonBreakingTextInline = styled.span`
-	${fontStyleDeclarations.body};
 	white-space: nowrap;
 	display: inline;
 `;
@@ -34,7 +32,6 @@ interface UnitProps {
 
 const Unit = styled.span<UnitProps>`
 	display: inline-block;
-	${fontStyleDeclarations.bodySmall};
 	vertical-align: baseline;
 	margin-left: ${p => p.space}rem;
 `;
@@ -53,12 +50,12 @@ export const TimeTextUnit: React.FC<TimeTextUnitProps> = (props) => {
 
 export interface TimeDurationTextUnitProps {
 	startTime: DateTime;
-	endTime: DateTime;
+	stopTime: DateTime;
 }
 
 export const TimeDurationTextUnit: React.FC<TimeDurationTextUnitProps> = (props) => {
 	// Probably one of the coolest things Luxon does:
-	const duration = props.endTime.diff(props.startTime, ['hours', 'minutes']);
+	const duration = props.stopTime.diff(props.startTime, ['hours', 'minutes']);
 
 	const hours = duration.hours > 0 ? (<TextUnit text={duration.hours.toString()} unit='h' />) : null;
 

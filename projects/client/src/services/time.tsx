@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import * as React from 'react';
 
 /** Gets text like 'Today' or 'Tomorrow' from the date provided, relative to the reference date. */
 export function getRelativeDayText(date: DateTime, reference: DateTime): string | null {
@@ -34,6 +35,10 @@ export function getTimeTwelveHour(date: DateTime): TwelveHourTime {
 export function getTimeTwelveHourString(date: DateTime): string {
 	const { time, ampm } = getTimeTwelveHour(date);
 	return `${time} ${ampm}`;
+}
+
+export function getTimeTwelveHourRange(start: DateTime, stop: DateTime): JSX.Element {
+	return <>{getTimeTwelveHourString(start)} &ndash; {getTimeTwelveHourString(stop)}</>;
 }
 
 export function getDate(date: DateTime): string {
