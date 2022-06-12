@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { SizedIcon } from '@/core/icon/icon';
-import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { PanelPadding } from '@/core/layout/panel/panel';
-import { fontStyleDeclarations } from '@/core/text';
-import { Block, borderRadiusStyle, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
+import { PanelLoader } from '@/core/layout/panel/panel-loader';
+import { Note } from '@/core/note';
+import { Block } from '@/core/theme/box';
 import { useBatchResponse } from '@/services/data/data';
 import { BeachTimeBadges } from './beach-time-badges';
 import { BeachTimeDays } from './beach-time-days';
@@ -16,7 +14,7 @@ export const BeachTime: React.FC = () => {
 	const { success } = useBatchResponse();
 
 	if (!success) {
-		return <SizedIcon size='medium' type={SpinnerIcon} />;
+		return <PanelLoader />;
 	}
 
 	return (
@@ -31,21 +29,12 @@ export const BeachTime: React.FC = () => {
 			<BeachTimeDays />
 			<Block.Bat08 />
 			<PanelPadding>
-				<BeachTimeNote>
+				<Note>
 					"Beach time" is a subjective approximation based on available data for tides, sunlight, and weather (specifically, chance for rain or storms).
 					Temperature is not considered. Data is not guaranteed accurate, and is less accurate the further it is based from the current time.
-				</BeachTimeNote>
+				</Note>
 			</PanelPadding>
 		</>
 	);
 };
 
-const BeachTimeNote = styled.div`
-	${fontStyleDeclarations.bodySmall};
-	color: ${p => p.theme.textSubtle};
-	padding: ${Spacing.dog16};
-	background-color: ${p => p.theme.note.background};
-	${borderRadiusStyle};
-	border: 1px solid ${p => p.theme.note.outline};
-
-`;

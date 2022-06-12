@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { icons } from '@wbtdevlocal/assets';
-import { SizedIcon } from './icon/icon';
 import { css, styled } from './theme/styled';
 
 /*
@@ -52,7 +50,7 @@ export const OutLink: React.FC<LinkProps> = (props) => {
 	return (
 		<BasicLink href={href} rel="noreferrer noopener" target="_blank" title={combinedTitle} {...otherProps}>
 			{text}
-			<SizedIcon type={icons.arrowOut} size='small' />
+			{/* <SizedIcon type={icons.arrowOut} size='small' /> */}
 		</BasicLink>
 	);
 };

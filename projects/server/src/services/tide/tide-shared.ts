@@ -72,27 +72,17 @@ export function getTideMeasuredAndRelativity(config: BaseConfig, fetchedTide: Fe
 		For division: top 25% is upper; middle 50% is mid; lower 25% is lower.
 	*/
 	const currentDirection = current ? iso.Tide.Direction.turning : (next.isLow ? iso.Tide.Direction.falling : iso.Tide.Direction.rising);
-	let low = 0;
-	let high = 0;
+	let currentDivision: iso.Tide.Division = null!;
 	if (current) {
-		// Use the average of previous and next as part of our range.
-		const previousNextAverage = (previous.height + next.height) / 2;
-		if (current.isLow) {
-			low = current.height;
-			high = previousNextAverage;
-		}
-		else {
-			high = current.height;
-			low = previousNextAverage;
-		}
+		currentDivision = current.isLow ? iso.Tide.Division.low : iso.Tide.Division.high;
 	}
 	else {
-		low = previous.isLow ? previous.height : next.height;
-		high = previous.isLow ? next.height : previous.height;
+		// Get the height as a percent in the range of low to high. 
+		const low = previous.isLow ? previous.height : next.height;
+		const high = previous.isLow ? next.height : previous.height;
+		const divisionAsPercent = (currentHeight - low) / (high - low);
+		currentDivision = divisionAsPercent >= .75 ? iso.Tide.Division.high : (divisionAsPercent > .25 ? iso.Tide.Division.mid : iso.Tide.Division.low);
 	}
-	// Get the height as a percent in the range of low to high. 
-	const divisionAsPercent = (currentHeight - low) / (high - low);
-	const currentDivision = divisionAsPercent >= .75 ? iso.Tide.Division.high : (divisionAsPercent > .25 ? iso.Tide.Division.mid : iso.Tide.Division.low);
 
 	return {
 		measured: {
