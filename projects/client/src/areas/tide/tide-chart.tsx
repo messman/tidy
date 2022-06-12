@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { MoonPhaseIcon } from '@/core/astro/moon-phase-icon';
-import { IconTitle } from '@/core/layout/layout';
-import { OutLink } from '@/core/link';
-import { Note } from '@/core/note';
-import { fontStyleDeclarations, Paragraph } from '@/core/text';
+import { fontStyleDeclarations } from '@/core/text';
 import { Block, Spacing } from '@/core/theme/box';
 import { FontWeight } from '@/core/theme/font';
 import { styled } from '@/core/theme/styled';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { TideExtremeIcon, TideLevelIcon } from '@/core/tide/tide-level-icon';
 import { useBatchResponse } from '@/services/data/data';
-import { getDate, getDateDayOfWeek, getRelativeDayText, getTimeTwelveHourString, percentTimeBetween } from '@/services/time';
+import { getDateDayOfWeek, getRelativeDayText, getTimeTwelveHourString } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 
 export const TideChart: React.FC = () => {
@@ -74,7 +71,9 @@ const TideChartDay: React.FC<TideChartDayProps> = (props) => {
 		const visualPercent = ((stamp.height - minHeight) / range) * 100;
 		const visualRender = (
 			<RowVisual>
-				<VisualCircle percent={visualPercent} />
+				<RowVisualAdjust>
+					<VisualCircle percent={visualPercent} isMeasured={isMeasured} />
+				</RowVisualAdjust>
 			</RowVisual>
 		);
 
@@ -142,7 +141,8 @@ const RowContainer = styled.div<{ isHighlighted: boolean; }>`
 `;
 
 const RowTime = styled.div`
-	flex: 3;
+	flex: 2;
+	min-width: 5.5rem;
 	${fontStyleDeclarations.body};
 	font-weight: ${FontWeight.medium};
 	text-align: center;
@@ -158,6 +158,7 @@ const RowIcon = styled.div`
 
 const RowHeight = styled.div`
 	flex: 2;
+	min-width: 5rem;
 	${fontStyleDeclarations.body};
 	font-weight: ${FontWeight.medium};
 	text-align: center;
@@ -165,25 +166,38 @@ const RowHeight = styled.div`
 
 //#region Visual
 
+const visualSize = '.5rem';
+const visualBorder = '.25rem';
+
+/**
+ * The top-level background that the user sees.
+*/
 const RowVisual = styled.div`
-	${fontStyleDeclarations.body};
-	font-weight: ${FontWeight.medium};
-	flex: 6;
+	flex: 5;
 	position: relative;
-	height: .5rem;
-	border-radius: .25rem;
-	background: ${p => p.theme.tideHorizontalGradient};
+	height: ${visualSize};
+	border-radius: ${visualBorder};
+	background: ${p => p.theme.visual.background};
 	overflow: hidden;
 `;
 
-const VisualCircle = styled.div<{ percent: number; }>`
+/**
+ * An invisible layer in-between that allows us to use absolute position percentages correctly for the circle.
+*/
+const RowVisualAdjust = styled.div`
+	// subtract the width of the circle so that 100% still shows the full circle.
+	width: calc(100% - ${visualSize});
+	position: relative;
+	height: ${visualSize};
+`;
+
+const VisualCircle = styled.div<{ percent: number; isMeasured: boolean; }>`
 	position: absolute;
-	outline: .25rem solid ${p => p.theme.common.brand2.dark};
-	background-color: ${p => p.theme.common.brand2.main};
-	width: .5rem;
-	height: .5rem;
-	border-radius: .5rem;
+	background-color: ${p => p.isMeasured ? p.theme.common.system.green.a_main : p.theme.common.brand1.main};
+	width: ${visualSize};
+	height: ${visualSize};
+	border-radius: ${visualBorder};
 	top: 0;
-	left: ${p => p.percent}%; // TODO
+	left: ${p => p.percent}%;
 `;
 //#endregion
