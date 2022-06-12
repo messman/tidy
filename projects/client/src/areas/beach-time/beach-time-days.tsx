@@ -10,22 +10,52 @@ import { WeatherStatusIcon } from '@/core/weather/weather-icon';
 import { useBatchResponse } from '@/services/data/data';
 import { getRelativeDayText } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
+import { BeachTimeRangeView } from './beach-time-range';
 
 export const BeachTimeDays: React.FC = () => {
 	const { success } = useBatchResponse();
 	const reference = success!.meta.referenceTime;
 	const days = success!.beach.days;
 
-	const daysRender = days.map((day) => {
-		return <BeachTimeDay key={day.day.toMillis()} day={day} reference={reference} />;
+	const filteredDays = days.filter((day, i) => {
+		// If today has no ranges, ignore it because it just takes up space.
+		// Also, it could be basically the end of the day.
+		if (i === 0 && !day.ranges.length) {
+			return false;
+		}
+		return true;
+	});
+
+	const daysRender = filteredDays.map((day, i) => {
+		const lineRender = i !== 0 ? <Line /> : null;
+		return (
+			<React.Fragment key={day.day.toMillis()}>
+				{lineRender}
+				<BeachTimeDay day={day} reference={reference} />
+			</React.Fragment>
+		);
 	});
 
 	return (
 		<>
-			{daysRender}
+			<Line />
+			<PaddedListContainer>
+				{daysRender}
+			</PaddedListContainer>
+			<Line />
 		</>
 	);
 };
+
+const Line = styled.div`
+	width: 100%;
+	height: 1px;
+	background-color: ${p => p.theme.outlineDistinct};
+`;
+
+const PaddedListContainer = styled.div`
+	padding-left: ${Spacing.dog16};
+`;
 
 interface BeachTimeDayProps {
 	reference: DateTime;
@@ -34,7 +64,7 @@ interface BeachTimeDayProps {
 
 const BeachTimeDay: React.FC<BeachTimeDayProps> = (props) => {
 	const { reference } = props;
-	const { day, astro, weather, ranges } = props.day;
+	const { day, astro, weather } = props.day;
 
 	let dayText = getRelativeDayText(day, reference) || day.weekdayLong;
 
@@ -54,9 +84,9 @@ const BeachTimeDay: React.FC<BeachTimeDayProps> = (props) => {
 					<MoonPhaseIcon phase={astro.moon} />
 				</IconsContainer>
 			</BeachTimeDaySide>
-			<BeachTimeDaySide>
-
-			</BeachTimeDaySide>
+			<BeachTimeDayRightSide>
+				<BeachTimeRangeView day={props.day} />
+			</BeachTimeDayRightSide>
 		</BeachTimeDayContainer>
 	);
 };
@@ -64,11 +94,16 @@ const BeachTimeDay: React.FC<BeachTimeDayProps> = (props) => {
 const BeachTimeDayContainer = styled.div`
 	display: flex;
 	padding: ${Spacing.dog16};
-	padding-right: 0;
+	padding-left: 0;
 `;
 
 const BeachTimeDaySide = styled.div`
 	flex: 1;
+`;
+
+const BeachTimeDayRightSide = styled(BeachTimeDaySide)`
+	// Leave enough space for time on the right side
+	min-width: 9.5rem;
 `;
 
 const SubtleText = styled.div`

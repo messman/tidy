@@ -1,10 +1,16 @@
 import * as iso from '@wbtdevlocal/iso';
 import { route } from '../../api/wrap';
+import { settings } from '../../env';
 import { createResponseCache } from '../../services/cache/response-cache';
 import { readBatch } from './batch-read';
 
+let cacheMinutes = 3.5;
+if (settings.CACHE_MINUTES !== undefined) {
+	cacheMinutes = parseInt(settings.CACHE_MINUTES as string, 10);
+}
+
 const latestCache = createResponseCache<iso.Batch.LatestAPI.Read.Response>({
-	expiration: 1000 * 60 * 3
+	expiration: iso.minutes(cacheMinutes)
 });
 
 export const routes = [

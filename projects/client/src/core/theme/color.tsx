@@ -121,7 +121,11 @@ export const baseLightTheme: Theme = {
 
 	badge: {
 		water: '#1A66AB',
-		textBackground: '#E1F1FF',
+		textBackground: '#E4EFF9',
+	},
+
+	visual: {
+		background: '#E4EFF9'
 	},
 
 	form: {
@@ -232,6 +236,10 @@ export interface Theme {
 	badge: {
 		water: string;
 		textBackground: string;
+	};
+
+	visual: {
+		background: string;
 	};
 
 	form: {

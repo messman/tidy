@@ -1,3 +1,4 @@
 {
-	"TEST_VALUE": "wbt-test-value"
+	"TEST_VALUE": "wbt-test-value",
+	"CACHE_MINUTES": 15
 }

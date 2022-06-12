@@ -5,6 +5,7 @@ export interface ProcessEnv {
 	NODE_ENV: string;
 	KEY_OPEN_WEATHER: string;
 	TEST_VALUE: string;
+	CACHE_MINUTES: string | number;
 }
 
 export interface Settings extends Partial<ProcessEnv> {

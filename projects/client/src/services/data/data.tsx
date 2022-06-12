@@ -86,7 +86,6 @@ export const BatchResponseProvider: React.FC = (props) => {
 	}, [seed]);
 
 	// Start it immediately or after any seed change.
-	console.log(seed);
 	React.useEffect(() => {
 		makeRequest();
 	}, [seed]);
