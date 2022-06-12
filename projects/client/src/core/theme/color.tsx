@@ -49,6 +49,10 @@ const commonTheme: CommonTheme = {
 		main: '#3794EB',
 		dark: '#2572BA'
 	},
+	brand2: {
+		main: '#B44646',
+		dark: '#791B1B',
+	},
 
 	content: {
 		backgroundDay: '#489EEE',
@@ -118,6 +122,7 @@ export const baseLightTheme: Theme = {
 	},
 
 	rowHighlight: '#F5F8FA',
+	tideHorizontalGradient: 'linear-gradient(90deg, #489EEE 0%, #1A66AB 100%)',
 
 	badge: {
 		water: '#1A66AB',
@@ -167,6 +172,7 @@ export interface CommonTheme {
 	};
 
 	brand1: ColorBrandSet;
+	brand2: ColorBrandSet;
 
 	content: {
 		backgroundDay: string;
@@ -232,6 +238,7 @@ export interface Theme {
 	};
 
 	rowHighlight: string;
+	tideHorizontalGradient: string;
 
 	badge: {
 		water: string;

@@ -28,11 +28,13 @@ export function getTideDays(weather: FetchedWeather, extrema: iso.Tide.ExtremeSt
 			currentDay.extremes.push(extreme);
 		}
 		else {
+			moonDayIndex++;
 			moonPhaseDay = weather.moonPhaseDaily[moonDayIndex];
 			currentDay = {
 				extremes: [extreme],
 				moonPhase: moonPhaseDay.moon
 			};
+			days.push(currentDay);
 		}
 	});
 	return days;

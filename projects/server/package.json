@@ -9,7 +9,8 @@
 		"build-start": "npm run build && npm run start",
 		"clean": "trash dist",
 		"build-and-test": "npm run build && npm run test",
-		"test": "tsc --p test/tsconfig.json && node test/test.js"
+		"test": "tsc --p test/tsconfig.json && node test/test.js",
+		"debug": "npm start --inspect"
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",

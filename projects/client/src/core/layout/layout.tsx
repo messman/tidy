@@ -1,3 +1,6 @@
+import * as React from 'react';
+import { fontStyleDeclarations } from '../text';
+import { Block } from '../theme/box';
 import { css, styled } from '../theme/styled';
 
 /**
@@ -24,4 +27,30 @@ export const ApplicationLayoutContainer = styled.div`
 	width: 100%;
 	height: 100%;
 	${overflowHiddenScrollStyle};
+`;
+
+export interface IconTitleProps {
+	icon: JSX.Element;
+}
+
+export const IconTitle: React.FC<IconTitleProps> = (props) => {
+	const { icon, children } = props;
+	return (
+		<TitleContainer>
+			{icon}
+			<Block.Bat08 />
+			<TitleText>
+				{children}
+			</TitleText>
+		</TitleContainer>
+	);
+};
+
+const TitleContainer = styled.div`
+	display: flex;
+	align-items: center;
+`;
+
+const TitleText = styled.div`
+	${fontStyleDeclarations.heading5};
 `;

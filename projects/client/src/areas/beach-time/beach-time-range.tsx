@@ -3,7 +3,7 @@ import * as React from 'react';
 import { fontStyleDeclarations } from '@/core/text';
 import { Spacing } from '@/core/theme/box';
 import { css, styled } from '@/core/theme/styled';
-import { getTimeTwelveHourRange, getTimeTwelveHourString } from '@/services/time';
+import { getTimeTwelveHourRange } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 
 export interface BeachTimeRangeViewProps {
