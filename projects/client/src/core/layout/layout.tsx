@@ -30,14 +30,14 @@ export const ApplicationLayoutContainer = styled.div`
 `;
 
 export interface IconTitleProps {
-	icon: JSX.Element;
+	iconRender: JSX.Element;
 }
 
 export const IconTitle: React.FC<IconTitleProps> = (props) => {
-	const { icon, children } = props;
+	const { iconRender, children } = props;
 	return (
 		<TitleContainer>
-			{icon}
+			{iconRender}
 			<Block.Bat08 />
 			<TitleText>
 				{children}
@@ -53,4 +53,10 @@ const TitleContainer = styled.div`
 
 const TitleText = styled.div`
 	${fontStyleDeclarations.heading5};
+`;
+
+export const Line = styled.div`
+	width: 100%;
+	height: 1px;
+	background-color: ${p => p.theme.outlineDistinct};
 `;

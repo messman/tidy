@@ -14,7 +14,7 @@ export const ConditionsHeader: React.FC = () => {
 
 	return (
 		<>
-			<IconTitle icon={
+			<IconTitle iconRender={
 				<WeatherStatusIcon isDay={weather.current.isDaytime} status={weather.current.status} />
 			}>
 				It's {statusDescription.itIsShort} and {Math.round(weather.current.temp)}&deg;.

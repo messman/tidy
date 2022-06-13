@@ -69,7 +69,7 @@ export const ConditionsAstro: React.FC = () => {
 
 	return (
 		<>
-			<IconTitle icon={icon}>{title}</IconTitle>
+			<IconTitle iconRender={icon}>{title}</IconTitle>
 			<Block.Bat08 />
 			<Paragraph>Today {tense} {getDurationDescription(today.rise, today.set)} of sunlight.</Paragraph>
 			<Block.Bat08 />

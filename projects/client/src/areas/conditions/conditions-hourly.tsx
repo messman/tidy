@@ -9,9 +9,13 @@ import { getTimeTwelveHour } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 
 export const ConditionsHourly: React.FC = () => {
-	const { weather } = useBatchResponse().success!;
+	const { meta, weather } = useBatchResponse().success!;
 
 	const hourlyRender = weather.hourly.map((weather) => {
+		if (weather.time < meta.referenceTime) {
+			return null;
+		}
+
 		return <HourlyWeather key={weather.time.toMillis()} weather={weather} />;
 	});
 

@@ -57,7 +57,7 @@ export const ConditionsBasics: React.FC = () => {
 
 	return (
 		<>
-			<IconTitle icon={
+			<IconTitle iconRender={
 				<BaseWeatherIcon type={<TemperatureIcon type={icons.weatherTemperature} />} />
 			}>
 				{roundedTemp}&deg;

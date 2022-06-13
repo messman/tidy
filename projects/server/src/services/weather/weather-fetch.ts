@@ -323,7 +323,7 @@ function applyCommonPrecision(entry: iso.Weather.CommonCurrentHourly): iso.Weath
 		dewPoint: toPrecision(entry.dewPoint, 1),
 		status: entry.status,
 		uvi: toPrecision(entry.uvi, 1),
-		humidity: toPrecision(entry.cloudCover, 3), // .xxx becomes xx.x%, so use 3 digits
+		humidity: toPrecision(entry.humidity, 3), // .xxx becomes xx.x%, so use 3 digits
 	};
 }
 

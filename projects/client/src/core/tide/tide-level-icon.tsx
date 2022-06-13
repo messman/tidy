@@ -1,9 +1,13 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { Icon } from '../icon/icon';
 import { fontStyleDeclarations } from '../text';
 import { styled, StyledFC } from '../theme/styled';
+
+/** A tide status that should never happen with real data, but may be used for loading. */
+export const unknownTide: iso.Tide.Stamp = { time: DateTime.now(), height: 0, direction: iso.Tide.Direction.turning, division: iso.Tide.Division.mid };
 
 export interface TideLevelIconProps {
 	tide: iso.Tide.Stamp;
@@ -22,7 +26,7 @@ export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {
 			icon = <ExtremeText>HI</ExtremeText>;
 		}
 		else if (division === iso.Tide.Division.mid) {
-			// Should never happen
+			// Used for loading
 		}
 	}
 	else if (direction === iso.Tide.Direction.rising) {

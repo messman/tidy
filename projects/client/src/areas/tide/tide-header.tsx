@@ -7,29 +7,17 @@ import { Block } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { TideLevelIcon } from '@/core/tide/tide-level-icon';
+import { getTideTitle } from '@/services/content/tide-utility';
 import { useBatchResponse } from '@/services/data/data';
-import { getTimeTwelveHourString, percentTimeBetween } from '@/services/time';
+import { getTimeTwelveHourString } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 
 export const TideHeader: React.FC = () => {
 	const { meta, tide } = useBatchResponse().success!;
 	const { measured, relativity } = tide;
-	const { current: currentExtreme, next, previous } = relativity;
+	const { current: currentExtreme, next } = relativity;
 
-	let title: string = null!;
-	if (currentExtreme) {
-		title = `It's ${currentExtreme.isLow ? 'low' : 'high'} tide.`;
-	}
-	else {
-		// [0-100]
-		const timePercent = percentTimeBetween(meta.referenceTime, previous.time, next.time);
-		if (timePercent >= 80) {
-			title = `It's almost ${next.isLow ? 'low' : 'high'} tide.`;
-		}
-		else {
-			title = `The tide is ${measured.direction === iso.Tide.Direction.falling ? 'falling' : (measured.direction === iso.Tide.Direction.rising ? 'rising' : 'turning')}.`;
-		}
-	}
+	const title = getTideTitle(meta.referenceTime, measured, relativity);
 
 	let noteRender: JSX.Element | null = null;
 	if (currentExtreme) {
@@ -52,7 +40,7 @@ export const TideHeader: React.FC = () => {
 
 	return (
 		<>
-			<IconTitle icon={<TideLevelIcon tide={measured} />}>{title}</IconTitle>
+			<IconTitle iconRender={<TideLevelIcon tide={measured} />}>{title}</IconTitle>
 			<Block.Bat08 />
 			<LeadText>
 				Expecting a {next.isLow ? 'low' : 'high'} of <TideHeightTextUnit height={next.height} precision={1} /> at {getTimeTwelveHourString(next.time)}.
