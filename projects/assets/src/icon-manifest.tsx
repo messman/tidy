@@ -114,4 +114,5 @@ export const weatherSunrise = create('weatherSunrise', require('@/static/icons/w
 export const weatherTemperatureCold = create('weatherTemperatureCold', require('@/static/icons/weather/temperature-cold.svg'));
 export const weatherTemperatureHot = create('weatherTemperatureHot', require('@/static/icons/weather/temperature-hot.svg'));
 export const weatherTemperature = create('weatherTemperature', require('@/static/icons/weather/temperature.svg'));
+export const weatherWater = create('weatherWater', require('@/static/icons/weather/water.svg'));
 export const weatherWind = create('weatherWind', require('@/static/icons/weather/wind.svg'));

@@ -177,7 +177,7 @@ const keyValueContainerLineStyle = css`
 
 const groupContainerStyle = css`
 	${borderRadiusStyle}
-	background-color: ${p => p.theme.form.background};
+	/* background-color: ${p => p.theme.form.background}; */
 	box-shadow: ${p => p.theme.shadow.a_background};
 	overflow: hidden;
 `;

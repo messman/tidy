@@ -10,8 +10,8 @@ import { FetchedTide, getStartOfDayBefore } from './tide-shared';
 	From https://tidesandcurrents.noaa.gov/api/
 
 	Sample URLs:
-	https://tidesandcurrents.noaa.gov/api/datagetter?application=messman_tidy&station=8419317&format=json&time_zone=lst_ldt&units=english&product=predictions&datum=mllw&interval=hilo&begin_date=20200425%2000%3A00&range=240
-	https://tidesandcurrents.noaa.gov/api/datagetter?application=messman_tidy&station=8419317&format=json&time_zone=lst_ldt&units=english&product=water_level&datum=mllw&date=latest
+	https://tidesandcurrents.noaa.gov/api/datagetter?application=wells_beach_time&station=8419317&format=json&time_zone=lst_ldt&units=english&product=predictions&datum=mllw&interval=hilo&begin_date=20200425%2000%3A00&range=240
+	https://tidesandcurrents.noaa.gov/api/datagetter?application=wells_beach_time&station=8419317&format=json&time_zone=lst_ldt&units=english&product=water_level&datum=mllw&date=latest
 */
 
 export async function readTides(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedTide> {
@@ -98,7 +98,7 @@ interface BaseNOAAInput {
 }
 
 const defaultNOAAInput: BaseNOAAInput = {
-	application: 'messman_tidy',
+	application: 'wells_beach_time',
 	station: null!,
 	format: 'json',
 	time_zone: 'lst_ldt', // Local Time with DST offset

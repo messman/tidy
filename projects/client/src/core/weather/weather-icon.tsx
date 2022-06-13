@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import * as React from 'react';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
@@ -35,9 +34,9 @@ const WeatherIconContainer = styled.span`
 	height: 2rem;
 `;
 
-export function isDay(eventTime: DateTime, day: iso.Astro.SunDay): boolean {
-	return eventTime >= day.rise && eventTime <= day.set;
-}
+// export function isDay(eventTime: DateTime, day: iso.Astro.SunDay): boolean {
+// 	return eventTime >= day.rise && eventTime <= day.set;
+// }
 
 export interface StatusTypeIcon {
 	day: IconInputType;
