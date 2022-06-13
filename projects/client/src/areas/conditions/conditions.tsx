@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { Line } from '@/core/layout/layout';
 import { PanelPadding } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { DefaultErrorLoad } from '@/core/loader/loader';
 import { Block } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { ConditionsAstro } from './conditions-astro';
 import { ConditionsBasics } from './conditions-basics';
 import { ConditionsHeader } from './conditions-header';
@@ -33,9 +33,3 @@ const ConditionsSuccess: React.FC = () => {
 };
 
 export const Conditions = wrapForBatchLoad(DefaultErrorLoad, ConditionsSuccess);
-
-const Line = styled.div`
-	width: 100%;
-	height: 1px;
-	background-color: ${p => p.theme.outlineDistinct};
-`;

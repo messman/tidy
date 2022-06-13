@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { MoonPhaseIcon } from '@/core/astro/moon-phase-icon';
 import { LabelText } from '@/core/label';
+import { Line } from '@/core/layout/layout';
 import { fontStyleDeclarations } from '@/core/text';
 import { Block, Spacing } from '@/core/theme/box';
 import { FontWeight } from '@/core/theme/font';
@@ -46,12 +47,6 @@ export const BeachTimeDays: React.FC = () => {
 		</>
 	);
 };
-
-const Line = styled.div`
-	width: 100%;
-	height: 1px;
-	background-color: ${p => p.theme.outlineDistinct};
-`;
 
 const PaddedListContainer = styled.div`
 	padding-left: ${Spacing.dog16};
