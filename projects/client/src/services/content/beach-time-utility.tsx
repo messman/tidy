@@ -1,6 +1,15 @@
 import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
 
+export enum BeachTimeStatus {
+	current,
+	currentEndingSoon,
+	nextSoon,
+	nextLater,
+	nextTomorrow,
+	other
+}
+
 export function getBeachTimeStatus(beach: iso.Batch.BeachContent, referenceTime: DateTime): BeachTimeStatus {
 	const { current, next } = beach;
 
@@ -26,11 +35,14 @@ export function getBeachTimeStatus(beach: iso.Batch.BeachContent, referenceTime:
 	return BeachTimeStatus.other;
 }
 
-export enum BeachTimeStatus {
-	current,
-	currentEndingSoon,
-	nextSoon,
-	nextLater,
-	nextTomorrow,
-	other
-}
+export const beachTimeStatusTitle: Record<keyof typeof BeachTimeStatus, string> = {
+	current: `It's beach time!`,
+	currentEndingSoon: `Beach time ends soon.`,
+	nextSoon: `Beach time starts soon.`,
+	nextLater: `Beach time is back later.`,
+	nextTomorrow: `Beach time is back tomorrow.`,
+	other: `It's not beach time.`,
+};
+
+
+

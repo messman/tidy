@@ -6,11 +6,10 @@ import { styled } from '@/core/theme/styled';
 import { icons } from '@wbtdevlocal/assets';
 
 export const AboutIconLargeNamed: React.FC = () => {
-
 	return (
 		<LargeNamedContainer>
 
-			<AboutIconContainer size='6.25rem'>
+			<AboutIconContainer>
 				<Icon type={icons.brandUmbrella} />
 			</AboutIconContainer>
 			<Block.Cat12 />
@@ -37,10 +36,11 @@ const AboutIconTitle = styled.div`
 	font-weight: ${FontWeight.bold};
 `;
 
-const AboutIconContainer = styled.span<{ size: string; }>`
+
+const AboutIconContainer = styled.span`
 	display: inline-block;
-	background: linear-gradient(180deg, #3794EB 0%, #2572BA 100%);
+	background: ${p => p.theme.common.umbrellaGradient};
 	border-radius: 50%;
-	width: ${p => p.size};
-	height: ${p => p.size};
+	width: 6.25rem;
+	height: 6.25rem;
 `;

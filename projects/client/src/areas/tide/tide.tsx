@@ -1,18 +1,12 @@
 import * as React from 'react';
 import { PanelPadding } from '@/core/layout/panel/panel';
-import { PanelLoader } from '@/core/layout/panel/panel-loader';
+import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
+import { DefaultErrorLoad } from '@/core/loader/loader';
 import { Block } from '@/core/theme/box';
-import { useBatchResponse } from '@/services/data/data';
 import { TideChart } from './tide-chart';
 import { TideHeader } from './tide-header';
 
-export const Tide: React.FC = () => {
-	const { success } = useBatchResponse();
-
-	if (!success) {
-		return <PanelLoader />;
-	}
-
+const TideSuccess: React.FC = () => {
 	return (
 		<>
 			<PanelPadding>
@@ -24,3 +18,5 @@ export const Tide: React.FC = () => {
 		</>
 	);
 };
+
+export const Tide = wrapForBatchLoad(DefaultErrorLoad, TideSuccess);

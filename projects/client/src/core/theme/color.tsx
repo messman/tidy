@@ -49,6 +49,7 @@ const commonTheme: CommonTheme = {
 		main: '#3794EB',
 		dark: '#2572BA'
 	},
+	umbrellaGradient: 'linear-gradient(180deg, #3794EB 0%, #2572BA 100%)',
 
 	content: {
 		backgroundDay: '#489EEE',
@@ -169,6 +170,7 @@ export interface CommonTheme {
 	};
 
 	brand1: ColorBrandSet;
+	umbrellaGradient: string;
 
 	content: {
 		backgroundDay: string;
