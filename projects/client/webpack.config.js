@@ -16,7 +16,7 @@ const isBundleAnalysis = envToBool('ANALYZE');
 
 function envToBool(variableName) {
 	const variable = process.env[variableName] || process.env[variableName.toLowerCase()];
-	return variable && variable.toLowerCase() === 'true';
+	return !!variable && variable.toLowerCase() === 'true';
 }
 
 /**
@@ -237,6 +237,7 @@ module.exports = async () => {
 			resolve,
 			module,
 			plugins: [
+				copyPlugin,
 				definePlugin,
 				htmlPlugin,
 				forkCheckerPlugin

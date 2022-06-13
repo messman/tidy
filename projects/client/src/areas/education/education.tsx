@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { PanelPadding } from '@/core/layout/panel/panel';
 import { OutLink } from '@/core/link';
-import { fontStyleDeclarations, Paragraph } from '@/core/text';
-import { Block, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
+import { Heading, Paragraph } from '@/core/text';
+import { Block } from '@/core/theme/box';
 
 export const Education: React.FC = () => {
 	return (
@@ -93,9 +92,3 @@ export const Education: React.FC = () => {
 		</PanelPadding>
 	);
 };
-
-const Heading = styled.div`
-	${fontStyleDeclarations.leadLarge};
-	margin-top: ${Spacing.dog16};
-	margin-bottom: ${Spacing.bat08};
-`;

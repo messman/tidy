@@ -14,13 +14,17 @@ export const TideChart: React.FC = () => {
 	const { tide } = useBatchResponse().success!;
 	const { measured, dailyMin, dailyMax, daily } = tide;
 
+	// Handle the case where the measured tide is above even the highest or lowest tide value.
+	const absoluteMax = Math.max(measured.height, dailyMax.height);
+	const absoluteMin = Math.min(measured.height, dailyMin.height);
+
 	const daysRender = daily.map((day) => {
 		return (
 			<TideChartDay
 				key={day.extremes[0].time.toMillis()}
 				day={day}
-				minHeight={dailyMin.height}
-				maxHeight={dailyMax.height}
+				maxHeight={absoluteMax}
+				minHeight={absoluteMin}
 				measured={measured}
 			/>
 		);

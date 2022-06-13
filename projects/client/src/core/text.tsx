@@ -1,3 +1,4 @@
+import { Spacing } from './theme/box';
 import { defaultLetterSpacing, defaultLineHeight, FontSize, FontWeight } from './theme/font';
 import { css, styled, ThemedCSS } from './theme/styled';
 
@@ -126,4 +127,14 @@ export const Paragraph = styled.p`
 	${fontStyleDeclarations.body};
 	color: ${p => p.theme.textSubtle};
 	${paragraphMarginStyle}
+`;
+
+/**
+ * A specific purposeful heading component.
+ * Defined here because of how common it is.
+*/
+export const Heading = styled.div`
+	${fontStyleDeclarations.leadLarge};
+	margin-top: ${Spacing.dog16};
+	margin-bottom: ${Spacing.bat08};
 `;

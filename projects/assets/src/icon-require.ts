@@ -91,6 +91,7 @@ export enum SVGIconTypeName {
 	navigationLocation,
 	navigationMenu,
 	navigationSettings,
+	navigationShare,
 	navigationUrl,
 
 	// Status

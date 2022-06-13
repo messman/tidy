@@ -4,6 +4,7 @@
 	"appService.defaultWebAppToDeploy": "None",
 	"cSpell.words": [
 		"Astro",
+		"compostable",
 		"Devcode",
 		"endregion",
 		"favicons",
@@ -11,6 +12,7 @@
 		"mllw",
 		"OPENWEATHER",
 		"pino",
-		"wbtdevlocal"
+		"wbtdevlocal",
+		"wellsbeachtime"
 	]
 }
