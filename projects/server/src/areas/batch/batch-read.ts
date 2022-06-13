@@ -92,10 +92,47 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tide: FetchedT
 			}
 		},
 		weather: {
-			current: weather.current,
-			hourly: weather.hourly.filter((entry) => {
-				return filterHourlyWeather(config, entry);
-			})
+			current: appendDaytimeToCurrentWeather(astro, weather.current),
+			hourly: prepareHourlyWeather(config, astro, weather.hourly)
 		}
 	};
+}
+
+function appendDaytimeToCurrentWeather(astro: ComputedAstro, current: iso.Weather.Current): iso.Batch.WeatherContentCurrent {
+	const day = astro.daily.find((day) => {
+		return current.time.hasSame(day.rise, 'day');
+	})!;
+	const isDaytime = current.time > day.rise && current.time < day.set;
+	return {
+		...current,
+		isDaytime
+	};
+}
+
+/**
+ * Does two things:
+ * - Filters the hourly down to fewer hours total
+ * - Figures out if it's daytime at each hour
+*/
+function prepareHourlyWeather(config: BaseConfig, astro: ComputedAstro, hourly: iso.Weather.Hourly[]): iso.Batch.WeatherContentHourly[] {
+	hourly = hourly.filter((entry) => {
+		return filterHourlyWeather(config, entry);
+	});
+
+	let sunDayIndex = 0;
+	let sunDay = astro.daily[sunDayIndex];
+	return hourly.map<iso.Batch.WeatherContentHourly>((hourly) => {
+		// Assume that if it's not today, it's tomorrow.
+		if (!hourly.time.hasSame(sunDay.rise, 'day')) {
+			sunDayIndex++;
+			sunDay = astro.daily[sunDayIndex];
+		}
+
+		const isDaytime = hourly.time > sunDay.rise && hourly.time < sunDay.set;
+
+		return {
+			...hourly,
+			isDaytime
+		};
+	});
 }

@@ -136,5 +136,6 @@ export enum SVGIconTypeName {
 	weatherTemperatureCold,
 	weatherTemperatureHot,
 	weatherTemperature,
+	weatherWater,
 	weatherWind
 }

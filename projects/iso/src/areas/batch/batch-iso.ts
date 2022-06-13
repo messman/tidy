@@ -104,9 +104,19 @@ export interface AstroContent {
 
 export interface WeatherContent {
 	/** Current weather. */
-	current: Weather.Current;
+	current: WeatherContentCurrent;
 	/** Hourly weather for some time. */
-	hourly: Weather.Hourly[];
+	hourly: WeatherContentHourly[];
+}
+
+export interface WeatherContentCurrent extends Weather.Current {
+	/** Whether it's daytime or not. */
+	isDaytime: boolean;
+}
+
+export interface WeatherContentHourly extends Weather.Hourly {
+	/** Whether it's daytime or not. */
+	isDaytime: boolean;
 }
 
 export interface TideContent {

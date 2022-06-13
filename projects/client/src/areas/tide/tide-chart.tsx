@@ -72,6 +72,7 @@ const TideChartDay: React.FC<TideChartDayProps> = (props) => {
 		const visualRender = (
 			<RowVisual>
 				<RowVisualAdjust>
+					<VisualCircleTrail percent={visualPercent} isMeasured={isMeasured} />
 					<VisualCircle percent={visualPercent} isMeasured={isMeasured} />
 				</RowVisualAdjust>
 			</RowVisual>
@@ -150,6 +151,7 @@ const RowTime = styled.div`
 
 const RowIcon = styled.div`
 	flex: 1;
+	padding: 0 ${Spacing.ant04};
 	display: flex;
 	justify-content: center;
 	${fontStyleDeclarations.body};
@@ -158,7 +160,7 @@ const RowIcon = styled.div`
 
 const RowHeight = styled.div`
 	flex: 2;
-	min-width: 5rem;
+	min-width: 4.5rem;
 	${fontStyleDeclarations.body};
 	font-weight: ${FontWeight.medium};
 	text-align: center;
@@ -167,6 +169,7 @@ const RowHeight = styled.div`
 //#region Visual
 
 const visualSize = '.5rem';
+const halfVisualSize = '.25rem';
 const visualBorder = '.25rem';
 
 /**
@@ -189,6 +192,15 @@ const RowVisualAdjust = styled.div`
 	width: calc(100% - ${visualSize});
 	position: relative;
 	height: ${visualSize};
+`;
+
+const VisualCircleTrail = styled.div<{ percent: number; isMeasured: boolean; }>`
+	position: absolute;
+	background-color: ${p => p.isMeasured ? p.theme.common.system.green.d_lightest : p.theme.visual.tideCoverage};
+	width: calc(${p => p.percent}% + ${halfVisualSize});
+	height: ${visualSize};
+	top: 0;
+	left: 0;
 `;
 
 const VisualCircle = styled.div<{ percent: number; isMeasured: boolean; }>`

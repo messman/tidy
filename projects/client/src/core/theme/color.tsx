@@ -49,10 +49,6 @@ const commonTheme: CommonTheme = {
 		main: '#3794EB',
 		dark: '#2572BA'
 	},
-	brand2: {
-		main: '#B44646',
-		dark: '#791B1B',
-	},
 
 	content: {
 		backgroundDay: '#489EEE',
@@ -122,15 +118,16 @@ export const baseLightTheme: Theme = {
 	},
 
 	rowHighlight: '#F5F8FA',
-	tideHorizontalGradient: 'linear-gradient(90deg, #489EEE 0%, #1A66AB 100%)',
 
 	badge: {
 		water: '#1A66AB',
-		textBackground: '#E4EFF9',
+		textBackground: '#dae2ea',
 	},
 
 	visual: {
-		background: '#E4EFF9'
+		background: '#E4EFF9',
+		tideCoverage: '#9cc6e9',
+		temperatureGradient: 'linear-gradient(90deg, #8A47DF 0%, #5189DD 15.79%, #52C4D3 35.92%, #61E1A3 50.08%, #E1C847 60.82%, #E24747 85.9%, #E247DC 100%)',
 	},
 
 	form: {
@@ -172,7 +169,6 @@ export interface CommonTheme {
 	};
 
 	brand1: ColorBrandSet;
-	brand2: ColorBrandSet;
 
 	content: {
 		backgroundDay: string;
@@ -238,7 +234,7 @@ export interface Theme {
 	};
 
 	rowHighlight: string;
-	tideHorizontalGradient: string;
+
 
 	badge: {
 		water: string;
@@ -247,6 +243,9 @@ export interface Theme {
 
 	visual: {
 		background: string;
+		tideCoverage: string;
+		/** Should cover -25 to 120. */
+		temperatureGradient: string;
 	};
 
 	form: {

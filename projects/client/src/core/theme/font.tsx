@@ -45,5 +45,5 @@ export enum FontSize {
 	bodySmall = '.875rem', // 14px
 	small = '.875rem', // 14px
 	capital = '.875rem',
-	tiny = '.75rem' // 12px
+	tiny = '.625rem' // 10px
 }
