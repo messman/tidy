@@ -3,16 +3,24 @@ import { Icon } from '@/core/icon/icon';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { Block } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
-import { PanelPadding } from './panel';
+import { useBatchResponse } from '@/services/data/data';
+import { PanelPadding } from '../layout/panel/panel';
+import { Paragraph } from '../text';
 
-export const PanelLoader: React.FC = () => {
+export const DefaultErrorLoad: React.FC = () => {
+	const { error } = useBatchResponse();
+
+	if (error) {
+		return <Paragraph>Error!</Paragraph>;
+	}
+
 	return (
 		<PanelPadding>
-			<Block.Elf24 />
+			<Block.Dog16 />
 			<CenterContainer>
 				<LargeSpinnerIcon type={SpinnerIcon} />
 			</CenterContainer>
-			<Block.Elf24 />
+			<Block.Dog16 />
 		</PanelPadding>
 	);
 };

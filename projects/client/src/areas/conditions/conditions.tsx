@@ -1,22 +1,16 @@
 import * as React from 'react';
 import { PanelPadding } from '@/core/layout/panel/panel';
-import { PanelLoader } from '@/core/layout/panel/panel-loader';
+import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
+import { DefaultErrorLoad } from '@/core/loader/loader';
 import { Block } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
-import { useBatchResponse } from '@/services/data/data';
 import { ConditionsAstro } from './conditions-astro';
 import { ConditionsBasics } from './conditions-basics';
 import { ConditionsHeader } from './conditions-header';
 import { ConditionsHourly } from './conditions-hourly';
 import { ConditionsMore } from './conditions-more';
 
-export const Conditions: React.FC = () => {
-	const { success } = useBatchResponse();
-
-	if (!success) {
-		return <PanelLoader />;
-	}
-
+const ConditionsSuccess: React.FC = () => {
 	return (
 		<>
 			<PanelPadding>
@@ -37,6 +31,8 @@ export const Conditions: React.FC = () => {
 		</>
 	);
 };
+
+export const Conditions = wrapForBatchLoad(DefaultErrorLoad, ConditionsSuccess);
 
 const Line = styled.div`
 	width: 100%;

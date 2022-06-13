@@ -1,22 +1,16 @@
 import * as React from 'react';
 import { PanelPadding } from '@/core/layout/panel/panel';
-import { PanelLoader } from '@/core/layout/panel/panel-loader';
+import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
+import { DefaultErrorLoad } from '@/core/loader/loader';
 import { Note } from '@/core/note';
 import { Block } from '@/core/theme/box';
-import { useBatchResponse } from '@/services/data/data';
 import { BeachTimeBadges } from './beach-time-badges';
 import { BeachTimeDays } from './beach-time-days';
 import { BeachTimeDescription } from './beach-time-description';
 import { BeachTimeRequirements } from './beach-time-requirements';
 import { BeachTimeTitle } from './beach-time-title';
 
-export const BeachTime: React.FC = () => {
-	const { success } = useBatchResponse();
-
-	if (!success) {
-		return <PanelLoader />;
-	}
-
+export const BeachTimeSuccess: React.FC = () => {
 	return (
 		<>
 			<PanelPadding>
@@ -38,3 +32,4 @@ export const BeachTime: React.FC = () => {
 	);
 };
 
+export const BeachTime = wrapForBatchLoad(DefaultErrorLoad, BeachTimeSuccess);
