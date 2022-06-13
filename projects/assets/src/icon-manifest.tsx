@@ -69,6 +69,7 @@ export const navigationHome = create('navigationHome', require('@/static/icons/n
 export const navigationLocation = create('navigationLocation', require('@/static/icons/navigation/location.svg'));
 export const navigationMenu = create('navigationMenu', require('@/static/icons/navigation/menu.svg'));
 export const navigationSettings = create('navigationSettings', require('@/static/icons/navigation/settings.svg'));
+export const navigationShare = create('navigationShare', require('@/static/icons/navigation/share.svg'));
 export const navigationUrl = create('navigationUrl', require('@/static/icons/navigation/url.svg'));
 
 // Status
