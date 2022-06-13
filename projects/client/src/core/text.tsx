@@ -109,7 +109,7 @@ export const fontStyleDeclarations: Record<keyof typeof FontSize, ThemedCSS> = {
 	`,
 };
 
-export const paragraphMargin = '1rem';
+export const paragraphMargin = '.5rem';
 export const paragraphMarginStyle = css`
 	& + & {
 		margin-top: ${paragraphMargin};
