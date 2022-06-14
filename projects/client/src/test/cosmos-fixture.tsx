@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ErrorBoundary } from '@/core/error/error-boundary';
+import { AppNavigationProvider } from '@/core/layout/app/app-navigation';
 import { ApplicationLayoutContainer } from '@/core/layout/layout';
 import { Panel, PanelPadding } from '@/core/layout/panel/panel';
 import { Spacing } from '@/core/theme/box';
@@ -41,6 +42,7 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 			provider(RequestFetchProvider, {}),
 			provider(DataSeedProvider, {}),
 			provider(BatchResponseProvider, {}),
+			provider(AppNavigationProvider, {}),
 		];
 
 		if (additionalProviders) {

@@ -22,7 +22,7 @@ export const Education: React.FC = () => {
 					weather, geography, and more. These many factors can make tidal predictions complicated.
 				</Paragraph>
 			</div>
-			<Block.Bat08 />
+			<Block.Dog16 />
 			<div>
 				<Heading>How often do tides occur?</Heading>
 				<Paragraph>
@@ -41,7 +41,7 @@ export const Education: React.FC = () => {
 					Earth's geography can even cause some coastal locations to regularly experience fewer than two tides a day or to experience irregular high and low tide times.
 				</Paragraph>
 			</div>
-			<Block.Bat08 />
+			<Block.Dog16 />
 			<div>
 				<Heading>Why are high or low tides not always the same height across a day, month, or year?</Heading>
 				<Paragraph>
@@ -63,7 +63,7 @@ export const Education: React.FC = () => {
 					Of course, weather can modify the final effect of these astronomical events.
 				</Paragraph>
 			</div>
-			<Block.Bat08 />
+			<Block.Dog16 />
 			<div>
 				<Heading>How are tides measured and made available?</Heading>
 				<Paragraph>
@@ -76,7 +76,7 @@ export const Education: React.FC = () => {
 					Many weather apps and services rely on the data NOAA provides.
 				</Paragraph>
 			</div>
-			<Block.Bat08 />
+			<Block.Dog16 />
 			<div>
 				<Heading>Where can I learn more?</Heading>
 				<Paragraph>
