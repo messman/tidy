@@ -55,7 +55,12 @@ async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<Fe
 	}
 
 	const currentLevelData = currentLevelResponse.data[0];
-	const currentTime = toDateTimeFromNOAAString(currentLevelData.t);
+
+	// The current time can be 0-15 minutes behind our reference time.
+	// Just use the reference time.
+	//const currentTime = toDateTimeFromNOAAString(currentLevelData.t);
+	const currentTime = config.referenceTime;
+
 	const currentHeight = parseHeight(currentLevelData.v);
 
 	const extrema: iso.Tide.ExtremeStamp[] = [];

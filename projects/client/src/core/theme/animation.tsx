@@ -1,10 +1,8 @@
 import { createClassSelectors } from '@messman/react-common-transition';
 import { css } from './styled';
 
-export const defaultAnimationDuration = '.2s';
-
 export enum AnimationDuration {
-	a_min = '.01s',
+	a_min = '.05s',
 	b_zip = '.1s',
 	c_quick = '.2s',
 	d_basic = '.35s',

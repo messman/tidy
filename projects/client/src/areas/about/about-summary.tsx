@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { Icon, SizedIcon } from '@/core/icon/icon';
+import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { fontStyleDeclarations } from '@/core/text';
 import { Spacing } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
 import { icons } from '@wbtdevlocal/assets';
 
 export const AboutSummary: React.FC = () => {
+	const { setScreen } = useAppNavigation();
 
+	function onClick() {
+		setScreen(AppScreen.f_about);
+	}
 
 	return (
-		<Container>
+		<Container onClick={onClick}>
 			<AboutIconContainer>
 				<Icon type={icons.brandUmbrella} />
 			</AboutIconContainer>
@@ -20,9 +25,9 @@ export const AboutSummary: React.FC = () => {
 };
 
 const Container = styled.div`
-	position: absolute;
-	bottom: 0;
-	right: 0;
+	position: fixed;
+	bottom: ${Spacing.cat12};
+	right: ${Spacing.cat12};
 	background-color: #FFF;
 	box-shadow: ${p => p.theme.shadow.g_overlay};
 	display: flex;

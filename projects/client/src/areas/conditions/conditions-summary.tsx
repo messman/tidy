@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
+import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { IconTitle, Line } from '@/core/layout/layout';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
@@ -17,13 +18,18 @@ import { ConditionsHourly } from './conditions-hourly';
 
 const ConditionsSummarySuccess: React.FC = () => {
 	const { meta, weather, astro } = useBatchResponse().success!;
+	const { setScreen } = useAppNavigation();
+
+	function onClick() {
+		setScreen(AppScreen.d_conditions);
+	}
 
 	const statusDescription = iso.mapEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
 	const nextSunEvent = astro.sun.relativity.next;
 
 	return (
 		<>
-			<HomeSummaryClickPadding onClick={() => { }} isConnectedBelow={true}>
+			<HomeSummaryClickPadding onClick={onClick} isConnectedBelow={true}>
 				<IconTitle iconRender={
 					<WeatherStatusIcon isDay={weather.current.isDaytime} status={weather.current.status} />
 				}>
@@ -43,6 +49,11 @@ const ConditionsSummarySuccess: React.FC = () => {
 
 const ConditionsSummaryErrorLoad: React.FC = () => {
 	const { error } = useBatchResponse();
+	const { setScreen } = useAppNavigation();
+
+	function onClick() {
+		setScreen(AppScreen.d_conditions);
+	}
 
 	const title = (
 		<IconTitle
@@ -54,7 +65,7 @@ const ConditionsSummaryErrorLoad: React.FC = () => {
 
 	function wrap(render: JSX.Element) {
 		return (
-			<HomeSummaryClickPadding onClick={() => { }}>
+			<HomeSummaryClickPadding onClick={onClick}>
 				{render}
 			</HomeSummaryClickPadding>
 		);

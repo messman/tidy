@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Block } from '@/core/theme/box';
+import { Block, Spacing } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
 import { AboutSummary } from '../about/about-summary';
 import { BeachTimeSummary } from '../beach-time/beach-time-summary';
@@ -26,4 +26,7 @@ export const Home: React.FC = () => {
 const HomeContainer = styled.div`
 	position: relative;
 	flex: 1;
+
+	// Leave extra space for our floating about component.
+	padding-bottom: ${Spacing.inn64};
 `;

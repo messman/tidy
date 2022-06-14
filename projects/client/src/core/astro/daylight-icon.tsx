@@ -9,6 +9,7 @@ const WeatherIconContainer = styled.span`
 	border-radius: 50%;
 	width: 2rem;
 	height: 2rem;
+	flex-shrink: 0;
 `;
 
 export interface DaylightIconProps {

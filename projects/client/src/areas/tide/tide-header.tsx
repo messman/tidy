@@ -28,14 +28,16 @@ export const TideHeader: React.FC = () => {
 		else if (!currentExtreme.isLow && measured.height > currentExtreme.height) {
 			text = 'The measured water level is above the predicted high';
 		}
-		noteRender = (
-			<>
-				<Block.Bat08 />
-				<Note>
-					{text}, which may indicate adverse weather conditions.
-				</Note>
-			</>
-		);
+		if (text) {
+			noteRender = (
+				<>
+					<Block.Bat08 />
+					<Note>
+						{text}, which may indicate adverse weather conditions.
+					</Note>
+				</>
+			);
+		}
 	}
 
 	return (
@@ -43,7 +45,7 @@ export const TideHeader: React.FC = () => {
 			<IconTitle iconRender={<TideLevelIcon tide={measured} />}>{title}</IconTitle>
 			<Block.Bat08 />
 			<LeadText>
-				Expecting a {next.isLow ? 'low' : 'high'} of <TideHeightTextUnit height={next.height} precision={1} /> at {getTimeTwelveHourString(next.time)}.
+				Expect a {next.isLow ? 'low' : 'high'} of <TideHeightTextUnit height={next.height} precision={1} /> at {getTimeTwelveHourString(next.time)}.
 			</LeadText>
 			<Block.Bat08 />
 			<Paragraph>

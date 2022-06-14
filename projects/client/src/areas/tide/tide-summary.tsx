@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { LabelText } from '@/core/label';
+import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { IconTitle, Line } from '@/core/layout/layout';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
@@ -18,6 +19,11 @@ import { HomeSummaryClickPadding, HomeSummarySpinnerIcon } from '../home/home-su
 
 const TideSummarySuccess: React.FC = () => {
 	const { meta, tide } = useBatchResponse().success!;
+	const { setScreen } = useAppNavigation();
+
+	function onClick() {
+		setScreen(AppScreen.c_tide);
+	}
 	const { measured, relativity } = tide;
 	const { next } = relativity;
 
@@ -25,7 +31,7 @@ const TideSummarySuccess: React.FC = () => {
 
 	return (
 		<>
-			<HomeSummaryClickPadding onClick={() => { }} isConnectedBelow={true}>
+			<HomeSummaryClickPadding onClick={onClick} isConnectedBelow={true}>
 				<IconTitle
 					iconRender={<TideLevelIcon tide={tide.measured} />}
 				>
@@ -66,6 +72,11 @@ const RowValue = styled.div`
 
 const TideSummaryErrorLoad: React.FC = () => {
 	const { error } = useBatchResponse();
+	const { setScreen } = useAppNavigation();
+
+	function onClick() {
+		setScreen(AppScreen.c_tide);
+	}
 
 	const title = (
 		<IconTitle
@@ -77,7 +88,7 @@ const TideSummaryErrorLoad: React.FC = () => {
 
 	function wrap(render: JSX.Element) {
 		return (
-			<HomeSummaryClickPadding onClick={() => { }}>
+			<HomeSummaryClickPadding onClick={onClick}>
 				{render}
 			</HomeSummaryClickPadding>
 		);

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { Icon } from '@/core/icon/icon';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
+import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { fontStyleDeclarations, Paragraph } from '@/core/text';
@@ -59,9 +60,15 @@ const BeachTimeSummaryErrorLoad: React.FC = () => {
 const Wrapped = wrapForBatchLoad(BeachTimeSummaryErrorLoad, BeachTimeSummarySuccess);
 
 export const BeachTimeSummary: React.FC = () => {
+	const { setScreen } = useAppNavigation();
+
+	function onClick() {
+		setScreen(AppScreen.b_beachTime);
+	}
+
 	return (
 		<Panel>
-			<HomeSummaryClickPadding onClick={() => { }}>
+			<HomeSummaryClickPadding onClick={onClick}>
 				<Wrapped />
 			</HomeSummaryClickPadding>
 		</Panel>

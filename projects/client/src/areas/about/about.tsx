@@ -37,7 +37,7 @@ export const About: React.FC = () => {
 				<Note>
 					Please do your part to keep Wells a clean and beautiful place.
 					Properly dispose of all waste and ensure trash cannot be blown or washed into the marsh or ocean.
-					Reduce your consumption of single-use, non-recyclable, or non-compostable materials.
+					Reduce your consumption of single-use, non-recyclable, and non-compostable materials.
 					Do not walk on the marsh or otherwise disturb the ecosystem.
 					Thank you!
 				</Note>
@@ -52,7 +52,7 @@ export const About: React.FC = () => {
 					Version: {DEFINE.buildVersion} ({DateTime.fromMillis(DEFINE.buildTime).toLocaleString()})
 				</Paragraph>
 				<Paragraph>
-					Credit to NOAA &amp; OpenWeather (TM).
+					Credit to NOAA &amp; OpenWeather.
 				</Paragraph>
 				<Paragraph>
 					To report a bug, send thanks, request a feature, or see how this product is made, <OutLink title='Wells Beach Time on GitHub' href="https://github.com/messman/tidy">visit the project on GitHub</OutLink>.
