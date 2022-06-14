@@ -122,7 +122,7 @@ export const baseLightTheme: Theme = {
 
 	badge: {
 		water: '#1A66AB',
-		textBackground: '#dae2ea',
+		textBackground: '#E4EFF9',
 	},
 
 	visual: {

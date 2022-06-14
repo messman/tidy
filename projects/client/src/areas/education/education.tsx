@@ -13,9 +13,9 @@ export const Education: React.FC = () => {
 					The primary source of the tides is the moon's gravitation pull. The power of this gravitational pull affects areas differently as the moon orbits Earth.
 				</Paragraph>
 				<Paragraph>
-					As the moon moves, its gravitational causes Earth and its water to bulge out directly
-					toward the moon and directly away from the moon, squeezing it slightly like a ball. These two bulges are the high tides,
-					and areas far from these bulges will be low tides.
+					As the moon moves, its gravitational pull causes Earth and its oceans to bulge out directly
+					toward the moon and directly away from the moon, squeezing it slightly. These two bulges are the high tides,
+					and areas far from these bulges will be the low tides.
 				</Paragraph>
 				<Paragraph>
 					The strength and timing of tides are also controlled by the sun's gravitational pull, Earth's rotation and tilt,
@@ -26,13 +26,13 @@ export const Education: React.FC = () => {
 			<div>
 				<Heading>How often do tides occur?</Heading>
 				<Paragraph>
-					Since the moon's position and pull is largely responsible for the tides, the time it takes to orbit Earth is important to know in predicting tides.
+					Since the moon's position and pull is largely responsible for the tides, the time the moon takes to orbit Earth is important to know in predicting tides.
 					It takes about 24 hours and 50 minutes for the moon to orbit Earth and return to the same meridian (longitude line).
 				</Paragraph>
 				<Paragraph>
-					During this "tidal day", many coastal locations on earth such as Wells will typically experience two high tides and two low tides &mdash;
+					During this "tidal day", many coastal locations on earth such as Wells will experience two high tides and two low tides &mdash;
 					two times where the ocean around Wells bulges toward or away from the moon, and two times where the water flows away.
-					The time between two high tides and the time between two low tides is roughly 12 hours and 25 minutes.
+					The time between two high tides and the time between two low tides should be half a tidal day: roughly 12 hours and 25 minutes.
 				</Paragraph>
 				<Paragraph>
 					This timing, however, is not exact. As discussed before, many other factors can influence the tides. These factors can change both the height and timing of high and low tides.
@@ -50,14 +50,14 @@ export const Education: React.FC = () => {
 				</Paragraph>
 				<Paragraph>
 					When the sun and moon align relative to Earth (at a full moon or new moon), their tidal bulges will add together.
-					This additive effect will create higher high tides and lower low tides. When the sun and moon do not align with Earth, tidal effects are more muted.
+					This added power will create higher high tides and lower low tides. When the sun and moon do not align with Earth, tidal effects are more muted.
 				</Paragraph>
 				<Paragraph>
 					Even the elliptic shape of Earth's orbit around the sun and the moon's orbit around Earth can cause tidal differences.
 					In January, the Earth is physically closer to the sun (perihelion) and experiences more of the sun's gravitational power;
 					similarly, once a month, the moon is closer to the Earth than it is any other time (perigee).
 					A "king tide" (not a scientific term) can occur when the Earth is physically closer to both the sun and the moon
-					at the same time and also experiencing a full or new moon.
+					at the same time and also experiencing a full or new moon. These king tides can be expected as the largest tidal range of the year.
 				</Paragraph>
 				<Paragraph>
 					Of course, weather can modify the final effect of these astronomical events.
@@ -81,8 +81,7 @@ export const Education: React.FC = () => {
 				<Heading>Where can I learn more?</Heading>
 				<Paragraph>
 					To learn more, check
-					out <OutLink title='NOAA Tides Education' href="https://oceanservice.noaa.gov/education/tutorial_tides/welcome.html">NOAA's excellent resources</OutLink> on
-					how tides work.
+					out <OutLink title='NOAA Tides Education' href="https://oceanservice.noaa.gov/education/tutorial_tides/welcome.html">NOAA's excellent resources on how tides work</OutLink>.
 				</Paragraph>
 				<Paragraph>
 					To learn about the data recording station for Wells (including what data it records), see

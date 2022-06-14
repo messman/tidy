@@ -30,11 +30,11 @@ export const ConditionsMore: React.FC = () => {
 	return (
 		<GroupContainer>
 			<GroupKeyValue icon={makeSubtleIcon(icons.weatherWind)} label='Wind'>{wind} knots from {iso.keyForEnumValue(iso.Weather.WindDirection, windDirection)}</GroupKeyValue>
-			<GroupKeyValue icon={makeSubtleIcon(icons.weatherSun)} label='UV Index'>{uvi} ({uviText})</GroupKeyValue>
+			<GroupKeyValue icon={makeSubtleIcon(icons.weatherSun)} label='UV Index'>{Math.round(uvi)} ({uviText})</GroupKeyValue>
 			<GroupKeyValue icon={makeSubtleIcon(icons.weatherCloud)} label='Cloud Cover'>{Math.round(cloudCover * 100)}%</GroupKeyValue>
 			<GroupKeyValue icon={makeSubtleIcon(icons.weatherFog)} label='Visibility'>{visibility ? visibility : '10+'} miles</GroupKeyValue>
 			<GroupKeyValue icon={makeSubtleIcon(icons.weatherPressure)} label='Air Pressure'>{pressure} mHg</GroupKeyValue>
-			<GroupKeyValue icon={makeSubtleIcon(icons.weatherWater)} label='Humidity'>{Math.round(humidity * 100)}%</GroupKeyValue>
+			<GroupKeyValue icon={makeSubtleIcon(icons.weatherWater)} label='Relative Humidity'>{Math.round(humidity * 100)}%</GroupKeyValue>
 		</GroupContainer>
 	);
 };

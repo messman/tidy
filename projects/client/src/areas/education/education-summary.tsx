@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
 import { fontStyleDeclarations, Paragraph } from '@/core/text';
 import { Block } from '@/core/theme/box';
@@ -6,9 +7,15 @@ import { styled } from '@/core/theme/styled';
 import { HomeSummaryClickPadding } from '../home/home-summary-shared';
 
 export const EducationSummary: React.FC = () => {
+	const { setScreen } = useAppNavigation();
+
+	function onClick() {
+		setScreen(AppScreen.e_education);
+	}
+
 	return (
 		<Panel>
-			<HomeSummaryClickPadding onClick={() => { }}>
+			<HomeSummaryClickPadding onClick={onClick}>
 				<TitleText>
 					How do tides work?
 				</TitleText>

@@ -118,7 +118,8 @@ export const ButtonFullWidthContainer = styled.div`
 export const baseButtonStyles = css<ButtonProps>`
 	${buttonResetStyles}
 
-	border: 1px solid transparent; // ensure buttons are not different heights when one is styled with a border
+	// ensure buttons are not different heights when one is styled with a border
+	border: 1px solid transparent;
 	${borderRadiusStyle};
 
 	padding: ${p => buttonPaddings[p.size || 'medium']};

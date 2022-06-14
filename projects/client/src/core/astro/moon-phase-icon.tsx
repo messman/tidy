@@ -28,6 +28,7 @@ const MoonPhaseIconContainer = styled.span`
 	border-radius: 50%;
 	width: 2rem;
 	height: 2rem;
+	flex-shrink: 0;
 	// Slightly smaller in comparison to weather icons; because moon takes up all space as a circle
 	padding: .25rem;
 `;
