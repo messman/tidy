@@ -31,7 +31,7 @@ const ConditionsSummarySuccess: React.FC = () => {
 				</IconTitle>
 				<Block.Bat08 />
 				<Paragraph>
-					<Paragraph>{nextSunEvent.isRise ? 'Sunrise' : 'Sundown'} is in {getDurationDescription(meta.referenceTime, nextSunEvent.time)}.</Paragraph>
+					{nextSunEvent.isRise ? 'Sunrise' : 'Sundown'} is in {getDurationDescription(meta.referenceTime, nextSunEvent.time)}.
 				</Paragraph>
 			</HomeSummaryClickPadding>
 			<Line />

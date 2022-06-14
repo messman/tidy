@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import styled from 'styled-components';
+import { AppNavigationProvider } from '@/core/layout/app/app-navigation';
 // import { InvalidCheck } from '@/areas/alert/invalid';
 // import { Loading } from '@/areas/alert/loading';
 // import { ComponentLayoutProvider } from '@/areas/layout/component-layout';
@@ -24,6 +25,7 @@ const App: React.FC = () => {
 		provider(RequestFetchProvider, {}),
 		provider(DataSeedProvider, {}),
 		provider(BatchResponseProvider, {}),
+		provider(AppNavigationProvider, {}),
 	];
 
 	return (

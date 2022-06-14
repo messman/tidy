@@ -135,6 +135,5 @@ export const Paragraph = styled.p`
 */
 export const Heading = styled.div`
 	${fontStyleDeclarations.leadLarge};
-	margin-top: ${Spacing.dog16};
-	margin-bottom: ${Spacing.bat08};
+	margin: ${Spacing.bat08} 0;
 `;

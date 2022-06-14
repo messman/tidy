@@ -2,23 +2,33 @@ import { WindowLayout } from '@messman/react-common';
 
 // Customized breakpoints based on design.
 export enum LayoutBreakpointRem {
+	/** 0. */
 	a0 = 0,
+
 	/** 20rem = 320px. Absolute minimum we will support. iPhone 5 / SE. */
 	b20Min = 20,
+
 	/** 30rem = 480px. Past most mobile phones and into tablets. */
 	c30 = 30,
+
 	/** 40rem = 640px. Tablets. */
 	d40 = 40,
+
 	/** 50rem = 800px. Tablets. */
 	e50 = 50,
+
 	/** 60rem = 960px. Desktop. */
 	f60 = 60,
+
 	/** 70rem = 1120px. Desktop. */
 	g70 = 70,
+
 	/** 90rem = 1440px. Wide. */
 	h90 = 90,
+
 	/** 100rem = 1600px. Wide. */
 	i100 = 100,
+
 	/** 120rem = 1920px. Ultra-wide. */
 	j120Max = 120,
 }
