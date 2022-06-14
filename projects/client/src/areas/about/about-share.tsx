@@ -70,7 +70,7 @@ export const AboutShare: React.FC = () => {
 				<QRImage alt='QR code' title='QR code for wellsbeachtime.com' src='/qr-code.svg' />
 				<ButtonContainer>
 					<StandardButton
-						isDisabled={copyStatus !== ShareStatus.default}
+						isDisabled={false}
 						onClick={onClickCopyLink}
 						leftIcon={icons.navigationUrl}
 						justifyContent='center'
@@ -79,7 +79,7 @@ export const AboutShare: React.FC = () => {
 					</StandardButton>
 					<Block.Bat08 />
 					<StandardButton
-						isDisabled={shareStatus !== ShareStatus.default || !canShare}
+						isDisabled={!canShare}
 						onClick={onClickShare}
 						leftIcon={icons.navigationShare}
 						justifyContent='center'
