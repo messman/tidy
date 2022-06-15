@@ -40,11 +40,14 @@ export const ConditionsAstro: React.FC = () => {
 
 		if (isDaytime) {
 			icon = icons.weatherSun;
+			if (percent >= .45 && percent <= .55) {
+				title = `It's midday`;
+			}
 			if (percent < .15) {
 				title = `The day is young`;
 			}
 			else if (percent < .85) {
-				title = `Today is always the day`;
+				title = `Carpe diem`;
 			}
 			else {
 				title = `The day is getting long`;
@@ -54,13 +57,13 @@ export const ConditionsAstro: React.FC = () => {
 		else {
 			icon = icons.weatherMoon;
 			if (percent < .15) {
-				title = `Good evening`;
+				title = `The sun has set`;
 			}
 			else if (percent < .85) {
-				title = `Shoot for the stars`;
+				title = `Carpe noctem`;
 			}
 			else {
-				title = `The day approaches`;
+				title = `Daytime is approaching`;
 			}
 			tense = meta.referenceTime > today.rise ? 'had' : 'will have';
 		}

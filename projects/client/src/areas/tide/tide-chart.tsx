@@ -209,7 +209,7 @@ const VisualCircleTrail = styled.div<{ percent: number; isMeasured: boolean; }>`
 
 const VisualCircle = styled.div<{ percent: number; isMeasured: boolean; }>`
 	position: absolute;
-	background-color: ${p => p.isMeasured ? p.theme.common.system.green.a_main : p.theme.common.brand1.main};
+	background-color: ${p => p.isMeasured ? p.theme.common.system.green.a_main : p.theme.badge.water};
 	width: ${visualSize};
 	height: ${visualSize};
 	border-radius: ${visualBorder};

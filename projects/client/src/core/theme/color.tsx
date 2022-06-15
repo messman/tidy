@@ -109,9 +109,8 @@ export const baseLightTheme: Theme = {
 	textLink: '#3794EB',
 
 	/** A color distinct against the background, used for borders. */
-	outlineDistinct: '#96B2CC',
-	/** A color distinct against the background, used for borders. */
-	outlineSubtle: '#A5C4DF',
+	outlineDistinct: '#C1C1C1',
+	outlineSubtle: '#DADADA',
 
 	note: {
 		outline: '#ECDD7E',
@@ -127,7 +126,7 @@ export const baseLightTheme: Theme = {
 
 	visual: {
 		background: '#E4EFF9',
-		tideCoverage: '#9cc6e9',
+		tideCoverage: '#7bc0f9',
 		temperatureGradient: 'linear-gradient(90deg, #8A47DF 0%, #5189DD 15.79%, #52C4D3 35.92%, #61E1A3 50.08%, #E1C847 60.82%, #E24747 85.9%, #E247DC 100%)',
 	},
 
