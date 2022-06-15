@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { BeachTime } from '@/areas/beach-time/beach-time';
+import { AnimationDuration, TransitionSelector } from '@/core/animation/animation';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { overflowHiddenScrollStyle } from '@/core/layout/layout';
 import { Panel } from '@/core/layout/panel/panel';
-import { AnimationDuration, TransitionSelector } from '@/core/theme/animation';
 import { Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
+import { css, styled } from '@/core/theme/styled';
 import { Transition } from '@messman/react-common-transition';
 import * as iso from '@wbtdevlocal/iso';
 import { About } from '../about/about';
@@ -16,20 +16,35 @@ import { Tide } from '../tide/tide';
 import { CompactAppHeader } from './app-layout-compact-header';
 import { appCompactNavHeight, AppLayoutCompactNav } from './app-layout-compact-nav';
 
+interface AppNavigationState {
+	current: AppScreen;
+	previous: AppScreen | null;
+}
+
 export const CompactApplicationLayout: React.FC = () => {
 
-	const [screen, setScreen] = React.useState(AppScreen.a_home);
-	const { screen: contextScreen } = useAppNavigation();
+	const { screen: next } = useAppNavigation();
+	const [state, setState] = React.useState<AppNavigationState>(() => {
+		return { current: next, previous: null };
+	});
+	const { current, previous } = state;
 
 	function onExited() {
-		setScreen(contextScreen);
+		setState((p) => {
+			return {
+				current: next,
+				previous: p.current
+			};
+		});
 	}
 
-	let TransitionComponent = OpacityTransitionContainer;
-	let AppScreenComponent = iso.mapEnumValue(AppScreen, appScreenComponent, screen);
+	let TransitionComponent = SlideRightTransitionContainer;
+
+
+	let AppScreenComponent = iso.mapEnumValue(AppScreen, appScreenComponent, current);
 	let screenRender = <AppScreenComponent />;
 
-	screenRender = screen === AppScreen.a_home ? (
+	screenRender = current === AppScreen.a_home ? (
 		<HomeScroller>
 			{screenRender}
 		</HomeScroller>
@@ -41,16 +56,21 @@ export const CompactApplicationLayout: React.FC = () => {
 		</PanelScroller>
 	);
 
+	const inScreen = next !== current ? next : current;
+	const outScreen = next !== current ? current : previous;
+	if (inScreen === AppScreen.a_home || outScreen === AppScreen.a_home) {
+		TransitionComponent = FadePopTransitionContainer;
+	}
 
 	return (
 		<>
 			<CompactAppHeader />
-			<Transition isActive={screen === contextScreen} onExited={onExited}>
+			<Transition isActive={current === next} onExited={onExited}>
 				<TransitionComponent>
 					{screenRender}
 				</TransitionComponent>
 			</Transition>
-			<Transition isActive={contextScreen !== AppScreen.a_home}>
+			<Transition isActive={next !== AppScreen.a_home}>
 				<NavigationTransitionContainer>
 					<AppLayoutCompactNav />
 				</NavigationTransitionContainer>
@@ -104,12 +124,38 @@ const NavigationTransitionContainer = styled.div`
 	}
 `;
 
-const OpacityTransitionContainer = styled.div`
+const transitionContainerStyles = css`
 	flex: 1;
 	position: relative;
 	display: flex;
 	flex-direction: column;
 	${overflowHiddenScrollStyle};
+`;
+
+const FadePopTransitionContainer = styled.div`
+	${transitionContainerStyles};
+
+	${TransitionSelector.enter} {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+	${TransitionSelector.exit} {
+		opacity: 1;
+	}
+	${TransitionSelector.entering} {
+		opacity: 1;
+		transform: translateX(0);
+		transition: opacity ${AnimationDuration.c_quick} ease-in, transform ${AnimationDuration.c_quick} ease-in;
+	}
+	${TransitionSelector.exiting} {
+		opacity: 0;
+		transform: scale(0.95);
+		transition: opacity ${AnimationDuration.c_quick} ease-in, transform ${AnimationDuration.c_quick} ease-in;
+	}
+`;
+
+const OpacityTransitionContainer = styled.div`
+	${transitionContainerStyles};
 
 	${TransitionSelector.enter} {
 		opacity: 0;
@@ -124,5 +170,46 @@ const OpacityTransitionContainer = styled.div`
 	${TransitionSelector.exiting} {
 		opacity: 0;
 		transition: opacity ${AnimationDuration.b_zip} ease-in;
+	}
+`;
+
+const SlideLeftTransitionContainer = styled.div`
+	${transitionContainerStyles};
+
+	${TransitionSelector.enter} {
+		transform: translateX(-100%);
+	}
+	${TransitionSelector.entering} {
+		transform: translateX(0%);
+		transition: transform ${AnimationDuration.c_quick} ease-in-out;
+	}
+	${TransitionSelector.exit} {
+		transform: translateX(0%);
+	}
+	${TransitionSelector.exiting} {
+		transform: translateX(-100%);
+		transition: transform ${AnimationDuration.c_quick} ease-in-out;
+	}
+	${TransitionSelector.exiting} {
+		transform: translateX(-100%);
+	}
+`;
+
+const SlideRightTransitionContainer = styled.div`
+	${transitionContainerStyles};
+
+	${TransitionSelector.enter} {
+		transform: translateX(100%);
+	}
+	${TransitionSelector.entering} {
+		transform: translateX(0%);
+		transition: transform ${AnimationDuration.c_quick} ease-in-out;
+	}
+	${TransitionSelector.exit} {
+		transform: translateX(0%);
+	}
+	${TransitionSelector.exiting} {
+		transform: translateX(100%);
+		transition: transform ${AnimationDuration.c_quick} ease-in-out;
 	}
 `;

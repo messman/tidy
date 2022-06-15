@@ -73,9 +73,10 @@ const BeachTimeDay: React.FC<BeachTimeDayProps> = (props) => {
 					<SubtleTextLabel>{Math.round(weather.maxTemp)}&deg;</SubtleTextLabel>
 					&nbsp;&middot;&nbsp;{Math.round(weather.minTemp)}&deg;
 				</SubtleText>
+				<Block.Ant04 />
 				<IconsContainer>
 					<WeatherStatusIcon status={weather.status} isDay={true} />
-					<Block.Ant04 />
+					<Block.Bat08 />
 					<MoonPhaseIcon phase={astro.moon} />
 				</IconsContainer>
 			</BeachTimeDaySide>

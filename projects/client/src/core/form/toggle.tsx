@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { AnimationDuration } from '../animation/animation';
 import { GroupEntry, GroupEntryProps, GroupKeyLabel, GroupValue } from '../group/group';
-import { AnimationDuration } from '../theme/animation';
 import { Block } from '../theme/box';
 import { styled } from '../theme/styled';
 

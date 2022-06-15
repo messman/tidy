@@ -1,14 +1,14 @@
 import { createClassSelectors } from '@messman/react-common-transition';
-import { css } from './styled';
+import { css } from '../theme/styled';
 
 export enum AnimationDuration {
 	a_min = '.05s',
 	b_zip = '.1s',
-	c_quick = '.2s',
-	d_basic = '.35s',
-	e_slow = '.5s',
-	f_fade = '1s',
-	g_max = '2s'
+	c_quick = '.15s',
+	d_basic = '.25s',
+	e_slow = '.35s',
+	f_fade = '.5s',
+	g_max = '1.5s'
 }
 
 /**
@@ -32,14 +32,14 @@ export const slideTransitionLowerStyle = css`
 	}
 	${TransitionSelector.entering} {
 		transform: translateX(0%);
-		transition: transform ${AnimationDuration.d_basic} ease-in-out;
+		transition: transform ${AnimationDuration.c_quick} ease-in-out;
 	}
 	${TransitionSelector.exit} {
 		transform: translateX(0%);
 	}
 	${TransitionSelector.exiting} {
 		transform: translateX(-30%);
-		transition: transform ${AnimationDuration.d_basic} ease-in-out;
+		transition: transform ${AnimationDuration.c_quick} ease-in-out;
 	}
 	${TransitionSelector.exiting} {
 		transform: translateX(-30%);
@@ -58,13 +58,13 @@ export const slideTransitionUpperStyle = css`
 	}
 	${TransitionSelector.entering} {
 		transform: translateX(0%);
-		transition: transform ${AnimationDuration.d_basic} ease-in-out;
+		transition: transform ${AnimationDuration.c_quick} ease-in-out;
 	}
 	${TransitionSelector.exit} {
 		transform: translateX(0%);
 	}
 	${TransitionSelector.exiting} {
 		transform: translateX(100%);
-		transition: transform ${AnimationDuration.d_basic} ease-in-out;
+		transition: transform ${AnimationDuration.c_quick} ease-in-out;
 	}
 `;
