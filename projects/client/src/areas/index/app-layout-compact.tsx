@@ -18,14 +18,14 @@ import { appCompactNavHeight, AppLayoutCompactNav } from './app-layout-compact-n
 
 interface AppNavigationState {
 	current: AppScreen;
-	previous: AppScreen | null;
+	previous: AppScreen;
 }
 
 export const CompactApplicationLayout: React.FC = () => {
 
 	const { screen: next } = useAppNavigation();
 	const [state, setState] = React.useState<AppNavigationState>(() => {
-		return { current: next, previous: null };
+		return { current: next, previous: next };
 	});
 	const { current, previous } = state;
 
@@ -39,8 +39,6 @@ export const CompactApplicationLayout: React.FC = () => {
 	}
 
 	let TransitionComponent = SlideRightTransitionContainer;
-
-
 	let AppScreenComponent = iso.mapEnumValue(AppScreen, appScreenComponent, current);
 	let screenRender = <AppScreenComponent />;
 
@@ -56,10 +54,15 @@ export const CompactApplicationLayout: React.FC = () => {
 		</PanelScroller>
 	);
 
-	const inScreen = next !== current ? next : current;
-	const outScreen = next !== current ? current : previous;
+	const isExit = next !== current;
+	const inScreen = isExit ? next : current;
+	const outScreen = isExit ? current : previous;
+
 	if (inScreen === AppScreen.a_home || outScreen === AppScreen.a_home) {
 		TransitionComponent = FadePopTransitionContainer;
+	}
+	else if ((isExit && next > current) || (!isExit && current < previous)) {
+		TransitionComponent = SlideLeftTransitionContainer;
 	}
 
 	return (
@@ -145,33 +148,15 @@ const FadePopTransitionContainer = styled.div`
 	${TransitionSelector.entering} {
 		opacity: 1;
 		transform: translateX(0);
-		transition: opacity ${AnimationDuration.c_quick} ease-in, transform ${AnimationDuration.c_quick} ease-in;
+		transition: opacity ${AnimationDuration.b_zip} ease-out, transform ${AnimationDuration.b_zip} ease-out;
 	}
 	${TransitionSelector.exiting} {
 		opacity: 0;
 		transform: scale(0.95);
-		transition: opacity ${AnimationDuration.c_quick} ease-in, transform ${AnimationDuration.c_quick} ease-in;
+		transition: opacity ${AnimationDuration.b_zip} ease-in, transform ${AnimationDuration.b_zip} ease-in;
 	}
 `;
 
-const OpacityTransitionContainer = styled.div`
-	${transitionContainerStyles};
-
-	${TransitionSelector.enter} {
-		opacity: 0;
-	}
-	${TransitionSelector.exit} {
-		opacity: 1;
-	}
-	${TransitionSelector.entering} {
-		opacity: 1;
-		transition: opacity ${AnimationDuration.b_zip} ease-in;
-	}
-	${TransitionSelector.exiting} {
-		opacity: 0;
-		transition: opacity ${AnimationDuration.b_zip} ease-in;
-	}
-`;
 
 const SlideLeftTransitionContainer = styled.div`
 	${transitionContainerStyles};
@@ -181,14 +166,14 @@ const SlideLeftTransitionContainer = styled.div`
 	}
 	${TransitionSelector.entering} {
 		transform: translateX(0%);
-		transition: transform ${AnimationDuration.c_quick} ease-in-out;
+		transition: transform ${AnimationDuration.b_zip} ease-out;
 	}
 	${TransitionSelector.exit} {
 		transform: translateX(0%);
 	}
 	${TransitionSelector.exiting} {
 		transform: translateX(-100%);
-		transition: transform ${AnimationDuration.c_quick} ease-in-out;
+		transition: transform ${AnimationDuration.b_zip} ease-in;
 	}
 	${TransitionSelector.exiting} {
 		transform: translateX(-100%);
@@ -203,13 +188,13 @@ const SlideRightTransitionContainer = styled.div`
 	}
 	${TransitionSelector.entering} {
 		transform: translateX(0%);
-		transition: transform ${AnimationDuration.c_quick} ease-in-out;
+		transition: transform ${AnimationDuration.b_zip} ease-out;
 	}
 	${TransitionSelector.exit} {
 		transform: translateX(0%);
 	}
 	${TransitionSelector.exiting} {
 		transform: translateX(100%);
-		transition: transform ${AnimationDuration.c_quick} ease-in-out;
+		transition: transform ${AnimationDuration.b_zip} ease-in;
 	}
 `;
