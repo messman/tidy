@@ -22,8 +22,8 @@ export const AppLayoutCompactNav: React.FC = () => {
 		setScreen(getScreenCarouselMove(screen, true));
 	}
 
-	const canMoveLeft = canScreenCarouselMoveLeft(screen);
-	const canMoveRight = canScreenCarouselMoveRight(screen);
+	const canMoveLeft = canScreenCarouselMoveLeft(screen) && screen !== AppScreen.a_home;
+	const canMoveRight = canScreenCarouselMoveRight(screen) && screen !== AppScreen.a_home;
 
 	return (
 		<Container>
@@ -34,7 +34,7 @@ export const AppLayoutCompactNav: React.FC = () => {
 				<WrapperButton onClick={onClickLeft} isDisabled={!canMoveLeft}>
 					<NavSizedIcon size='medium' type={icons.arrowLeft} isVisible={canMoveLeft} />
 				</WrapperButton>
-				<Block.Dog16 />
+				<Block.Elf24 />
 				<WrapperButton onClick={onClickRight} isDisabled={!canMoveRight}>
 					<NavSizedIcon size='medium' type={icons.arrowRight} isVisible={canMoveRight} />
 				</WrapperButton>
@@ -51,7 +51,7 @@ const Container = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0 ${Spacing.dog16};
+	padding: 0 ${Spacing.elf24};
 `;
 
 const ContainerRight = styled.div`
