@@ -3,22 +3,34 @@ import * as React from 'react';
 import { fontStyleDeclarations } from '@/core/text';
 import { Spacing } from '@/core/theme/box';
 import { css, styled } from '@/core/theme/styled';
-import { getTimeTwelveHourRange } from '@/services/time';
+import { getTimeTwelveHourRange, getTimeTwelveHourString } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 
 export interface BeachTimeRangeViewProps {
+	referenceTime: DateTime;
 	day: iso.Batch.BeachTimeDay;
 }
 
-
 export const BeachTimeRangeView: React.FC<BeachTimeRangeViewProps> = (props) => {
+	const { referenceTime } = props;
 	const { ranges, day } = props.day;
 
 	const rangesRender = ranges.map((range) => {
-		return <SubtleBodyText key={range.start.toMillis()}>{getTimeTwelveHourRange(range.start, range.stop)}</SubtleBodyText>;
+		const rangeRender = range.start.equals(referenceTime) ? (
+			<>Now &ndash; {getTimeTwelveHourString(range.stop)}</>
+		) : getTimeTwelveHourRange(range.start, range.stop);
+
+		return <SubtleBodyText key={range.start.toMillis()}>{rangeRender}</SubtleBodyText>;
 	});
 
+	const noneText = ranges.length === 0 ? (
+		<SubtleBodyText>
+			Bad weather &ndash; no suggested beach times
+		</SubtleBodyText>
+	) : null;
+
 	const rangesVisualRender = ranges.map((range) => {
+
 		const weatherBlockRenders = range.weather.map((block, i) => {
 			const isStart = i === 0;
 			const isStop = i === range.weather.length - 1;
@@ -49,6 +61,7 @@ export const BeachTimeRangeView: React.FC<BeachTimeRangeViewProps> = (props) => 
 				{rangesVisualRender}
 			</VisualContainer>
 			{rangesRender}
+			{noneText}
 		</>
 	);
 };

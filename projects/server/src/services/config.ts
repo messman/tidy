@@ -1,12 +1,10 @@
 import { DateTime } from 'luxon';
-import * as iso from '@wbtdevlocal/iso';
-import { dateForZone } from './time';
 
 export interface BaseInput {
 	/**
 	 * Time to make all requests based off of. Should probably be "now", and that may be all that's supported for now.
 	 */
-	referenceTime: Date,
+	referenceTime: DateTime,
 
 	/**
 	 * Number of days into the future to grab long-term data (data that shows in our long-term view).
@@ -25,9 +23,7 @@ export interface BaseLiveConfig {
 }
 
 export function createBaseLiveConfig(baseInput: BaseInput): BaseLiveConfig {
-	// Associate the time with the location.
-	const referenceTime = dateForZone(baseInput.referenceTime, iso.constant.timeZoneLabel);
-
+	const referenceTime = baseInput.referenceTime;
 	return {
 		referenceTime: referenceTime,
 

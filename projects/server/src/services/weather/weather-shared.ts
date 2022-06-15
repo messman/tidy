@@ -21,21 +21,28 @@ export function fixFetchedWeather(config: BaseConfig, fetchedWeather: FetchedWea
 	const hourlyLimit = futureCutoff;
 	const dailyLimit = futureCutoff;
 
-	const iterableHourly = hourly.map((entry, i) => {
-		const next = hourly[i + 1];
-		const nextTime = next?.time || entry.time.plus({ hours: 1 });
+	const iterableHourly = hourly
+		.filter((entry) => {
+			// Discard any from before our reference time (the current hour, for example)
+			return entry.time > referenceTime;
+		})
+		.map((entry, i, arr) => {
+			const next = arr[i + 1];
+			const nextTime = next?.time || entry.time.plus({ hours: 1 });
 
-		return {
-			span: {
-				begin: entry.time,
-				end: nextTime
-			},
-			value: entry
-		};
-	});
+			return {
+				span: {
+					begin: entry.time,
+					end: nextTime
+				},
+				value: entry
+			};
+		});
 	const hourlyIterator = createTimeIterator(iterableHourly);
 
-	const currentHour = referenceTime.startOf("hour");
+	// Go to the start of the next hour, since we disregarded this current hour.
+	// Note - end of hour and start of hour are not the same.
+	const currentHour = referenceTime.plus({ hours: 1 }).startOf("hour");
 	// Get the hours between our start hour and our short-term limit
 	const shortHoursBetween = hourlyLimit.diff(currentHour, "hours").hours;
 	const iteratedHourly: iso.Weather.Hourly[] = [];

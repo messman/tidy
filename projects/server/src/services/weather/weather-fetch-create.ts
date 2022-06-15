@@ -1,11 +1,13 @@
 import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
+import { baseLogger } from '../logging/pino';
 import { linearFromPoints, quadraticFromPoints } from '../test/equation';
 import { combineSeed, Randomizer, randomizer, TestSeed } from '../test/randomize';
 import { IterableTimeData } from './iterator';
 import { FetchedWeather, fixFetchedWeather } from './weather-shared';
 
+import StatusType = iso.Weather.StatusType;
 /** Creates random weather data. Uses a seeded randomizer. */
 export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeather {
 	const weatherRandomizer = randomizer(combineSeed('_weather_', seed));
@@ -13,7 +15,7 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	const { referenceTime, futureCutoff } = config;
 
 	const hourlyStartDateTime = referenceTime.startOf('hour').minus({ hours: 1 });
-	const hourlyEndDateTime = futureCutoff;
+	const hourlyEndDateTime = hourlyStartDateTime.plus({ hours: 72 });
 
 	/*
 		We use some interesting techniques here to generate more realistic random data.
@@ -27,7 +29,6 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	}
 
 	const nWindDirection = iso.enumKeys(iso.Weather.WindDirection).length - 1;
-	const nWeatherStatusType = iso.enumKeys(iso.Weather.StatusType).length - 1;
 
 	const hourlyTemp = hourlyWeatherData(40, 60, 1, true, .2);
 	const hourlyTempFeelsLike = hourlyWeatherData(40, 60, 1, true, .2);
@@ -41,12 +42,23 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	const hourlyPressure = hourlyWeatherData(1000, 1200, 0, true, .2);
 	const hourlyDewPoint = hourlyWeatherData(20, 40, 1, true, .2);
 	const hourlyCloudCover = hourlyWeatherData(0, 1, 3, true, .2);
-	const hourlyStatus = hourlyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {
+
+	const weatherStatusComboIndex = weatherRandomizer.randomInt(0, weightedWeatherStatusCombos.length, false);
+	const weatherStatusCombo = weightedWeatherStatusCombos[weatherStatusComboIndex];
+	let weatherStatuses: StatusType[] = [];
+	weatherStatusCombo.forEach((statusType) => {
+		const weight = iso.mapEnumValue(iso.Weather.StatusType, weatherStatusWeights, statusType);
+		for (let i = 0; i < weight; i++) {
+			weatherStatuses.push(statusType);
+		}
+	});
+	const hourlyStatus = hourlyWeatherData(0, weatherStatuses.length, 0, false, .5).map((data) => {
 		return {
 			span: data.span,
-			value: data.value as iso.Weather.StatusType
+			value: weatherStatuses[data.value]
 		};
 	});
+
 	const hourlyVisibility = hourlyWeatherData(2, 20, 1, true, .2).map((data) => {
 		if (data.value >= 19) {
 			return { ...data, value: null };
@@ -86,10 +98,13 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 
 	const dailyMinTemp = dailyWeatherData(30, 50, 1, true, .2);
 	const dailyMaxTemp = dailyWeatherData(50, 80, 1, true, .2);
-	const dailyEntry = dailyWeatherData(0, nWeatherStatusType, 0, false, .1).map((data) => {
+	const dailyEntry = dailyWeatherData(0, weatherStatuses.length, 0, false, .3).map((data, i, arr) => {
+		if (data.value === weatherStatuses.length) {
+			baseLogger.info('HERE', { value: data.value, i, arr });
+		}
 		return {
 			span: data.span,
-			value: data.value as iso.Weather.StatusType
+			value: weatherStatuses[data.value]
 		};
 	});
 	const dailyPop = dailyWeatherData(0, 1, 3, true, .2);
@@ -156,8 +171,13 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 		}
 	}
 
+	const current: iso.Weather.Current = {
+		...(hourly[0]),
+		time: referenceTime
+	};
+
 	return fixFetchedWeather(config, {
-		current: hourly[0],
+		current,
 		hourly,
 		daily,
 		moonPhaseDaily,
@@ -192,3 +212,63 @@ function quadraticShakeData(randomizer: Randomizer, startDateTime: DateTime, end
 	}
 	return iterables;
 }
+
+const weatherStatusCombos: [number, StatusType[]][] = [
+	// Clear or cloudy
+	[3, [StatusType.clear, StatusType.clouds_few, StatusType.clouds_most, StatusType.clouds_over, StatusType.fog]],
+
+	// Clear, hot, or rainy
+	[2, [StatusType.clear, StatusType.clear_hot, StatusType.clouds_most, StatusType.thun_light, StatusType.clouds_few, StatusType.rain_drizzle, StatusType.rain_light, StatusType.haze]],
+
+	// Clear, cold, or snowy / sleety
+	[1, [StatusType.clear, StatusType.clear_cold, StatusType.clouds_most, StatusType.rain_freeze, StatusType.snow_sleet, StatusType.snow_light]],
+
+	// Cloudy and stormy
+	[1, [StatusType.rain_drizzle, StatusType.rain_heavy, StatusType.thun_light, StatusType.clouds_over, StatusType.clouds_few, StatusType.rain_medium]],
+
+	// Intense
+	[1, [StatusType.rain_heavy, StatusType.thun_heavy, StatusType.dust, StatusType.intense_storm, StatusType.clouds_most, StatusType.clear]],
+
+	// Unknown
+	[1, [StatusType.unknown, StatusType.clear, StatusType.rain_light, StatusType.clouds_few]],
+];
+
+const weightedWeatherStatusCombos: StatusType[][] = [];
+weatherStatusCombos.forEach((tuple) => {
+	const [weight, combo] = tuple;
+	for (let i = 0; i < weight; i++) {
+		weightedWeatherStatusCombos.push(combo);
+	}
+});
+
+const weatherStatusWeights: Record<keyof typeof StatusType, number> = {
+	clear: 3,
+	clear_hot: 2,
+	clear_cold: 2,
+	clouds_few: 2,
+	clouds_some: 2,
+
+	clouds_most: 1,
+	clouds_over: 1,
+
+	rain_drizzle: 2,
+	rain_light: 1,
+	rain_medium: 1,
+	rain_heavy: 1,
+	rain_freeze: 1,
+	snow_light: 1,
+	snow_medium: 1,
+	snow_heavy: 1,
+	snow_sleet: 1,
+	snow_rain: 1,
+	thun_light: 1,
+	thun_medium: 1,
+	thun_heavy: 1,
+	intense_storm: 1,
+	intense_other: 1,
+	dust: 1,
+	smoke: 1,
+	haze: 1,
+	fog: 1,
+	unknown: 1,
+};

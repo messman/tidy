@@ -74,6 +74,9 @@ const randomFloatSet = makeFunctionSet(randomFloat);
 
 /** Gets an integer number between min and max. */
 function randomInt(randomFunc: RandomFunc, min: number, max: number, inclusive: boolean): number {
+	if (min === max && !inclusive) {
+		throw new Error(`Cannot get randomInt non-inclusive with min ${min} and max ${max}`);
+	}
 	return Math.floor(randomFunc() * (max - min + (inclusive ? 1 : 0))) + min;
 }
 const randomIntSet = makeFunctionSet(randomInt);
@@ -83,8 +86,16 @@ function shake(randomFunc: RandomFunc, min: number, max: number, precision: numb
 	if (shakeRange === 0) {
 		return value;
 	}
+	// Our value may be outside of max and min. Constrain it.
+	value = Math.max(min, Math.min(max, value));
 	// Divide by two so that a shakeRange of 1 potentially covers the entire range, while .5 means .5 of the total range (.25 each direction).
-	const shake = ((max - min) * shakeRange) / 2;
+	let shake = (max - min) * (shakeRange / 2);
+	// Corner case: the shake value is less than 1, we are getting an int, non-inclusive, and the value is at the max -
+	// so we won't get enough range to get a valid int to return.
+	// Always make sure the shake has enough range when not inclusive.
+	if (!inclusive) {
+		shake = Math.max(shake, 1 / (Math.pow(10, precision)));
+	}
 	const shakenMin = Math.min(max, Math.max(min, value - shake));
 	const shakenMax = Math.max(min, Math.min(max, value + shake));
 	return randomFloat(randomFunc, shakenMin, shakenMax, precision, inclusive);
