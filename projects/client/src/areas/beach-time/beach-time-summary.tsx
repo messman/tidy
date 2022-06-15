@@ -7,7 +7,7 @@ import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { fontStyleDeclarations, Paragraph } from '@/core/text';
 import { styled } from '@/core/theme/styled';
-import { BeachTimeStatus, beachTimeStatusTitle, getBeachTimeStatus } from '@/services/content/beach-time-utility';
+import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
@@ -17,12 +17,14 @@ const BeachTimeSummarySuccess: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;
 
 	const beachTimeStatus = getBeachTimeStatus(beach, meta.referenceTime);
+	const textInfoFunc = iso.mapEnumValue(BeachTimeStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
+	const { title, description } = textInfoFunc(beach, meta.referenceTime);
 
 	return (
 		<RowContainer>
 			<TextContainer>
-				<Title>{iso.mapEnumValue(BeachTimeStatus, beachTimeStatusTitle, beachTimeStatus)}</Title>
-				<Paragraph>Something</Paragraph>
+				<Title>{title}</Title>
+				<Paragraph>{description}</Paragraph>
 			</TextContainer>
 			<ExpressionIcon type={icons.expressionHappy} />
 		</RowContainer>
