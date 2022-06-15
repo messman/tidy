@@ -5,7 +5,7 @@ import { styled } from './theme/styled';
 export const Note = styled.div`
 	${fontStyleDeclarations.bodySmall};
 	color: ${p => p.theme.textDistinct};
-	padding: ${Spacing.dog16};
+	padding: ${Spacing.cat12};
 	background-color: ${p => p.theme.note.background};
 	${borderRadiusStyle};
 	border: 1px solid ${p => p.theme.note.outline};

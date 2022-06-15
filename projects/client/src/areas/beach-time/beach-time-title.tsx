@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { PanelTitle } from '@/core/layout/panel/panel';
-import { BeachTimeStatus, beachTimeStatusTitle, getBeachTimeStatus } from '@/services/content/beach-time-utility';
+import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';
 
 export const BeachTimeTitle: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;
+
+	const beachTimeStatus = getBeachTimeStatus(beach, meta.referenceTime);
+	const textInfoFunc = iso.mapEnumValue(BeachTimeStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
+	const { title } = textInfoFunc(beach, meta.referenceTime);
+
 	return (
-		<PanelTitle>{iso.mapEnumValue(BeachTimeStatus, beachTimeStatusTitle, getBeachTimeStatus(beach, meta.referenceTime))}</PanelTitle>
+		<PanelTitle>{title}</PanelTitle>
 	);
 };
 

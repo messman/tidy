@@ -18,16 +18,7 @@ export const BeachTimeDays: React.FC = () => {
 	const referenceTime = success!.meta.referenceTime;
 	const days = success!.beach.days;
 
-	const filteredDays = days.filter((day, i) => {
-		// If today has no ranges, ignore it because it just takes up space.
-		// Also, it could be basically the end of the day.
-		if (i === 0 && !day.ranges.length) {
-			return false;
-		}
-		return true;
-	});
-
-	const daysRender = filteredDays.map((day, i) => {
+	const daysRender = days.map((day, i) => {
 		const lineRender = i !== 0 ? <Line /> : null;
 		return (
 			<React.Fragment key={day.day.toMillis()}>

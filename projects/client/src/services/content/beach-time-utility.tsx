@@ -1,5 +1,7 @@
+
 import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
+import { getDurationDescription, getTimeTwelveHourRange, getTimeTwelveHourString } from '../time';
 
 export enum BeachTimeStatus {
 	current,
@@ -14,7 +16,7 @@ export function getBeachTimeStatus(beach: iso.Batch.BeachContent, referenceTime:
 	const { current, next } = beach;
 
 	if (current) {
-		if (current.stop.diff(referenceTime, 'minutes').minutes <= 30) {
+		if (current.stop.diff(referenceTime, 'minutes').minutes <= 45) {
 			return BeachTimeStatus.currentEndingSoon;
 		}
 		else {
@@ -22,7 +24,7 @@ export function getBeachTimeStatus(beach: iso.Batch.BeachContent, referenceTime:
 		}
 	}
 	else if (next) {
-		if (next.start.diff(referenceTime, 'minutes').minutes <= 45) {
+		if (next.start.diff(referenceTime, 'minutes').minutes <= 60) {
 			return BeachTimeStatus.nextSoon;
 		}
 		else if (next.start.hasSame(referenceTime, 'day')) {
@@ -35,14 +37,73 @@ export function getBeachTimeStatus(beach: iso.Batch.BeachContent, referenceTime:
 	return BeachTimeStatus.other;
 }
 
-export const beachTimeStatusTitle: Record<keyof typeof BeachTimeStatus, string> = {
-	current: `It's beach time!`,
-	currentEndingSoon: `Beach time ends soon.`,
-	nextSoon: `Beach time starts soon.`,
-	nextLater: `Beach time is back later.`,
-	nextTomorrow: `Beach time is back tomorrow.`,
-	other: `It's not beach time.`,
+
+export interface BeachTimeTextInfo {
+	title: string;
+	range: JSX.Element | string | null;
+	description: string;
+}
+
+export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (beach: iso.Batch.BeachContent, referenceTime: DateTime) => BeachTimeTextInfo> = {
+	current: (beach) => {
+		return {
+			title: `It's beach time!`,
+			range: null,
+			description: `Enjoy the beach until ${getTimeTwelveHourString(beach.current!.stop)}.`
+		};
+	},
+	currentEndingSoon: (beach, referenceTime) => {
+		const { current, next } = beach;
+		const isNextToday = next.start.hasSame(referenceTime, 'day');
+		const isNextTomorrow = next.start.hasSame(referenceTime.plus({ days: 1 }), 'day');
+
+		const description = (isNextToday || isNextTomorrow) ? (
+			`The next beach time starts at ${getTimeTwelveHourString(next.start)}${isNextTomorrow ? ' tomorrow' : ''}.`
+		) : (
+			`The next beach time isn't for awhile.`
+		);
+
+		return {
+			title: `Beach time ends soon.`,
+			range: `Ends ${getTimeTwelveHourString(current!.stop)}`,
+			description: description
+		};
+	},
+	nextSoon: (beach, referenceTime) => {
+		return {
+			title: `Beach time starts soon!`,
+			range: getTimeTwelveHourRange(beach.next.start, beach.next.stop),
+			description: `Enjoy the beach starting in ${getDurationDescription(referenceTime, beach.next.start)}.`
+		};
+	},
+	nextLater: (beach) => {
+		return {
+			title: `It's not beach time right now.`,
+			range: null,
+			description: `Beach time starts at ${getTimeTwelveHourString(beach.next.start)}.`
+		};
+	},
+	nextTomorrow: (beach) => {
+
+		return {
+			title: `The next beach time is tomorrow.`,
+			range: null,
+			description: `Enjoy the beach starting at ${getTimeTwelveHourString(beach.next.start)}.`
+		};
+
+	},
+	other: (beach) => {
+		const { next } = beach;
+
+		let description: string = null!;
+		if (next) {
+			description = `The next beach time starts ${getTimeTwelveHourString(next.start)} ${next.start.weekdayLong}.`;
+		}
+
+		return {
+			title: `It's not beach time.`,
+			range: null,
+			description
+		};
+	},
 };
-
-
-

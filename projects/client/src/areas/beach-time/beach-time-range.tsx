@@ -12,8 +12,8 @@ export interface BeachTimeRangeViewProps {
 }
 
 export const BeachTimeRangeView: React.FC<BeachTimeRangeViewProps> = (props) => {
-	const { referenceTime } = props;
-	const { ranges, day } = props.day;
+	const { referenceTime, day } = props;
+	const { ranges, day: dateTime } = day;
 
 	const rangesRender = ranges.map((range) => {
 		const rangeRender = range.start.equals(referenceTime) ? (
@@ -23,19 +23,38 @@ export const BeachTimeRangeView: React.FC<BeachTimeRangeViewProps> = (props) => 
 		return <SubtleBodyText key={range.start.toMillis()}>{rangeRender}</SubtleBodyText>;
 	});
 
-	const noneText = ranges.length === 0 ? (
-		<SubtleBodyText>
-			Bad weather &ndash; no suggested beach times
-		</SubtleBodyText>
-	) : null;
+	let noneText: JSX.Element | null = null;
+	if (!ranges.length) {
+		/*
+			Because tides and sun are consistent, there's only two reasons
+			we don't have a beach time for a day: weather, or because it's today
+			and the day is already gone by.
+		*/
+		if (dateTime.hasSame(referenceTime, 'day')) {
+			// Leave it ambiguous for now
+			noneText = (
+				<SubtleBodyText>
+					No suggested beach times
+				</SubtleBodyText>
+			);
+		}
+		else {
+			noneText = (
+				<SubtleBodyText>
+					Bad weather &ndash; no suggested beach times
+				</SubtleBodyText>
+			);
+		}
+	}
+
 
 	const rangesVisualRender = ranges.map((range) => {
 
 		const weatherBlockRenders = range.weather.map((block, i) => {
 			const isStart = i === 0;
 			const isStop = i === range.weather.length - 1;
-			const blockStartPercent = percentFromStartOfDay(block.start, day);
-			const blockStopPercent = percentFromStartOfDay(block.stop, day);
+			const blockStartPercent = percentFromStartOfDay(block.start, dateTime);
+			const blockStopPercent = percentFromStartOfDay(block.stop, dateTime);
 			const widthPercent = blockStopPercent - blockStartPercent;
 			const Component = block.isBest ? VisualBest : VisualOkay;
 			return (
