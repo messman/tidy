@@ -7,7 +7,7 @@ export interface LogContext {
 // Looking for how pino streams to seq? See the starting scripts.
 // Options: https://getpino.io/#/docs/api?id=options
 export const baseLogger = pino({
-	name: 'strudel-server-web',
+	name: 'wbt-server',
 	nestedKey: 'data',
 	hooks: {
 		// https://getpino.io/#/docs/api?id=logmethod

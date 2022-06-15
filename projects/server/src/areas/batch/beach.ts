@@ -14,14 +14,14 @@ export function getTideDays(weather: FetchedWeather, extrema: iso.Tide.ExtremeSt
 		return days;
 	}
 	let moonDayIndex = 0;
-	let moonPhaseDay = weather.moonPhaseDaily[moonDayIndex];
+	let moonPhaseDay: iso.Astro.MoonPhaseDay | null = weather.moonPhaseDaily[moonDayIndex];
 	let currentDay: iso.Batch.TideContentDay = {
 		extremes: [],
 		moonPhase: moonPhaseDay.moon
 	};
 	days.push(currentDay);
 	extrema.forEach((extreme) => {
-		if (extreme.time < moonPhaseDay.time.startOf('day')) {
+		if (!moonPhaseDay || extreme.time < moonPhaseDay.time.startOf('day')) {
 			// Ignore if before our day (to cover past tide data against moon data)
 		}
 		else if (moonPhaseDay.time.hasSame(extreme.time, 'day')) {
@@ -30,17 +30,19 @@ export function getTideDays(weather: FetchedWeather, extrema: iso.Tide.ExtremeSt
 		else {
 			moonDayIndex++;
 			moonPhaseDay = weather.moonPhaseDaily[moonDayIndex];
-			currentDay = {
-				extremes: [extreme],
-				moonPhase: moonPhaseDay.moon
-			};
-			days.push(currentDay);
+			if (moonPhaseDay) {
+				currentDay = {
+					extremes: [extreme],
+					moonPhase: moonPhaseDay.moon
+				};
+				days.push(currentDay);
+			}
 		}
 	});
 	return days;
 }
 
-export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: ComputedAstro, weather: FetchedWeather): iso.Batch.BeachContent {
+export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTides: iso.Batch.TideContentDay[], astro: ComputedAstro, weather: FetchedWeather): iso.Batch.BeachContent {
 	const { referenceTime } = config;
 
 	/*
@@ -60,12 +62,14 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: Co
 	let isCurrentDaylight = false;
 	for (let i = 0; i < astro.daily.length; i++) {
 		const astroDaily = astro.daily[i];
-		if (referenceTime >= astroDaily.rise && referenceTime <= astroDaily.set) {
-			isCurrentDaylight = true;
-			break;
-		}
-		if (referenceTime > astroDaily.set) {
-			break;
+		if (referenceTime.hasSame(astroDaily.rise, 'day')) {
+			if (referenceTime >= astroDaily.rise && referenceTime <= astroDaily.set) {
+				isCurrentDaylight = true;
+				break;
+			}
+			if (referenceTime > astroDaily.set) {
+				break;
+			}
 		}
 	}
 	const isStartingInBeachTime = isTideCurrentlyGood && currentWeatherIdeal !== WeatherIdeal.bad && isCurrentDaylight;
@@ -95,10 +99,10 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: Co
 		startReasons: [],
 		stop: null!,
 		stopReasons: [],
-		weather: []
+		weather: [trackedWeatherBlock!]
 	} : null;
-	const currentBeachTime: iso.Batch.BeachTimeRange | null = trackedBeachTime;
-	const allBeachTimes: iso.Batch.BeachTimeRange[] = [];
+	let currentBeachTime: iso.Batch.BeachTimeRange | null = trackedBeachTime;
+	let allBeachTimes: iso.Batch.BeachTimeRange[] = [];
 	if (trackedBeachTime) {
 		allBeachTimes.push(trackedBeachTime);
 	}
@@ -116,11 +120,15 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: Co
 
 	reasons.forEach((reason) => {
 		const time = reason.time;
-		// if (time < referenceTime) {
-		// 	// For beach time, not all data is available before the reference time.
-		// 	// So just ignore.
-		// 	return;
-		// }
+		/*
+			We don't have a lot of good, consistent data before our reference time. This can create weird 
+			beach time scenarios.
+			If we are in a beach time at the start, we don't need to know anything else about the past.
+			But if we aren't, those past times could be valuable start reasons.
+		*/
+		if (isStartingInBeachTime && time < referenceTime) {
+			return;
+		}
 
 		// It's only one of these. The others will be null.
 		const tideMark = isBeachTimeTideMark(reason) ? reason : null;
@@ -281,6 +289,14 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: Co
 	if (trackedBeachTime) {
 		allBeachTimes.pop();
 	}
+	// Remove any beach times that are less than 30 minutes long
+	allBeachTimes = allBeachTimes.filter((beachTime) => {
+		return beachTime.stop && beachTime.start && beachTime.stop.diff(beachTime.start, 'minutes').minutes >= 30;
+	});
+	// Remove current beach time if it is less than 30 minutes long
+	if (currentBeachTime && currentBeachTime.stop && currentBeachTime.start && currentBeachTime.stop.diff(currentBeachTime.start, 'minutes').minutes < 30) {
+		currentBeachTime = null;
+	}
 
 	const daysMap = new Map<number, iso.Batch.BeachTimeDay>();
 	function getFor(time: DateTime): iso.Batch.BeachTimeDay {
@@ -291,6 +307,7 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: Co
 				day: startOfDay,
 				astro: null!,
 				ranges: [],
+				tideLows: [],
 				weather: null!
 			});
 		}
@@ -304,9 +321,19 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: Co
 		const beachTimeDay = getFor(day.rise);
 		beachTimeDay.astro = { sun: day, moon: null! };
 	});
+	dailyTides.forEach((day) => {
+		const justLows = day.extremes.filter((extreme) => extreme.isLow);
+		if (justLows.length) {
+			const first = justLows[0];
+			const beachTimeDay = getFor(first.time);
+			beachTimeDay.tideLows = justLows;
+		}
+	});
 	weather.moonPhaseDaily.forEach((day) => {
 		const beachTimeDay = getFor(day.time);
-		beachTimeDay.astro.moon = day.moon;
+		if (beachTimeDay.astro) {
+			beachTimeDay.astro.moon = day.moon;
+		}
 	});
 	allBeachTimes.forEach((range) => {
 		const beachTimeDay = getFor(range.start);
@@ -315,7 +342,7 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, astro: Co
 	// Strip out anything incomplete.
 	Array.from(daysMap.keys()).forEach((key) => {
 		const beachTimeDay = daysMap.get(key);
-		if (!beachTimeDay || !beachTimeDay.astro || !beachTimeDay.weather || !beachTimeDay.astro.moon) {
+		if (!beachTimeDay || !beachTimeDay.astro || !beachTimeDay.weather || beachTimeDay.astro.moon === null) {
 			daysMap.delete(key);
 		}
 	});

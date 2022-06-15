@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
 import { ServerPromise } from '../../api/error';
 import { computeAstro } from '../../services/astro/astro-compute';
@@ -5,7 +6,7 @@ import { createAstro } from '../../services/astro/astro-compute-create';
 import { ComputedAstro, getCloseSunDays, getNextLunarDay, getSunRelativity } from '../../services/astro/astro-shared';
 import { BaseConfig, BaseInput, createBaseLiveConfig } from '../../services/config';
 import { LogContext } from '../../services/logging/pino';
-import { TestSeed } from '../../services/test/randomize';
+import { combineSeed, randomizer, TestSeed } from '../../services/test/randomize';
 import { readTides } from '../../services/tide/tide-fetch';
 import { createTides } from '../../services/tide/tide-fetch-create';
 import { FetchedTide, getTideMeasuredAndRelativity, getTideMinMax } from '../../services/tide/tide-shared';
@@ -17,7 +18,7 @@ import { getBeachContent, getTideDays } from './beach';
 
 /** The main function. Calls APIs. */
 export async function readBatch(ctx: LogContext): ServerPromise<iso.Batch.BatchContent> {
-	const config = createConfig();
+	const config = createConfig(dateForZone(new Date()));
 
 	const fetchedTide = await readTides(ctx, config);
 	if (iso.isServerError(fetchedTide)) {
@@ -37,7 +38,11 @@ export async function readBatch(ctx: LogContext): ServerPromise<iso.Batch.BatchC
 
 /** The main test function. */
 export async function readBatchWithSeed(ctx: LogContext, seed: TestSeed): Promise<iso.Batch.BatchContent> {
-	const config = createConfig();
+	const timeRandomizer = randomizer(combineSeed('_time_', seed));
+	// From the start of the day, go to between 7AM and 9PM (better probability of nice daytime results).
+	const minutesAhead = timeRandomizer.randomInt(60 * 7, 60 * 21, true);
+	const date = dateForZone(new Date()).startOf('day').plus({ minutes: minutesAhead });
+	const config = createConfig(date);
 
 	const fetchedTide = createTides(config, seed);
 	const computedAstro = createAstro(config, seed);
@@ -46,9 +51,9 @@ export async function readBatchWithSeed(ctx: LogContext, seed: TestSeed): Promis
 	return createBatchContent(ctx, config, fetchedTide, computedAstro, fetchedWeather);
 }
 
-function createConfig(): BaseConfig {
+function createConfig(referenceTime: DateTime): BaseConfig {
 	const input: BaseInput = {
-		referenceTime: new Date(),
+		referenceTime,
 		futureDays: 7
 	};
 	const live = createBaseLiveConfig(input);
@@ -61,9 +66,10 @@ function createConfig(): BaseConfig {
 function createBatchContent(_ctx: LogContext, config: BaseConfig, tide: FetchedTide, astro: ComputedAstro, weather: FetchedWeather): iso.Batch.BatchContent {
 	const meta: iso.Batch.Meta = {
 		referenceTime: config.referenceTime,
-		processingTime: dateForZone(new Date(), iso.constant.timeZoneLabel),
+		processingTime: dateForZone(new Date()),
 	};
 
+	const dailyTides = getTideDays(weather, tide.extrema);
 	const [dailyMin, dailyMax] = getTideMinMax(tide.extrema);
 	const { measured, relativity } = getTideMeasuredAndRelativity(config, tide);
 
@@ -71,11 +77,11 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tide: FetchedT
 
 	return {
 		meta,
-		beach: getBeachContent(config, tide, astro, weather),
+		beach: getBeachContent(config, tide, dailyTides, astro, weather),
 		tide: {
 			measured,
 			relativity,
-			daily: getTideDays(weather, tide.extrema),
+			daily: dailyTides,
 			dailyMin,
 			dailyMax
 		},

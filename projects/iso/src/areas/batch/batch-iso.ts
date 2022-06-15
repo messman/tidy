@@ -5,14 +5,21 @@ import * as Tide from '../tide';
 import * as Weather from '../weather';
 
 export enum Seed {
-	apple = 'apple',
-	bronco = 'bronco',
-	caesar = 'caesar',
-	drum = 'drum',
-	eggs = 'eggs',
-	frost = 'frost',
+	avocado = 'avocado',
+	banana = 'banana',
+	cheerio = 'cheerio',
+	durian = 'durian',
+	ember = 'ember',
+	frosting = 'frosting',
 	ginger = 'ginger',
-	halo = 'halo',
+	hamburger = 'hamburger',
+	icing = 'icing',
+	juice = 'juice',
+	knife = 'knife',
+	lemon = 'lemon',
+	meat = 'meat',
+	nacho = 'nacho',
+	oreo = 'oreo'
 }
 export const seedKeys = enumKeys(Seed);
 
@@ -52,6 +59,8 @@ export interface BeachTimeDay {
 	weather: Weather.Day;
 	/** Astro events for the day. */
 	astro: Astro.Day;
+	/** Low tides for the day. */
+	tideLows: Tide.ExtremeStamp[];
 	/** Ranges, if any. */
 	ranges: BeachTimeRange[];
 }

@@ -327,7 +327,6 @@ function applyCommonPrecision(entry: iso.Weather.CommonCurrentHourly): iso.Weath
 	};
 }
 
-
 function toPrecision(value: number, precision: number): number {
 	return parseFloat(value.toFixed(precision));
 }
