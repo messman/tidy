@@ -9,7 +9,6 @@ import { fontStyleDeclarations, Paragraph } from '@/core/text';
 import { styled } from '@/core/theme/styled';
 import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
-import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { HomeSummaryClickPadding, HomeSummarySpinnerIcon } from '../home/home-summary-shared';
 
@@ -18,7 +17,7 @@ const BeachTimeSummarySuccess: React.FC = () => {
 
 	const beachTimeStatus = getBeachTimeStatus(beach, meta.referenceTime);
 	const textInfoFunc = iso.mapEnumValue(BeachTimeStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
-	const { title, description } = textInfoFunc(beach, meta.referenceTime);
+	const { title, description, expression } = textInfoFunc(beach, meta.referenceTime);
 
 	return (
 		<RowContainer>
@@ -26,7 +25,7 @@ const BeachTimeSummarySuccess: React.FC = () => {
 				<Title>{title}</Title>
 				<Paragraph>{description}</Paragraph>
 			</TextContainer>
-			<ExpressionIcon type={icons.expressionHappy} />
+			<ExpressionIcon type={expression} />
 		</RowContainer>
 	);
 };

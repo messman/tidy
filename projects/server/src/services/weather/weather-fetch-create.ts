@@ -5,7 +5,7 @@ import { baseLogger } from '../logging/pino';
 import { linearFromPoints, quadraticFromPoints } from '../test/equation';
 import { combineSeed, Randomizer, randomizer, TestSeed } from '../test/randomize';
 import { IterableTimeData } from './iterator';
-import { FetchedWeather, fixFetchedWeather } from './weather-shared';
+import { FetchedWeather, fixFetchedWeather, getIndicator, WithoutIndicator } from './weather-shared';
 
 import StatusType = iso.Weather.StatusType;
 /** Creates random weather data. Uses a seeded randomizer. */
@@ -71,7 +71,7 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 
 
 	const hourly = hourlyTemp.map<iso.Weather.Hourly>((temp, i) => {
-		return {
+		const withoutIndicator: WithoutIndicator<iso.Weather.Hourly> = {
 			time: temp.span.begin,
 			temp: temp.value,
 			tempFeelsLike: hourlyTempFeelsLike[i].value,
@@ -85,6 +85,11 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 			humidity: hourlyHumidity[i].value,
 			uvi: hourlyUvi[i].value,
 			pop: hourlyPop[i].value
+		};
+
+		return {
+			...withoutIndicator,
+			indicator: getIndicator(withoutIndicator)
 		};
 	});
 
@@ -110,12 +115,17 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	const dailyPop = dailyWeatherData(0, 1, 3, true, .2);
 
 	const daily = dailyMinTemp.map<iso.Weather.Day>((minTemp, i) => {
-		return {
+		const withoutIndicator: WithoutIndicator<iso.Weather.Day> = {
 			time: minTemp.span.begin,
 			minTemp: minTemp.value,
 			maxTemp: dailyMaxTemp[i].value,
 			status: dailyEntry[i].value,
 			pop: dailyPop[i].value
+		};
+
+		return {
+			...withoutIndicator,
+			indicator: getIndicator(withoutIndicator)
 		};
 	});
 

@@ -5,7 +5,7 @@ import { settings } from '../../env';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
 import { makeRequest } from '../network/request';
-import { FetchedWeather, fixFetchedWeather } from './weather-shared';
+import { FetchedWeather, fixFetchedWeather, getIndicator, WithoutIndicator } from './weather-shared';
 
 import StatusType = iso.Weather.StatusType;
 
@@ -41,10 +41,11 @@ export async function readWeather(ctx: LogContext, config: BaseConfig): ServerPr
 	return fixFetchedWeather(config, fetchedWeather);
 }
 
-async function fetchWeather(ctx: LogContext, _config: BaseConfig): ServerPromise<FetchedWeather> {
+async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedWeather> {
 
 	// Make our initial request to get our API URL from the latitude and longitude
 	const { latitude, longitude } = iso.constant;
+	const { referenceTime } = config;
 
 	// Maximum precision is 4 decimal points.
 	const fixedLatitude = parseFloat(latitude.toFixed(4));
@@ -95,47 +96,75 @@ async function fetchWeather(ctx: LogContext, _config: BaseConfig): ServerPromise
 		lunar.push(...both);
 	});
 
+	const hourly = response.hourly.map<iso.Weather.Hourly>((hourly) => {
+		const withoutIndicator: WithoutIndicator<iso.Weather.Hourly> = {
+			...applyCommonPrecision({
+				time: DateTime.fromSeconds(hourly.dt, zoneOptions).startOf('hour'),
+				temp: hourly.temp,
+				tempFeelsLike: hourly.feels_like,
+				wind: hourly.wind_speed,
+				windDirection: degreesToDirection(hourly.wind_deg),
+				pressure: pressureToMillibars(hourly.pressure),
+				cloudCover: toPercent(hourly.clouds),
+				visibility: visibilityToMiles(hourly.visibility),
+				dewPoint: hourly.dew_point,
+				status: getStatusType(ctx, hourly.weather),
+				humidity: toPercent(hourly.humidity),
+				uvi: hourly.uvi,
+				pop: hourly.pop,
+			}),
+		};
+
+		return {
+			...withoutIndicator,
+			indicator: getIndicator(withoutIndicator)
+		};
+	});
+
+	// Get the hourly entry that most closely corresponds to what our current entry will be.
+	let hourForCurrent: iso.Weather.Hourly = null!;
+	for (let i = 0; i < hourly.length; i++) {
+		const hour = hourly[i];
+		if (referenceTime.diff(hour.time, 'minutes').minutes <= 61) {
+			if (!hourForCurrent || hour.time > hourForCurrent.time) {
+				hourForCurrent = hour;
+			}
+		}
+	}
+
+	const currentWithoutIndicator = applyCommonPrecision({
+		time: DateTime.fromSeconds(response.current.dt, zoneOptions),
+		temp: response.current.temp,
+		tempFeelsLike: response.current.feels_like,
+		wind: response.current.wind_speed,
+		windDirection: degreesToDirection(response.current.wind_deg),
+		pressure: pressureToMillibars(response.current.pressure),
+		cloudCover: toPercent(response.current.clouds),
+		visibility: visibilityToMiles(response.current.visibility),
+		dewPoint: response.current.dew_point,
+		status: getStatusType(ctx, response.current.weather),
+		humidity: toPercent(response.current.humidity),
+		uvi: response.current.uvi,
+		pop: hourForCurrent.pop
+	});
+
 	return {
-		current: applyCommonPrecision({
-			time: DateTime.fromSeconds(response.current.dt, zoneOptions),
-			temp: response.current.temp,
-			tempFeelsLike: response.current.feels_like,
-			wind: response.current.wind_speed,
-			windDirection: degreesToDirection(response.current.wind_deg),
-			pressure: pressureToMillibars(response.current.pressure),
-			cloudCover: toPercent(response.current.clouds),
-			visibility: visibilityToMiles(response.current.visibility),
-			dewPoint: response.current.dew_point,
-			status: getStatusType(ctx, response.current.weather),
-			humidity: toPercent(response.current.humidity),
-			uvi: response.current.uvi
-		}),
-		hourly: response.hourly.map<iso.Weather.Hourly>((hourly) => {
-			return {
-				...applyCommonPrecision({
-					time: DateTime.fromSeconds(hourly.dt, zoneOptions).startOf('hour'),
-					temp: hourly.temp,
-					tempFeelsLike: hourly.feels_like,
-					wind: hourly.wind_speed,
-					windDirection: degreesToDirection(hourly.wind_deg),
-					pressure: pressureToMillibars(hourly.pressure),
-					cloudCover: toPercent(hourly.clouds),
-					visibility: visibilityToMiles(hourly.visibility),
-					dewPoint: hourly.dew_point,
-					status: getStatusType(ctx, hourly.weather),
-					humidity: toPercent(hourly.humidity),
-					uvi: hourly.uvi
-				}),
-				pop: toPrecision(hourly.pop, 3),
-			};
-		}),
+		current: {
+			...currentWithoutIndicator,
+			indicator: getIndicator(currentWithoutIndicator)
+		},
+		hourly,
 		daily: response.daily.map<iso.Weather.Day>((daily) => {
-			return {
+			const withoutIndicator: WithoutIndicator<iso.Weather.Day> = {
 				time: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
 				minTemp: daily.temp.min,
 				maxTemp: daily.temp.max,
 				status: getStatusType(ctx, daily.weather),
 				pop: daily.pop
+			};
+			return {
+				...withoutIndicator,
+				indicator: getIndicator(withoutIndicator)
 			};
 		}),
 		moonPhaseDaily: response.daily.map<iso.Astro.MoonPhaseDay>((daily) => {
@@ -310,7 +339,7 @@ function pressureToMillibars(value: number) {
 	return toPrecision(value, 1);
 };
 
-function applyCommonPrecision(entry: iso.Weather.CommonCurrentHourly): iso.Weather.CommonCurrentHourly {
+function applyCommonPrecision(entry: WithoutIndicator<iso.Weather.CommonCurrentHourly>): WithoutIndicator<iso.Weather.CommonCurrentHourly> {
 	return {
 		time: entry.time,
 		temp: toPrecision(entry.temp, 1),
@@ -324,6 +353,7 @@ function applyCommonPrecision(entry: iso.Weather.CommonCurrentHourly): iso.Weath
 		status: entry.status,
 		uvi: toPrecision(entry.uvi, 1),
 		humidity: toPrecision(entry.humidity, 3), // .xxx becomes xx.x%, so use 3 digits
+		pop: toPrecision(entry.pop, 3), // .xxx becomes xx.x%, so use 3 digits
 	};
 }
 

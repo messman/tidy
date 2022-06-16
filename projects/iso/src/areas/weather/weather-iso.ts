@@ -26,16 +26,25 @@ export interface CommonCurrentHourly {
 	cloudCover: number;
 	/** Visibility in miles. Null if unknown or at max measured. */
 	visibility: number | null;
+	/** Probability of precipitation, [0, 1] */
+	pop: number;
+	/** Easy-to-check indicator of whether the weather is good. */
+	indicator: Indicator;
+}
+
+export enum Indicator {
+	bad,
+	okay,
+	best
 }
 
 /** Contains information for current weather. */
 export interface Current extends CommonCurrentHourly {
+
 }
 
 /** Contains information for current and hourly weather. */
 export interface Hourly extends CommonCurrentHourly {
-	/** Probability of precipitation, [0, 1] */
-	pop: number;
 }
 
 export interface Day {
@@ -49,6 +58,8 @@ export interface Day {
 	maxTemp: number;
 	/** Probability of precipitation, [0, 1] */
 	pop: number;
+	/** Easy-to-check indicator of whether the weather is good. */
+	indicator: Indicator;
 }
 
 export enum WindDirection {
