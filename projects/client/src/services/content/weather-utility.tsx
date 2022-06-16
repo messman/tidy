@@ -17,11 +17,11 @@ export const weatherStatusDescription: Record<keyof typeof iso.Weather.StatusTyp
 	},
 	clear_hot: {
 		itIsShort: 'clear',
-		conditions: `High-heat conditions.`
+		conditions: `High-heat conditions; proceed with care.`
 	},
 	clear_cold: {
 		itIsShort: 'clear',
-		conditions: `Chilly conditions.`
+		conditions: `Chilly conditions; proceed with care.`
 	},
 	clouds_few: {
 		itIsShort: 'lightly cloudy',
@@ -33,7 +33,7 @@ export const weatherStatusDescription: Record<keyof typeof iso.Weather.StatusTyp
 	},
 	clouds_most: {
 		itIsShort: 'mostly cloudy',
-		conditions: 'Mostly cloudy conditions.'
+		conditions: 'Cloudy conditions.'
 	},
 	clouds_over: {
 		itIsShort: 'overcast',
