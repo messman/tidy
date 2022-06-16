@@ -5,10 +5,12 @@ import { Block } from '@/core/theme/box';
 import { WeatherStatusIcon } from '@/core/weather/weather-icon';
 import { weatherStatusDescription } from '@/services/content/weather-utility';
 import { useBatchResponse } from '@/services/data/data';
+import { getDurationDescription } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 
 export const ConditionsHeader: React.FC = () => {
-	const { weather } = useBatchResponse().success!;
+	const { meta, weather, astro } = useBatchResponse().success!;
+	const { next } = astro.sun.relativity;
 
 	const statusDescription = iso.mapEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
 
@@ -21,7 +23,7 @@ export const ConditionsHeader: React.FC = () => {
 			</IconTitle>
 			<Block.Bat08 />
 			<Paragraph>
-				{statusDescription.conditions}
+				{statusDescription.conditions} {next.isRise ? 'Sunrise' : 'Sundown'} is in {getDurationDescription(meta.referenceTime, next.time)}.
 			</Paragraph>
 		</>
 	);

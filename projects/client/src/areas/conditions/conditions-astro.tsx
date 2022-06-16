@@ -7,7 +7,7 @@ import { Paragraph } from '@/core/text';
 import { Block } from '@/core/theme/box';
 import { BaseWeatherIcon } from '@/core/weather/weather-icon';
 import { useBatchResponse } from '@/services/data/data';
-import { getDurationDescription } from '@/services/time';
+import { getDurationDescription, getTimeTwelveHourString } from '@/services/time';
 import { icons } from '@wbtdevlocal/assets';
 
 export const ConditionsAstro: React.FC = () => {
@@ -74,9 +74,11 @@ export const ConditionsAstro: React.FC = () => {
 		<>
 			<IconTitle iconRender={icon}>{title}</IconTitle>
 			<Block.Bat08 />
-			<Paragraph>Today {tense} {getDurationDescription(today.rise, today.set)} of sunlight.</Paragraph>
+			<Paragraph>
+				Today {tense} {getDurationDescription(today.rise, today.set)} of sunlight.
+			</Paragraph>
 			<Block.Bat08 />
-			<Paragraph>{next.isRise ? 'Sunrise' : 'Sundown'} is in {getDurationDescription(meta.referenceTime, next.time)}.</Paragraph>
+			<Paragraph>{next.isRise ? 'Sunrise' : 'Sundown'} is at {getTimeTwelveHourString(next.time)}.</Paragraph>
 			<Block.Bat08 />
 			<Note>
 				Here, sunrise is when the sun breaks over the horizon, and sundown is when the sun fully disappears over the horizon.
