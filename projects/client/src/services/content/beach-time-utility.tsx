@@ -1,5 +1,7 @@
 
 import { DateTime } from 'luxon';
+import { IconInputType } from '@/core/icon/icon';
+import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { getDurationDescription, getTimeTwelveHourRange, getTimeTwelveHourString } from '../time';
 
@@ -42,6 +44,7 @@ export interface BeachTimeTextInfo {
 	title: string;
 	range: JSX.Element | string | null;
 	description: string;
+	expression: IconInputType;
 }
 
 export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (beach: iso.Batch.BeachContent, referenceTime: DateTime) => BeachTimeTextInfo> = {
@@ -49,7 +52,8 @@ export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (
 		return {
 			title: `It's beach time!`,
 			range: null,
-			description: `Enjoy the beach until ${getTimeTwelveHourString(beach.current!.stop)}.`
+			description: `Enjoy the beach until ${getTimeTwelveHourString(beach.current!.stop)}.`,
+			expression: icons.expressionHappy
 		};
 	},
 	currentEndingSoon: (beach, referenceTime) => {
@@ -66,29 +70,33 @@ export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (
 		return {
 			title: `Beach time ends soon.`,
 			range: `Ends ${getTimeTwelveHourString(current!.stop)}`,
-			description: description
+			description: description,
+			expression: icons.expressionStraight
 		};
 	},
 	nextSoon: (beach, referenceTime) => {
 		return {
 			title: `Beach time starts soon!`,
 			range: getTimeTwelveHourRange(beach.next.start, beach.next.stop),
-			description: `Enjoy the beach starting in ${getDurationDescription(referenceTime, beach.next.start)}.`
+			description: `Enjoy the beach starting in ${getDurationDescription(referenceTime, beach.next.start)}.`,
+			expression: icons.expressionStraight
 		};
 	},
 	nextLater: (beach) => {
 		return {
 			title: `It's not beach time right now.`,
 			range: null,
-			description: `Beach time starts at ${getTimeTwelveHourString(beach.next.start)}.`
+			description: `Beach time starts at ${getTimeTwelveHourString(beach.next.start)}.`,
+			expression: icons.expressionStraight
 		};
 	},
 	nextTomorrow: (beach) => {
 
 		return {
-			title: `The next beach time is tomorrow.`,
+			title: `It's not beach time.`,
 			range: null,
-			description: `Enjoy the beach starting at ${getTimeTwelveHourString(beach.next.start)}.`
+			description: `Enjoy the beach starting at ${getTimeTwelveHourString(beach.next.start)} tomorrow.`,
+			expression: icons.expressionSad
 		};
 
 	},
@@ -103,7 +111,8 @@ export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (
 		return {
 			title: `It's not beach time.`,
 			range: null,
-			description
+			description,
+			expression: icons.expressionSad
 		};
 	},
 };

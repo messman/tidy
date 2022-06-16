@@ -58,7 +58,6 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 
 	// First, use the current data (more accurate) to know whether it's beach time currently.
 	const isTideCurrentlyGood = tide.currentHeight <= iso.constant.beachAccessHeight;
-	const currentWeatherIdeal = getWeatherIdeal(weather.current);
 	let isCurrentDaylight = false;
 	for (let i = 0; i < astro.daily.length; i++) {
 		const astroDaily = astro.daily[i];
@@ -72,7 +71,7 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 			}
 		}
 	}
-	const isStartingInBeachTime = isTideCurrentlyGood && currentWeatherIdeal !== WeatherIdeal.bad && isCurrentDaylight;
+	const isStartingInBeachTime = isTideCurrentlyGood && weather.current.indicator !== iso.Weather.Indicator.bad && isCurrentDaylight;
 
 	const tideMarks = getBeachTideMarks(tide);
 	const sunEvents: iso.Astro.BodyEvent[] = [];
@@ -89,16 +88,17 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 		return a.time.toMillis() - b.time.toMillis();
 	});
 
+	let firstCurrentStopReason: iso.Batch.BeachTimeReason | null = null;
+	let upcomingNextStartReasons: iso.Batch.BeachTimeReason[] = [];
+
 	let trackedWeatherBlock: iso.Batch.BeachTimeWeatherBlock | null = isStartingInBeachTime ? {
-		isBest: currentWeatherIdeal === WeatherIdeal.best,
+		indicator: weather.current.indicator,
 		start: referenceTime,
 		stop: null!
 	} : null;
 	let trackedBeachTime: iso.Batch.BeachTimeRange | null = isStartingInBeachTime ? {
 		start: referenceTime,
-		startReasons: [],
 		stop: null!,
-		stopReasons: [],
 		weather: [trackedWeatherBlock!]
 	} : null;
 	let currentBeachTime: iso.Batch.BeachTimeRange | null = trackedBeachTime;
@@ -114,9 +114,9 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 	let firstGoodWeather: iso.Weather.Hourly | iso.Weather.Day | null = null;
 	let mostRecentGoodWeather: iso.Weather.Hourly | iso.Weather.Day | null = null;
 	// Bad requirements
-	let lastBadTide: iso.Batch.BeachTimeTideMark | null = null;
-	let lastBadSun: iso.Astro.BodyEvent | null = null;
-	let lastBadWeather: iso.Weather.Hourly | iso.Weather.Day | null = null;
+	// let lastBadTide: iso.Batch.BeachTimeTideMark | null = null;
+	// let lastBadSun: iso.Astro.BodyEvent | null = null;
+	// let lastBadWeather: iso.Weather.Hourly | iso.Weather.Day | null = null;
 
 	reasons.forEach((reason) => {
 		const time = reason.time;
@@ -131,12 +131,9 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 		}
 
 		// It's only one of these. The others will be null.
-		const tideMark = isBeachTimeTideMark(reason) ? reason : null;
-		const sunEvent = isSunEvent(reason) ? reason : null;
-		const weatherEntry = isWeatherEntry(reason) ? reason : null;
-
-		const weatherIdeal = weatherEntry ? getWeatherIdeal(weatherEntry) : null;
-		const isWeatherBest = weatherIdeal === WeatherIdeal.best;
+		const tideMark = iso.Batch.isBeachTimeTideMark(reason) ? reason : null;
+		const sunEvent = iso.Batch.isSunEvent(reason) ? reason : null;
+		const weatherEntry = iso.Batch.isWeatherEntry(reason) ? reason : null;
 		/*
 			Scenarios:
 			- It's beach time
@@ -161,7 +158,7 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 		// Here, "Bad" means "Reason to end a range" and "Good" means "Reason to start a range"
 		const isTideReasonGood = !!tideMark && !tideMark.isRising;
 		const isSunReasonGood = !!sunEvent && sunEvent.isRise;
-		const isWeatherReasonGood = !!weatherEntry && (weatherIdeal === WeatherIdeal.best || weatherIdeal === WeatherIdeal.okay);
+		const isWeatherReasonGood = !!weatherEntry && (weatherEntry.indicator !== iso.Weather.Indicator.bad);
 		const isAnyReasonGood = isTideReasonGood || isSunReasonGood || isWeatherReasonGood;
 
 		if (isWeatherReasonGood) {
@@ -170,7 +167,7 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 
 		const isTideReasonBad = !!tideMark && tideMark.isRising;
 		const isSunReasonBad = !!sunEvent && !sunEvent.isRise;
-		const isWeatherReasonBad = !!weather && (weatherIdeal === WeatherIdeal.bad);
+		const isWeatherReasonBad = !!weatherEntry && (weatherEntry.indicator === iso.Weather.Indicator.bad);
 		const isAnyReasonBad = isTideReasonBad || isSunReasonBad || isWeatherReasonBad;
 
 		if (trackedBeachTime != null) {
@@ -180,10 +177,10 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 				// If any reason is good...
 
 				// Update weather block if how ideal the weather is has changed
-				if (isWeatherReasonGood && trackedWeatherBlock && (trackedWeatherBlock.isBest !== isWeatherBest)) {
+				if (isWeatherReasonGood && trackedWeatherBlock && (trackedWeatherBlock.indicator !== weatherEntry!.indicator)) {
 					trackedWeatherBlock.stop = time;
 					trackedWeatherBlock = {
-						isBest: isWeatherBest,
+						indicator: weatherEntry!.indicator,
 						start: time,
 						stop: null!
 					};
@@ -195,22 +192,28 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 
 				if (isTideReasonBad) {
 					firstGoodTide = null;
-					lastBadTide = tideMark;
+					// lastBadTide = tideMark;
 				}
 				else if (isSunReasonBad) {
 					firstGoodSun = null;
-					lastBadSun = sunEvent;
+					// lastBadSun = sunEvent;
 				}
 				else if (isWeatherReasonBad) {
 					firstGoodWeather = null;
-					lastBadWeather = weatherEntry;
+					// lastBadWeather = weatherEntry;
 				}
 
 				if (trackedWeatherBlock) {
 					trackedWeatherBlock.stop = time;
 					trackedWeatherBlock = null;
 				}
-				trackedBeachTime.stopReasons.push(reason);
+				if (trackedBeachTime === currentBeachTime) {
+					/*
+						If we're tracking the current beach time,
+						keep track of the reason it's stopping.
+					*/
+					firstCurrentStopReason = reason;
+				}
 				trackedBeachTime.stop = time;
 				lastTrackedBeachTime = trackedBeachTime;
 				trackedBeachTime = null;
@@ -237,22 +240,32 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 					// Start beach time
 					trackedWeatherBlock = {
 						// Either rely on this entry that's starting the beach time, or the last one we have saved.
-						isBest: getWeatherIdeal(mostRecentGoodWeather!) === WeatherIdeal.best,
+						indicator: mostRecentGoodWeather!.indicator,
 						start: time,
 						stop: null!
 					};
 					trackedBeachTime = {
 						start: time,
-						startReasons: [firstGoodTide, firstGoodSun, firstGoodWeather],
 						stop: null!,
-						stopReasons: [],
 						weather: [trackedWeatherBlock]
 					};
 					allBeachTimes.push(trackedBeachTime);
 
-					lastBadTide = null;
-					lastBadWeather = null;
-					lastBadSun = null;
+					if (!currentBeachTime && !lastTrackedBeachTime) {
+						/*
+							If we don't have a current beach time and we don't have a last tracked beach time,
+							this is the first one, or 'next'.
+							Track the start reasons that will happen in the future to create this beach time.
+						*/
+						const startReasons: iso.Batch.BeachTimeReason[] = [firstGoodTide, firstGoodSun, firstGoodWeather];
+						upcomingNextStartReasons = startReasons.filter((reason) => {
+							return reason.time > referenceTime;
+						});
+					}
+
+					// lastBadTide = null;
+					// lastBadWeather = null;
+					// lastBadSun = null;
 				}
 			}
 			else if (isAnyReasonBad) {
@@ -260,24 +273,24 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 
 				if (isTideReasonBad) {
 					firstGoodTide = null;
-					if (!lastBadTide && lastTrackedBeachTime) {
-						lastTrackedBeachTime.stopReasons.push(tideMark);
-					}
-					lastBadTide = tideMark;
+					// if (!lastBadTide && lastTrackedBeachTime) {
+					// 	lastTrackedBeachTime.stopReasons.push(tideMark);
+					// }
+					// lastBadTide = tideMark;
 				}
 				else if (isSunReasonBad) {
 					firstGoodSun = null;
-					if (!lastBadSun && lastTrackedBeachTime) {
-						lastTrackedBeachTime.stopReasons.push(sunEvent);
-					}
-					lastBadSun = sunEvent;
+					// if (!lastBadSun && lastTrackedBeachTime) {
+					// 	lastTrackedBeachTime.stopReasons.push(sunEvent);
+					// }
+					// lastBadSun = sunEvent;
 				}
 				else if (isWeatherReasonBad) {
 					firstGoodWeather = null;
-					if (!lastBadWeather && lastTrackedBeachTime) {
-						lastTrackedBeachTime.stopReasons.push(weatherEntry!);
-					}
-					lastBadWeather = weatherEntry;
+					// if (!lastBadWeather && lastTrackedBeachTime) {
+					// 	lastTrackedBeachTime.stopReasons.push(weatherEntry!);
+					// }
+					// lastBadWeather = weatherEntry;
 				}
 			}
 
@@ -308,6 +321,7 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 				astro: null!,
 				ranges: [],
 				tideLows: [],
+				tideMarks: [],
 				weather: null!
 			});
 		}
@@ -320,6 +334,10 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 	astro.daily.forEach((day) => {
 		const beachTimeDay = getFor(day.rise);
 		beachTimeDay.astro = { sun: day, moon: null! };
+	});
+	tideMarks.forEach((tideMark) => {
+		const beachTimeDay = getFor(tideMark.time);
+		beachTimeDay.tideMarks.push(tideMark);
 	});
 	dailyTides.forEach((day) => {
 		const justLows = day.extremes.filter((extreme) => extreme.isLow);
@@ -348,22 +366,13 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, dailyTide
 	});
 
 	return {
+		firstCurrentStopReason,
+		upcomingNextStartReasons,
 		current: currentBeachTime,
 		next: currentBeachTime ? allBeachTimes[1] : allBeachTimes[0],
 		days: Array.from(daysMap.values())
 	};
 }
-
-function isBeachTimeTideMark(value: iso.Batch.BeachTimeReason): value is iso.Batch.BeachTimeTideMark {
-	return !!value && (value as iso.Batch.BeachTimeTideMark).isRising !== undefined;
-}
-function isSunEvent(value: iso.Batch.BeachTimeReason): value is iso.Astro.BodyEvent {
-	return !!value && (value as iso.Astro.BodyEvent).isRise !== undefined;
-}
-function isWeatherEntry(value: iso.Batch.BeachTimeReason): value is iso.Weather.Hourly | iso.Weather.Day {
-	return !!value && (value as iso.Weather.Hourly | iso.Weather.Day).status !== undefined;
-}
-
 
 /** Return all the points in time where we cross our beach access height. */
 function getBeachTideMarks(tide: FetchedTide): iso.Batch.BeachTimeTideMark[] {
@@ -452,59 +461,6 @@ function getCombinedWeather(hourly: iso.Weather.Hourly[], daily: iso.Weather.Day
 	return combined;
 }
 
-enum WeatherIdeal {
-	bad,
-	okay,
-	best
-}
 
-/** The best possible ideal that can be assigned to a weather status. */
-const weatherStatusIdeal: Record<keyof typeof iso.Weather.StatusType, WeatherIdeal> = {
-	clear: WeatherIdeal.best,
-	clear_hot: WeatherIdeal.best,
-	clear_cold: WeatherIdeal.best,
-	clouds_few: WeatherIdeal.best,
-	clouds_some: WeatherIdeal.best,
-	clouds_most: WeatherIdeal.best,
 
-	dust: WeatherIdeal.okay,
-	smoke: WeatherIdeal.okay,
-	unknown: WeatherIdeal.okay,
-	clouds_over: WeatherIdeal.okay,
-	rain_drizzle: WeatherIdeal.okay,
-	rain_light: WeatherIdeal.okay,
-	haze: WeatherIdeal.okay,
-	fog: WeatherIdeal.okay,
-
-	thun_light: WeatherIdeal.bad,
-	snow_light: WeatherIdeal.bad,
-	rain_medium: WeatherIdeal.bad,
-	rain_heavy: WeatherIdeal.bad,
-	rain_freeze: WeatherIdeal.bad,
-	snow_medium: WeatherIdeal.bad,
-	snow_heavy: WeatherIdeal.bad,
-	snow_sleet: WeatherIdeal.bad,
-	snow_rain: WeatherIdeal.bad,
-	thun_medium: WeatherIdeal.bad,
-	thun_heavy: WeatherIdeal.bad,
-	intense_storm: WeatherIdeal.bad,
-	intense_other: WeatherIdeal.bad,
-};
-
-function getWeatherIdeal(entry: iso.Weather.Current | iso.Weather.Hourly | iso.Weather.Day): WeatherIdeal {
-	const { status } = entry;
-
-	// If the best scenario is bad, just say it's bad
-	const ideal = iso.mapEnumValue(iso.Weather.StatusType, weatherStatusIdeal, status);
-	if (ideal === WeatherIdeal.bad) {
-		return WeatherIdeal.bad;
-	}
-
-	// // If there's a good chance of rain, no beach time.
-	// if (pop >= .8) {
-	// 	return WeatherIdeal.bad;
-	// }
-
-	return ideal;
-}
 

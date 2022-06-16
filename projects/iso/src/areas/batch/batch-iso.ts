@@ -44,6 +44,10 @@ export interface Meta {
 }
 
 export interface BeachContent {
+	/** First reason for stopping current beach time. */
+	firstCurrentStopReason: BeachTimeReason | null;
+	/** Reasons for starting next beach time that have not already happened. */
+	upcomingNextStartReasons: BeachTimeReason[];
 	/** The current beach time range, if we're in one. */
 	current: BeachTimeRange | null;
 	/** The next beach time that users can expect. */
@@ -61,9 +65,12 @@ export interface BeachTimeDay {
 	astro: Astro.Day;
 	/** Low tides for the day. */
 	tideLows: Tide.ExtremeStamp[];
+	/** Tide marks for the day. */
+	tideMarks: BeachTimeTideMark[];
 	/** Ranges, if any. */
 	ranges: BeachTimeRange[];
 }
+
 
 export interface BeachTimeRange {
 	/** When the beach time begins. */
@@ -72,15 +79,12 @@ export interface BeachTimeRange {
 	stop: DateTime;
 	/** Blocks of weather described as ideal/not ideal. */
 	weather: BeachTimeWeatherBlock[];
-	/** Reasons for why the beach time starts when it does. */
-	startReasons: BeachTimeReason[];
-	/** Reasons for why the beach time stops when it does. */
-	stopReasons: BeachTimeReason[];
 }
+
 
 export interface BeachTimeWeatherBlock {
 	/** A somewhat-arbitrary indicator of if the weather is the best weather we can expect. */
-	isBest: boolean;
+	indicator: Weather.Indicator;
 	/** When this block starts. */
 	start: DateTime,
 	/** When this block stops. */
@@ -142,4 +146,14 @@ export interface TideContent {
 export interface TideContentDay {
 	extremes: Tide.ExtremeStamp[];
 	moonPhase: Astro.MoonPhase;
+}
+
+export function isBeachTimeTideMark(value: BeachTimeReason | null): value is BeachTimeTideMark {
+	return !!value && (value as BeachTimeTideMark).isRising !== undefined;
+}
+export function isSunEvent(value: BeachTimeReason | null): value is Astro.BodyEvent {
+	return !!value && (value as Astro.BodyEvent).isRise !== undefined;
+}
+export function isWeatherEntry(value: BeachTimeReason | null): value is Weather.Hourly | Weather.Day {
+	return !!value && (value as Weather.Hourly | Weather.Day).status !== undefined;
 }
