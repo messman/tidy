@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
-import { Icon, IconInputType } from '../icon/icon';
+import { defaultIconSvgStyle, Icon, IconInputType } from '../icon/icon';
 import { styled, StyledFC } from '../theme/styled';
 
 export interface MoonPhaseIconProps {
@@ -21,6 +21,7 @@ export const MoonPhaseIcon: StyledFC<MoonPhaseIconProps> = (props) => {
 };
 
 const MoonPhaseIconContainer = styled.span`
+	${defaultIconSvgStyle}
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;

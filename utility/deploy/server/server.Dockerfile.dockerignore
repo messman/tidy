@@ -1,0 +1,23 @@
+# Exclude all
+*
+
+# Explicitly include what's needed for server build
+!shared/configs/tsconfig-base.json
+!projects/iso
+
+!projects/server/node_modules
+!projects/server/src
+!projects/server/types
+!projects/server/package-lock.json
+!projects/server/package.json
+!projects/server/start.sh
+!projects/server/tsconfig.json
+
+!utility/deploy/server/build-server.sh
+!utility/deploy/server/start-server.sh
+
+# Although in production this will run from a clean git repo, also plan for a local run for debugging (meaning, exclude node_modules)
+**/node_modules
+**/dist
+**/dist-icons
+**/ts-build

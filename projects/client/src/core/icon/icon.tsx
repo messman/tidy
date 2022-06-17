@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EmptyIconName, SVGIconType, SVGIconTypeName } from '@wbtdevlocal/assets';
 import { ComponentSize } from '../theme/font';
-import { styled, StyledFC } from '../theme/styled';
+import { css, styled, StyledFC } from '../theme/styled';
 import { UrlIcon } from './icon-url';
 
 export type IconInputType = JSX.Element | SVGIconType | StyledFC | SVGIconTypeName | EmptyIconName | null;
@@ -51,6 +51,18 @@ export interface SizedIconProps extends IconProps {
 export const SizedIcon = styled(Icon) <SizedIconProps>`
 	width: ${p => iconHeights[p.size]};
 	height: ${p => iconHeights[p.size]};
+`;
+
+/**
+ * Fix for Safari rendering issue. Some icons (haven't figured out why, but the moon phase icons)
+ * won't render unless an explicit width or height is set on them.
+ * Only Safari. Only some icons. But it seems to not hurt the others.
+*/
+export const defaultIconSvgStyle = css`
+	svg {
+		width: 100%;
+		height: 100%;
+	}
 `;
 
 export const iconHeights: Record<ComponentSize, string> = {

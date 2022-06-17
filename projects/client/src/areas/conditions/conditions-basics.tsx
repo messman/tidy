@@ -134,13 +134,15 @@ const VisualAdjust = styled.div`
 	height: ${visualSize};
 `;
 
+/** It would have been great to use outline for this circle, but unfortunately Safari won't render border-radius with outline. */
 const VisualCircle = styled.div<{ percent: number; }>`
 	position: absolute;
-	outline: .25rem solid #FFF;
+	box-sizing: content-box;
+    border: 0.25rem solid #FFF;
 	width: ${visualSize};
 	height: ${visualSize};
-	border-radius: ${visualBorder};
-	top: 0;
+	border-radius: .5rem; // Different with content-box
+	top: -0.25rem; // Different with content-box
 	left: ${p => p.percent}%;
 `;
 //#endregion
