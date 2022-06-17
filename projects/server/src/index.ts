@@ -8,21 +8,21 @@ import { baseLogger } from './services/logging/pino';
 const port = settings.PORT || 8000;
 const app = express();
 
-/*
-	TODO: Check if this is the right way to reject HTTP.
-*/
-if (!settings.isDev) {
-	app.use((req, res, next) => {
-		if (!req.secure) {
-			// Probably should upgrade instead.
-			// Or maybe a proxy handles this anyway?
-			// This might cause socket issues.
-			res.sendStatus(500);
-			return;
-		}
-		next();
-	});
-}
+// /*
+// 	TODO: Check if this is the right way to reject HTTP.
+// */
+// if (!settings.isDev) {
+// 	app.use((req, res, next) => {
+// 		if (!req.secure) {
+// 			// Probably should upgrade instead.
+// 			// Or maybe a proxy handles this anyway?
+// 			// This might cause socket issues.
+// 			res.sendStatus(500);
+// 			return;
+// 		}
+// 		next();
+// 	});
+// }
 
 /*
 	#REF_API_DATE_SERIALIZATION

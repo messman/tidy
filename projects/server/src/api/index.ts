@@ -63,7 +63,7 @@ function attachRoutes(router: Router, customRoutes: CustomRouters) {
 			catch (e) {
 				sendServerError(res, serverErrors.internal.unknown(ctx, e as Error, {
 					hiddenArea: 'route handler try/catch',
-					// TODO: Be careful about including user-sent values for additional logging.
+					// Be careful about including user-sent values for additional logging.
 				}));
 				return;
 			}
