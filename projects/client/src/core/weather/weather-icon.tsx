@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
-import { Icon, IconInputType, IconProps } from '../icon/icon';
+import { defaultIconSvgStyle, Icon, IconInputType, IconProps } from '../icon/icon';
 import { styled, StyledFC } from '../theme/styled';
 
 export interface WeatherStatusIconProps {
@@ -27,6 +27,7 @@ export const BaseWeatherIcon: StyledFC<IconProps> = (props) => {
 };
 
 const WeatherIconContainer = styled.span`
+	${defaultIconSvgStyle};
 	display: inline-block;
 	background-color: ${p => p.theme.common.content.backgroundDay};
 	border-radius: 50%;

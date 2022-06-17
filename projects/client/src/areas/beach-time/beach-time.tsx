@@ -26,9 +26,10 @@ export const BeachTimeSuccess: React.FC = () => {
 			<Block.Bat08 />
 			<PanelPadding>
 				<Note>
-					"Beach time" is a subjective approximation based on available data for tides, sunlight, and weather (specifically, chance for rain or storms).
-					It is assumed that the beach becomes available at a water level at or below <TideHeightTextUnit height={iso.constant.beachAccessHeight} precision={0} />.
-					Temperature and wind are not currently considered. Data is not guaranteed accurate, and is less accurate the further it is based from the current time.
+					"Beach time" is an approximation of the time range when the beach is suitable to visit.
+					Beach time is based on available data for tides, sunlight, and weather (excluding wind and temperature).
+					It is assumed that the beach becomes accessible at a water level at or below <TideHeightTextUnit height={iso.constant.beachAccessHeight} precision={0} />.
+					Data is not guaranteed accurate, and is less accurate the further it is based from the current time.
 				</Note>
 			</PanelPadding>
 		</>

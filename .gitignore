@@ -15,6 +15,7 @@ node_modules
 dist
 dist-client
 dist-icons
+prod-dist
 
 # NPM logs.
 npm-debug.log

@@ -4,12 +4,6 @@
 export const fontFamily = `'Poppins', sans-serif;`;
 export const fontFamilyMonospace = 'Courier New';
 
-export const fontFamilyGoogleLink = `
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet"></link>
-`;
-
 export type ComponentSize = 'small' | 'medium';
 
 export enum FontWeight {
