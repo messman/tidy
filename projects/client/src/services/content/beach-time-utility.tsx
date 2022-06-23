@@ -18,7 +18,7 @@ export function getBeachTimeStatus(beach: iso.Batch.BeachContent, referenceTime:
 	const { current, next } = beach;
 
 	if (current) {
-		if (current.stop.diff(referenceTime, 'minutes').minutes <= 45) {
+		if (current.stop.diff(referenceTime, 'minutes').minutes <= 60) {
 			return BeachTimeStatus.currentEndingSoon;
 		}
 		else {
