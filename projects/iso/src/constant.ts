@@ -19,5 +19,5 @@ export const constant = {
 	tideStation: 8419317,
 
 	/** When the tide is at or below this height, the beach is accessible. */
-	beachAccessHeight: 7,
+	beachAccessHeight: 6.5,
 };

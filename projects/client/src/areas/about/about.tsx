@@ -20,7 +20,7 @@ export const About: React.FC = () => {
 			<div>
 				<Heading>About</Heading>
 				<Paragraph>
-					This project is a labor of love designed for use by residents and visitors to Wells, Maine.
+					This project is a labor of love designed for use by residents of and visitors to Wells, Maine.
 					This project is dedicated to Mark Messier and Dawna Messier; the project (and its developer) would not exist without them.
 				</Paragraph>
 				<Paragraph>
@@ -55,7 +55,7 @@ export const About: React.FC = () => {
 					Credit to NOAA &amp; OpenWeather.
 				</Paragraph>
 				<Paragraph>
-					To report a bug, send thanks, request a feature, or see how this product is made, <OutLink title='Wells Beach Time on GitHub' href="https://github.com/messman/tidy">visit the project on GitHub</OutLink>.
+					To report a bug, send thanks, request a feature, or see how this application works, <OutLink title='Wells Beach Time on GitHub' href="https://github.com/messman/tidy">visit the project on GitHub</OutLink>.
 				</Paragraph>
 			</div>
 		</PanelPadding>
