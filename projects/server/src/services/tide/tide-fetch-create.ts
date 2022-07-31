@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { combineSeed, randomizer, TestSeed } from '../test/randomize';
-import { FetchedTide, getStartOfDayBefore } from './tide-shared';
+import { computeHeightAtTimeBetweenPredictions, FetchedTide, getStartOfDayBefore } from './tide-shared';
 
 /** Creates random tide data. Uses a seeded randomizer. */
 export function createTides(config: BaseConfig, seed: TestSeed): FetchedTide {
@@ -10,6 +10,17 @@ export function createTides(config: BaseConfig, seed: TestSeed): FetchedTide {
 
 	const { referenceTime, futureCutoff } = config;
 	let startDateTime = getStartOfDayBefore(referenceTime);
+
+	const isAlternate = tideRandomizer.randomFloat(0, 1, 2, true) < .4;
+
+	/*
+		If we say our height is "computed", it will be at the reference time.
+		Else, we delay our height just a bit to make it more realistic to how the API works.
+		We only compute if neither Wells nor Portland is available... which is not often.
+	*/
+	const isComputed = !isAlternate && tideRandomizer.randomFloat(0, 1, 2, true) < .25;
+	const minutesOfDelay = tideRandomizer.randomInt(0, 15, true);
+	const measureTime = isComputed ? referenceTime : referenceTime.minus({ minutes: minutesOfDelay });
 
 	// Get our time between highs and lows.
 	// This is typically 6 hours 12 minutes and some change, but we'll make it a little random and pretend it's because of the sun.
@@ -42,27 +53,26 @@ export function createTides(config: BaseConfig, seed: TestSeed): FetchedTide {
 			isLow: isLow
 		};
 
-		if (time < referenceTime) {
+		if (time < measureTime) {
 			previous = extreme;
 		}
-		else if (!next && time > referenceTime) {
+		else if (!next && time > measureTime) {
 			next = extreme;
 		}
 
 		return extreme;
 	});
 
-	// Do an estimation of the current height based on previous and next.
-	const minutesBetweenReferenceAndPrevious = Math.max(0, referenceTime.diff(previous.time, 'minutes').minutes);
-	const minutesBetweenNextAndPrevious = next.time.diff(previous.time, 'minutes').minutes;
-
-	const percentFromPreviousToNext = minutesBetweenReferenceAndPrevious / minutesBetweenNextAndPrevious;
-	const height = (percentFromPreviousToNext * (next.height - previous.height)) + previous.height;
-	const heightWithPrecision = parseFloat(height.toFixed(1));
+	const height = computeHeightAtTimeBetweenPredictions(previous, next, measureTime);
 
 	return {
-		currentTime: referenceTime,
-		currentHeight: heightWithPrecision,
+		current: {
+			computed: height,
+			isComputed,
+			isAlternate,
+			height: height,
+			time: measureTime
+		},
 		extrema
 	};
 }

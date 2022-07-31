@@ -85,7 +85,8 @@ export const Education: React.FC = () => {
 				</Paragraph>
 				<Paragraph>
 					To learn about the data recording station for Wells (including what data it records), see
-					its <OutLink title='Wells Data Recording Station' href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317">NOAA station homepage</OutLink>.
+					the <OutLink title='Wells Data Recording Station' href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317">Wells NOAA station homepage</OutLink>.
+					You can also refer to the <OutLink title='Portland Data Recording Station' href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8418150">Portland NOAA station homepage</OutLink>.
 				</Paragraph>
 			</div>
 		</PanelPadding>

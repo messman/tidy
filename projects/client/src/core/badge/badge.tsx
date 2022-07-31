@@ -22,7 +22,7 @@ export const WeatherBadge: React.FC<WeatherBadgeProps> = (props) => {
 };
 
 export interface TideLevelBadgeProps {
-	tide: iso.Tide.Stamp;
+	tide: iso.Tide.MeasureStamp;
 }
 
 export const TideLevelBadge: React.FC<TideLevelBadgeProps> = (props) => {

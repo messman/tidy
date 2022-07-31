@@ -155,8 +155,8 @@ export async function makeApiRequest
 		}
 	}
 
-	// apiRoot is similar to "/api"
-	const url = `${DEFINE.apiRoot}/${path}`;
+	// apiRoot is similar to "/api", path is like "/batch"
+	const url = `${DEFINE.apiRoot}${path}`;
 	const pathInfo: RequestResultPathInfo = {
 		finalUrl: url,
 		method: route.method

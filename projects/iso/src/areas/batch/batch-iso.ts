@@ -44,12 +44,14 @@ export interface Meta {
 }
 
 export interface BeachContent {
-	/** First reason for stopping current beach time. */
-	firstCurrentStopReason: BeachTimeReason | null;
-	/** Reasons for starting next beach time that have not already happened. */
-	upcomingNextStartReasons: BeachTimeReason[];
-	/** The current beach time range, if we're in one. */
-	current: BeachTimeRange | null;
+	/** Whether or not it is beach time, and whether or not it is best. */
+	status: BeachTimeStatus;
+	/** First reason for fully stopping current beach time. */
+	firstStopReason: BeachTimeReason | null;
+	tide: BeachTimeCurrentTide;
+	sun: BeachTimeCurrentSun;
+	weather: BeachTimeCurrentWeather;
+
 	/** The next beach time that users can expect. */
 	next: BeachTimeRange;
 	/** Beach times by day for the next few days. */
@@ -65,40 +67,98 @@ export interface BeachTimeDay {
 	astro: Astro.Day;
 	/** Low tides for the day. */
 	tideLows: Tide.ExtremeStamp[];
-	/** Tide marks for the day. */
-	tideMarks: BeachTimeTideMark[];
 	/** Ranges, if any. */
 	ranges: BeachTimeRange[];
 }
-
 
 export interface BeachTimeRange {
 	/** When the beach time begins. */
 	start: DateTime;
 	/** When the beach time ends. */
 	stop: DateTime;
-	/** Blocks of weather described as ideal/not ideal. */
-	weather: BeachTimeWeatherBlock[];
+	/** Blocks of time broken up by whether they are best. */
+	blocks: BeachTimeBlock[];
 }
 
-
-export interface BeachTimeWeatherBlock {
-	/** A somewhat-arbitrary indicator of if the weather is the best weather we can expect. */
-	indicator: Weather.Indicator;
+export interface BeachTimeBlock {
+	/** Whether this is a time when all parts are in their best state. */
+	isBest: boolean;
 	/** When this block starts. */
 	start: DateTime,
 	/** When this block stops. */
 	stop: DateTime,
 }
 
+export interface BeachTimeCurrentTide {
+	beachTimeStatus: BeachTimeStatus;
+	tideMarkStatus: BeachTimeTideMarkStatus;
+}
+
 export interface BeachTimeTideMark {
 	time: DateTime;
-	/** In the context of the tides starting or stopping beach time, it should be either while rising or falling. */
-	isRising: boolean;
+	heightStatus: BeachTimeTideMarkStatus;
+}
+
+export enum BeachTimeTideMarkStatus {
+	/** The bare minimum beach is becoming available. */
+	earlyFall,
+	/** The beach is as available as it needs to be for beach time. */
+	fullyFall,
+	/** The beach is at the first point of concern for rising. */
+	earlyRise,
+	/** The beach has risen past the point where beach is available. */
+	fullyRise
+}
+
+export interface BeachTimeCurrentSun {
+	beachTimeStatus: BeachTimeStatus;
+	sunMarkStatus: BeachTimeSunMarkStatus;
+}
+
+export interface BeachTimeSunMark {
+	time: DateTime;
+	lightStatus: BeachTimeSunMarkStatus;
+}
+
+export enum BeachTimeSunMarkStatus {
+	/** The sun has set, but there is still light. */
+	sunset,
+	/** It is too dark for the beach. */
+	night,
+	/** The sun has not yet risen, but there is light. */
+	predawn,
+	/** The sun has risen. */
+	sunrise
+}
+
+export interface BeachTimeCurrentWeather {
+	beachTimeStatus: BeachTimeStatus;
+	weatherMarkStatus: Weather.Indicator;
+}
+
+export interface BeachTimeWeatherMark {
+	time: DateTime;
+	weatherStatus: Weather.Indicator;
+}
+
+export enum BeachTimeStatus {
+	not,
+	okay,
+	best
 }
 
 /** A reason can be due to tides, sun, or weather. */
-export type BeachTimeReason = BeachTimeTideMark | Weather.Hourly | Weather.Day | Astro.BodyEvent;
+export type BeachTimeReason = BeachTimeTideMark | BeachTimeWeatherMark | BeachTimeSunMark;
+
+export function isBeachTimeTideMark(value: BeachTimeReason | null): value is BeachTimeTideMark {
+	return !!value && (value as BeachTimeTideMark).heightStatus !== undefined;
+}
+export function isBeachTimeSunMark(value: BeachTimeReason | null): value is BeachTimeSunMark {
+	return !!value && (value as BeachTimeSunMark).lightStatus !== undefined;
+}
+export function isBeachTimeWeatherMark(value: BeachTimeReason | null): value is BeachTimeWeatherMark {
+	return !!value && (value as BeachTimeWeatherMark).weatherStatus !== undefined;
+}
 
 export interface AstroContent {
 	sun: {
@@ -134,7 +194,7 @@ export interface WeatherContentHourly extends Weather.Hourly {
 
 export interface TideContent {
 	/** The true measured tide level. */
-	measured: Tide.Stamp;
+	measured: Tide.MeasureStamp;
 	relativity: Tide.Relativity;
 	daily: TideContentDay[];
 	/** The minimum across all included in the daily array. */
@@ -146,14 +206,4 @@ export interface TideContent {
 export interface TideContentDay {
 	extremes: Tide.ExtremeStamp[];
 	moonPhase: Astro.MoonPhase;
-}
-
-export function isBeachTimeTideMark(value: BeachTimeReason | null): value is BeachTimeTideMark {
-	return !!value && (value as BeachTimeTideMark).isRising !== undefined;
-}
-export function isSunEvent(value: BeachTimeReason | null): value is Astro.BodyEvent {
-	return !!value && (value as Astro.BodyEvent).isRise !== undefined;
-}
-export function isWeatherEntry(value: BeachTimeReason | null): value is Weather.Hourly | Weather.Day {
-	return !!value && (value as Weather.Hourly | Weather.Day).status !== undefined;
 }

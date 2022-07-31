@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
 import { percentTimeBetween } from '../time';
 
-export function getTideTitle(referenceTime: DateTime, measured: iso.Tide.Stamp, relativity: iso.Tide.Relativity): string {
+export function getTideTitle(referenceTime: DateTime, measured: iso.Tide.MeasureStamp, relativity: iso.Tide.Relativity): string {
 	const { previous, current, next } = relativity;
 
 	if (current) {
@@ -20,7 +20,7 @@ export function getTideTitle(referenceTime: DateTime, measured: iso.Tide.Stamp, 
 	}
 }
 
-export function getTideDescription(tide: iso.Tide.Stamp): string {
+export function getTideDescription(tide: iso.Tide.MeasureStamp): string {
 	const { direction, division } = tide;
 
 	if (direction === iso.Tide.Direction.turning) {

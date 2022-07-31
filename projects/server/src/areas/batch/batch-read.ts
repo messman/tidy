@@ -77,7 +77,7 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tide: FetchedT
 
 	return {
 		meta,
-		beach: getBeachContent(config, tide, dailyTides, astro, weather),
+		beach: getBeachContent(config, tide, measured, dailyTides, astro, weather),
 		tide: {
 			measured,
 			relativity,

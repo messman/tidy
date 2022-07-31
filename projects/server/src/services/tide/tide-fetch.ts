@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon';
 import * as iso from '@wbtdevlocal/iso';
-import { ServerPromise } from '../../api/error';
+import { serverErrors, ServerPromise } from '../../api/error';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
 import { makeRequest } from '../network/request';
-import { FetchedTide, getStartOfDayBefore } from './tide-shared';
+import { computeHeightAtTimeBetweenPredictions, FetchedTide, getStartOfDayBefore } from './tide-shared';
 
 /*
 	From https://tidesandcurrents.noaa.gov/api/
@@ -20,6 +20,25 @@ export async function readTides(ctx: LogContext, config: BaseConfig): ServerProm
 
 async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedTide> {
 
+	const extrema = await getPredictions(ctx, config);
+	if (iso.isServerError(extrema)) {
+		return extrema;
+	}
+
+	const computed = getComputed(config, extrema);
+
+	const current = await getMeasured(ctx, config, computed);
+	if (iso.isServerError(current)) {
+		return current;
+	}
+
+	return {
+		current,
+		extrema
+	};
+}
+
+async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromise<iso.Tide.ExtremeStamp[]> {
 	const { referenceTime, futureCutoff } = config;
 	const { tideStation } = iso.constant;
 
@@ -41,27 +60,13 @@ async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<Fe
 	if (iso.isServerError(predictionResponse)) {
 		return predictionResponse;
 	}
-
-	const currentLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
-		station: tideStation,
-		product: "water_level",
-		datum: "mllw",
-		date: "latest"
-	} as NOAACurrentLevelInput));
-
-	const currentLevelResponse = await makeRequest<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(currentLevelInput));
-	if (iso.isServerError(currentLevelResponse)) {
-		return currentLevelResponse;
+	if (isNOAARawErrorResponse(predictionResponse)) {
+		// If we can't have predictions, we have nothing. Get out.
+		return serverErrors.internal.service(ctx, 'Tides - prediction', {
+			hiddenArea: 'Service returned an error object',
+			hiddenLog: { message: predictionResponse.error?.message || 'No message' }
+		});
 	}
-
-	const currentLevelData = currentLevelResponse.data[0];
-
-	// The current time can be 0-15 minutes behind our reference time.
-	// Just use the reference time.
-	//const currentTime = toDateTimeFromNOAAString(currentLevelData.t);
-	const currentTime = config.referenceTime;
-
-	const currentHeight = parseHeight(currentLevelData.v);
 
 	const extrema: iso.Tide.ExtremeStamp[] = [];
 	predictionResponse.predictions.forEach((p) => {
@@ -75,11 +80,110 @@ async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<Fe
 		}
 	});
 
-	return {
-		currentTime,
-		currentHeight,
-		extrema
+	return extrema;
+}
+
+/**
+ * Based on the reference time, get what we think the height is.
+ * This logic is based off the same logic used for beach access height time.
+ */
+function getComputed(config: BaseConfig, extrema: iso.Tide.ExtremeStamp[]): number {
+	const { referenceTime } = config;
+
+	// get previous and next
+	let previous: iso.Tide.ExtremeStamp = null!;
+	let next: iso.Tide.ExtremeStamp = null!;
+
+	for (let i = 0; i < extrema.length; i++) {
+		if (extrema[i].time >= referenceTime) {
+			previous = extrema[i - 1];
+			next = extrema[i];
+			break;
+		}
+	}
+
+	return computeHeightAtTimeBetweenPredictions(previous, next, referenceTime);
+}
+
+async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number): ServerPromise<iso.Tide.MeasureStampBase> {
+	const { tideStation, portlandTideStation } = iso.constant;
+
+	/*
+		The reason for this complexity:
+		The measurements of water levels from the NOAA station in Wells is finicky.
+		In 2019 and 2022, the measurements went offline for some time. But we can't just throw the whole app
+		away when that happens. So we have two backups:
+		- Using Portland
+		- Computing the water level from predictions like we do for beach time access height
+	*/
+
+	let isHeightAlternate = false;
+	let isHeightComputed = false;
+	let heightTime: DateTime = null!;
+	let height: number = null!;
+
+	// Try to get the measurements from Wells.
+	const wellsLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
+		station: tideStation,
+		product: "water_level",
+		datum: "mllw",
+		date: "latest"
+	} as NOAACurrentLevelInput));
+
+	const wellsLevelResponse = await makeRequest<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(wellsLevelInput));
+	if (iso.isServerError(wellsLevelResponse)) {
+		return wellsLevelResponse;
+	}
+	else if (isNOAARawErrorResponse(wellsLevelResponse)) {
+		// Could not get the water level from Wells.
+		ctx.logger.warn('Tide level response from Wells is an error - no water level available', {
+			message: wellsLevelResponse.error?.message || 'No message'
+		});
+
+		// Try Portland
+		const portlandLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
+			station: portlandTideStation,
+			product: "water_level",
+			datum: "mllw",
+			date: "latest"
+		} as NOAACurrentLevelInput));
+
+		const portlandLevelResponse = await makeRequest<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(portlandLevelInput));
+		if (iso.isServerError(portlandLevelResponse)) {
+			return portlandLevelResponse;
+		}
+		else if (isNOAARawErrorResponse(portlandLevelResponse)) {
+			// Could not get the water level from Portland.
+			ctx.logger.warn('Tide level response from Portland is an error - no water level available', {
+				message: wellsLevelResponse.error?.message || 'No message'
+			});
+
+			// Portland failed too? Aw man.
+			isHeightComputed = true;
+			height = computed;
+			heightTime = config.referenceTime;
+		}
+		else {
+			isHeightAlternate = true;
+			const data = portlandLevelResponse.data[0];
+			height = parseHeight(data.v);
+			heightTime = toDateTimeFromNOAAString(data.t); // May be significantly in the past
+		}
+	}
+	else {
+		const data = wellsLevelResponse.data[0];
+		height = parseHeight(data.v);
+		heightTime = toDateTimeFromNOAAString(data.t); // May be significantly in the past
+	}
+
+	const current: iso.Tide.MeasureStampBase = {
+		computed,
+		isAlternate: isHeightAlternate,
+		isComputed: isHeightComputed,
+		height,
+		time: heightTime
 	};
+	return current;
 }
 
 function toDateTimeFromNOAAString(time: string): DateTime {
@@ -124,9 +228,9 @@ interface NOAACurrentLevelInput extends BaseNOAAInput {
 }
 
 
-interface NOAAPredictionOutput extends NOAARawErrorResponse {
+type NOAAPredictionOutput = NOAARawErrorResponse | {
 	predictions: NOAAPredictionEntry[];
-}
+};
 
 interface NOAAPredictionEntry {
 	t: string,
@@ -134,9 +238,9 @@ interface NOAAPredictionEntry {
 	type: 'H' | 'L';
 }
 
-interface NOAACurrentLevelOutput extends NOAARawErrorResponse {
+type NOAACurrentLevelOutput = NOAARawErrorResponse | {
 	data: NOAACurrentLevelEntry[];
-}
+};
 
 interface NOAACurrentLevelEntry {
 	t: string,
@@ -147,6 +251,9 @@ interface NOAARawErrorResponse {
 	error: {
 		message: string;
 	};
+}
+function isNOAARawErrorResponse(response: any): response is NOAARawErrorResponse {
+	return !!response && !!(response as NOAARawErrorResponse).error;
 }
 
 const api_noaa = "https://tidesandcurrents.noaa.gov/api/datagetter";

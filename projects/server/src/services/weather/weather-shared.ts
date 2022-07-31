@@ -84,8 +84,8 @@ const statusIndicator: Record<keyof typeof iso.Weather.StatusType, iso.Weather.I
 	clear_cold: iso.Weather.Indicator.best,
 	clouds_few: iso.Weather.Indicator.best,
 	clouds_some: iso.Weather.Indicator.best,
+	clouds_most: iso.Weather.Indicator.best,
 
-	clouds_most: iso.Weather.Indicator.okay,
 	dust: iso.Weather.Indicator.okay,
 	smoke: iso.Weather.Indicator.okay,
 	unknown: iso.Weather.Indicator.okay,

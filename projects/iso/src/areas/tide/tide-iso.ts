@@ -17,10 +17,31 @@ export enum Direction {
 	falling
 }
 
-/** A measurement/estimation of the tides at a given time. */
-export interface Stamp {
+/**
+ * A measurement/estimation of the tides at a given time.
+ * Note - this information is not always guaranteed accurate or from the right location.
+ */
+export interface MeasureStampBase {
+	/** Whether we had to grab water level from the backup location. */
+	isAlternate: boolean;
+	/** Whether the water level is the computed value. */
+	isComputed: boolean;
+	/**
+	 * We can always compute a height, so make it available always.
+	 * While the measured height may be significantly in the past, this computed value
+	 * is for the reference time.
+	*/
+	computed: number;
+	/** Could be up to 30 minutes behind, based on when measurement was taken! */
 	time: DateTime;
-	height: number,
+	/** Always a value, but may be the computed value. May not be precise to this time. */
+	height: number;
+}
+
+/**
+ * A measurement/estimation of the tides at a given time.
+ */
+export interface MeasureStamp extends MeasureStampBase {
 	division: Division;
 	direction: Direction;
 }

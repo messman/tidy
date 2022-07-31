@@ -40,6 +40,18 @@ export const TideHeader: React.FC = () => {
 		}
 	}
 
+	const portlandText = tide.measured.isAlternate ? (
+		<Paragraph>
+			Due to station availability issues, the current water level measurement is from Portland and may be less accurate.
+		</Paragraph>
+	) : null;
+
+	const computedText = tide.measured.isComputed ? (
+		<Paragraph>
+			Due to station availability issues, the current water level measurement is mathematically computed and may be less accurate.
+		</Paragraph>
+	) : null;
+
 	return (
 		<>
 			<IconTitle iconRender={<TideLevelIcon tide={measured} />}>{title}</IconTitle>
@@ -50,13 +62,15 @@ export const TideHeader: React.FC = () => {
 			<Block.Bat08 />
 			<Paragraph>
 				The water level is currently <TideHeightTextUnit height={measured.height} precision={1} /> above the average low.
-				The beach is usually accessible at around <TideHeightTextUnit height={iso.constant.beachAccessHeight} precision={0} /> and below.
+				The beach is most available at a water level below <TideHeightTextUnit height={iso.constant.beachAccessFullyFall} precision={0} />.
 			</Paragraph>
 			{noteRender}
 			<Block.Bat08 />
 			<Paragraph>
 				Tide charts can be printed from <OutLink title='US Harbors' href="https://www.usharbors.com/harbor/maine/wells-harbor-me/tides/">US Harbors</OutLink>.
 			</Paragraph>
+			{portlandText}
+			{computedText}
 		</>
 	);
 };

@@ -15,10 +15,10 @@ export enum BeachTimeStatus {
 }
 
 export function getBeachTimeStatus(beach: iso.Batch.BeachContent, referenceTime: DateTime): BeachTimeStatus {
-	const { current, next } = beach;
+	const { firstStopReason, next } = beach;
 
-	if (current) {
-		if (current.stop.diff(referenceTime, 'minutes').minutes <= 60) {
+	if (firstStopReason) {
+		if (firstStopReason.time.diff(referenceTime, 'minutes').minutes <= 60) {
 			return BeachTimeStatus.currentEndingSoon;
 		}
 		else {
@@ -49,37 +49,39 @@ export interface BeachTimeTextInfo {
 
 export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (beach: iso.Batch.BeachContent, referenceTime: DateTime) => BeachTimeTextInfo> = {
 	current: (beach) => {
+		const isBest = beach.status === iso.Batch.BeachTimeStatus.best;
+
 		return {
-			title: `It's beach time!`,
+			title: `It's beach time${isBest ? '!' : '.'}`,
 			range: null,
-			description: `Enjoy the beach until ${getTimeTwelveHourString(beach.current!.stop)}.`,
-			expression: icons.expressionHappy
+			description: `Enjoy the beach until ${getTimeTwelveHourString(beach.firstStopReason!.time)}.`,
+			expression: isBest ? icons.expressionHappy : icons.expressionStraight
 		};
 	},
 	currentEndingSoon: (beach, referenceTime) => {
-		const { current, next } = beach;
+		const { firstStopReason, next } = beach;
 		const isNextToday = next.start.hasSame(referenceTime, 'day');
 		const isNextTomorrow = next.start.hasSame(referenceTime.plus({ days: 1 }), 'day');
 
 		const description = (isNextToday || isNextTomorrow) ? (
-			`The next beach time starts at ${getTimeTwelveHourString(next.start)}${isNextTomorrow ? ' tomorrow' : ''}.`
+			`Beach time ends soon. The next beach time starts at ${getTimeTwelveHourString(next.start)}${isNextTomorrow ? ' tomorrow' : ''}.`
 		) : (
-			`The next beach time isn't for awhile.`
+			`Beach time ends soon. The next beach time isn't for awhile.`
 		);
 
 		return {
-			title: `Beach time ends soon.`,
-			range: `Ends ${getTimeTwelveHourString(current!.stop)}`,
+			title: `It's beach time.`,
+			range: `Ends ${getTimeTwelveHourString(firstStopReason!.time)}`,
 			description: description,
-			expression: icons.expressionStraight
+			expression: beach.status === iso.Batch.BeachTimeStatus.best ? icons.expressionHappy : icons.expressionStraight
 		};
 	},
 	nextSoon: (beach, referenceTime) => {
 		return {
-			title: `Beach time starts soon!`,
+			title: `It's not beach time yet.`,
 			range: getTimeTwelveHourRange(beach.next.start, beach.next.stop),
 			description: `Enjoy the beach starting in ${getDurationDescription(referenceTime, beach.next.start)}.`,
-			expression: icons.expressionStraight
+			expression: icons.expressionSad
 		};
 	},
 	nextLater: (beach) => {
@@ -87,7 +89,7 @@ export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (
 			title: `It's not beach time right now.`,
 			range: null,
 			description: `Beach time starts at ${getTimeTwelveHourString(beach.next.start)}.`,
-			expression: icons.expressionStraight
+			expression: icons.expressionSad
 		};
 	},
 	nextTomorrow: (beach) => {

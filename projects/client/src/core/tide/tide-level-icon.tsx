@@ -7,10 +7,10 @@ import { fontStyleDeclarations } from '../text';
 import { styled, StyledFC } from '../theme/styled';
 
 /** A tide status that should never happen with real data, but may be used for loading. */
-export const unknownTide: iso.Tide.Stamp = { time: DateTime.now(), height: 0, direction: iso.Tide.Direction.turning, division: iso.Tide.Division.mid };
+export const unknownTide: iso.Tide.MeasureStamp = { time: DateTime.now(), height: 0, direction: iso.Tide.Direction.turning, division: iso.Tide.Division.mid, isComputed: false, isAlternate: false, computed: 0 };
 
 export interface TideLevelIconProps {
-	tide: iso.Tide.Stamp;
+	tide: iso.Tide.MeasureStamp;
 }
 
 export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {
