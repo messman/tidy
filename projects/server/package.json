@@ -1,6 +1,6 @@
 {
 	"name": "@wbtdevlocal/server",
-	"version": "4.0.0",
+	"version": "4.0.2",
 	"description": "The server for WBT.",
 	"main": "dist/index.js",
 	"scripts": {
