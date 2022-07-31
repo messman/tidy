@@ -10,16 +10,19 @@ export default CosmosFixture.create(() => {
 
 	const height = 0;
 	const time = DateTime.now();
-	const entries: iso.Tide.Stamp[] = [
-		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.turning, height, time },
-		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.falling, height, time },
-		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.falling, height, time },
-		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.falling, height, time },
-		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.turning, height, time },
-		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.rising, height, time },
-		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.rising, height, time },
-		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.rising, height, time },
-		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.turning, height, time },
+	const computed = 0;
+	const isComputed = false;
+	const isAlternate = false;
+	const entries: iso.Tide.MeasureStamp[] = [
+		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.turning, height, time, computed, isComputed, isAlternate },
+		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.falling, height, time, computed, isComputed, isAlternate },
+		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.falling, height, time, computed, isComputed, isAlternate },
+		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.falling, height, time, computed, isComputed, isAlternate },
+		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.turning, height, time, computed, isComputed, isAlternate },
+		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.rising, height, time, computed, isComputed, isAlternate },
+		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.rising, height, time, computed, isComputed, isAlternate },
+		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.rising, height, time, computed, isComputed, isAlternate },
+		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.turning, height, time, computed, isComputed, isAlternate },
 	];
 
 	const entriesRender = entries.map((entry) => {

@@ -32,6 +32,8 @@ export const About: React.FC = () => {
 				<Paragraph>
 					Live measurement of water level comes from <OutLink title='NOAA station homepage' href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317">NOAA station 8419317</OutLink> located
 					on the Wells Town Dock on Harbor Road.
+					When that station is unavailable, measurements come from <OutLink title='NOAA station homepage' href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8418150">NOAA station 8418150</OutLink> located
+					in Portland.
 				</Paragraph>
 				<Block.Bat08 />
 				<Note>

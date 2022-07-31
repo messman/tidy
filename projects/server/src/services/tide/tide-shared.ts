@@ -3,8 +3,7 @@ import * as iso from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 
 export interface FetchedTide {
-	currentTime: DateTime;
-	currentHeight: number;
+	current: iso.Tide.MeasureStampBase;
 	extrema: iso.Tide.ExtremeStamp[];
 }
 
@@ -17,12 +16,13 @@ const currentExtremeBoundMinutes = 10;
 
 
 export interface TideMeasuredAndRelativity {
-	measured: iso.Tide.Stamp;
+	measured: iso.Tide.MeasureStamp;
 	relativity: iso.Tide.Relativity;
 }
 
 export function getTideMeasuredAndRelativity(config: BaseConfig, fetchedTide: FetchedTide): TideMeasuredAndRelativity {
-	const { currentHeight, currentTime, extrema } = fetchedTide;
+	const { current, extrema } = fetchedTide;
+	const { height: currentHeight } = current;
 
 	const { referenceTime } = config;
 
@@ -47,7 +47,7 @@ export function getTideMeasuredAndRelativity(config: BaseConfig, fetchedTide: Fe
 	const referenceTimeCurrentLowerBound = referenceTime.minus({ minutes: currentExtremeBoundMinutes });
 	const referenceTimeCurrentUpperBound = referenceTime.plus({ minutes: currentExtremeBoundMinutes });
 
-	let current: iso.Tide.ExtremeStamp | null = null;
+	let currentExtreme: iso.Tide.ExtremeStamp | null = null;
 
 	/*
 		Three possibilities:
@@ -56,11 +56,11 @@ export function getTideMeasuredAndRelativity(config: BaseConfig, fetchedTide: Fe
 		- there is no current
 	*/
 	if (previous.time >= referenceTimeCurrentLowerBound || (previous.isLow && currentHeight <= previous.height) || (!previous.isLow && currentHeight >= previous.height)) {
-		current = previous;
+		currentExtreme = previous;
 		previous = twoPrevious;
 	}
 	else if (next.time <= referenceTimeCurrentUpperBound || (next.isLow && currentHeight <= next.height) || (!next.isLow && currentHeight >= next.height)) {
-		current = next;
+		currentExtreme = next;
 		next = twoNext;
 	}
 	else {
@@ -71,10 +71,10 @@ export function getTideMeasuredAndRelativity(config: BaseConfig, fetchedTide: Fe
 		Calculate the direction and division based on what we now know.
 		For division: top 25% is upper; middle 50% is mid; lower 25% is lower.
 	*/
-	const currentDirection = current ? iso.Tide.Direction.turning : (next.isLow ? iso.Tide.Direction.falling : iso.Tide.Direction.rising);
+	const currentDirection = currentExtreme ? iso.Tide.Direction.turning : (next.isLow ? iso.Tide.Direction.falling : iso.Tide.Direction.rising);
 	let currentDivision: iso.Tide.Division = null!;
-	if (current) {
-		currentDivision = current.isLow ? iso.Tide.Division.low : iso.Tide.Division.high;
+	if (currentExtreme) {
+		currentDivision = currentExtreme.isLow ? iso.Tide.Division.low : iso.Tide.Division.high;
 	}
 	else {
 		// Get the height as a percent in the range of low to high. 
@@ -86,14 +86,13 @@ export function getTideMeasuredAndRelativity(config: BaseConfig, fetchedTide: Fe
 
 	return {
 		measured: {
-			time: currentTime,
-			height: currentHeight,
+			...current,
 			direction: currentDirection,
 			division: currentDivision,
 		},
 		relativity: {
 			previous,
-			current,
+			current: currentExtreme,
 			next
 		}
 	};
@@ -123,3 +122,39 @@ export function getTideMinMax(events: iso.Tide.ExtremeStamp[]): [iso.Tide.Extrem
 
 	return [minEvent, maxEvent];
 };
+
+
+/**
+ * Uses the cosine function to compute/guess the height at a time between two tide extremes.
+*/
+export function computeHeightAtTimeBetweenPredictions(previousExtreme: iso.Tide.ExtremeStamp, nextExtreme: iso.Tide.ExtremeStamp, referenceTime: DateTime): number {
+	/*
+		Use cosine function, where our domain is [0, pi] for high -> low or [pi, 2pi] for low -> high
+		and our range is [-1, 1].
+		(See https://www.math.net/cosine)
+
+		So figure out which direction we're headed, restrict
+		to our domain and range, and compute.
+	*/
+	const a: iso.Tide.ExtremeStamp = previousExtreme;
+	const b: iso.Tide.ExtremeStamp = nextExtreme;
+
+	const totalSeconds = b.time.diff(a.time, 'seconds').seconds;
+	const timeAsPercent = referenceTime.diff(a.time, 'seconds').seconds / totalSeconds; // [0, 1]
+
+	let radian = timeAsPercent * Math.PI; // [0, pi]
+	if (a.isLow) {
+		radian += Math.PI; // [pi, 2pi]
+	}
+
+	const cosine = Math.cos(radian); // [-1, 1]
+	const adjusted = (cosine + 1) / 2; // [0, 1]
+
+	let [high, low] = [a.height, b.height];
+	if (a.isLow) {
+		[low, high] = [high, low];
+	}
+	const height = ((high - low) * adjusted) + low;
+	const heightWithPrecision = parseFloat(height.toFixed(1));
+	return heightWithPrecision;
+}

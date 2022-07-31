@@ -18,6 +18,21 @@ export const constant = {
 	 */
 	tideStation: 8419317,
 
-	/** When the tide is at or below this height, the beach is accessible. */
-	beachAccessHeight: 6.5,
+	/**
+	 * An alternative NOAA station, like https://tidesandcurrents.noaa.gov/stationhome.html?id=8418150
+	 * in case the Wells station does not measure water level (it has a history of going down)
+	 */
+	portlandTideStation: 8418150,
+
+	/** When beach time is no longer best. */
+	beachAccessEarlyRise: 5,
+	/** When beach time is over. */
+	beachAccessFullyRise: 7.5,
+	/** When beach time starts but is not best. */
+	beachAccessEarlyFall: 8,
+	/** When beach time is best. */
+	beachAccessFullyFall: 7,
+
+	/** Number of minutes before sunrise and after sunset where we can still have beach time. */
+	sunLightBufferMinutes: 30,
 };

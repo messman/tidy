@@ -4,7 +4,6 @@ import { LabelText } from '@/core/label';
 import { fontStyleDeclarations } from '@/core/text';
 import { Block, Spacing } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
-import { BeachTimeStatus, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
@@ -43,88 +42,68 @@ import * as iso from '@wbtdevlocal/iso';
 */
 
 export const BeachTimeRequirements: React.FC = () => {
-	const { meta, beach, tide, astro, weather } = useBatchResponse().success!;
-	const { referenceTime } = meta;
-	const { current, firstCurrentStopReason, upcomingNextStartReasons } = beach;
-
-	const status = getBeachTimeStatus(beach, referenceTime);
-	const isEndingSoon = status === BeachTimeStatus.currentEndingSoon;
-	const isStartingSoon = status === BeachTimeStatus.nextSoon;
-
-	let tideStartReason: iso.Batch.BeachTimeTideMark | null = null;
-	let sunStartReason: iso.Astro.BodyEvent | null = null;
-	let weatherStartReason: iso.Weather.Hourly | iso.Weather.Day | null = null;
-	upcomingNextStartReasons.forEach((reason) => {
-		if (iso.Batch.isBeachTimeTideMark(reason)) {
-			tideStartReason = reason;
-		}
-		else if (iso.Batch.isSunEvent(reason)) {
-			sunStartReason = reason;
-		}
-		else if (iso.Batch.isWeatherEntry(reason)) {
-			weatherStartReason = reason;
-		}
-	});
+	const { beach } = useBatchResponse().success!;
+	const { tide, sun, weather } = beach;
 
 
 	let tideText: string = null!;
 	let tideIcon: IconInputType = null!;
-	if (tide.measured.height <= iso.constant.beachAccessHeight) {
-		tideText = `Water level is low enough`;
+	if (tide.beachTimeStatus === iso.Batch.BeachTimeStatus.best) {
+		tideText = `The tide is low enough`;
 		tideIcon = icons.expressionHappy;
-
-		if (isEndingSoon && iso.Batch.isBeachTimeTideMark(firstCurrentStopReason)) {
-			tideText += `, but not for much longer`;
+	}
+	else if (tide.beachTimeStatus === iso.Batch.BeachTimeStatus.okay) {
+		if (tide.tideMarkStatus === iso.Batch.BeachTimeTideMarkStatus.earlyFall) {
+			tideText = `The tide is falling, but still high`;
+			tideIcon = icons.expressionStraight;
+		}
+		else if (tide.tideMarkStatus === iso.Batch.BeachTimeTideMarkStatus.earlyRise) {
+			tideText = `The tide is quickly covering the beach`;
 			tideIcon = icons.expressionStraight;
 		}
 	}
 	else {
-		tideText = `Water level is too high`;
+		tideText = `The tide has covered the beach`;
 		tideIcon = icons.expressionSad;
-
-		if (isStartingSoon && tideStartReason && tide.measured.direction !== iso.Tide.Direction.rising) {
-			tideText += `, but is on its way down`;
-		}
 	}
 
 	let weatherText: string = null!;
 	let weatherIcon: IconInputType = null!;
-	if (weather.current.indicator !== iso.Weather.Indicator.bad) {
-		weatherText = `Weather is ${weather.current.indicator === iso.Weather.Indicator.best ? 'good' : 'okay'}`;
+	if (weather.beachTimeStatus === iso.Batch.BeachTimeStatus.best) {
+		weatherText = `The weather is looking good`;
 		weatherIcon = icons.expressionHappy;
-		if (isEndingSoon && iso.Batch.isWeatherEntry(firstCurrentStopReason)) {
-			weatherText += `, but not for much longer`;
-			weatherIcon = icons.expressionStraight;
-		}
+	}
+	else if (weather.beachTimeStatus === iso.Batch.BeachTimeStatus.okay) {
+		weatherText = `The weather could be better`;
+		weatherIcon = icons.expressionStraight;
 	}
 	else {
-		weatherText = `Weather is bad`;
+		weatherText = `The weather is poor`;
 		weatherIcon = icons.expressionSad;
-		if (isStartingSoon && weatherStartReason) {
-			weatherText += `, but it's turning around soon`;
-		}
 	}
 
 	let sunText: string = null!;
 	let sunIcon: IconInputType = null!;
-	if (!astro.sun.relativity.next.isRise) {
+	if (sun.beachTimeStatus === iso.Batch.BeachTimeStatus.best) {
 		sunText = `It's daytime`;
 		sunIcon = icons.expressionHappy;
-		if (isEndingSoon && iso.Batch.isSunEvent(firstCurrentStopReason)) {
-			sunText += `, but not for much longer`;
+	}
+	else if (sun.beachTimeStatus === iso.Batch.BeachTimeStatus.okay) {
+		if (sun.sunMarkStatus === iso.Batch.BeachTimeSunMarkStatus.predawn) {
+			sunText = `The sun hasn't risen yet, but there is decent light`;
+			sunIcon = icons.expressionStraight;
+		}
+		else if (sun.sunMarkStatus === iso.Batch.BeachTimeSunMarkStatus.sunset) {
+			sunText = `The sun has set, but there's still enough light`;
 			sunIcon = icons.expressionStraight;
 		}
 	}
 	else {
-		sunText = `Sun has gone down`;
+		sunText = `There's not enough light`;
 		sunIcon = icons.expressionSad;
-		if (isStartingSoon && sunStartReason) {
-			sunText += `, but is rising soon`;
-		}
 	}
 
-
-	const rightNowText = !current ? (
+	const rightNowText = beach.status !== iso.Batch.BeachTimeStatus.not ? (
 		<RightNowText>Right now:</RightNowText>
 	) : null;
 

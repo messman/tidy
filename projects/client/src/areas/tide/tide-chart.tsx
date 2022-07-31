@@ -40,7 +40,7 @@ export const TideChart: React.FC = () => {
 interface TideChartDayProps {
 	minHeight: number;
 	maxHeight: number;
-	measured: iso.Tide.Stamp;
+	measured: iso.Tide.MeasureStamp;
 	day: iso.Batch.TideContentDay;
 }
 
@@ -53,7 +53,7 @@ const TideChartDay: React.FC<TideChartDayProps> = (props) => {
 	const dateText = getDateDayOfWeek(date);
 	const titleText = (relativeDayText ? (relativeDayText + ', ') : '') + dateText;
 
-	let all: (iso.Tide.ExtremeStamp | iso.Tide.Stamp)[] = [...day.extremes];
+	let all: (iso.Tide.ExtremeStamp | iso.Tide.MeasureStamp)[] = [...day.extremes];
 	if (measured.time.hasSame(date, 'day')) {
 		const index = all.findIndex((extreme) => {
 			return extreme.time > measured.time;
