@@ -15,7 +15,7 @@ echo $ROOT_PATH
 HEROKU_APP=wellsbeachtime-api-v4-0
 HEROKU_REGISTRY=registry.heroku.com/${HEROKU_APP}/web
 
-DOCKER_BUILDKIT=1 docker build . \
+DOCKER_BUILDKIT=1 docker build --platform linux/amd64 . \
 	--file utility/deploy/server/server.Dockerfile \
 	--tag "$HEROKU_REGISTRY" \
 
