@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IconInputType, SizedIcon } from '@/core/icon/icon';
 import { LabelText } from '@/core/label';
-import { fontStyleDeclarations } from '@/core/text';
 import { Block, Spacing } from '@/core/theme/box';
 import { styled } from '@/core/theme/styled';
 import { useBatchResponse } from '@/services/data/data';
@@ -12,7 +11,6 @@ import * as iso from '@wbtdevlocal/iso';
 	Spacing is a little weird in this component just because we start with icons on the left side
 	and they have some spacing baked-in.
 */
-
 
 /*
 	Tide
@@ -44,7 +42,6 @@ import * as iso from '@wbtdevlocal/iso';
 export const BeachTimeRequirements: React.FC = () => {
 	const { beach } = useBatchResponse().success!;
 	const { tide, sun, weather } = beach;
-
 
 	let tideText: string = null!;
 	let tideIcon: IconInputType = null!;
@@ -103,14 +100,9 @@ export const BeachTimeRequirements: React.FC = () => {
 		sunIcon = icons.expressionSad;
 	}
 
-	const rightNowText = beach.status !== iso.Batch.BeachTimeStatus.not ? (
-		<RightNowText>Right now:</RightNowText>
-	) : null;
-
 	return (
 		<>
 			<Container>
-				{rightNowText}
 				<Requirement icon={tideIcon}>{tideText}</Requirement>
 				<Requirement icon={weatherIcon}>{weatherText}</Requirement>
 				<Requirement icon={sunIcon}>{sunText}</Requirement>
@@ -118,13 +110,6 @@ export const BeachTimeRequirements: React.FC = () => {
 		</>
 	);
 };
-
-const RightNowText = styled.div`
-	${fontStyleDeclarations.body};
-	color: ${p => p.theme.textSubtle};
-	padding-left: ${Spacing.bat08};
-`;
-
 
 const Container = styled.div`
 	padding: ${Spacing.bat08};

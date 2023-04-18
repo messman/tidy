@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { MoonPhaseIcon } from '@/core/astro/moon-phase-icon';
 import { fontStyleDeclarations } from '@/core/text';
@@ -11,7 +12,8 @@ import { getDateDayOfWeek, getRelativeDayText, getTimeTwelveHourString } from '@
 import * as iso from '@wbtdevlocal/iso';
 
 export const TideChart: React.FC = () => {
-	const { tide } = useBatchResponse().success!;
+	const { tide, meta } = useBatchResponse().success!;
+	const { referenceTime } = meta;
 	const { measured, dailyMin, dailyMax, daily } = tide;
 
 	// Handle the case where the measured tide is above even the highest or lowest tide value.
@@ -25,6 +27,7 @@ export const TideChart: React.FC = () => {
 				day={day}
 				maxHeight={absoluteMax}
 				minHeight={absoluteMin}
+				referenceTime={referenceTime}
 				measured={measured}
 			/>
 		);
@@ -41,22 +44,31 @@ interface TideChartDayProps {
 	minHeight: number;
 	maxHeight: number;
 	measured: iso.Tide.MeasureStamp;
+	referenceTime: DateTime;
 	day: iso.Batch.TideContentDay;
 }
 
 const TideChartDay: React.FC<TideChartDayProps> = (props) => {
-	const { minHeight, maxHeight, day, measured } = props;
+	const { minHeight, maxHeight, day, referenceTime, measured } = props;
 	const range = maxHeight - minHeight;
 
+	/*
+		Note - the measured time may be significantly behind the reference time.
+		This has implications for our charts - we want to show the "current" tide level,
+		but if we put it at the measured time it may come before an extreme.
+		For the purposes of these charts, let's always just say the measured water level is 
+		from the reference time.
+	*/
 	const date = day.extremes[0].time;
-	const relativeDayText = getRelativeDayText(date, measured.time);
+	const relativeDayText = getRelativeDayText(date, referenceTime);
 	const dateText = getDateDayOfWeek(date);
 	const titleText = (relativeDayText ? (relativeDayText + ', ') : '') + dateText;
 
 	let all: (iso.Tide.ExtremeStamp | iso.Tide.MeasureStamp)[] = [...day.extremes];
-	if (measured.time.hasSame(date, 'day')) {
+	if (referenceTime.hasSame(date, 'day')) {
+		// Inefficient but there's only a few for one day.
 		const index = all.findIndex((extreme) => {
-			return extreme.time > measured.time;
+			return extreme.time > referenceTime;
 		});
 		if (index === -1) {
 			all.push(measured);
