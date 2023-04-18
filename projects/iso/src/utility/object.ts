@@ -1,46 +1,26 @@
-import { DateTime } from 'luxon';
 import { KeysOf } from './types';
 
 /**
  * Modifies the object to delete any undefined keys.
- * Returns the same object.
+ * Returns a new object.
+ * Used in the database calls, where pg (in node) treats undefined as null.
 */
-export function strip<T extends object>(value: T): T {
+export function stripUndefined<T extends object>(value: T): T {
 	const keys = Object.keys(value);
+	const output = {} as T;
 	for (let i = 0; i < keys.length; i++) {
 		const key = keys[i] as keyof typeof value;
-		if (value[key] === undefined) {
-			delete value[key];
+		if (value[key] !== undefined) {
+			(output as any)[key] = value[key];
 		}
 	}
-	return value;
-}
-
-export function inline<T>(value: T): T { return value; }
-
-/**
- * A helper function that provides defined types for values but keeps key names.
- * Often in dictionaries the keys of the dictionary are lost as 'string' - here they are retained.
- * 
- * Example:
- * ```
- * const x = strictValues<number | null>()({
- *   key1: null,
- *   key2: 77
- * });
- * 
- * // TypeScript will know x has two keys, key1 and key2
- * // TypeScript will type-check the null and 77
- * ```
-*/
-export function strict<Value>() {
-	return function <O>(obj: { [Key in keyof O]: Value }) {
-		return obj;
-	};
+	return output;
 }
 
 /**
- * Returns `true` if the param is an object and not a number, string, etc.
+ * Returns `true` if the param exists and is a JS object literal and not a number, string, Date, String, Number, etc.
+ * 
+ * Note, this is different than extending `Object` or being `typeof` "Object". 
 */
 export function isObjectLiteral<T>(val: T): boolean {
 	return !!val && Object.getPrototypeOf(val) === Object.prototype;
@@ -70,49 +50,37 @@ export function isNotNullOrUndefined<TValue>(value: TValue | null | undefined): 
 	return value !== null && value !== undefined;
 }
 
-/**
- * Returns `true` if a is equal to b. Equivalent to `===`, but:
- * - `DateTime` objects are also compared, since they are immutable.
-*/
-export function isEqualValue<T>(a: T, b: T): boolean {
-	if (DateTime.isDateTime(a) && DateTime.isDateTime(b)) {
-		return a.equals(b);
-	}
-	return a === b;
-}
+/** If added to the constraint model, we don't check the children of this property. */
+const constrainAllowAll = 'all';
 
-const delayParse = 'DELAY_PARSE';
-/** Parses request bodies. */
-export type Parser<T> = (value: any) => T;
-/** Returns the keys that have some type to them other than `undefined`. So `number` and `number | undefined` are returned; `undefined` is not. */
 export type NonUndefinedKeys<T> = Exclude<{ [P in keyof T]: Exclude<T[P], undefined> extends never ? never : P; }[keyof T], undefined>;
 /** If the type extends object (even if it also extends null or undefined), require a parser. Else, require `1`. */
-export type ParserKeyMap<T> = { [P in NonUndefinedKeys<T>]: P extends keyof T ? (NonNullable<T[P]> extends object ? (Parser<NonNullable<T[P]>> | typeof delayParse) : 1) : never };
+export type ConstraintModel<T extends object> = { [P in NonUndefinedKeys<T>]: P extends keyof T ? (NonNullable<T[P]> extends object ? (ConstraintModel<NonNullable<T[P]>> | typeof constrainAllowAll) : 1) : never };
 
-/**
- * Creates a 'Parser' that can be called to copy an object out of a request body on the server.
- * This is done to ensure there are no extraneous properties that could find their way into server logic or the DB
- * when working with JSON storage.
-*/
-export function createParser<T>(keyMap: ParserKeyMap<T>): Parser<T> {
-	const keys = Object.keys(keyMap) as KeysOf<T>;
-	return function (value) {
-		const obj = {} as T;
-		for (let i = 0; i < keys.length; i++) {
-			const key = keys[i];
-			const propParser = keyMap[key as keyof typeof keyMap];
-			const propValue = value[key];
-			if (propValue === undefined) {
-				continue;
+/** Constrains an object to the provided model, stripping out properties that may exist on the object that don't match the object's type. */
+export function constrainObject<T extends object>(input: T, model: ConstraintModel<T>): T {
+	const keys = Object.keys(model) as KeysOf<T>;
+	const obj = {} as T;
+	for (let i = 0; i < keys.length; i++) {
+		const key = keys[i];
+		const modelValue = model[key as keyof typeof model];
+		const inputValue = input[key];
+		if (inputValue === undefined) {
+			// Skip if there's no value to copy anyway
+			continue;
+		}
+		if (isObjectLiteral(inputValue)) {
+			if (isObjectLiteral(modelValue)) {
+				// Assume it's deeper levels... get recursive
+				obj[key] = constrainObject(inputValue as any, modelValue as ConstraintModel<{}>);
 			}
-			if (propValue !== null && typeof propParser === 'function') {
-				obj[key] = propParser(propValue) as any;
-			}
-			else {
-				// Safety: if we didn't add a Parser, remove the object unless we said "delay".
-				obj[key] = isObjectLiteral(propValue) ? (propValue === delayParse ? propValue : {}) : propValue;
+			else if (modelValue === constrainAllowAll) {
+				obj[key] = inputValue;
 			}
 		}
-		return obj;
-	};
+		else if (modelValue === 1) {
+			obj[key] = inputValue;
+		}
+	}
+	return obj;
 }

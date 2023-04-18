@@ -1,11 +1,14 @@
-import { ApiRoute, BaseApiRequest, BaseApiResponse } from '../../api/request-response';
+import { ApiRouteTypes } from '../../api/request-response';
 import { BatchContent } from './batch-iso';
 
-export namespace Read {
-	export type Route = ApiRoute<Request, Response>;
-	export interface Request extends BaseApiRequest<null, null, Path> { }
-	export interface Path {
+export namespace ApiRouteBatchSeed {
+	export type Types = ApiRouteTypes<null, Path, null, ResponseInner>;
+
+	export type Path = {
 		seed: string;
+	};
+
+	export interface ResponseInner {
+		batch: BatchContent;
 	}
-	export interface Response extends BaseApiResponse, BatchContent { }
 }

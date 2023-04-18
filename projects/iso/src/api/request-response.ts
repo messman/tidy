@@ -1,28 +1,39 @@
+import { DateTime } from 'luxon';
 import { ServerError } from './error';
 
-/** < Body , Query , Path > */
-export interface BaseApiRequest<TBody extends RequestDataType = RequestDataType, TQuery extends RequestDataType = RequestDataType, TPath extends RequestDataType = RequestDataType> {
+/** BPQ: < Body , Path , Query > */
+export interface ApiRouteRequest<TBody extends ApiRouteRequestBody = ApiRouteRequestBody, TPath extends ApiRouteRequestPath = ApiRouteRequestPath, TQuery extends ApiRouteRequestQuery = ApiRouteRequestQuery> {
 	/** Body params. Null if empty on the server. */
 	body: TBody;
-	/**
-	 * Query params (search, like ?x=1&y=2).
-	 * All properties of the object are strings on the wire.
-	 */
-	query: TQuery;
 	/**
 	 * Path params (like this/:param/here)
 	 * All properties of the object are strings on the wire.
 	 */
 	path: TPath;
+	/**
+	 * Query params (search, like ?x=1&y=2).
+	 * All properties of the object are strings on the wire.
+	 */
+	query: TQuery;
 }
 
-/** These data types (body, query, path) can only be objects or null. Not primitives. */
-export type RequestDataType = null | {};
+/** Can be null or an object of any type. */
+export type ApiRouteRequestBody = null | {};
+/** Can be null or a dictionary of strings. */
+export type ApiRouteRequestPath = null | { [key: string]: string | undefined; };
+/** Can be null or a dictionary of strings, booleans, or numbers (will be strings on the wire and deserialized on the server) */
+export type ApiRouteRequestQuery = null | { [key: string]: string | number | boolean | DateTime | undefined; };
 
-export interface BaseApiResponse {
+export interface ApiRouteResponse<TResponseInner extends ApiRouteResponseInner = ApiRouteResponseInner> {
+	a: TResponseInner;
+
 	/** Error, if included. */
 	_err?: ServerError;
+	// Add more here, with underscore
 }
+
+/** The type of the 'body' property inside the response  */
+export type ApiRouteResponseInner = null | {};
 
 /**
  * HTTP method types.
@@ -34,33 +45,51 @@ export const enum HttpMethod {
 	PUT = 'put'
 }
 
-export type ApiRouteRequest = BaseApiRequest | null;
-export type ApiRouteResponse = BaseApiResponse;
+export type ApiRouteRequestEmpty = ApiRouteRequest<null, null, null>;
+export type ApiRouteResponseEmpty = ApiRouteResponse<null>;
 
-/** Objects like query and path are split and sent as strings (in the URL). Thus, the properties of the objects should be strings that must be re-typed on the server. */
-export type StringOnWire<T extends RequestDataType> = T extends object ? { [Key in keyof T]: T[Key] | string | undefined } : null;
-
-export type MaliciousBody<T> = { [P in keyof T]: any };
-
-/** How we should treat the request object on the server, where we must be more security-conscious */
-export type ApiRouteRequestOnServer<T extends ApiRouteRequest> = T extends BaseApiRequest<infer Body, infer Query, infer Path> ? BaseApiRequest<Body extends null ? null : MaliciousBody<Body> | null, StringOnWire<Query>, StringOnWire<Path>> : null;
-
-export interface ApiRoute
+export interface ApiRouteTypes
 	<
-	TRequest extends ApiRouteRequest,
-	TResponse extends ApiRouteResponse,
+		TReqBody extends ApiRouteRequestBody = ApiRouteRequestBody,
+		TReqPath extends ApiRouteRequestPath = ApiRouteRequestPath,
+		TReqQuery extends ApiRouteRequestQuery = ApiRouteRequestQuery,
+		TResInner extends ApiRouteResponseInner = ApiRouteResponseInner,
 	> {
-	/** Path to the route, without the '/api' prefix. */
-	path: string;
-	/** Method (get, post, etc). */
-	method: HttpMethod;
-
-	/** Ignore. */
-	res: TResponse;
-	/** Ignore. */
-	req: TRequest;
+	/** For typing only. */
+	req: ApiRouteRequest<TReqBody, TReqPath, TReqQuery>;
+	/** For typing only. */
+	res: ApiRouteResponse<TResInner>;
 }
 
-export type ApiRouteEmpty = ApiRoute<null, ApiRouteResponse>;
-export type ApiRouteNoRequest<TResponse extends ApiRouteResponse = ApiRouteResponse> = ApiRoute<null, TResponse>;
-export type ApiRouteNoResponse<TRequest extends ApiRouteRequest = ApiRouteRequest> = ApiRoute<TRequest, ApiRouteResponse>;
+/** < RequestBody, RequestPath, RequestQuery, ResponseBody > */
+export interface ApiRoute
+	<
+		TPath extends string = string,
+		TMethod extends HttpMethod = HttpMethod,
+		TReqBody extends ApiRouteRequestBody = ApiRouteRequestBody,
+		TReqPath extends ApiRouteRequestPath = ApiRouteRequestPath,
+		TReqQuery extends ApiRouteRequestQuery = ApiRouteRequestQuery,
+		TResInner extends ApiRouteResponseInner = ApiRouteResponseInner,
+	> extends ApiRouteTypes<TReqBody, TReqPath, TReqQuery, TResInner> {
+	/** Path to the route, without the '/api' prefix. */
+	path: TPath;
+	/** Method (get, post, etc). */
+	method: TMethod;
+}
+
+export type ApiRouteTypesEmpty = ApiRouteTypes<null, null, null, null>;
+export type ApiRouteTypesNoRequest<TResInner extends ApiRouteResponseInner> = ApiRouteTypes<null, null, null, TResInner>;
+export type ApiRouteTypesNoResponse
+	<
+		TReqBody extends ApiRouteRequestBody,
+		TReqPath extends ApiRouteRequestPath,
+		TReqQuery extends ApiRouteRequestQuery
+	> = ApiRouteTypes<TReqBody, TReqPath, TReqQuery, null>;
+
+export type RequestOf<T extends ApiRouteTypes> = [T] extends [ApiRouteTypes<infer TReqBody, infer TReqPath, infer TReqQuery, any>] ? ApiRouteRequest<TReqBody, TReqPath, TReqQuery> : ApiRouteRequest;
+export type OptionalRequestOf<T extends ApiRouteTypes> = [T] extends [ApiRouteTypes<null, null, null, any>] ? (RequestOf<T> | null) : RequestOf<T>;
+export type RequestBodyOf<T extends ApiRouteTypes> = [T] extends [ApiRouteTypes<infer TReqBody, any, any, any>] ? TReqBody : null;
+export type RequestPathOf<T extends ApiRouteTypes> = [T] extends [ApiRouteTypes<any, infer TReqPath, any, any>] ? TReqPath : null;
+export type RequestQueryOf<T extends ApiRouteTypes> = [T] extends [ApiRouteTypes<any, any, infer TReqQuery, any>] ? TReqQuery : null;
+export type ResponseOf<T extends ApiRouteTypes> = [T] extends [ApiRouteTypes<any, any, any, infer TResInner>] ? ApiRouteResponse<TResInner> : ApiRouteResponse;
+export type ResponseInnerOf<T extends ApiRouteTypes> = [T] extends [ApiRouteTypes<any, any, any, infer TResInner>] ? TResInner : null;

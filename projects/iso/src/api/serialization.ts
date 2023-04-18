@@ -21,32 +21,32 @@ import { DateTime } from 'luxon';
 	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
 */
-
-export const dateMark = '_$D_';
+export const dateSerializationMark = '_$D_';
 
 /**
  * Serializes the object. Must be deserialized with the deserializer function.
  * Specially serializes date objects so that they are still date objects when deserialized.
 */
 export function serialize(response: any): string {
-	return JSON.stringify(response, createReplacer());
+	return JSON.stringify(response, createSerializationReplacer());
 }
 
-export function createReplacer(): (key: string, value: any) => any {
+/** To be used to serialize DateTime values to strings on the server. */
+export function createSerializationReplacer(): (key: string, value: any) => any {
 
 	return function (this: any, key: string, value: any) {
 		// Interestingly enough, the 'value' has already had its 'toJSON' method called before we get it here!
 		// So the Date is already a string. We need to look on the 'this' value for the undisturbed Date object.
 		// Also 'instanceof' is problematic, but we're okay with it here. See https://stackoverflow.com/a/643827
 		if (DateTime.isDateTime(this[key])) {
-			return dateMark + value;
+			return dateSerializationMark + value;
 		}
 		return value;
 	};
 }
 
 export function serializeDateTime(value: DateTime): string {
-	return dateMark + value.toJSON();
+	return dateSerializationMark + value.toJSON();
 }
 
 /**
@@ -54,12 +54,13 @@ export function serializeDateTime(value: DateTime): string {
  * Specially deserializes date objects so that they are DateTime objects instead of strings.
  */
 export function deserialize<T>(response: string): T {
-	return JSON.parse(response, createReviver());
+	return JSON.parse(response, createSerializationReviver());
 }
 
-export function createReviver(): (key: string, value: any) => any {
+/** To be used to deserialize DateTime strings to DateTime instances. */
+export function createSerializationReviver(): (key: string, value: any) => any {
 	return function (this: any, _key: string, value: any) {
-		if (isMarkedDateTimeString(value)) {
+		if (isSerializedDateTimeString(value)) {
 			// Assume this is an ISO-8601 string. In reality, it could be anything, including something invalid. See https://stackoverflow.com/a/643827
 			// It could even be a user-provided string.
 			// The DateTime.fromISO function is pretty strict, so we should be fine.
@@ -69,11 +70,37 @@ export function createReviver(): (key: string, value: any) => any {
 	};
 }
 
-export function isMarkedDateTimeString(value: any): boolean {
-	return value && typeof value === 'string' && value.startsWith(dateMark);
+export function isSerializedDateTimeString(value: any): boolean {
+	return value && typeof value === 'string' && value.startsWith(dateSerializationMark);
 }
 
 export function deserializeToDateTime(value: string): any {
-	const dateStringValue = value.substring(dateMark.length);
+	const dateStringValue = value.substring(dateSerializationMark.length);
 	return DateTime.fromISO(dateStringValue, { setZone: true });
+}
+
+/** Serializes DateTime objects and booleans for travel as a string in a request path parameter or request query parameter. */
+export function serializeForPathOrQuery(value: string | number | DateTime | boolean): string {
+	if (value === true) {
+		return '1';
+	}
+	if (value === false) {
+		return '0';
+	}
+	if (DateTime.isDateTime(value)) {
+		return serializeDateTime(value);
+	}
+	// Allow strings and numbers to continue as-is
+	return value.toString();
+}
+
+/** Deserializes booleans from strings used in a request path parameter or request query parameter. */
+export function deserializeBooleanFromPathOrQuery(value: any): any {
+	if (value === '1') {
+		return true;
+	}
+	if (value === '0') {
+		return false;
+	}
+	return value;
 }

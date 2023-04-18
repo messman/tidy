@@ -1,7 +1,7 @@
 # https://hub.docker.com/_/node/
 # Buster Slim (Debian) instead of Alpine, since Alpine 
 # doesn't have the necessary packages for postgresql (in case we need it)
-FROM node:16.9.0-buster-slim
+FROM node:16.20.0-buster-slim
 
 # Get the verdaccio port from the build arg setting.
 ARG ARG_VERDACCIO_PORT

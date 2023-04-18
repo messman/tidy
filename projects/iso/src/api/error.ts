@@ -1,4 +1,4 @@
-import { createParser } from '../utility';
+import { constrainObject } from '../utility';
 
 /** The top-level category of a server error. */
 export enum ServerErrorFormParent {
@@ -92,10 +92,9 @@ export interface ServerError {
 	form: ServerErrorForm;
 	detail: {} | null;
 }
-const parse = createParser<ServerError>({ _isServerError: 1, id: 1, form: v => v, detail: v => v });
 /** Removes extraneous properties from a ServerError, since it may be extended. */
 export function scrubServerError(error: ServerError): ServerError {
-	return parse(error);
+	return constrainObject(error, { _isServerError: 1, detail: 'all', form: 'all', id: 1 });
 }
 
 export function isServerError<T>(object: T | ServerError): object is ServerError {
