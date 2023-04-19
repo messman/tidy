@@ -1,7 +1,7 @@
 import * as React from 'react';
+import styled, { css } from 'styled-components';
 import { SVGPath } from '@/services/draw/bezier';
 import { TextUnit } from '../text-unit';
-import { css, styled } from '../theme/styled';
 
 const svgStyle = css`
 	position: absolute;

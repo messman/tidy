@@ -1,16 +1,18 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { IconWrapper, IconWrapperProps } from './icon/icon-wrapper';
 import { fontStyleDeclarations } from './text';
 import { ComponentSize, FontWeight } from './theme/font';
-import { styled, StyledFC, ThemedCSS } from './theme/styled';
+import { CssOutput, StyledFC } from './theme/styled';
 
-export const labelSizeStyles: Record<ComponentSize, ThemedCSS> = {
+export const labelSizeStyles: Record<ComponentSize, CssOutput> = {
 	medium: fontStyleDeclarations.body,
 	small: fontStyleDeclarations.small,
 };
 
 export interface LabelTextProps {
 	size: ComponentSize;
+	children: React.ReactNode;
 }
 
 export const LabelText = styled.span<LabelTextProps>`
@@ -19,6 +21,7 @@ export const LabelText = styled.span<LabelTextProps>`
 `;
 
 export interface IconLabelProps extends LabelTextProps, IconWrapperProps {
+
 }
 
 export const IconLabel: StyledFC<IconLabelProps> = (props) => {

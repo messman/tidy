@@ -1,10 +1,10 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { ErrorBoundary } from '@/core/error/error-boundary';
 import { AppNavigationProvider } from '@/core/layout/app/app-navigation';
 import { ApplicationLayoutContainer } from '@/core/layout/layout';
 import { Panel, PanelPadding } from '@/core/layout/panel/panel';
 import { Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { ThemeContextProvider, themes, useThemeIndex } from '@/core/theme/theme';
 import { BatchResponseProvider } from '@/services/data/data';
 import { DataSeedProvider, useDataSeed } from '@/services/data/data-seed';
@@ -66,6 +66,7 @@ seedOb['_real_'] = null;
 
 interface TestWrapperProps {
 	container: FixtureContainer;
+	children: React.ReactNode;
 }
 
 const TestWrapper: React.FC<TestWrapperProps> = (props) => {

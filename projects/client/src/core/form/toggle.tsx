@@ -1,8 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { AnimationDuration } from '../animation/animation';
 import { GroupEntry, GroupEntryProps, GroupKeyLabel, GroupValue } from '../group/group';
 import { Block } from '../theme/box';
-import { styled } from '../theme/styled';
 
 export interface GroupKeyValueToggleProps extends Omit<GroupEntryProps, 'hasArrowWhenClickable' | 'onClick'> {
 	label: string;

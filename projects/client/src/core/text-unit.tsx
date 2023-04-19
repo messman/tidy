@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import styled from 'styled-components';
 import { getTimeTwelveHour } from '@/services/time';
-import { styled } from './theme/styled';
 
 export interface TextUnitProps {
 	text: string,

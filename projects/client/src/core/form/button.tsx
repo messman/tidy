@@ -1,11 +1,12 @@
 import * as React from 'react';
+import styled, { css } from 'styled-components';
 import { SizedIcon } from '../icon/icon';
 import { SpinnerIcon } from '../icon/icon-spinner';
 import { IconLabel, IconLabelProps, labelSizeStyles, LabelText } from '../label';
 import { borderRadiusStyle, Spacing } from '../theme/box';
 import { outlineStyle } from '../theme/common';
 import { ComponentSize } from '../theme/font';
-import { css, styled, StyledFC } from '../theme/styled';
+import { StyledFC } from '../theme/styled';
 
 const buttonPaddings: Record<ComponentSize, string> = {
 	medium: `${Spacing.bat08} ${Spacing.dog16}`,
@@ -20,6 +21,7 @@ export interface ButtonProps extends Omit<IconLabelProps, 'size'> {
 	isLoading?: boolean;
 	/** size defaults to medium for buttons. */
 	size?: ComponentSize;
+	children: React.ReactNode;
 };
 
 /*

@@ -1,7 +1,7 @@
 // import * as React from 'react';
 // import { Text } from '@/core/text';
 // import { Cosmos, CosmosFixture } from '@/test';
-// import { styled } from '../theme/styled';
+// import styled from 'styled-components';
 // import { ContextBlock } from './context-block';
 
 // export default CosmosFixture.create(() => {

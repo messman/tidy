@@ -1,8 +1,9 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { defaultIconSvgStyle, Icon, IconInputType } from '../icon/icon';
-import { styled, StyledFC } from '../theme/styled';
+import { StyledFC } from '../theme/styled';
 
 export interface MoonPhaseIconProps {
 	phase: iso.Astro.MoonPhase;
@@ -11,7 +12,7 @@ export interface MoonPhaseIconProps {
 export const MoonPhaseIcon: StyledFC<MoonPhaseIconProps> = (props) => {
 	const { phase } = props;
 
-	const icon = iso.mapEnumValue(iso.Astro.MoonPhase, moonPhaseIcon, phase);
+	const icon = iso.mapNumberEnumValue(iso.Astro.MoonPhase, moonPhaseIcon, phase);
 
 	return (
 		<MoonPhaseIconContainer>

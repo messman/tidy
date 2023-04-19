@@ -1,4 +1,4 @@
-import { css, styled } from './styled';
+import styled, { css } from 'styled-components';
 
 /** Regular border radius, for buttons/components. */
 export const borderRadiusValue: string = '.5rem';

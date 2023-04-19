@@ -1,9 +1,9 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { Icon, SizedIcon } from '@/core/icon/icon';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { fontStyleDeclarations } from '@/core/text';
 import { Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { icons } from '@wbtdevlocal/assets';
 
 export const AboutSummary: React.FC = () => {

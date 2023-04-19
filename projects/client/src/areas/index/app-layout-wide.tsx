@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { About } from '@/areas/about/about';
 import { BeachTime } from '@/areas/beach-time/beach-time';
 import { Conditions } from '@/areas/conditions/conditions';
@@ -10,11 +11,10 @@ import { AppInfo } from '@/core/layout/app/app-info';
 import { overflowHiddenScrollStyle } from '@/core/layout/layout';
 import { Panel } from '@/core/layout/panel/panel';
 import { Block, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { useBatchResponse } from '@/services/data/data';
 import { appHeaderHeight } from './app-layout-shared';
 
-export const WideApplicationLayout: React.FC = () => {
+export const WideApplicationLayout: React.FC<React.PropsWithChildren> = () => {
 
 	const { isLoading } = useBatchResponse();
 

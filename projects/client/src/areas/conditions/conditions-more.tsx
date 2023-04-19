@@ -1,7 +1,7 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { GroupContainer, GroupKeyValue } from '@/core/group/group';
 import { IconInputType, SizedIcon } from '@/core/icon/icon';
-import { styled } from '@/core/theme/styled';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
@@ -33,7 +33,7 @@ export const ConditionsMore: React.FC = () => {
 
 	return (
 		<GroupContainer>
-			<GroupKeyValue icon={makeSubtleIcon(icons.weatherWind)} label='Wind'>{wind} knots from {iso.keyForEnumValue(iso.Weather.WindDirection, windDirection)}</GroupKeyValue>
+			<GroupKeyValue icon={makeSubtleIcon(icons.weatherWind)} label='Wind'>{wind} knots from {iso.keyForNumberEnumValue(iso.Weather.WindDirection, windDirection)}</GroupKeyValue>
 			<GroupKeyValue icon={makeSubtleIcon(icons.weatherSun)} label='UV Index'>{roundedUvi}{uviText}</GroupKeyValue>
 			<GroupKeyValue icon={makeSubtleIcon(icons.weatherCloud)} label='Cloud Cover'>{Math.round(cloudCover * 100)}%</GroupKeyValue>
 			<GroupKeyValue icon={makeSubtleIcon(icons.weatherFog)} label='Visibility'>{visibility ? visibility : '10+'} miles</GroupKeyValue>

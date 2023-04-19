@@ -80,7 +80,7 @@ export function isInStringEnum<T extends object>(enumObject: T, enumValue: any):
  * This function can be used like:
  * ```
  * const status = Status.active; // 0
- * const statusKey = keyForEnumValue(Status, status) // 'active' <==
+ * const statusKey = keyForNumberEnumValue(Status, status) // 'active' <==
  * ```
  */
 export function keyForNumberEnumValue<T>(enumObject: T, enumValue: T[keyof T]): keyof T {

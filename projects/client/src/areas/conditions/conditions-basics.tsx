@@ -1,10 +1,10 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { Icon } from '@/core/icon/icon';
 import { IconTitle } from '@/core/layout/layout';
 import { fontStyleDeclarations, Paragraph } from '@/core/text';
 import { Block } from '@/core/theme/box';
 import { FontWeight } from '@/core/theme/font';
-import { styled } from '@/core/theme/styled';
 import { BaseWeatherIcon } from '@/core/weather/weather-icon';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';

@@ -1,11 +1,11 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { WrapperButton } from '@/core/form/button';
 import { SizedIcon } from '@/core/icon/icon';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { AppInfo } from '@/core/layout/app/app-info';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Block, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import { appHeaderHeight } from './app-layout-shared';

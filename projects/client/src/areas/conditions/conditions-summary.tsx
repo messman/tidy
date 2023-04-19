@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
@@ -7,7 +8,6 @@ import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { Paragraph } from '@/core/text';
 import { Block } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { BaseWeatherIcon, WeatherStatusIcon } from '@/core/weather/weather-icon';
 import { weatherStatusDescription } from '@/services/content/weather-utility';
 import { useBatchResponse } from '@/services/data/data';
@@ -24,7 +24,7 @@ const ConditionsSummarySuccess: React.FC = () => {
 		setScreen(AppScreen.d_conditions);
 	}
 
-	const statusDescription = iso.mapEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
+	const statusDescription = iso.mapNumberEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
 	const nextSunEvent = astro.sun.relativity.next;
 
 	return (

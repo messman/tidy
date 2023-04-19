@@ -9,6 +9,7 @@ export function provider<T extends object = any>(Component: Provider<T>, props: 
 
 export interface ProviderComposerProps {
 	providers: ProviderWithProps[] | null;
+	children: React.ReactNode;
 }
 
 /**

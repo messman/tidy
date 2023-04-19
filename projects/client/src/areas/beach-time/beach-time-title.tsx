@@ -8,7 +8,7 @@ export const BeachTimeTitle: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;
 
 	const beachTimeStatus = getBeachTimeStatus(beach, meta.referenceTime);
-	const textInfoFunc = iso.mapEnumValue(BeachTimeStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
+	const textInfoFunc = iso.mapNumberEnumValue(BeachTimeStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
 	const { title } = textInfoFunc(beach, meta.referenceTime);
 
 	return (

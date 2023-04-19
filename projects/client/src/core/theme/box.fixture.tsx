@@ -1,10 +1,10 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
 import { fontStyleDeclarations } from '../text';
 import { Spacing } from './box';
 import { Theme } from './color';
-import { styled } from './styled';
 
 export default CosmosFixture.create(() => {
 

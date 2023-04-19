@@ -1,8 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
 import { icons, SVGIconTypeName } from '@wbtdevlocal/assets';
-import { styled } from '../theme/styled';
 import { Icon, SizedIcon } from './icon';
 import { SpinnerIcon } from './icon-spinner';
 

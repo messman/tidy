@@ -1,10 +1,10 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { IconTitle } from '@/core/layout/layout';
 import { OutLink } from '@/core/link';
 import { Note } from '@/core/note';
 import { fontStyleDeclarations, Paragraph } from '@/core/text';
 import { Block } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { TideLevelIcon } from '@/core/tide/tide-level-icon';
 import { getTideTitle } from '@/services/content/tide-utility';

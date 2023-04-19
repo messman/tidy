@@ -1,9 +1,9 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { LayoutBreakpointRem } from '@/services/layout/window-layout';
 import { ButtonFullWidthContainer, StandardButton } from '../form/button';
 import { fontStyleDeclarations } from '../text';
 import { Block, Spacing } from '../theme/box';
-import { styled } from '../theme/styled';
 
 interface ErrorBoundaryState {
 	error: Error | null;
@@ -13,7 +13,7 @@ interface ErrorBoundaryState {
  * This is a class component so that it can act as our error boundary.
  * https://reactjs.org/docs/error-boundaries.html
  */
-export class ErrorBoundary extends React.Component<{}, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<React.PropsWithChildren, ErrorBoundaryState> {
 	constructor(props: {}) {
 		super(props);
 		this.state = { error: null };
@@ -38,6 +38,7 @@ export class ErrorBoundary extends React.Component<{}, ErrorBoundaryState> {
 
 export interface ErrorBoundaryCoverProps {
 	error: Error | null;
+	children: React.ReactNode;
 }
 
 export const ErrorBoundaryCover: React.FC<ErrorBoundaryCoverProps> = (props) => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { css, styled } from './theme/styled';
+import styled, { css } from 'styled-components';
 
 /*
 	Links are for legit anchor tags.

@@ -1,8 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { BaseButton, StandardButton } from '@/core/form/button';
 import { Heading, Paragraph } from '@/core/text';
 import { Block, borderRadiusStyle, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { useSafeTimer } from '@/services/lifecycle/timer';
 import { setClipboard } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import styled from 'styled-components';
 import { borderRadiusStyle, borderRadiusValue, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import * as iso from '@wbtdevlocal/iso';
 
 export interface BeachTimeRangeVisualProps {

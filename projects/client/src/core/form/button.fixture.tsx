@@ -1,10 +1,10 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
 import { IconInputType } from '../icon/icon';
 import { Paragraph } from '../text';
 import { Block, Spacing } from '../theme/box';
-import { styled } from '../theme/styled';
 import { BaseButton, ButtonProps, StandardButton, WrapperButton } from './button';
 
 const buttons: [React.FC<ButtonProps>, string, string][] = [
@@ -95,6 +95,7 @@ interface ButtonGroupProps {
 	leftIcon: IconInputType;
 	rightIcon: IconInputType;
 	isLoading: boolean;
+	children: React.ReactNode;
 }
 
 const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {

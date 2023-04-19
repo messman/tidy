@@ -1,6 +1,6 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { fontStyleDeclarations } from '@/core/text';
-import { styled } from '@/core/theme/styled';
 import { CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
 import { LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';

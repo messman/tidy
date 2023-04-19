@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import styled from 'styled-components';
 import { MoonPhaseIcon } from '@/core/astro/moon-phase-icon';
 import { LabelText } from '@/core/label';
 import { Line } from '@/core/layout/layout';
 import { fontStyleDeclarations } from '@/core/text';
 import { Block, Spacing } from '@/core/theme/box';
 import { FontWeight } from '@/core/theme/font';
-import { styled } from '@/core/theme/styled';
 import { WeatherStatusIcon } from '@/core/weather/weather-icon';
 import { useBatchResponse } from '@/services/data/data';
 import { getRelativeDayText, getTimeTwelveHourString } from '@/services/time';

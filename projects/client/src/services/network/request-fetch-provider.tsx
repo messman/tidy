@@ -3,7 +3,7 @@ import { createContextConsumer } from '@messman/react-common';
 import * as iso from '@wbtdevlocal/iso';
 import { FetchFunc } from './request';
 
-export type CreateFetchFunc = <TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse>(route: iso.ApiRoute<TRequest, TResponse>, input: TRequest) => FetchFunc;
+export type CreateFetchFunc = <TApiRoute extends iso.ApiRoute>(route: iso.ApiRoute, input: iso.RequestOf<TApiRoute>) => FetchFunc;
 
 
 export interface RequestFetchProviderOutput {
@@ -12,7 +12,7 @@ export interface RequestFetchProviderOutput {
 
 export const [RequestFetchContextProvider, useRequestFetch] = createContextConsumer<RequestFetchProviderOutput>();
 
-export const RequestFetchProvider: React.FC = (props) => {
+export const RequestFetchProvider: React.FC<React.PropsWithChildren> = (props) => {
 
 	const value = React.useMemo<RequestFetchProviderOutput>(() => {
 		return {

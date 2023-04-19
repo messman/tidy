@@ -1,8 +1,8 @@
 import { DateTime, DurationLikeObject } from 'luxon';
 import * as React from 'react';
+import styled from 'styled-components';
 import { Paragraph } from '@/core/text';
 import { TimeTextUnit } from '@/core/text-unit';
-import { styled } from '@/core/theme/styled';
 import { CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
 import { getDurationDescription } from './time';

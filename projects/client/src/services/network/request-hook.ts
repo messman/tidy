@@ -24,7 +24,7 @@ export interface ApiRequestOutput<TRequest extends iso.ApiRouteRequest> {
  * Returns functions that make or abort requests to the API (only).
  * @param route - The route that will be accessed. This route should not change for the life of the component.
  */
-export function useApiRequest<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse>(route: iso.ApiRoute<TRequest, TResponse>, callback: (result: RequestResult<TResponse>) => void): ApiRequestOutput<TRequest> {
+export function useApiRequest<TApiRoute extends iso.ApiRoute>(route: TApiRoute, callback: (result: RequestResult<iso.ResponseInnerOf<TApiRoute>>) => void): ApiRequestOutput<iso.RequestOf<TApiRoute>> {
 
 	const { createFetchFunc } = useRequestFetch();
 
@@ -49,7 +49,7 @@ export function useApiRequest<TRequest extends iso.ApiRouteRequest, TResponse ex
 		};
 	}, []);
 
-	return React.useMemo<ApiRequestOutput<TRequest>>(() => {
+	return React.useMemo<ApiRequestOutput<iso.RequestOf<TApiRoute>>>(() => {
 		return {
 			start: (input, options) => {
 				// End any existing request.

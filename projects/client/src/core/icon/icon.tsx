@@ -1,7 +1,8 @@
 import * as React from 'react';
+import styled, { css } from 'styled-components';
 import { EmptyIconName, SVGIconType, SVGIconTypeName } from '@wbtdevlocal/assets';
 import { ComponentSize } from '../theme/font';
-import { css, styled, StyledFC } from '../theme/styled';
+import { StyledFC } from '../theme/styled';
 import { UrlIcon } from './icon-url';
 
 export type IconInputType = JSX.Element | SVGIconType | StyledFC | SVGIconTypeName | EmptyIconName | null;

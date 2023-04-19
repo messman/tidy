@@ -1,7 +1,7 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import { Icon } from '../icon/icon';
-import { styled } from '../theme/styled';
 
 const WeatherIconContainer = styled.span`
 	display: inline-block;

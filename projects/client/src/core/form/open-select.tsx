@@ -1,10 +1,10 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { createContextConsumer } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
 import { GroupContainer, GroupEntry, GroupEntryProps, GroupKeyLabel } from '../group/group';
 import { SizedIcon } from '../icon/icon';
 import { Block } from '../theme/box';
-import { styled } from '../theme/styled';
 
 export interface SelectedDataKeyOutput {
 	selectedDataKey: string | number | null;
@@ -14,6 +14,7 @@ export interface SelectedDataKeyOutput {
 const [SelectedDataKeyProvider, useSelectedDataKeyState] = createContextConsumer<SelectedDataKeyOutput>();
 
 export interface OpenSelectContainerProps extends SelectedDataKeyOutput {
+	children: React.ReactNode;
 }
 
 export const OpenSelectContainer: React.FC<OpenSelectContainerProps> = (props) => {
@@ -29,7 +30,7 @@ export const OpenSelectContainer: React.FC<OpenSelectContainerProps> = (props) =
 };
 
 
-export interface OpenSelectValueProps extends Omit<GroupEntryProps, 'hasArrowWhenClickable' | 'onClick'> {
+export interface OpenSelectValueProps extends Omit<GroupEntryProps, 'hasArrowWhenClickable' | 'onClick' | 'children'> {
 	dataKey: string | number;
 	label: string;
 }

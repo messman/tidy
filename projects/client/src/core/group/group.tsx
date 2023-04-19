@@ -1,11 +1,11 @@
 import * as React from 'react';
+import styled, { css } from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import { IconInputType, SizedIcon, SizedIconArrowChevronInline } from '../icon/icon';
 import { ellipsisStyle, fontStyleDeclarations } from '../text';
 import { Block, borderRadiusStyle, Spacing } from '../theme/box';
 import { Theme } from '../theme/color';
 import { FontWeight } from '../theme/font';
-import { css, styled } from '../theme/styled';
 
 export interface GroupEntryProps {
 	/** Hover title - should be provided when content may cause ellipses. */
@@ -17,6 +17,7 @@ export interface GroupEntryProps {
 	hasArrowWhenClickable?: boolean;
 	/** An icon that may appear to the left. */
 	icon?: IconInputType;
+	children: React.ReactNode;
 }
 
 /** Meant to be extended and not used directly. Missing the 'label' that goes on the left side. */
@@ -88,7 +89,7 @@ export const GroupKeyValue: React.FC<GroupKeyValueProps> = (props) => {
 	);
 };
 
-export interface GroupButtonProps extends Omit<GroupEntryProps, 'hasArrowWhenClickable'> {
+export interface GroupButtonProps extends Omit<GroupEntryProps, 'hasArrowWhenClickable' | 'children'> {
 	label: string;
 	/** If true, an arrow is added. Useful for single-group entries. */
 	hasArrow?: boolean;

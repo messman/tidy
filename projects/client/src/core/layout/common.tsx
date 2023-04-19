@@ -1,4 +1,4 @@
-// import { styled } from '../theme/styled';
+// import styled from 'styled-components';
 
 // /** A flex column whose width is the screen width, not the width decided by flex rules. */
 // export const ScreenWidthFlexColumn = styled(FlexColumn)`

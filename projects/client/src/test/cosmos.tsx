@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Cosmos from 'react-cosmos/fixture';
+import styled from 'styled-components';
 import { BaseButton, StandardButton } from '@/core/form/button';
-import { styled } from '@/core/theme/styled';
 import { MockApiOutput, useMockApi } from '@/services/network/request-fetch-provider.test';
 import { useEventCallback } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
@@ -104,7 +104,7 @@ export function useControlSelectKey<T extends object>(title: string, dictionary:
 /**
  * Turns an enum into an object for {@link useControlSelect}.
  */
-export function createControlSelectForEnum<T>(enumObject: T): Record<keyof T, T[keyof T]> {
+export function createControlSelectForEnum<T extends object>(enumObject: T): Record<keyof T, T[keyof T]> {
 	const keys = iso.enumKeys(enumObject);
 	const options: { [key: string]: T[keyof T]; } = {};
 	keys.forEach((key) => {
@@ -235,8 +235,8 @@ export function useControlSelectIcon(label: string, initial?: keyof typeof testI
 export const controlAPIResultSuccessOption = ['Success'] as const;
 const otherOptions = ['Client Error', 'Server Error'] as const;
 
-export interface ControlAPIResultOnFetch<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse, TOptions extends ReadonlyArray<string>> {
-	(option: TOptions[number], response: (obj: TResponse) => TResponse, input: TRequest): iso.ServerError | TResponse;
+export interface ControlAPIResultOnFetch<TApiRoute extends iso.ApiRoute, TOptions extends ReadonlyArray<string>> {
+	(option: TOptions[number], response: (obj: iso.ResponseOf<TApiRoute>) => iso.ResponseOf<TApiRoute>, input: iso.RequestOf<TApiRoute>): iso.ServerError | iso.ResponseOf<TApiRoute>;
 }
 
 /**
@@ -249,7 +249,7 @@ export interface ControlAPIResultOnFetch<TRequest extends iso.ApiRouteRequest, T
  * 
  * Specifying in this way adds type safety in the function.
  */
-export function useControlMockAPIResult<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse, TOptions extends ReadonlyArray<string>>(name: string, route: iso.ApiRoute<TRequest, TResponse>, options: TOptions, onFetch: ControlAPIResultOnFetch<TRequest, TResponse, TOptions>): void {
+export function useControlMockAPIResult<TApiRoute extends iso.ApiRoute, TOptions extends ReadonlyArray<string>>(name: string, route: TApiRoute, options: TOptions, onFetch: ControlAPIResultOnFetch<TApiRoute, TOptions>): void {
 
 	const mockApi = useMockApi();
 
@@ -272,7 +272,7 @@ export function useControlMockAPIResult<TRequest extends iso.ApiRouteRequest, TR
 	}, [chosenOption, onFetch]);
 }
 
-function setMock<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse, TOptions extends ReadonlyArray<string>>(mockApi: MockApiOutput | null, route: iso.ApiRoute<TRequest, TResponse>, chosenOption: string, onFetch: ControlAPIResultOnFetch<TRequest, TResponse, TOptions>): void {
+function setMock<TApiRoute extends iso.ApiRoute, TOptions extends ReadonlyArray<string>>(mockApi: MockApiOutput | null, route: TApiRoute, chosenOption: string, onFetch: ControlAPIResultOnFetch<TApiRoute, TOptions>): void {
 	if (!mockApi) {
 		return;
 	}

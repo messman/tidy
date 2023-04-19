@@ -10,17 +10,17 @@ import { RequestFetchContextProvider, RequestFetchProviderOutput } from './reque
 	Function signature should roughly match that function.
 */
 
-export interface MockOnFetchFunc<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse> {
-	(input: TRequest, route: iso.ApiRoute<TRequest, TResponse>): iso.ServerError | TResponse | false;
+export interface MockOnFetchFunc<TApiRoute extends iso.ApiRoute> {
+	(input: iso.RequestOf<TApiRoute>, route: TApiRoute): iso.ServerError | iso.ResponseOf<TApiRoute> | false;
 }
 
-export const defaultFailureMockFetch: MockOnFetchFunc<any, any> = (_input, _route) => {
+export const defaultFailureMockFetch: MockOnFetchFunc<iso.ApiRoute> = (_input, _route) => {
 	return createTestServerError();
 };
 
-export interface MockApiEntry<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse> {
+export interface MockApiEntry<TApiRoute extends iso.ApiRoute> {
 	timeout: number;
-	onFetch: MockOnFetchFunc<TRequest, TResponse>;
+	onFetch: MockOnFetchFunc<TApiRoute>;
 }
 
 export interface MockApiOverrides {
@@ -31,21 +31,21 @@ export interface MockApiOverrides {
 export interface MockApiOutput {
 	setOverrides: (overrides: MockApiOverrides | null) => void;
 	getOverrides: () => MockApiOverrides | null;
-	set: <TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse>(route: iso.ApiRoute<TRequest, TResponse>, entry: MockApiEntry<TRequest, TResponse> | null) => void;
-	get: <TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse>(route: iso.ApiRoute<TRequest, TResponse>) => MockApiEntry<TRequest, TResponse> | null;
+	set: <TApiRoute extends iso.ApiRoute>(route: TApiRoute, entry: MockApiEntry<TApiRoute> | null) => void;
+	get: <TApiRoute extends iso.ApiRoute>(route: TApiRoute) => MockApiEntry<TApiRoute> | null;
 };
 
 const [MockApiProviderContext, useMockApiContext] = createContextConsumer<MockApiOutput>();
 export const useMockApi = useMockApiContext;
 
-type MockApiMap = Map<iso.ApiRoute<any, any>, MockApiEntry<any, any>>;
+type MockApiMap = Map<iso.ApiRoute, MockApiEntry<iso.ApiRoute>>;
 
-export const MockApiProvider: React.FC = (props) => {
+export const MockApiProvider: React.FC<React.PropsWithChildren> = (props) => {
 
 	const overridesRef = React.useRef<MockApiOverrides | null>(null);
 	const mapRef = React.useRef<MockApiMap>(null!);
 	if (!mapRef.current) {
-		mapRef.current = new Map<iso.ApiRoute<any, any>, MockApiEntry<any, any>>();
+		mapRef.current = new Map<iso.ApiRoute, MockApiEntry<iso.ApiRoute>>();
 	}
 
 	const output = React.useMemo<MockApiOutput>(() => {
@@ -58,7 +58,7 @@ export const MockApiProvider: React.FC = (props) => {
 			},
 			set: (route, entry) => {
 				if (entry) {
-					mapRef.current.set(route, entry);
+					mapRef.current.set(route, entry as any);
 				}
 				else if (mapRef.current.has(route)) {
 					mapRef.current.delete(route);
@@ -79,7 +79,7 @@ export const MockApiProvider: React.FC = (props) => {
 	);
 };
 
-const TestRequestProvider: React.FC = (props) => {
+const TestRequestProvider: React.FC<React.PropsWithChildren> = (props) => {
 	const mockApi = useMockApiContext();
 
 	const value = React.useMemo<RequestFetchProviderOutput>(() => {
@@ -120,12 +120,7 @@ const TestRequestProvider: React.FC = (props) => {
 	);
 };
 
-function createMockFetch
-	<
-		TRequest extends iso.ApiRouteRequest,
-		TResponse extends iso.ApiRouteResponse,
-	>
-	(route: iso.ApiRoute<TRequest, TResponse>, input: TRequest, timeout: number, onFetch: MockOnFetchFunc<TRequest, TResponse>, overrideResponse: iso.ServerError | iso.ApiRouteResponse | false | null): FetchFunc {
+function createMockFetch<TApiRoute extends iso.ApiRoute>(route: TApiRoute, input: iso.RequestOf<TApiRoute>, timeout: number, onFetch: MockOnFetchFunc<TApiRoute>, overrideResponse: iso.ServerError | iso.ApiRouteResponse | false | null): FetchFunc {
 
 	return function (_url: string, init: RequestInit) {
 		return new Promise((resolve, reject) => {
@@ -137,7 +132,7 @@ function createMockFetch
 					reject(new Error('Mock API - simulated network issue'));
 				}
 				else if (iso.isServerError(response)) {
-					resolve(new Response(asBlob({ _err: response }), { status: 500, statusText: 'mock error' }));
+					resolve(new Response(asBlob({ a: null, _err: response }), { status: 500, statusText: 'mock error' }));
 				}
 				else {
 					resolve(new Response(asBlob(response), { status: 200, statusText: 'mock success' }));

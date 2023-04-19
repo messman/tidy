@@ -28,7 +28,7 @@ export default CosmosFixture.create(() => {
 	const entriesRender = entries.map((entry) => {
 		return (
 			<TideLevelBadge key={`${entry.division}-${entry.direction}`} tide={entry}>
-				{iso.keyForEnumValue(iso.Tide.Division, entry.division)}, {iso.keyForEnumValue(iso.Tide.Direction, entry.direction)}
+				{iso.keyForNumberEnumValue(iso.Tide.Division, entry.division)}, {iso.keyForNumberEnumValue(iso.Tide.Direction, entry.direction)}
 			</TideLevelBadge>
 		);
 	});

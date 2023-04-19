@@ -1,8 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { Icon } from '@/core/icon/icon';
 import { Block } from '@/core/theme/box';
 import { defaultLetterSpacing, FontWeight } from '@/core/theme/font';
-import { styled } from '@/core/theme/styled';
 import { icons } from '@wbtdevlocal/assets';
 
 export const AboutIconLargeNamed: React.FC = () => {

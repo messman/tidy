@@ -7,10 +7,10 @@ export interface RequestResultPathInfo {
 	method: iso.HttpMethod;
 }
 
-export interface RequestResultSuccess<TResponse extends iso.ApiRouteResponse> {
+export interface RequestResultSuccess<TResponseInner extends iso.ApiRouteResponseInner> {
 	isSuccess: true;
 	pathInfo: RequestResultPathInfo;
-	data: TResponse;
+	data: TResponseInner;
 	clientError: null;
 	serverError: null;
 }
@@ -33,7 +33,7 @@ export interface RequestResultServerError {
 
 export type RequestResultError = RequestResultClientError | RequestResultServerError;
 
-export type RequestResult<TResponse extends iso.ApiRouteResponse> = RequestResultSuccess<TResponse> | RequestResultError;
+export type RequestResult<TResponseInner extends iso.ApiRouteResponseInner> = RequestResultSuccess<TResponseInner> | RequestResultError;
 
 export function isRequestResultError(obj: any): obj is RequestResultError {
 	return !!obj && obj['isSuccess'] === false && obj['pathInfo'] !== undefined && obj['data'] === null;
@@ -57,7 +57,7 @@ export interface ClientError {
 	error: Error | null;
 }
 
-export function createClientRequestResultError<TResponse extends iso.ApiRouteResponse>(pathInfo: RequestResultPathInfo, form: ClientErrorForm, error: Error | null): RequestResult<TResponse> {
+export function createClientRequestResultError<TResponseInner extends iso.ApiRouteResponseInner>(pathInfo: RequestResultPathInfo, form: ClientErrorForm, error: Error | null): RequestResult<TResponseInner> {
 	const result: RequestResultClientError = {
 		pathInfo,
 		isSuccess: false,
@@ -92,16 +92,11 @@ export interface RequestOptions {
  * Never throws. Always returns a result object that will
  * contain an error, if any.
  */
-export async function makeApiRequest
-	<
-		TRequest extends iso.ApiRouteRequest,
-		TResponse extends iso.ApiRouteResponse,
-	>
-	(route: iso.ApiRoute<TRequest, TResponse>, input: TRequest, options: RequestOptions): Promise<RequestResult<TResponse>> {
+export async function makeApiRequest<TApiRoute extends iso.ApiRoute = iso.ApiRoute>(route: TApiRoute, input: iso.OptionalRequestOf<TApiRoute>, options: RequestOptions): Promise<RequestResult<iso.ResponseInnerOf<TApiRoute>>> {
 
 	// Path may actually be null if we are attempting a development path in production.
 	if (!route || !route.path) {
-		return createClientRequestResultError<TResponse>({ finalUrl: '', method: iso.HttpMethod.GET }, ClientErrorForm.packRequest, new Error('Request path is empty'));
+		return createClientRequestResultError<iso.ResponseInnerOf<TApiRoute>>({ finalUrl: '', method: iso.HttpMethod.GET }, ClientErrorForm.packRequest, new Error('Request path is empty'));
 	}
 
 	const headers: Record<string, string> = {
@@ -109,11 +104,11 @@ export async function makeApiRequest
 	};
 
 	let path = route.path;
-	let requestBody: iso.RequestDataType = null;
+	let requestBody: iso.ApiRouteRequestBody = null;
 	let pathParamsError: Error | null = null;
 
 	if (input) {
-		const { body, query: queryParams, path: pathParams } = input as iso.BaseApiRequest;
+		const { body, path: pathParams, query: queryParams } = input as iso.ApiRouteRequest;
 		requestBody = body as {} | null;
 
 		if (pathParams) {
@@ -121,7 +116,13 @@ export async function makeApiRequest
 			for (let i = 0; i < keys.length; i++) {
 				const key = keys[i];
 				const value = pathParams[key as keyof typeof pathParams] as any;
-				if (!key || !value) {
+				/*
+					TODO:
+					As of right now, we don't support optional parameters, and we want to fail fast here
+					to prevent weird behaviors based on arbitrary parameters.
+					But maybe we'll need to be less strict than this...
+				*/
+				if (!value) {
 					pathParamsError = new Error('Path parameter is malformed');
 					break;
 				}
@@ -144,7 +145,7 @@ export async function makeApiRequest
 			Object.keys(queryParams).forEach((key) => {
 				const value = queryParams[key as keyof typeof queryParams];
 				if (value !== undefined && value !== null) {
-					cleanedQueryParams[key] = value;
+					cleanedQueryParams[key] = iso.serializeForPathOrQuery(value); // #REF_API_DATE_SERIALIZATION
 				}
 			});
 			const params = new URLSearchParams(cleanedQueryParams as Record<string, string>);
@@ -163,13 +164,13 @@ export async function makeApiRequest
 	};
 
 	if (pathParamsError) {
-		return createClientRequestResultError<TResponse>(pathInfo, ClientErrorForm.packRequest, pathParamsError);
+		return createClientRequestResultError<iso.ResponseInnerOf<TApiRoute>>(pathInfo, ClientErrorForm.packRequest, pathParamsError);
 	}
 
 	const isGet = route.method === iso.HttpMethod.GET;
 	const hasRequestBody = requestBody && (Object.keys(requestBody).length !== 0);
 	if (isGet && hasRequestBody) {
-		return createClientRequestResultError<TResponse>(pathInfo, ClientErrorForm.packRequest, new Error(`Method '${route.method}' cannot include a body`));
+		return createClientRequestResultError<iso.ResponseInnerOf<TApiRoute>>(pathInfo, ClientErrorForm.packRequest, new Error(`Method '${route.method}' cannot include a body`));
 	}
 
 	/*
@@ -239,13 +240,13 @@ export async function makeApiRequest
 	catch (e) {
 		// Three possibilities: manual timeout, aborted outside, or other.
 		if (isManualTimeout) {
-			return createClientRequestResultError<TResponse>(pathInfo, ClientErrorForm.fetchTimeout, new Error('Request timed out'));
+			return createClientRequestResultError<iso.ResponseInnerOf<TApiRoute>>(pathInfo, ClientErrorForm.fetchTimeout, new Error('Request timed out'));
 		}
 		else if (abortController.signal.aborted) {
-			return createClientRequestResultError<TResponse>(pathInfo, ClientErrorForm.aborted, new Error('Request was aborted'));
+			return createClientRequestResultError<iso.ResponseInnerOf<TApiRoute>>(pathInfo, ClientErrorForm.aborted, new Error('Request was aborted'));
 		}
 		else {
-			return createClientRequestResultError<TResponse>(pathInfo, ClientErrorForm.networkIssue, e as Error);
+			return createClientRequestResultError<iso.ResponseInnerOf<TApiRoute>>(pathInfo, ClientErrorForm.networkIssue, e as Error);
 		}
 	}
 
@@ -257,7 +258,7 @@ export async function makeApiRequest
 		return createClientRequestResultError(pathInfo, ClientErrorForm.networkIssue, new Error(`${response.status}: ${response.statusText}`));
 	}
 
-	let responseBody: TResponse | void = null!;
+	let responseBody: iso.ResponseOf<TApiRoute> | void = null!;
 	if (text) {
 		try {
 			/*
@@ -265,10 +266,10 @@ export async function makeApiRequest
 				As discussed in iso, Dates are serialized to strings and not deserialized back to Dates.
 				There is a serialize/deserialize function pair that handles this issue.
 			*/
-			responseBody = iso.deserialize<TResponse>(text);
+			responseBody = iso.deserialize<iso.ResponseOf<TApiRoute>>(text);
 		}
 		catch (e) {
-			return createClientRequestResultError<TResponse>(pathInfo, ClientErrorForm.parseResult, e as Error);
+			return createClientRequestResultError<iso.ResponseInnerOf<TApiRoute>>(pathInfo, ClientErrorForm.parseResult, e as Error);
 		}
 	}
 
@@ -277,24 +278,23 @@ export async function makeApiRequest
 		return {
 			pathInfo,
 			isSuccess: true,
-			data: responseBody,
+			data: responseBody.a as iso.ResponseInnerOf<TApiRoute>,
 			clientError: null,
 			serverError: null
 		};
 	}
 	// Else, check for an error...
 	if (responseBody) {
-		const baseResponse = (responseBody as iso.BaseApiResponse);
-		if (baseResponse._err) {
+		if (responseBody._err) {
 			return {
 				pathInfo,
 				isSuccess: false,
 				data: null,
 				clientError: null,
-				serverError: baseResponse._err!
+				serverError: responseBody._err
 			};
 		}
 	}
 	// Default, error.
-	return createClientRequestResultError<TResponse>(pathInfo, ClientErrorForm.parseResult, null);
+	return createClientRequestResultError<iso.ResponseInnerOf<TApiRoute>>(pathInfo, ClientErrorForm.parseResult, null);
 }

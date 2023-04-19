@@ -1,6 +1,6 @@
+import styled from 'styled-components';
 import { fontStyleDeclarations } from './text';
 import { borderRadiusStyle, Spacing } from './theme/box';
-import { styled } from './theme/styled';
 
 export const Note = styled.div`
 	${fontStyleDeclarations.bodySmall};

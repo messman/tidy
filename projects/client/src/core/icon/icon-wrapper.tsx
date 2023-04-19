@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { StyledComponent } from 'styled-components';
+import styled, { StyledComponent } from 'styled-components';
 import { Block } from '../theme/box';
 import { ComponentSize } from '../theme/font';
-import { styled, StyledFC } from '../theme/styled';
+import { StyledFC } from '../theme/styled';
 import { IconInputType, SizedIcon } from './icon';
 
 const iconWrapperSpacingSize: Record<ComponentSize, StyledComponent<any, any, any, any>> = {
@@ -18,6 +18,7 @@ export interface IconWrapperProps {
 	/** Default: flex-start. Other possibilities: center, space-between, space-around, flex-end */
 	justifyContent?: FlexJustifyContent;
 	size: ComponentSize;
+	children: React.ReactNode;
 }
 
 export const IconWrapper: StyledFC<IconWrapperProps> = (props) => {

@@ -1,11 +1,11 @@
 import * as React from 'react';
+import styled, { css } from 'styled-components';
 import { BeachTime } from '@/areas/beach-time/beach-time';
 import { AnimationDuration, TransitionSelector } from '@/core/animation/animation';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { overflowHiddenScrollStyle } from '@/core/layout/layout';
 import { Panel } from '@/core/layout/panel/panel';
 import { Spacing } from '@/core/theme/box';
-import { css, styled } from '@/core/theme/styled';
 import { Transition } from '@messman/react-common-transition';
 import * as iso from '@wbtdevlocal/iso';
 import { About } from '../about/about';
@@ -21,7 +21,7 @@ interface AppNavigationState {
 	previous: AppScreen;
 }
 
-export const CompactApplicationLayout: React.FC = () => {
+export const CompactApplicationLayout: React.FC<React.PropsWithChildren> = () => {
 
 	const { screen: next } = useAppNavigation();
 	const [state, setState] = React.useState<AppNavigationState>(() => {
@@ -39,7 +39,7 @@ export const CompactApplicationLayout: React.FC = () => {
 	}
 
 	let TransitionComponent = SlideRightTransitionContainer;
-	let AppScreenComponent = iso.mapEnumValue(AppScreen, appScreenComponent, current);
+	let AppScreenComponent = iso.mapNumberEnumValue(AppScreen, appScreenComponent, current);
 	let screenRender = <AppScreenComponent />;
 
 	screenRender = current === AppScreen.a_home ? (
@@ -111,19 +111,14 @@ const PanelScroller = styled.div`
 const NavigationTransitionContainer = styled.div`
 	height: ${appCompactNavHeight};
 
-	${TransitionSelector.enter} {
-		height: 0;
-	}
-	${TransitionSelector.exit} {
-		height: ${appCompactNavHeight};
-	}
-	${TransitionSelector.entering} {
-		height: ${appCompactNavHeight};
+	${TransitionSelector.transitioning} {
 		transition: height ${AnimationDuration.b_zip} ease-in;
 	}
-	${TransitionSelector.exiting} {
+	${TransitionSelector.active} {
+		height: ${appCompactNavHeight};
+	}
+	${TransitionSelector.inactive} {
 		height: 0;
-		transition: height ${AnimationDuration.b_zip} ease-in;
 	}
 `;
 
@@ -138,44 +133,33 @@ const transitionContainerStyles = css`
 const FadePopTransitionContainer = styled.div`
 	${transitionContainerStyles};
 
-	${TransitionSelector.enter} {
+	${TransitionSelector.transitioning} {
 		opacity: 0;
-		transform: scale(0.95);
-	}
-	${TransitionSelector.exit} {
-		opacity: 1;
-	}
-	${TransitionSelector.entering} {
-		opacity: 1;
-		transform: translateX(0);
 		transition: opacity ${AnimationDuration.b_zip} ease-out, transform ${AnimationDuration.b_zip} ease-out;
 	}
-	${TransitionSelector.exiting} {
+	${TransitionSelector.enterStart} {
+		transform: scale(0.95);
+	}
+	${TransitionSelector.active} {
+		opacity: 1;
+		transform: translateX(0);
+	}
+	${TransitionSelector.inactive} {
 		opacity: 0;
 		transform: scale(0.95);
-		transition: opacity ${AnimationDuration.b_zip} ease-in, transform ${AnimationDuration.b_zip} ease-in;
 	}
 `;
-
 
 const SlideLeftTransitionContainer = styled.div`
 	${transitionContainerStyles};
 
-	${TransitionSelector.enter} {
-		transform: translateX(-100%);
-	}
-	${TransitionSelector.entering} {
-		transform: translateX(0%);
+	${TransitionSelector.transitioning} {
 		transition: transform ${AnimationDuration.b_zip} ease-out;
 	}
-	${TransitionSelector.exit} {
+	${TransitionSelector.active} {
 		transform: translateX(0%);
 	}
-	${TransitionSelector.exiting} {
-		transform: translateX(-100%);
-		transition: transform ${AnimationDuration.b_zip} ease-in;
-	}
-	${TransitionSelector.exiting} {
+	${TransitionSelector.inactive} {
 		transform: translateX(-100%);
 	}
 `;
@@ -183,18 +167,13 @@ const SlideLeftTransitionContainer = styled.div`
 const SlideRightTransitionContainer = styled.div`
 	${transitionContainerStyles};
 
-	${TransitionSelector.enter} {
-		transform: translateX(100%);
-	}
-	${TransitionSelector.entering} {
-		transform: translateX(0%);
-		transition: transform ${AnimationDuration.b_zip} ease-out;
-	}
-	${TransitionSelector.exit} {
-		transform: translateX(0%);
-	}
-	${TransitionSelector.exiting} {
-		transform: translateX(100%);
+	${TransitionSelector.transitioning} {
 		transition: transform ${AnimationDuration.b_zip} ease-in;
+	}
+	${TransitionSelector.active} {
+		transform: translateX(0%);
+	}
+	${TransitionSelector.inactive} {
+		transform: translateX(100%);
 	}
 `;

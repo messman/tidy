@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { Icon } from '@/core/icon/icon';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
@@ -6,7 +7,6 @@ import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { fontStyleDeclarations, Paragraph } from '@/core/text';
-import { styled } from '@/core/theme/styled';
 import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';
@@ -16,7 +16,7 @@ const BeachTimeSummarySuccess: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;
 
 	const beachTimeStatus = getBeachTimeStatus(beach, meta.referenceTime);
-	const textInfoFunc = iso.mapEnumValue(BeachTimeStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
+	const textInfoFunc = iso.mapNumberEnumValue(BeachTimeStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
 	const { title, description, expression } = textInfoFunc(beach, meta.referenceTime);
 
 	return (

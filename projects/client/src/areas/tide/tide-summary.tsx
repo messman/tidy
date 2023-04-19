@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { LabelText } from '@/core/label';
@@ -9,7 +10,6 @@ import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { fontStyleDeclarations, Paragraph } from '@/core/text';
 import { TimeTextUnit } from '@/core/text-unit';
 import { Block, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { TideLevelIcon, unknownTide } from '@/core/tide/tide-level-icon';
 import { getTideTitle } from '@/services/content/tide-utility';

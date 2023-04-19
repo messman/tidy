@@ -12,7 +12,7 @@ export const ConditionsHeader: React.FC = () => {
 	const { meta, weather, astro } = useBatchResponse().success!;
 	const { next } = astro.sun.relativity;
 
-	const statusDescription = iso.mapEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
+	const statusDescription = iso.mapNumberEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
 
 	return (
 		<>

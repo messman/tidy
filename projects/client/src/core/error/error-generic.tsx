@@ -1,9 +1,9 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import { SizedIcon } from '../icon/icon';
 import { Paragraph } from '../text';
 import { Spacing } from '../theme/box';
-import { styled } from '../theme/styled';
 
 export const ErrorGeneric: React.FC = () => {
 	return (

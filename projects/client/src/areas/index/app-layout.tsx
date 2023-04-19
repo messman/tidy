@@ -4,7 +4,7 @@ import { useWindowMediaLayout } from '@messman/react-common';
 import { CompactApplicationLayout } from './app-layout-compact';
 import { WideApplicationLayout } from './app-layout-wide';
 
-export const ApplicationLayout: React.FC = (props) => {
+export const ApplicationLayout: React.FC<React.PropsWithChildren> = (props) => {
 	const { children } = props;
 	const { widthBreakpoint } = useWindowMediaLayout();
 	const Layout = isCompactWidthLayout(widthBreakpoint) ? CompactApplicationLayout : WideApplicationLayout;

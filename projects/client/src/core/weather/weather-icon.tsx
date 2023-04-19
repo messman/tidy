@@ -1,8 +1,9 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { defaultIconSvgStyle, Icon, IconInputType, IconProps } from '../icon/icon';
-import { styled, StyledFC } from '../theme/styled';
+import { StyledFC } from '../theme/styled';
 
 export interface WeatherStatusIconProps {
 	status: iso.Weather.StatusType;
@@ -11,10 +12,9 @@ export interface WeatherStatusIconProps {
 
 export const WeatherStatusIcon: React.FC<WeatherStatusIconProps> = (props) => {
 	const { isDay, status } = props;
-	const statusTypeIcon = iso.mapEnumValue(iso.Weather.StatusType, statusTypeIconMap, status);
+	const statusTypeIcon = iso.mapNumberEnumValue(iso.Weather.StatusType, statusTypeIconMap, status);
 	return (
-		<BaseWeatherIcon type={isDay ? statusTypeIcon.day : statusTypeIcon.night}>
-		</BaseWeatherIcon>
+		<BaseWeatherIcon type={isDay ? statusTypeIcon.day : statusTypeIcon.night} />
 	);
 };
 

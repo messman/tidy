@@ -1,9 +1,9 @@
 import * as React from 'react';
+import styled, { css } from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
 import { FixtureContainer } from '@/test/cosmos-fixture';
 import { ellipsisStyle, fontStyleDeclarations } from './text';
 import { Padding, Spacing } from './theme/box';
-import { css, styled } from './theme/styled';
 
 export default {
 	'Text': CosmosFixture.create(() => {

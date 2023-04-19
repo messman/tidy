@@ -51,7 +51,7 @@ export const GlobalStyles = createGlobalStyle<ThemeProps<Theme>>`
 
 const ThemeContext = React.createContext<UseLocalStorageReturn<number>>(null!);
 
-export const ThemeContextProvider: React.FC = (props) => {
+export const ThemeContextProvider: React.FC<React.PropsWithChildren> = (props) => {
 	const localStorageReturn = localStorage.useLocalStorage<number>('themeIndex', (value) => {
 		// If not stored or no longer valid, go with the first option.
 		if (value === undefined || !themes[value]) {

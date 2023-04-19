@@ -1,6 +1,6 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { Block, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { AboutSummary } from '../about/about-summary';
 import { BeachTimeSummary } from '../beach-time/beach-time-summary';
 import { ConditionsSummary } from '../conditions/conditions-summary';

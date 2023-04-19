@@ -37,7 +37,7 @@ const [AppNavigationContextProvider, useAppNavigationContext] = createContextCon
 
 export const useAppNavigation = useAppNavigationContext;
 
-export const AppNavigationProvider: React.FC = (props) => {
+export const AppNavigationProvider: React.FC<React.PropsWithChildren> = (props) => {
 
 	const [state, setState] = React.useState<AppNavigationState>(() => {
 		return {

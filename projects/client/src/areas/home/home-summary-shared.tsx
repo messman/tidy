@@ -1,8 +1,8 @@
 import * as React from 'react';
+import styled, { css } from 'styled-components';
 import { Icon, SizedIconArrowChevronInline } from '@/core/icon/icon';
 import { panelPaddingStyle } from '@/core/layout/panel/panel';
 import { Spacing } from '@/core/theme/box';
-import { css, styled } from '@/core/theme/styled';
 import { icons } from '@wbtdevlocal/assets';
 
 export const HomeSummarySpinnerIcon = styled(Icon)`
@@ -15,6 +15,7 @@ export interface HomeSummaryClickPaddingProps {
 	onClick: () => void;
 	/** If true, shortens the padding-bottom to feel more connected to content directly below. */
 	isConnectedBelow?: boolean;
+	children: React.ReactNode;
 }
 
 export const HomeSummaryClickPadding: React.FC<HomeSummaryClickPaddingProps> = (props) => {

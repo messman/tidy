@@ -1,6 +1,7 @@
+import styled, { css } from 'styled-components';
 import { Spacing } from './theme/box';
 import { defaultLetterSpacing, defaultLineHeight, FontSize, FontWeight } from './theme/font';
-import { css, styled, ThemedCSS } from './theme/styled';
+import { CssOutput } from './theme/styled';
 
 export const ellipsisStyle = css`
 	overflow: hidden;
@@ -8,7 +9,7 @@ export const ellipsisStyle = css`
 	white-space: nowrap;
 `;
 
-export const fontStyleDeclarations: Record<keyof typeof FontSize, ThemedCSS> = {
+export const fontStyleDeclarations: Record<keyof typeof FontSize, CssOutput> = {
 	display1: css`
 		font-size: ${FontSize.display1};
 		line-height: ${defaultLineHeight};

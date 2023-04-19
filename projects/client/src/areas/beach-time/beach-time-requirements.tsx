@@ -1,8 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { IconInputType, SizedIcon } from '@/core/icon/icon';
 import { LabelText } from '@/core/label';
 import { Block, Spacing } from '@/core/theme/box';
-import { styled } from '@/core/theme/styled';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
@@ -118,6 +118,7 @@ const Container = styled.div`
 
 interface RequirementProps {
 	icon: IconInputType;
+	children: React.ReactNode;
 }
 
 const Requirement: React.FC<RequirementProps> = (props) => {

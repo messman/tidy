@@ -1,6 +1,6 @@
 // import * as React from 'react';
 // import { borderRadiusStyle, edgePaddingValue } from '@/core/style/common';
-// import { styled } from '@/core/theme/styled';
+// import styled from 'styled-components';
 
 // export interface ContextBlockProps {
 // 	/** Primary component to show in the context block. */

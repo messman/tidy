@@ -22,8 +22,8 @@
 	},
 	"homepage": "https://github.com/messman/tidy#readme",
 	"peerDependencies": {
-		"react": "^17.0.1",
-		"react-dom": "^17.0.1"
+		"react": "*",
+		"react-dom": "*"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.15.5",

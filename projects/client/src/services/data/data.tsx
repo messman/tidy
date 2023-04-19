@@ -21,7 +21,7 @@ export interface BatchResponseOutput extends BatchResponseState {
 	restart: () => void;
 }
 
-export const BatchResponseProvider: React.FC = (props) => {
+export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) => {
 
 	const [seed] = useDataSeed();
 
@@ -37,7 +37,7 @@ export const BatchResponseProvider: React.FC = (props) => {
 		makeRequest();
 	});
 
-	function onResult(result: RequestResult<iso.Batch.LatestAPI.Read.Response | iso.Batch.SeedAPI.Read.Response>) {
+	function onResult(result: RequestResult<iso.Batch.LatestAPI.ApiRouteBatchLatest.ResponseInner | iso.Batch.SeedAPI.ApiRouteBatchSeed.ResponseInner>) {
 		if (!result.isSuccess) {
 			// Error handling
 			setState({
@@ -54,15 +54,15 @@ export const BatchResponseProvider: React.FC = (props) => {
 		setState({
 			isLoading: false,
 			error: null,
-			success: result.data
+			success: result.data.batch
 		});
 
 		// Start timer for refresh
 		change(CONSTANT.appRefreshTimeout);
 	}
 
-	const { start: startLatest } = useApiRequest(iso.apiRoutes.batch.latest.read, onResult);
-	const { start: startSeed } = useApiRequest(iso.apiRoutes.batch.seed.read, onResult);
+	const { start: startLatest } = useApiRequest(iso.apiRoutes.batch.latest, onResult);
+	const { start: startSeed } = useApiRequest(iso.apiRoutes.batch.seed, onResult);
 
 	const makeRequest = React.useCallback(() => {
 		const requestOptions: ApiRequestOptions = {
