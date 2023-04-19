@@ -1,4 +1,5 @@
-import * as iso from '@wbtdevlocal/iso';
+import { apiRoutes, isServerError, minutesToMs } from '@wbtdevlocal/iso';
+import { ApiRouteBatchLatest } from '@wbtdevlocal/iso/dist/areas/batch/latest-api';
 import { route } from '../../api/wrap';
 import { settings } from '../../env';
 import { createResponseCache } from '../../services/cache/response-cache';
@@ -9,13 +10,14 @@ if (settings.CACHE_MINUTES !== undefined) {
 	cacheMinutes = parseInt(settings.CACHE_MINUTES as string, 10);
 }
 
-const latestCache = createResponseCache<iso.Batch.LatestAPI.Read.Response>({
-	expiration: iso.minutes(cacheMinutes)
+const latestCache = createResponseCache<ApiRouteBatchLatest.ResponseInner>({
+	expiration: minutesToMs(cacheMinutes)
 });
 
 export const routes = [
-	route(iso.apiRoutes.batch.latest.read)
-		(async (ctx, _params, _req, _res) => {
+	route({
+		route: apiRoutes.batch.latest,
+		handler: async ({ ctx, ok }) => {
 			const logger = ctx.logger;
 
 			// Register a hit.
@@ -23,19 +25,22 @@ export const routes = [
 
 			// Check the cache.
 			if (hit.cacheItemValue) {
-				logger.info('Cached', { timeRemainingInCache: hit.timeRemainingInCache, meta: hit.cacheItemValue.meta });
-				return hit.cacheItemValue;
+				logger.info('Cached', { timeRemainingInCache: hit.timeRemainingInCache, meta: hit.cacheItemValue.batch.meta });
+				return ok(hit.cacheItemValue);
 			}
 
 			const result = await readBatch(ctx);
 
-			if (iso.isServerError(result)) {
+			if (isServerError(result)) {
 				latestCache.setCacheItemValue(null);
 				return result;
 			}
 
-			latestCache.setCacheItemValue(result);
+			latestCache.setCacheItemValue({ batch: result });
 			logger.info('Computed', { cacheForMs: latestCache.cacheExpiration, meta: result.meta });
-			return result;
-		}),
+			return ok({
+				batch: result
+			});
+		}
+	}),
 ];

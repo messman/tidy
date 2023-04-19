@@ -1,21 +1,21 @@
 import { DateTime, DurationLikeObject } from 'luxon';
-import * as iso from '@wbtdevlocal/iso';
+import { Astro, Batch, constant, Tide, Weather } from '@wbtdevlocal/iso';
 import { ComputedAstro } from '../../services/astro/astro-shared';
 import { BaseConfig } from '../../services/config';
 import { FetchedTide } from '../../services/tide/tide-shared';
 import { FetchedWeather } from '../../services/weather/weather-shared';
 
-export function getTideDays(weather: FetchedWeather, extrema: iso.Tide.ExtremeStamp[]): iso.Batch.TideContentDay[] {
+export function getTideDays(weather: FetchedWeather, extrema: Tide.ExtremeStamp[]): Batch.TideContentDay[] {
 	/*
 		Because the moon information has no past data, neither will this data.
 	*/
-	const days: iso.Batch.TideContentDay[] = [];
+	const days: Batch.TideContentDay[] = [];
 	if (!extrema.length || !weather.moonPhaseDaily) {
 		return days;
 	}
 	let moonDayIndex = 0;
-	let moonPhaseDay: iso.Astro.MoonPhaseDay | null = weather.moonPhaseDaily[moonDayIndex];
-	let currentDay: iso.Batch.TideContentDay = {
+	let moonPhaseDay: Astro.MoonPhaseDay | null = weather.moonPhaseDaily[moonDayIndex];
+	let currentDay: Batch.TideContentDay = {
 		extremes: [],
 		moonPhase: moonPhaseDay.moon
 	};
@@ -42,7 +42,7 @@ export function getTideDays(weather: FetchedWeather, extrema: iso.Tide.ExtremeSt
 	return days;
 }
 
-export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasured: iso.Tide.MeasureStamp, dailyTides: iso.Batch.TideContentDay[], astro: ComputedAstro, weather: FetchedWeather): iso.Batch.BeachContent {
+export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasured: Tide.MeasureStamp, dailyTides: Batch.TideContentDay[], astro: ComputedAstro, weather: FetchedWeather): Batch.BeachContent {
 	const { referenceTime } = config;
 
 	/*
@@ -60,53 +60,53 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 		data doesn't go back that far. We have to figure out our current status and call that the start.
 	*/
 
-	const { beachAccessEarlyRise, beachAccessEarlyFall, beachAccessFullyRise, beachAccessFullyFall, sunLightBufferMinutes } = iso.constant;
+	const { beachAccessEarlyRise, beachAccessEarlyFall, beachAccessFullyRise, beachAccessFullyFall, sunLightBufferMinutes } = constant;
 
 	// First, use the current data (more accurate) to know whether it's beach time currently.
-	let currentTideMarkStatus: iso.Batch.BeachTimeTideMarkStatus = null!;
-	if (tideMeasured.direction === iso.Tide.Direction.rising || (tideMeasured.direction === iso.Tide.Direction.turning && tideMeasured.division === iso.Tide.Division.high)) {
+	let currentTideMarkStatus: Batch.BeachTimeTideMarkStatus = null!;
+	if (tideMeasured.direction === Tide.Direction.rising || (tideMeasured.direction === Tide.Direction.turning && tideMeasured.division === Tide.Division.high)) {
 		// High or rising
 		if (tideMeasured.height > beachAccessFullyRise) {
-			currentTideMarkStatus = iso.Batch.BeachTimeTideMarkStatus.fullyRise;
+			currentTideMarkStatus = Batch.BeachTimeTideMarkStatus.fullyRise;
 		}
 		else if (tideMeasured.height > beachAccessEarlyRise) {
-			currentTideMarkStatus = iso.Batch.BeachTimeTideMarkStatus.earlyRise;
+			currentTideMarkStatus = Batch.BeachTimeTideMarkStatus.earlyRise;
 		}
 		else {
-			currentTideMarkStatus = iso.Batch.BeachTimeTideMarkStatus.fullyFall;
+			currentTideMarkStatus = Batch.BeachTimeTideMarkStatus.fullyFall;
 		}
 	}
 	else {
 		// Low or falling
 		if (tideMeasured.height > beachAccessEarlyFall) {
-			currentTideMarkStatus = iso.Batch.BeachTimeTideMarkStatus.fullyRise;
+			currentTideMarkStatus = Batch.BeachTimeTideMarkStatus.fullyRise;
 		}
 		else if (tideMeasured.height > beachAccessFullyFall) {
-			currentTideMarkStatus = iso.Batch.BeachTimeTideMarkStatus.earlyFall;
+			currentTideMarkStatus = Batch.BeachTimeTideMarkStatus.earlyFall;
 		}
 		else {
-			currentTideMarkStatus = iso.Batch.BeachTimeTideMarkStatus.fullyFall;
+			currentTideMarkStatus = Batch.BeachTimeTideMarkStatus.fullyFall;
 		}
 	}
 
-	let currentSunMarkStatus: iso.Batch.BeachTimeSunMarkStatus = iso.Batch.BeachTimeSunMarkStatus.night;
+	let currentSunMarkStatus: Batch.BeachTimeSunMarkStatus = Batch.BeachTimeSunMarkStatus.night;
 	for (let i = 0; i < astro.daily.length; i++) {
 		const astroDaily = astro.daily[i];
 		if (referenceTime.hasSame(astroDaily.rise, 'day')) {
 			if (referenceTime < astroDaily.rise.minus({ minutes: sunLightBufferMinutes })) {
-				currentSunMarkStatus = iso.Batch.BeachTimeSunMarkStatus.night;
+				currentSunMarkStatus = Batch.BeachTimeSunMarkStatus.night;
 			}
 			else if (referenceTime < astroDaily.rise) {
-				currentSunMarkStatus = iso.Batch.BeachTimeSunMarkStatus.predawn;
+				currentSunMarkStatus = Batch.BeachTimeSunMarkStatus.predawn;
 			}
 			else if (referenceTime < astroDaily.set) {
-				currentSunMarkStatus = iso.Batch.BeachTimeSunMarkStatus.sunrise;
+				currentSunMarkStatus = Batch.BeachTimeSunMarkStatus.sunrise;
 			}
 			else if (referenceTime < astroDaily.set.plus({ minutes: sunLightBufferMinutes })) {
-				currentSunMarkStatus = iso.Batch.BeachTimeSunMarkStatus.sunset;
+				currentSunMarkStatus = Batch.BeachTimeSunMarkStatus.sunset;
 			}
 			else {
-				currentSunMarkStatus = iso.Batch.BeachTimeSunMarkStatus.night;
+				currentSunMarkStatus = Batch.BeachTimeSunMarkStatus.night;
 			}
 		}
 	}
@@ -115,17 +115,17 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 	const currentSunBeachStatus = getStatusForSunMarkStatus(currentSunMarkStatus);
 	const currentWeatherBeachStatus = getStatusForWeatherIndicator(weather.current.indicator);
 	let currentBeachStatus = getBeachTimeStatusFromParts(currentTideBeachStatus, currentSunBeachStatus, currentWeatherBeachStatus);
-	const isStartingInBeachTime = currentBeachStatus !== iso.Batch.BeachTimeStatus.not;
+	const isStartingInBeachTime = currentBeachStatus !== Batch.BeachTimeStatus.not;
 
-	const currentTide: iso.Batch.BeachTimeCurrentTide = {
+	const currentTide: Batch.BeachTimeCurrentTide = {
 		beachTimeStatus: currentTideBeachStatus,
 		tideMarkStatus: currentTideMarkStatus
 	};
-	const currentSun: iso.Batch.BeachTimeCurrentSun = {
+	const currentSun: Batch.BeachTimeCurrentSun = {
 		beachTimeStatus: currentSunBeachStatus,
 		sunMarkStatus: currentSunMarkStatus
 	};
-	const currentWeather: iso.Batch.BeachTimeCurrentWeather = {
+	const currentWeather: Batch.BeachTimeCurrentWeather = {
 		beachTimeStatus: currentWeatherBeachStatus,
 		weatherMarkStatus: weather.current.indicator
 	};
@@ -137,32 +137,32 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 	/*
 		This sorting could be made more efficient with a merge implementation, but it's not a major issue.
 	*/
-	const reasons: iso.Batch.BeachTimeReason[] = [...tideMarks, ...sunMarks, ...weatherMarks];
+	const reasons: Batch.BeachTimeReason[] = [...tideMarks, ...sunMarks, ...weatherMarks];
 	reasons.sort((a, b) => {
 		return a.time.toMillis() - b.time.toMillis();
 	});
 
-	let firstCurrentStopReason: iso.Batch.BeachTimeReason | null = null;
+	let firstCurrentStopReason: Batch.BeachTimeReason | null = null;
 
-	let trackedBlock: iso.Batch.BeachTimeBlock | null = isStartingInBeachTime ? {
-		isBest: currentBeachStatus === iso.Batch.BeachTimeStatus.best,
+	let trackedBlock: Batch.BeachTimeBlock | null = isStartingInBeachTime ? {
+		isBest: currentBeachStatus === Batch.BeachTimeStatus.best,
 		start: referenceTime,
 		stop: null!
 	} : null;
-	let trackedBeachTime: iso.Batch.BeachTimeRange | null = isStartingInBeachTime ? {
+	let trackedBeachTime: Batch.BeachTimeRange | null = isStartingInBeachTime ? {
 		start: referenceTime,
 		stop: null!,
 		blocks: [trackedBlock!]
 	} : null;
-	let currentBeachTime: iso.Batch.BeachTimeRange | null = trackedBeachTime;
-	let allBeachTimes: iso.Batch.BeachTimeRange[] = [];
+	let currentBeachTime: Batch.BeachTimeRange | null = trackedBeachTime;
+	let allBeachTimes: Batch.BeachTimeRange[] = [];
 	if (trackedBeachTime) {
 		allBeachTimes.push(trackedBeachTime);
 	}
 
-	let mostRecentTideStatus: iso.Batch.BeachTimeStatus = currentTideBeachStatus;
-	let mostRecentSunStatus: iso.Batch.BeachTimeStatus = currentSunBeachStatus;
-	let mostRecentWeatherStatus: iso.Batch.BeachTimeStatus = currentWeatherBeachStatus;
+	let mostRecentTideStatus: Batch.BeachTimeStatus = currentTideBeachStatus;
+	let mostRecentSunStatus: Batch.BeachTimeStatus = currentSunBeachStatus;
+	let mostRecentWeatherStatus: Batch.BeachTimeStatus = currentWeatherBeachStatus;
 
 
 	reasons.forEach((reason) => {
@@ -177,9 +177,9 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 		}
 
 		// It's only one of these. The others will be null.
-		const tideMark = iso.Batch.isBeachTimeTideMark(reason) ? reason : null;
-		const sunMark = iso.Batch.isBeachTimeSunMark(reason) ? reason : null;
-		const weatherMark = iso.Batch.isBeachTimeWeatherMark(reason) ? reason : null;
+		const tideMark = Batch.isBeachTimeTideMark(reason) ? reason : null;
+		const sunMark = Batch.isBeachTimeSunMark(reason) ? reason : null;
+		const weatherMark = Batch.isBeachTimeWeatherMark(reason) ? reason : null;
 
 		if (tideMark) {
 			mostRecentTideStatus = getStatusForTideMarkStatus(tideMark.heightStatus);
@@ -191,16 +191,16 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 			mostRecentWeatherStatus = getStatusForWeatherIndicator(weatherMark.weatherStatus);
 		}
 
-		const newBeachTimeStatus: iso.Batch.BeachTimeStatus = getBeachTimeStatusFromParts(mostRecentTideStatus, mostRecentSunStatus, mostRecentWeatherStatus);
+		const newBeachTimeStatus: Batch.BeachTimeStatus = getBeachTimeStatusFromParts(mostRecentTideStatus, mostRecentSunStatus, mostRecentWeatherStatus);
 
 		if (trackedBeachTime != null) {
 			// If in beach time...
 
-			if (newBeachTimeStatus !== iso.Batch.BeachTimeStatus.not) {
+			if (newBeachTimeStatus !== Batch.BeachTimeStatus.not) {
 				// If any reason is good...
 
 				// Create a new block if we switched on whether or not the block is best
-				if (trackedBlock && trackedBlock.isBest !== (newBeachTimeStatus === iso.Batch.BeachTimeStatus.best)) {
+				if (trackedBlock && trackedBlock.isBest !== (newBeachTimeStatus === Batch.BeachTimeStatus.best)) {
 					trackedBlock.stop = time;
 					trackedBlock = {
 						isBest: !trackedBlock.isBest,
@@ -210,7 +210,7 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 					trackedBeachTime.blocks.push(trackedBlock);
 				}
 			}
-			else if (newBeachTimeStatus === iso.Batch.BeachTimeStatus.not) {
+			else if (newBeachTimeStatus === Batch.BeachTimeStatus.not) {
 				// If any reason is bad...
 
 				if (trackedBlock) {
@@ -232,13 +232,13 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 		else {
 			// If not in beach time...
 
-			if (newBeachTimeStatus !== iso.Batch.BeachTimeStatus.not) {
+			if (newBeachTimeStatus !== Batch.BeachTimeStatus.not) {
 				// If any reason is good...
 
 				// Start beach time
 				trackedBlock = {
 					// Either rely on this entry that's starting the beach time, or the last one we have saved.
-					isBest: newBeachTimeStatus === iso.Batch.BeachTimeStatus.best,
+					isBest: newBeachTimeStatus === Batch.BeachTimeStatus.best,
 					start: time,
 					stop: null!
 				};
@@ -263,8 +263,8 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 		return (beachTime === currentBeachTime) || (beachTime.stop && beachTime.start && beachTime.stop.diff(beachTime.start, 'minutes').minutes >= 30);
 	});
 
-	const daysMap = new Map<number, iso.Batch.BeachTimeDay>();
-	function getFor(time: DateTime): iso.Batch.BeachTimeDay {
+	const daysMap = new Map<number, Batch.BeachTimeDay>();
+	function getFor(time: DateTime): Batch.BeachTimeDay {
 		const startOfDay = time.startOf('day');
 		const key = startOfDay.toMillis();
 		if (!daysMap.get(key)) {
@@ -323,56 +323,56 @@ export function getBeachContent(config: BaseConfig, tide: FetchedTide, tideMeasu
 	};
 }
 
-function getStatusForTideMarkStatus(status: iso.Batch.BeachTimeTideMarkStatus): iso.Batch.BeachTimeStatus {
-	if (status === iso.Batch.BeachTimeTideMarkStatus.fullyRise) {
-		return iso.Batch.BeachTimeStatus.not;
+function getStatusForTideMarkStatus(status: Batch.BeachTimeTideMarkStatus): Batch.BeachTimeStatus {
+	if (status === Batch.BeachTimeTideMarkStatus.fullyRise) {
+		return Batch.BeachTimeStatus.not;
 	}
-	if (status === iso.Batch.BeachTimeTideMarkStatus.fullyFall) {
-		return iso.Batch.BeachTimeStatus.best;
+	if (status === Batch.BeachTimeTideMarkStatus.fullyFall) {
+		return Batch.BeachTimeStatus.best;
 	}
-	return iso.Batch.BeachTimeStatus.okay;
+	return Batch.BeachTimeStatus.okay;
 }
 
-function getStatusForSunMarkStatus(status: iso.Batch.BeachTimeSunMarkStatus): iso.Batch.BeachTimeStatus {
-	if (status === iso.Batch.BeachTimeSunMarkStatus.night) {
-		return iso.Batch.BeachTimeStatus.not;
+function getStatusForSunMarkStatus(status: Batch.BeachTimeSunMarkStatus): Batch.BeachTimeStatus {
+	if (status === Batch.BeachTimeSunMarkStatus.night) {
+		return Batch.BeachTimeStatus.not;
 	}
-	if (status === iso.Batch.BeachTimeSunMarkStatus.sunrise) {
-		return iso.Batch.BeachTimeStatus.best;
+	if (status === Batch.BeachTimeSunMarkStatus.sunrise) {
+		return Batch.BeachTimeStatus.best;
 	}
-	return iso.Batch.BeachTimeStatus.okay;
+	return Batch.BeachTimeStatus.okay;
 }
 
-function getStatusForWeatherIndicator(status: iso.Weather.Indicator): iso.Batch.BeachTimeStatus {
-	if (status === iso.Weather.Indicator.bad) {
-		return iso.Batch.BeachTimeStatus.not;
+function getStatusForWeatherIndicator(status: Weather.Indicator): Batch.BeachTimeStatus {
+	if (status === Weather.Indicator.bad) {
+		return Batch.BeachTimeStatus.not;
 	}
-	if (status === iso.Weather.Indicator.best) {
-		return iso.Batch.BeachTimeStatus.best;
+	if (status === Weather.Indicator.best) {
+		return Batch.BeachTimeStatus.best;
 	}
-	return iso.Batch.BeachTimeStatus.okay;
+	return Batch.BeachTimeStatus.okay;
 }
 
-function getBeachTimeStatusFromParts(tideStatus: iso.Batch.BeachTimeStatus, sunStatus: iso.Batch.BeachTimeStatus, weatherStatus: iso.Batch.BeachTimeStatus): iso.Batch.BeachTimeStatus {
-	let beachTimeStatus = iso.Batch.BeachTimeStatus.not;
-	if (tideStatus !== iso.Batch.BeachTimeStatus.not && sunStatus !== iso.Batch.BeachTimeStatus.not && weatherStatus !== iso.Batch.BeachTimeStatus.not) {
-		beachTimeStatus = iso.Batch.BeachTimeStatus.okay;
+function getBeachTimeStatusFromParts(tideStatus: Batch.BeachTimeStatus, sunStatus: Batch.BeachTimeStatus, weatherStatus: Batch.BeachTimeStatus): Batch.BeachTimeStatus {
+	let beachTimeStatus = Batch.BeachTimeStatus.not;
+	if (tideStatus !== Batch.BeachTimeStatus.not && sunStatus !== Batch.BeachTimeStatus.not && weatherStatus !== Batch.BeachTimeStatus.not) {
+		beachTimeStatus = Batch.BeachTimeStatus.okay;
 
-		if (tideStatus === iso.Batch.BeachTimeStatus.best && sunStatus === iso.Batch.BeachTimeStatus.best && weatherStatus === iso.Batch.BeachTimeStatus.best) {
-			beachTimeStatus = iso.Batch.BeachTimeStatus.best;
+		if (tideStatus === Batch.BeachTimeStatus.best && sunStatus === Batch.BeachTimeStatus.best && weatherStatus === Batch.BeachTimeStatus.best) {
+			beachTimeStatus = Batch.BeachTimeStatus.best;
 		}
 	}
 	return beachTimeStatus;
 }
 
 /** Return all the points in time where we cross our beach access height. */
-function getTideMarks(tide: FetchedTide): iso.Batch.BeachTimeTideMark[] {
+function getTideMarks(tide: FetchedTide): Batch.BeachTimeTideMark[] {
 	const { extrema } = tide;
 	/*
 		We know we will hit this point in time at most one time between each extrema, because we will be assuming
 		that we'll never go outside the predicted tide extremes.
 	*/
-	const tideMarks: iso.Batch.BeachTimeTideMark[] = [];
+	const tideMarks: Batch.BeachTimeTideMark[] = [];
 	for (let i = 0; i < extrema.length; i++) {
 		if (i === extrema.length - 1) {
 			break;
@@ -383,7 +383,7 @@ function getTideMarks(tide: FetchedTide): iso.Batch.BeachTimeTideMark[] {
 	return tideMarks;
 }
 
-function getTideMarksBetween(a: iso.Tide.ExtremeStamp, b: iso.Tide.ExtremeStamp): iso.Batch.BeachTimeTideMark[] {
+function getTideMarksBetween(a: Tide.ExtremeStamp, b: Tide.ExtremeStamp): Batch.BeachTimeTideMark[] {
 	/*
 		Use arccosine function, where our domain is [-1, 1] and range is [0, pi]
 		So translate our beach height into that domain, and then map the result back out to the time between.
@@ -396,26 +396,26 @@ function getTideMarksBetween(a: iso.Tide.ExtremeStamp, b: iso.Tide.ExtremeStamp)
 		[low, high] = [high, low];
 	}
 
-	const { beachAccessEarlyFall, beachAccessEarlyRise, beachAccessFullyFall, beachAccessFullyRise } = iso.constant;
+	const { beachAccessEarlyFall, beachAccessEarlyRise, beachAccessFullyFall, beachAccessFullyRise } = constant;
 	const heightRange = (high - low);
 
 	// Use percents to get to [0, 1].
 	let firstHeightPercent = (beachAccessEarlyFall - low) / heightRange;
-	let firstStatus = iso.Batch.BeachTimeTideMarkStatus.earlyFall;
+	let firstStatus = Batch.BeachTimeTideMarkStatus.earlyFall;
 	let secondHeightPercent = (beachAccessFullyFall - low) / heightRange;
-	let secondStatus = iso.Batch.BeachTimeTideMarkStatus.fullyFall;
+	let secondStatus = Batch.BeachTimeTideMarkStatus.fullyFall;
 
 	if (isStartLow) {
 		// If we started low, we need to flip at some point. Do it here while we understand our domain.
 		firstHeightPercent = (beachAccessEarlyRise - low) / heightRange;
 		firstHeightPercent = 1 - firstHeightPercent;
-		firstStatus = iso.Batch.BeachTimeTideMarkStatus.earlyRise;
+		firstStatus = Batch.BeachTimeTideMarkStatus.earlyRise;
 		secondHeightPercent = (beachAccessFullyRise - low) / heightRange;
 		secondHeightPercent = 1 - secondHeightPercent;
-		secondStatus = iso.Batch.BeachTimeTideMarkStatus.fullyRise;
+		secondStatus = Batch.BeachTimeTideMarkStatus.fullyRise;
 	}
 
-	const marks: iso.Batch.BeachTimeTideMark[] = [];
+	const marks: Batch.BeachTimeTideMark[] = [];
 
 	// Check to ensure our constants aren't bringing us outside of the extremes (could happen with test data)
 	// Will be less than zero if too low, and above one if too high.
@@ -450,25 +450,25 @@ function computeTimeForTideHeight(heightPercent: number, fromTime: DateTime, toT
 	return time;
 }
 
-function getSunMarks(sunDays: iso.Astro.SunDay[]): iso.Batch.BeachTimeSunMark[] {
-	const bufferMinutes: DurationLikeObject = { minutes: iso.constant.sunLightBufferMinutes };
-	const sunMarks: iso.Batch.BeachTimeSunMark[] = [];
+function getSunMarks(sunDays: Astro.SunDay[]): Batch.BeachTimeSunMark[] {
+	const bufferMinutes: DurationLikeObject = { minutes: constant.sunLightBufferMinutes };
+	const sunMarks: Batch.BeachTimeSunMark[] = [];
 	sunDays.forEach((day) => {
 		sunMarks.push({
 			time: day.rise.minus(bufferMinutes),
-			lightStatus: iso.Batch.BeachTimeSunMarkStatus.predawn
+			lightStatus: Batch.BeachTimeSunMarkStatus.predawn
 		});
 		sunMarks.push({
 			time: day.rise,
-			lightStatus: iso.Batch.BeachTimeSunMarkStatus.sunrise
+			lightStatus: Batch.BeachTimeSunMarkStatus.sunrise
 		});
 		sunMarks.push({
 			time: day.set,
-			lightStatus: iso.Batch.BeachTimeSunMarkStatus.sunset
+			lightStatus: Batch.BeachTimeSunMarkStatus.sunset
 		});
 		sunMarks.push({
 			time: day.set.plus(bufferMinutes),
-			lightStatus: iso.Batch.BeachTimeSunMarkStatus.night
+			lightStatus: Batch.BeachTimeSunMarkStatus.night
 		});
 	});
 	return sunMarks;
@@ -479,10 +479,10 @@ function getSunMarks(sunDays: iso.Astro.SunDay[]): iso.Batch.BeachTimeSunMark[] 
  * Daily weather goes 7 days.
  * We should get as much as we can from hourly, and use daily for the remainder.
 */
-function getWeatherMarks(hourly: iso.Weather.Hourly[], daily: iso.Weather.Day[]): iso.Batch.BeachTimeWeatherMark[] {
+function getWeatherMarks(hourly: Weather.Hourly[], daily: Weather.Day[]): Batch.BeachTimeWeatherMark[] {
 
 	// First, discard all unneeded info for weather marks.
-	const hourlyMarks = hourly.map<iso.Batch.BeachTimeWeatherMark>((hour) => {
+	const hourlyMarks = hourly.map<Batch.BeachTimeWeatherMark>((hour) => {
 		return {
 			time: hour.time,
 			weatherStatus: hour.indicator
@@ -490,7 +490,7 @@ function getWeatherMarks(hourly: iso.Weather.Hourly[], daily: iso.Weather.Day[])
 	});
 
 	// First, discard all unneeded info for weather marks.
-	const dailyMarks = daily.map<iso.Batch.BeachTimeWeatherMark>((day) => {
+	const dailyMarks = daily.map<Batch.BeachTimeWeatherMark>((day) => {
 		return {
 			time: day.time,
 			weatherStatus: day.indicator
@@ -508,7 +508,7 @@ function getWeatherMarks(hourly: iso.Weather.Hourly[], daily: iso.Weather.Day[])
 		return day.time >= lastHourly.time;
 	});
 	// Rewrite that first day to use the last hour's time and cover the rest of the day.
-	const bridgeDaySpan: iso.Batch.BeachTimeWeatherMark = {
+	const bridgeDaySpan: Batch.BeachTimeWeatherMark = {
 		...firstFilteredDay,
 		time: lastHourly.time,
 	};

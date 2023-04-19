@@ -1,5 +1,8 @@
 import { baseLogger } from './services/logging/pino';
 
+/*
+	We also use WBT_SEQ_URL, but it's needed for logging, so it can't be used here.
+*/
 export interface ProcessEnv {
 	PORT: number;
 	NODE_ENV: string;

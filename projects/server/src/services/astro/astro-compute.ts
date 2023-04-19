@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import * as iso from '@wbtdevlocal/iso';
+import { Astro, constant } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
 import { ComputedAstro, getStartOfDayBefore } from './astro-shared';
@@ -16,13 +16,13 @@ import { ComputedAstro, getStartOfDayBefore } from './astro-shared';
 
 export function computeAstro(_ctx: LogContext, config: BaseConfig): ComputedAstro {
 
-	const { latitude, longitude } = iso.constant;
+	const { latitude, longitude } = constant;
 	const { referenceTime, futureCutoff } = config;
 	const startDay = getStartOfDayBefore(referenceTime);
 	const endDay = futureCutoff;
 	const daysBetween = endDay.diff(startDay, 'days').days;
 
-	const days: iso.Astro.SunDay[] = [];
+	const days: Astro.SunDay[] = [];
 
 	for (let i = 0; i < daysBetween; i++) {
 		const day = startDay.plus({ days: i });
@@ -34,7 +34,7 @@ export function computeAstro(_ctx: LogContext, config: BaseConfig): ComputedAstr
 	};
 }
 
-function getSunEventsForDay(day: DateTime, latitude: number, longitude: number): iso.Astro.SunDay {
+function getSunEventsForDay(day: DateTime, latitude: number, longitude: number): Astro.SunDay {
 	const julianDay = getJulianDay(day);
 	const timezoneOffset = day.offset / 60; // To get hours
 

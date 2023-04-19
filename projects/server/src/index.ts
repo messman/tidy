@@ -1,6 +1,5 @@
 import express = require('express');
-import { NextFunction, Request, Response } from 'express';
-import { createReplacer } from '@wbtdevlocal/iso';
+import { createSerializationReplacer } from '@wbtdevlocal/iso';
 import { configureApi } from './api';
 import { settings } from './env';
 import { baseLogger } from './services/logging/pino';
@@ -29,7 +28,7 @@ const app = express();
 	Dates are serialized to strings and not deserialized back to Dates.
 	There is a serialize/deserialize function pair that handles this issue.
 */
-app.set('json replacer', createReplacer());
+app.set('json replacer', createSerializationReplacer());
 
 /*
 	A note on CORS:
@@ -54,7 +53,7 @@ app.use((req, res, next) => {
 configureApi(app);
 
 // Error handler
-app.use(function (error: Error, _request: Request, response: Response, _next: NextFunction) {
+app.use(function (error: Error, _request: express.Request, response: express.Response, _next: express.NextFunction) {
 	console.error(error);
 	response.status(500).send('Server Error');
 });

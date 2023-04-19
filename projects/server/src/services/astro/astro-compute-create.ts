@@ -1,4 +1,4 @@
-import * as iso from '@wbtdevlocal/iso';
+import { Astro } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { linearFromPoints } from '../test/equation';
 import { combineSeed, randomizer, TestSeed } from '../test/randomize';
@@ -41,7 +41,7 @@ export function createAstro(config: BaseConfig, seed: TestSeed): ComputedAstro {
 	}
 
 	// Combine our events
-	const days: iso.Astro.SunDay[] = [];
+	const days: Astro.SunDay[] = [];
 	for (let i = 0; i < daysBetween; i++) {
 		const day = startDay.plus({ days: i });
 		days.push({

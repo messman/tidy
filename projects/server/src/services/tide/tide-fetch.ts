@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import * as iso from '@wbtdevlocal/iso';
+import { constant, isServerError, Tide } from '@wbtdevlocal/iso';
 import { serverErrors, ServerPromise } from '../../api/error';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
@@ -21,14 +21,14 @@ export async function readTides(ctx: LogContext, config: BaseConfig): ServerProm
 async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedTide> {
 
 	const extrema = await getPredictions(ctx, config);
-	if (iso.isServerError(extrema)) {
+	if (isServerError(extrema)) {
 		return extrema;
 	}
 
 	const computed = getComputed(config, extrema);
 
 	const current = await getMeasured(ctx, config, computed);
-	if (iso.isServerError(current)) {
+	if (isServerError(current)) {
 		return current;
 	}
 
@@ -38,9 +38,9 @@ async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<Fe
 	};
 }
 
-async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromise<iso.Tide.ExtremeStamp[]> {
+async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromise<Tide.ExtremeStamp[]> {
 	const { referenceTime, futureCutoff } = config;
-	const { tideStation } = iso.constant;
+	const { tideStation } = constant;
 
 	const pastCutoff = getStartOfDayBefore(referenceTime);
 
@@ -57,7 +57,7 @@ async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromis
 	} as NOAAPredictionInput));
 
 	const predictionResponse = await makeRequest<NOAAPredictionOutput>(ctx, 'Tides - prediction', createRequestUrl(predictionInput));
-	if (iso.isServerError(predictionResponse)) {
+	if (isServerError(predictionResponse)) {
 		return predictionResponse;
 	}
 	if (isNOAARawErrorResponse(predictionResponse)) {
@@ -68,7 +68,7 @@ async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromis
 		});
 	}
 
-	const extrema: iso.Tide.ExtremeStamp[] = [];
+	const extrema: Tide.ExtremeStamp[] = [];
 	predictionResponse.predictions.forEach((p) => {
 		const time = toDateTimeFromNOAAString(p.t);
 		if (time < futureCutoff) {
@@ -87,12 +87,12 @@ async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromis
  * Based on the reference time, get what we think the height is.
  * This logic is based off the same logic used for beach access height time.
  */
-function getComputed(config: BaseConfig, extrema: iso.Tide.ExtremeStamp[]): number {
+function getComputed(config: BaseConfig, extrema: Tide.ExtremeStamp[]): number {
 	const { referenceTime } = config;
 
 	// get previous and next
-	let previous: iso.Tide.ExtremeStamp = null!;
-	let next: iso.Tide.ExtremeStamp = null!;
+	let previous: Tide.ExtremeStamp = null!;
+	let next: Tide.ExtremeStamp = null!;
 
 	for (let i = 0; i < extrema.length; i++) {
 		if (extrema[i].time >= referenceTime) {
@@ -105,8 +105,8 @@ function getComputed(config: BaseConfig, extrema: iso.Tide.ExtremeStamp[]): numb
 	return computeHeightAtTimeBetweenPredictions(previous, next, referenceTime);
 }
 
-async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number): ServerPromise<iso.Tide.MeasureStampBase> {
-	const { tideStation, portlandTideStation } = iso.constant;
+async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number): ServerPromise<Tide.MeasureStampBase> {
+	const { tideStation, portlandTideStation } = constant;
 
 	/*
 		The reason for this complexity:
@@ -131,7 +131,7 @@ async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number
 	} as NOAACurrentLevelInput));
 
 	const wellsLevelResponse = await makeRequest<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(wellsLevelInput));
-	if (iso.isServerError(wellsLevelResponse)) {
+	if (isServerError(wellsLevelResponse)) {
 		return wellsLevelResponse;
 	}
 	else if (isNOAARawErrorResponse(wellsLevelResponse)) {
@@ -149,7 +149,7 @@ async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number
 		} as NOAACurrentLevelInput));
 
 		const portlandLevelResponse = await makeRequest<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(portlandLevelInput));
-		if (iso.isServerError(portlandLevelResponse)) {
+		if (isServerError(portlandLevelResponse)) {
 			return portlandLevelResponse;
 		}
 		else if (isNOAARawErrorResponse(portlandLevelResponse)) {
@@ -176,7 +176,7 @@ async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number
 		heightTime = toDateTimeFromNOAAString(data.t); // May be significantly in the past
 	}
 
-	const current: iso.Tide.MeasureStampBase = {
+	const current: Tide.MeasureStampBase = {
 		computed,
 		isAlternate: isHeightAlternate,
 		isComputed: isHeightComputed,
@@ -188,7 +188,7 @@ async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number
 
 function toDateTimeFromNOAAString(time: string): DateTime {
 	// 2013-08-08 15:00
-	return DateTime.fromFormat(time, 'yyyy-MM-dd HH:mm', { zone: iso.constant.timeZoneLabel });
+	return DateTime.fromFormat(time, 'yyyy-MM-dd HH:mm', { zone: constant.timeZoneLabel });
 }
 
 function parseHeight(value: any): number {

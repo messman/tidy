@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import * as iso from '@wbtdevlocal/iso';
+import { Batch, isServerError, Weather } from '@wbtdevlocal/iso';
 import { ServerPromise } from '../../api/error';
 import { computeAstro } from '../../services/astro/astro-compute';
 import { createAstro } from '../../services/astro/astro-compute-create';
@@ -17,11 +17,11 @@ import { FetchedWeather, filterHourlyWeather } from '../../services/weather/weat
 import { getBeachContent, getTideDays } from './beach';
 
 /** The main function. Calls APIs. */
-export async function readBatch(ctx: LogContext): ServerPromise<iso.Batch.BatchContent> {
+export async function readBatch(ctx: LogContext): ServerPromise<Batch.BatchContent> {
 	const config = createConfig(dateForZone(new Date()));
 
 	const fetchedTide = await readTides(ctx, config);
-	if (iso.isServerError(fetchedTide)) {
+	if (isServerError(fetchedTide)) {
 		return fetchedTide;
 	}
 
@@ -29,7 +29,7 @@ export async function readBatch(ctx: LogContext): ServerPromise<iso.Batch.BatchC
 	const computedAstro = computeAstro(ctx, config);
 
 	const fetchedWeather = await readWeather(ctx, config);
-	if (iso.isServerError(fetchedWeather)) {
+	if (isServerError(fetchedWeather)) {
 		return fetchedWeather;
 	}
 
@@ -37,7 +37,7 @@ export async function readBatch(ctx: LogContext): ServerPromise<iso.Batch.BatchC
 }
 
 /** The main test function. */
-export async function readBatchWithSeed(ctx: LogContext, seed: TestSeed): Promise<iso.Batch.BatchContent> {
+export async function readBatchWithSeed(ctx: LogContext, seed: TestSeed): Promise<Batch.BatchContent> {
 	const timeRandomizer = randomizer(combineSeed('_time_', seed));
 	// From the start of the day, go to between 7AM and 9PM (better probability of nice daytime results).
 	const minutesAhead = timeRandomizer.randomInt(60 * 7, 60 * 21, true);
@@ -63,8 +63,8 @@ function createConfig(referenceTime: DateTime): BaseConfig {
 	};
 }
 
-function createBatchContent(_ctx: LogContext, config: BaseConfig, tide: FetchedTide, astro: ComputedAstro, weather: FetchedWeather): iso.Batch.BatchContent {
-	const meta: iso.Batch.Meta = {
+function createBatchContent(_ctx: LogContext, config: BaseConfig, tide: FetchedTide, astro: ComputedAstro, weather: FetchedWeather): Batch.BatchContent {
+	const meta: Batch.Meta = {
 		referenceTime: config.referenceTime,
 		processingTime: dateForZone(new Date()),
 	};
@@ -104,7 +104,7 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tide: FetchedT
 	};
 }
 
-function appendDaytimeToCurrentWeather(astro: ComputedAstro, current: iso.Weather.Current): iso.Batch.WeatherContentCurrent {
+function appendDaytimeToCurrentWeather(astro: ComputedAstro, current: Weather.Current): Batch.WeatherContentCurrent {
 	const day = astro.daily.find((day) => {
 		return current.time.hasSame(day.rise, 'day');
 	})!;
@@ -120,14 +120,14 @@ function appendDaytimeToCurrentWeather(astro: ComputedAstro, current: iso.Weathe
  * - Filters the hourly down to fewer hours total
  * - Figures out if it's daytime at each hour
 */
-function prepareHourlyWeather(config: BaseConfig, astro: ComputedAstro, hourly: iso.Weather.Hourly[]): iso.Batch.WeatherContentHourly[] {
+function prepareHourlyWeather(config: BaseConfig, astro: ComputedAstro, hourly: Weather.Hourly[]): Batch.WeatherContentHourly[] {
 	hourly = hourly.filter((entry) => {
 		return filterHourlyWeather(config, entry);
 	});
 
 	let sunDayIndex = 0;
 	let sunDay = astro.daily[sunDayIndex];
-	return hourly.map<iso.Batch.WeatherContentHourly>((hourly) => {
+	return hourly.map<Batch.WeatherContentHourly>((hourly) => {
 		// Assume that if it's not today, it's tomorrow.
 		if (!hourly.time.hasSame(sunDay.rise, 'day')) {
 			sunDayIndex++;

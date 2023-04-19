@@ -1,8 +1,8 @@
 import * as uid from 'uid-safe';
-import * as iso from '@wbtdevlocal/iso';
+import { isInternalServerError, ServerError, ServerErrorForm, serverErrorForms } from '@wbtdevlocal/iso';
 import { LogContext } from '../services/logging/pino';
 
-export type ServerPromise<T> = Promise<iso.ServerError | T>;
+export type ServerPromise<T> = Promise<ServerError | T>;
 
 export interface ServerErrorHiddenLog {
 	/**
@@ -61,7 +61,7 @@ function mergeNullableObject<T>(ob: T, newOb: T): T | undefined {
 	return Object.assign(ob, newOb);
 }
 
-function createServerError<TDetail extends object | null = null>(ctx: LogContext, form: iso.ServerErrorForm, input: Partial<ServerErrorInput<TDetail>> | null, overrideInput: Partial<ServerErrorInput<TDetail>> | null): iso.ServerError {
+function createServerError<TDetail extends object | null = null>(ctx: LogContext, form: ServerErrorForm, input: Partial<ServerErrorInput<TDetail>> | null, overrideInput: Partial<ServerErrorInput<TDetail>> | null): ServerError {
 
 	// Set description, falling back on default.
 	form = {
@@ -71,7 +71,7 @@ function createServerError<TDetail extends object | null = null>(ctx: LogContext
 
 	const mergedDetail = mergeNullableObject(input?.publicDetail, overrideInput?.publicDetail);
 
-	const error: iso.ServerError = {
+	const error: ServerError = {
 		_isServerError: true,
 		id: uid.sync(8),
 		form: form,
@@ -92,18 +92,18 @@ function createServerError<TDetail extends object | null = null>(ctx: LogContext
 	};
 
 	// For binding purposes, don't change how the functions are called here.
-	if (iso.isInternalServerError(error)) {
+	if (isInternalServerError(error)) {
 		logger.error(error.form.description, logData);
 	}
 	else {
 		// Still a server error... just not internal. No need to show the error color in our logging.
-		logger.info((error as iso.ServerError).form.description, logData);
+		logger.info((error as ServerError).form.description, logData);
 	}
 	return error;
 }
 
-function wrap(form: iso.ServerErrorForm) {
-	return <TDetail extends object | null = null>(ctx: LogContext, input: ServerErrorInput<TDetail>): iso.ServerError => {
+function wrap(form: ServerErrorForm) {
+	return <TDetail extends object | null = null>(ctx: LogContext, input: ServerErrorInput<TDetail>): ServerError => {
 		return createServerError<TDetail>(ctx, form, input, null);
 	};
 }
@@ -111,18 +111,18 @@ function wrap(form: iso.ServerErrorForm) {
 export const serverErrors = {
 
 	internal: {
-		unknown: (ctx: LogContext, error: Error | null, input: ServerErrorInputHidden): iso.ServerError => {
-			return createServerError(ctx, iso.serverErrorForms.internal.unknown, input, {
+		unknown: (ctx: LogContext, error: Error | null, input: ServerErrorInputHidden): ServerError => {
+			return createServerError(ctx, serverErrorForms.internal.unknown, input, {
 				hiddenLog: {
 					error: error?.message || undefined
 				}
 			});
 		},
-		design: (ctx: LogContext, input: ServerErrorInputHidden): iso.ServerError => {
-			return createServerError(ctx, iso.serverErrorForms.internal.design, input, null);
+		design: (ctx: LogContext, input: ServerErrorInputHidden): ServerError => {
+			return createServerError(ctx, serverErrorForms.internal.design, input, null);
 		},
-		service: (ctx: LogContext, serviceName: string, input: ServerErrorInputHidden): iso.ServerError => {
-			return createServerError(ctx, iso.serverErrorForms.internal.service, input, {
+		service: (ctx: LogContext, serviceName: string, input: ServerErrorInputHidden): ServerError => {
+			return createServerError(ctx, serverErrorForms.internal.service, input, {
 				publicDesc: `Error communicating with the service '${serviceName}'`,
 				hiddenLog: {
 					service: serviceName
@@ -131,18 +131,18 @@ export const serverErrors = {
 		}
 	},
 	logic: {
-		missingParams: wrap(iso.serverErrorForms.logic.missingParams),
-		troubleParams: wrap(iso.serverErrorForms.logic.troubleParams),
-		structureLock: wrap(iso.serverErrorForms.logic.notAllowed),
+		missingParams: wrap(serverErrorForms.logic.missingParams),
+		troubleParams: wrap(serverErrorForms.logic.troubleParams),
+		structureLock: wrap(serverErrorForms.logic.notAllowed),
 	},
 	wire: {
-		malformed: wrap(iso.serverErrorForms.wire.malformed),
-		routeNotFound: wrap(iso.serverErrorForms.wire.routeNotFound),
+		malformed: wrap(serverErrorForms.wire.malformed),
+		routeNotFound: wrap(serverErrorForms.wire.routeNotFound),
 	},
 	resource: {
-		notFound: wrap(iso.serverErrorForms.resource.notFound),
+		notFound: wrap(serverErrorForms.resource.notFound),
 	},
 	dev: {
-		test: wrap(iso.serverErrorForms.dev.test)
+		test: wrap(serverErrorForms.dev.test)
 	}
 };

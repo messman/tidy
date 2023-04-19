@@ -1,5 +1,5 @@
-import { Request, RequestHandler, Response } from 'express';
-import * as iso from '@wbtdevlocal/iso';
+import { Request, Response } from 'express';
+import { ApiRoute, ApiRouteTypes, RequestOf, ResponseInnerOf } from '@wbtdevlocal/iso';
 import { RequestContext } from './context';
 import { ServerPromise } from './error';
 
@@ -17,43 +17,54 @@ import { ServerPromise } from './error';
  **/
 export const customHandlerResponse = 'CUSTOM_HANDLER_RESPONSE';
 
-export type CustomRouteHandler<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse>
-	= (context: RequestContext, params: iso.ApiRouteRequestOnServer<TRequest>, request: Request, response: Response) => ServerPromise<TResponse | typeof customHandlerResponse>;
+// /** For typing pre-handlers (middleware, essentially). We know very little about the request during these. */
+// export type CustomRoutePreHandler = (context: RequestContext, params: ApiRouteRequest, request: Request, response: Response) => ServerPromise<null | typeof customHandlerResponse>;
 
-export interface CustomRoute<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse> {
-	route: iso.ApiRoute<TRequest, TResponse>;
-	preHandlers: RequestHandler[];
-	handler: CustomRouteHandler<TRequest, TResponse>;
+export interface ResponseInnerOkOf<TApiRoute extends ApiRouteTypes> {
+	_isOk: true;
+	inner: ResponseInnerOf<TApiRoute>;
 }
 
-export type CustomRouters = CustomRoute<any, any>[];
-
-export interface RouteFunc<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse> {
-	(handler: CustomRouteHandler<TRequest, TResponse>): CustomRoute<TRequest, TResponse>;
-}
-export function route<TRequest extends iso.ApiRouteRequest, TResponse extends iso.ApiRouteResponse>
-	(route: iso.ApiRoute<TRequest, TResponse>): RouteFunc<TRequest, TResponse> {
-
-	return (handler) => {
-		return {
-			route,
-			preHandlers: [],
-			handler
-		};
+export function makeOk<TApiRoute extends ApiRouteTypes>(innerResponse: ResponseInnerOf<TApiRoute>): ResponseInnerOkOf<TApiRoute> {
+	return {
+		_isOk: true,
+		inner: innerResponse
 	};
 }
 
-export function sendServerError(res: Response, serverError: iso.ServerError): void {
-	const response: iso.ApiRouteResponse = {
-		_err: iso.scrubServerError(serverError)
+export interface CustomRouteHandlerInput
+	<
+		TApiRoute extends ApiRoute = ApiRoute,
+		TContext extends RequestContext = RequestContext
+	> {
+	ctx: TContext,
+	params: RequestOf<TApiRoute>,
+	req: Request,
+	res: Response,
+	/** Helps with type safety. */
+	ok: (inner: ResponseInnerOf<TApiRoute>) => ResponseInnerOkOf<TApiRoute>;
+}
+
+/** The handler function for a route endpoint. */
+export type CustomRouteHandler
+	<
+		TApiRoute extends ApiRoute = ApiRoute,
+		TContext extends RequestContext = RequestContext
+	>
+	= (input: CustomRouteHandlerInput<TApiRoute, TContext>) => ServerPromise<ResponseInnerOkOf<TApiRoute> | typeof customHandlerResponse>;
+
+export interface CustomRouteDefinition {
+	route: ApiRoute;
+	handler: CustomRouteHandler;
+}
+
+export function route<TApiRoute extends ApiRoute>(input: {
+	route: TApiRoute,
+	handler: CustomRouteHandler<TApiRoute>;
+}): CustomRouteDefinition {
+	const { route, handler } = input;
+	return {
+		route,
+		handler: handler as any
 	};
-	sendResponse(res, serverError.form.statusCode, response);
-}
-
-export function sendSuccess(res: Response, body: iso.ApiRouteResponse | null): void {
-	sendResponse(res, 200, body);
-}
-
-function sendResponse(res: Response, status: number, body: iso.ApiRouteResponse | null): void {
-	res.status(status).json(body);
 }

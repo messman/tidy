@@ -1,15 +1,16 @@
 const express = require('express');
-import { Application, Request, Router } from 'express';
-import * as iso from '@wbtdevlocal/iso';
+import { Application, Request, RequestHandler, Response, Router } from 'express';
+import { ApiRoute, ApiRouteRequest, ApiRouteResponse, createSerializationReviver, isEmptyObject, isServerError, scrubServerError, ServerError } from '@wbtdevlocal/iso';
 import { routes as batchLatestRoutes } from '../areas/batch/latest-handle';
 import { routes as batchSeedRoutes } from '../areas/batch/seed-handle';
+import { baseLogger } from '../services/logging/pino';
 import { createRequestContext, RequestContext } from './context';
 import { serverErrors } from './error';
-import { customHandlerResponse, CustomRouters, sendServerError, sendSuccess } from './wrap';
+import { customHandlerResponse, CustomRouteDefinition, CustomRouteHandler, makeOk, ResponseInnerOkOf } from './wrap';
 
 export function configureApi(app: Application): void {
 	const router = Router();
-	router.use(express.json());
+	router.use(express.json({ reviver: createSerializationReviver() })); // #REF_API_DATE_SERIALIZATION
 	router.use(express.urlencoded({ extended: false }));
 
 	// Create request pre-context object.
@@ -43,52 +44,103 @@ export function configureApi(app: Application): void {
 	// Note: error handler is in main application code.
 
 	// Route into the '/api/' path
-	app.use('/api/v4-0', router);
+	app.use('/api', router);
 }
 
-function attachRoutes(router: Router, customRoutes: CustomRouters) {
+function attachRoutes(router: Router, customRoutes: CustomRouteDefinition[]) {
+	const usedRoutes = new Set<ApiRoute>();
+	const duplicateRoutes = new Set<ApiRoute>();
+
 	for (let i = 0; i < customRoutes.length; i++) {
 		const customRoute = customRoutes[i];
-		const { route, preHandlers, handler } = customRoute;
+		const { route, handler } = customRoute;
+
+		// Check for duplication
+		if (usedRoutes.has(route)) {
+			duplicateRoutes.add(route);
+		}
+		else {
+			usedRoutes.add(route);
+		}
+
+		const handlers: CustomRouteHandler[] = [handler];
+
+		const wrappedHandlers = handlers.map<RequestHandler>((customHandler, i) => {
+			const isMainHandler = i === handlers.length - 1;
+
+			return async function (req, res, next) {
+				const ctx = req._ctx as RequestContext;
+				const params = paramsOf(req);
+
+				// Global error handler
+				let result: any = null!;
+				try {
+					result = await customHandler({ ctx, params, req, res, ok: makeOk });
+				}
+				catch (e) {
+					sendServerError(res, serverErrors.internal.unknown(ctx, e as Error, {
+						hiddenArea: isMainHandler ? 'route handler wrap try/catch' : 'pre-handler wrap try/catch',
+						// TODO: Be careful about including user-sent values for additional logging.
+						hiddenLog: { i }
+					}));
+					return;
+				}
+
+				if (result === customHandlerResponse) {
+					// A custom response has been sent. No need to do anything.
+				}
+				else if (isServerError(result)) {
+					sendServerError(res, result);
+				}
+				else if (!isMainHandler) {
+					next();
+				}
+				else {
+					// Must be the result for the main handler
+					const resultOk = result as ResponseInnerOkOf<any>;
+					sendSuccess(res, {
+						a: resultOk.inner,
+						//_err: undefined
+					});
+				}
+			};
+		});
 
 		// Like router.get('/api/...', ...)
-		router[route.method](route.path, ...preHandlers, async function (req, res, _next) {
-			const ctx = req._ctx as RequestContext;
-			const params = paramsOf(req);
-			// Global error handler
-			let result: any = null!;
-			try {
-				result = await handler(ctx, params, req, res);
-			}
-			catch (e) {
-				sendServerError(res, serverErrors.internal.unknown(ctx, e as Error, {
-					hiddenArea: 'route handler try/catch',
-					// Be careful about including user-sent values for additional logging.
-				}));
-				return;
-			}
+		router[route.method](route.path, ...wrappedHandlers);
 
-			if (result === customHandlerResponse) {
-				// A custom response has been sent. No need to do anything.
-			}
-			else if (iso.isServerError(result)) {
-				sendServerError(res, result);
-			}
-			else {
-				sendSuccess(res, result);
-			}
-		});
 	}
+
+	duplicateRoutes.forEach((route) => {
+		baseLogger.warn(`Route duplicated: ${route.method} ${route.path}`);
+	});
 }
+
 
 /** 
  * Retrieves the parameters from an Express request.
  * Transforms empty objects into null.
  */
-function paramsOf<TRequest extends iso.ApiRouteRequest>(req: Request): TRequest {
+function paramsOf<TRequest extends ApiRouteRequest>(req: Request): TRequest {
 	return {
-		body: iso.isEmptyObject(req.body) ? null : req.body,
+		body: isEmptyObject(req.body) ? null : req.body,
 		query: req.query,
 		path: req.params
 	} as unknown as TRequest;
+}
+
+
+function sendServerError(res: Response, serverError: ServerError): void {
+	sendResponse(res, serverError.form.statusCode, {
+		a: null,
+		_err: scrubServerError(serverError)
+	});
+}
+
+function sendSuccess(res: Response, routeResponse: ApiRouteResponse | null): void {
+	sendResponse(res, 200, routeResponse);
+}
+
+function sendResponse(res: Response, status: number, routeResponse: ApiRouteResponse | null): void {
+	res.status(status).json(routeResponse);
 }

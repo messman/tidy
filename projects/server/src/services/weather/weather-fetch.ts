@@ -1,5 +1,5 @@
 import { DateTime, DateTimeOptions } from 'luxon';
-import * as iso from '@wbtdevlocal/iso';
+import { Astro, constant, isServerError, Weather } from '@wbtdevlocal/iso';
 import { serverErrors, ServerPromise } from '../../api/error';
 import { settings } from '../../env';
 import { BaseConfig } from '../config';
@@ -7,7 +7,7 @@ import { LogContext } from '../logging/pino';
 import { makeRequest } from '../network/request';
 import { FetchedWeather, fixFetchedWeather, getIndicator, WithoutIndicator } from './weather-shared';
 
-import StatusType = iso.Weather.StatusType;
+import StatusType = Weather.StatusType;
 
 /*
 	Uses OpenWeather's free 'One Call API', which replaced multiple calls to the NWS API.
@@ -35,7 +35,7 @@ const openWeatherDataUrl = 'https://api.openweathermap.org/data/3.0/onecall?unit
 
 export async function readWeather(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedWeather> {
 	const fetchedWeather = await fetchWeather(ctx, config);
-	if (iso.isServerError(fetchedWeather)) {
+	if (isServerError(fetchedWeather)) {
 		return fetchedWeather;
 	}
 	return fixFetchedWeather(config, fetchedWeather);
@@ -44,7 +44,7 @@ export async function readWeather(ctx: LogContext, config: BaseConfig): ServerPr
 async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedWeather> {
 
 	// Make our initial request to get our API URL from the latitude and longitude
-	const { latitude, longitude } = iso.constant;
+	const { latitude, longitude } = constant;
 	const { referenceTime } = config;
 
 	// Maximum precision is 4 decimal points.
@@ -62,7 +62,7 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 	const url = `${openWeatherDataUrl}&lat=${fixedLatitude}&lon=${fixedLongitude}&appid=${apiKey}`;
 
 	const response = await makeRequest<OpenWeatherResponse>(ctx, 'OpenWeather - fetch', url);
-	if (iso.isServerError(response)) {
+	if (isServerError(response)) {
 		return response;
 	}
 	ctx.logger.info('OpenWeather', { url, response });
@@ -76,16 +76,16 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 	}
 
 	// Per documentation - all times are Unix seconds UTC.
-	const zoneOptions: DateTimeOptions = { zone: iso.constant.timeZoneLabel };
+	const zoneOptions: DateTimeOptions = { zone: constant.timeZoneLabel };
 
 	// Get moonrise and moonset as an array of events in order
-	const lunar: iso.Astro.BodyEvent[] = [];
+	const lunar: Astro.BodyEvent[] = [];
 	response.daily.forEach((daily) => {
-		const rise: iso.Astro.BodyEvent = {
+		const rise: Astro.BodyEvent = {
 			time: DateTime.fromSeconds(daily.moonrise, zoneOptions),
 			isRise: true
 		};
-		const set: iso.Astro.BodyEvent = {
+		const set: Astro.BodyEvent = {
 			time: DateTime.fromSeconds(daily.moonset, zoneOptions),
 			isRise: false
 		};
@@ -96,8 +96,8 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 		lunar.push(...both);
 	});
 
-	const hourly = response.hourly.map<iso.Weather.Hourly>((hourly) => {
-		const withoutIndicator: WithoutIndicator<iso.Weather.Hourly> = {
+	const hourly = response.hourly.map<Weather.Hourly>((hourly) => {
+		const withoutIndicator: WithoutIndicator<Weather.Hourly> = {
 			...applyCommonPrecision({
 				time: DateTime.fromSeconds(hourly.dt, zoneOptions).startOf('hour'),
 				temp: hourly.temp,
@@ -122,7 +122,7 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 	});
 
 	// Get the hourly entry that most closely corresponds to what our current entry will be.
-	let hourForCurrent: iso.Weather.Hourly = null!;
+	let hourForCurrent: Weather.Hourly = null!;
 	for (let i = 0; i < hourly.length; i++) {
 		const hour = hourly[i];
 		if (referenceTime.diff(hour.time, 'minutes').minutes <= 61) {
@@ -154,8 +154,8 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 			indicator: getIndicator(currentWithoutIndicator)
 		},
 		hourly,
-		daily: response.daily.map<iso.Weather.Day>((daily) => {
-			const withoutIndicator: WithoutIndicator<iso.Weather.Day> = {
+		daily: response.daily.map<Weather.Day>((daily) => {
+			const withoutIndicator: WithoutIndicator<Weather.Day> = {
 				time: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
 				minTemp: daily.temp.min,
 				maxTemp: daily.temp.max,
@@ -167,7 +167,7 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 				indicator: getIndicator(withoutIndicator)
 			};
 		}),
-		moonPhaseDaily: response.daily.map<iso.Astro.MoonPhaseDay>((daily) => {
+		moonPhaseDaily: response.daily.map<Astro.MoonPhaseDay>((daily) => {
 			return {
 				time: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
 				moon: getMoonPhase(daily.moon_phase)
@@ -312,7 +312,7 @@ function toPercent(value: number) {
 };
 
 /** Converts angle degrees to cardinal directions. */
-function degreesToDirection(value: number): iso.Weather.WindDirection {
+function degreesToDirection(value: number): Weather.WindDirection {
 	// We are presuming that 0 degrees is N.
 	// 90 degrees is N to E, 45 is N to NE, 22.5 is N to NNE, 11.5 is to halfway between N and NNE.
 	// Use that logic to convert from number [0, 360] to direction.
@@ -321,7 +321,7 @@ function degreesToDirection(value: number): iso.Weather.WindDirection {
 	if (directionValue === 16) {
 		directionValue = 0;
 	}
-	return directionValue as iso.Weather.WindDirection;
+	return directionValue as Weather.WindDirection;
 };
 
 /** Max value for visibility from OpenWeather is 10km. */
@@ -339,7 +339,7 @@ function pressureToMillibars(value: number) {
 	return toPrecision(value, 1);
 };
 
-function applyCommonPrecision(entry: WithoutIndicator<iso.Weather.CommonCurrentHourly>): WithoutIndicator<iso.Weather.CommonCurrentHourly> {
+function applyCommonPrecision(entry: WithoutIndicator<Weather.CommonCurrentHourly>): WithoutIndicator<Weather.CommonCurrentHourly> {
 	return {
 		time: entry.time,
 		temp: toPrecision(entry.temp, 1),
@@ -382,7 +382,7 @@ function getStatusType(ctx: LogContext, statuses: OpenWeatherWeatherStatus[]): S
 	return status;
 }
 
-function getMoonPhase(value: number): iso.Astro.MoonPhase {
+function getMoonPhase(value: number): Astro.MoonPhase {
 	/*
 		As described in documentation: 0 and 1 are new; everything else is separated by 12.5.
 		Values may be any value, so we will need to round.
@@ -391,7 +391,7 @@ function getMoonPhase(value: number): iso.Astro.MoonPhase {
 	if (asPhase === 8) {
 		asPhase = 0;
 	}
-	return asPhase as iso.Astro.MoonPhase;
+	return asPhase as Astro.MoonPhase;
 }
 
 // Retrieved from https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2

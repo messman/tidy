@@ -15,25 +15,25 @@
 	"author": "Andrew Messier",
 	"license": "MIT",
 	"dependencies": {
+		"@autotelic/pino-seq-transport": "^0.1.0",
 		"@wbtdevlocal/iso": "*",
 		"express": "^4.17.1",
-		"luxon": "^2.3.2",
-		"node-fetch": "^2.6.7",
-		"pino": "^6.14.0",
-		"pino-seq": "^0.9.0",
+		"luxon": "^3.3.0",
+		"node-fetch": "^2.6.9",
+		"pino": "^8.11.0",
+		"pino-pretty": "^10.0.0",
 		"seedrandom": "^3.0.5",
 		"uid-safe": "^2.1.5"
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.11",
-		"@types/luxon": "^2.3.1",
-		"@types/node": "^17.0.25",
+		"@types/luxon": "^3.3.0",
+		"@types/node": "^18.15.11",
 		"@types/node-fetch": "^2.6.1",
-		"@types/pino": "^6.3.12",
 		"@types/seedrandom": "^3.0.2",
 		"@types/uid-safe": "^2.1.2",
 		"trash-cli": "^5.0.0",
-		"typescript": "^4.2.3"
+		"typescript": "^5.0.4"
 	},
 	"repository": {
 		"type": "git",

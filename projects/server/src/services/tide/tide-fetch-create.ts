@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import * as iso from '@wbtdevlocal/iso';
+import { Tide } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { combineSeed, randomizer, TestSeed } from '../test/randomize';
 import { computeHeightAtTimeBetweenPredictions, FetchedTide, getStartOfDayBefore } from './tide-shared';
@@ -39,15 +39,15 @@ export function createTides(config: BaseConfig, seed: TestSeed): FetchedTide {
 
 	const startHighOrLowOffset = tideRandomizer.randomInt(0, 1, true);
 
-	let previous: iso.Tide.ExtremeStamp = null!;
-	let next: iso.Tide.ExtremeStamp = null!;
+	let previous: Tide.ExtremeStamp = null!;
+	let next: Tide.ExtremeStamp = null!;
 
-	const extrema = eventTimes.map<iso.Tide.ExtremeStamp>((time, index) => {
+	const extrema = eventTimes.map<Tide.ExtremeStamp>((time, index) => {
 		const isLow = (index + startHighOrLowOffset) % 2 === 0;
 		// Low: [0, 2]
 		// High: [7, 9]
 		const height = isLow ? tideRandomizer.randomFloat(0, 2, 1, true) : tideRandomizer.randomFloat(7, 9, 1, true);
-		const extreme: iso.Tide.ExtremeStamp = {
+		const extreme: Tide.ExtremeStamp = {
 			time,
 			height: height,
 			isLow: isLow

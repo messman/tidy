@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import * as iso from '@wbtdevlocal/iso';
+import { Astro, enumKeys, mapNumberEnumValue, Weather } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { baseLogger } from '../logging/pino';
 import { linearFromPoints, quadraticFromPoints } from '../test/equation';
@@ -7,7 +7,7 @@ import { combineSeed, Randomizer, randomizer, TestSeed } from '../test/randomize
 import { IterableTimeData } from './iterator';
 import { FetchedWeather, fixFetchedWeather, getIndicator, WithoutIndicator } from './weather-shared';
 
-import StatusType = iso.Weather.StatusType;
+import StatusType = Weather.StatusType;
 /** Creates random weather data. Uses a seeded randomizer. */
 export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeather {
 	const weatherRandomizer = randomizer(combineSeed('_weather_', seed));
@@ -28,7 +28,7 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 		return quadraticShakeData(weatherRandomizer, hourlyStartDateTime, hourlyEndDateTime, 1, minY, maxY, precision, inclusive, shake);
 	}
 
-	const nWindDirection = iso.enumKeys(iso.Weather.WindDirection).length - 1;
+	const nWindDirection = enumKeys(Weather.WindDirection).length - 1;
 
 	const hourlyTemp = hourlyWeatherData(40, 60, 1, true, .2);
 	const hourlyTempFeelsLike = hourlyWeatherData(40, 60, 1, true, .2);
@@ -36,7 +36,7 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	const hourlyWindDirection = hourlyWeatherData(0, nWindDirection, 0, false, .2).map((data) => {
 		return {
 			span: data.span,
-			value: data.value as iso.Weather.WindDirection
+			value: data.value as Weather.WindDirection
 		};
 	});
 	const hourlyPressure = hourlyWeatherData(1000, 1200, 0, true, .2);
@@ -47,7 +47,7 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	const weatherStatusCombo = weightedWeatherStatusCombos[weatherStatusComboIndex];
 	let weatherStatuses: StatusType[] = [];
 	weatherStatusCombo.forEach((statusType) => {
-		const weight = iso.mapEnumValue(iso.Weather.StatusType, weatherStatusWeights, statusType);
+		const weight = mapNumberEnumValue(Weather.StatusType, weatherStatusWeights, statusType);
 		for (let i = 0; i < weight; i++) {
 			weatherStatuses.push(statusType);
 		}
@@ -70,8 +70,8 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	const hourlyPop = hourlyWeatherData(0, 1, 3, true, .2);
 
 
-	const hourly = hourlyTemp.map<iso.Weather.Hourly>((temp, i) => {
-		const withoutIndicator: WithoutIndicator<iso.Weather.Hourly> = {
+	const hourly = hourlyTemp.map<Weather.Hourly>((temp, i) => {
+		const withoutIndicator: WithoutIndicator<Weather.Hourly> = {
 			time: temp.span.begin,
 			temp: temp.value,
 			tempFeelsLike: hourlyTempFeelsLike[i].value,
@@ -114,8 +114,8 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	});
 	const dailyPop = dailyWeatherData(0, 1, 3, true, .2);
 
-	const daily = dailyMinTemp.map<iso.Weather.Day>((minTemp, i) => {
-		const withoutIndicator: WithoutIndicator<iso.Weather.Day> = {
+	const daily = dailyMinTemp.map<Weather.Day>((minTemp, i) => {
+		const withoutIndicator: WithoutIndicator<Weather.Day> = {
 			time: minTemp.span.begin,
 			minTemp: minTemp.value,
 			maxTemp: dailyMaxTemp[i].value,
@@ -129,14 +129,14 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 		};
 	});
 
-	const nMoonPhase = iso.enumKeys(iso.Astro.MoonPhase).length - 1;
+	const nMoonPhase = enumKeys(Astro.MoonPhase).length - 1;
 	const dailyMoonPhaseIterable = dailyWeatherData(0, nMoonPhase, 0, false, 0);
 
-	const moonPhaseDaily = dailyMoonPhaseIterable.map<iso.Astro.MoonPhaseDay>((moonPhase, i) => {
+	const moonPhaseDaily = dailyMoonPhaseIterable.map<Astro.MoonPhaseDay>((moonPhase, i) => {
 		const day = referenceTime.startOf('day').plus({ days: i });
 		return {
 			time: day,
-			moon: Math.round(moonPhase.value) as iso.Astro.MoonPhase,
+			moon: Math.round(moonPhase.value) as Astro.MoonPhase,
 		};
 	});
 
@@ -162,7 +162,7 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 	let isRiseAtStart = weatherRandomizer.randomInt(0, 1, true) === 0;
 	let lunarTime = referenceTime.startOf('day').minus({ hours: weatherRandomizer.randomInt(1, 6, true) });
 
-	const lunar: iso.Astro.BodyEvent[] = [];
+	const lunar: Astro.BodyEvent[] = [];
 	for (let i = 0; i < daysBetween; i++) {
 		const lunarShowMinutes = lunarShowMinutesFunc(i);
 		if (i !== 0 || isRiseAtStart) {
@@ -181,7 +181,7 @@ export function createWeather(config: BaseConfig, seed: TestSeed): FetchedWeathe
 		}
 	}
 
-	const current: iso.Weather.Current = {
+	const current: Weather.Current = {
 		...(hourly[0]),
 		time: referenceTime
 	};
