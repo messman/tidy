@@ -30,16 +30,15 @@
 		"@babel/preset-env": "^7.15.4",
 		"@babel/preset-react": "^7.14.5",
 		"@messman/ts-webpack-builder": "^2.1.0",
-		"@svgr/webpack": "^5.5.0",
-		"@types/react": "^17.0.20",
-		"@types/react-dom": "^17.0.9",
+		"@svgr/webpack": "^6.5.1",
+		"@types/react": "^18.0.38",
+		"@types/react-dom": "^18.0.11",
 		"@types/react-router-dom": "^5.1.8",
-		"babel-loader": "^8.2.2",
+		"babel-loader": "^9.1.2",
 		"file-loader": "^6.2.0",
-		"react": "^17.0.2",
-		"react-dom": "^17.0.2",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
 		"svgo-loader": "^3.0.0",
-		"typescript": "^4.4.2"
-	},
-	"dependencies": {}
+		"typescript": "^5.0.4"
+	}
 }

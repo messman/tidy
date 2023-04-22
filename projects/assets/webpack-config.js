@@ -110,7 +110,7 @@ module.exports = function updateWebpackConfig(webpackConfig, isDevelopment) {
 	*/
 
 
-	const svgoOptionsForSVGO = {
+	const optionsForSVGO = {
 		plugins: [
 			// Stops colors and heights from being removed.
 			{
@@ -133,17 +133,8 @@ module.exports = function updateWebpackConfig(webpackConfig, isDevelopment) {
 		]
 	};
 
-	const svgoOptionsForSVGR = {
-		plugins: {
-			removeViewBox: false,
-			removeUselessStrokeAndFill: false,
-			removeUnknownsAndDefaults: false,
-			removeDimensions: true,
-			custom: customPlugin
-		}
-	};
-
 	// ts-loader is present by default in ts-webpack-builder, but here we want to change some properties.
+	webpackConfig.module = webpackConfig.module || {};
 	webpackConfig.module.rules = [
 		{
 			test: /\.tsx?$/,
@@ -189,7 +180,7 @@ module.exports = function updateWebpackConfig(webpackConfig, isDevelopment) {
 					loader: '@svgr/webpack',
 					options: {
 						dimensions: false,
-						svgoConfig: svgoOptionsForSVGR
+						svgoConfig: optionsForSVGO
 					}
 				},
 			]
@@ -216,13 +207,25 @@ module.exports = function updateWebpackConfig(webpackConfig, isDevelopment) {
 							a parent.
 						*/
 						outputPath: '../dist-icons',
-						publicPath: 'icons'
+						publicPath: 'icons',
+						/** 
+						 * @param {string} path
+						 * @param {string} _query
+						*/
+						name: function (path, _query) {
+							// #REF_ASSETS_ICONS_URL
+							// Path like /usr/src/projects/assets/src/static/icons/animal/squirrel.svg
+							const prefix = '/static/icons/';
+							let name = path.substring(path.indexOf(prefix) + prefix.length); // animal/squirrel.svg
+							name = name.replace(/\//g, '_'); // animal_squirrel.svg
+							return name;
+						}
 					}
 				},
 				{
 					// https://github.com/svg/svgo-loader
 					loader: 'svgo-loader',
-					options: svgoOptionsForSVGO
+					options: optionsForSVGO
 				}
 			]
 		},
