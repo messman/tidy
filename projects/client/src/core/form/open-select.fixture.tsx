@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
-import { FixtureContainer } from '@/test/cosmos-fixture';
+import { fixtureDefault } from '@/test/cosmos-fixture';
 import { OpenSelectContainer, OpenSelectValue } from './open-select';
 
 export default CosmosFixture.create(() => {
@@ -21,5 +21,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	container: FixtureContainer.panelPadding
+	setup: fixtureDefault.docTwoPad
 });

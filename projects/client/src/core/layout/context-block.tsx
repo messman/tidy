@@ -81,7 +81,7 @@
 
 
 // const ContextBlockRoot = styled(FlexColumn)`
-// 	background-color: ${p => p.theme.color.backgroundLighter};
+// 	background-color: ${themeTokens.color.backgroundLighter};
 // 	${borderRadiusStyle};
 	
 // 	overflow: hidden;
@@ -99,7 +99,7 @@
 
 // const contextIndicatorLength = 24;
 // const ContextIndicator = styled.div`
-// 	background-color: ${p => p.theme.color.backgroundLightest};
+// 	background-color: ${themeTokens.color.backgroundLightest};
 // 	width: ${contextIndicatorLength}px;
 // 	height: ${contextIndicatorLength}px;
 // 	transform: rotateZ(45deg);

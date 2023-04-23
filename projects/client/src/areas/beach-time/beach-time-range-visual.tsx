@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
-import { borderRadiusStyle, borderRadiusValue, Spacing } from '@/core/theme/box';
+import { borderRadiusStyle, borderRadiusValue, Spacing } from '@/core/primitive/primitive-design';
+import { themeTokens } from '@/core/theme';
 import * as iso from '@wbtdevlocal/iso';
 
 export interface BeachTimeRangeVisualProps {
@@ -83,7 +84,7 @@ const CenterContainer = styled.div`
 	position: relative;
 	overflow: hidden;
 	margin: ${Spacing.bat08} 0;
-	background-color: ${p => p.theme.visual.background};
+	background-color: ${themeTokens.visual.background};
 	width: 100%;
 	height: .5rem;
 	${borderRadiusStyle};
@@ -96,7 +97,7 @@ const VisualNowLine = styled.div<{ $left: string; }>`
 	left: ${p => p.$left};
 	width: 1px;
 	height: 100%;
-	background-color: ${p => p.theme.common.system.green.a_main};
+	background-color: ${themeTokens.rawColor.green.distinct};
 `;
 
 const VisualRangePart = styled.div<{ $left: string; $width: string; isLeftCap: boolean; isRightCap: boolean; }>`
@@ -112,9 +113,9 @@ const VisualRangePart = styled.div<{ $left: string; $width: string; isLeftCap: b
 `;
 
 const VisualBest = styled(VisualRangePart)`
-	background-color: ${p => p.theme.common.system.green.c_lighter};
+	background-color: ${themeTokens.rawColor.green.subtle};
 `;
 
 const VisualOkay = styled(VisualRangePart)`
-	background-color: ${p => p.theme.common.system.yellow.a_main};
+	background-color: ${themeTokens.rawColor.yellow.distinct};
 `;

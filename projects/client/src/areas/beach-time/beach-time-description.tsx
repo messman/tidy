@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { fontStyleDeclarations, Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
+import { Block } from '@/core/layout';
+import { fontStyles, MediumBodyText } from '@/core/text';
 import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';
@@ -23,13 +23,13 @@ export const BeachTimeDescription: React.FC = () => {
 	return (
 		<>
 			{rangeRender}
-			<Paragraph>
+			<MediumBodyText>
 				{description}
-			</Paragraph>
+			</MediumBodyText>
 		</>
 	);
 };
 
 const TimeRange = styled.div`
-	${fontStyleDeclarations.lead};
+	${fontStyles.lead.medium};
 `;

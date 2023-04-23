@@ -1,11 +1,12 @@
 import styled, { css } from 'styled-components';
-import { fontStyleDeclarations } from '@/core/text';
-import { borderRadiusStyle, Spacing } from '@/core/theme/box';
+import { borderRadiusStyle, Spacing } from '@/core/primitive/primitive-design';
+import { fontStyles } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 
 export const Panel = styled.div`
-	background-color: ${p => p.theme.gradient.cover};
+	background-color: ${themeTokens.background.oneBox};
 	${borderRadiusStyle};
-	box-shadow: ${p => p.theme.shadow.b_card};
+	box-shadow: ${themeTokens.shadow.b_card};
 `;
 
 export const panelPaddingValue = Spacing.dog16;
@@ -17,5 +18,5 @@ export const PanelPadding = styled.div`
 `;
 
 export const PanelTitle = styled.div`
-	${fontStyleDeclarations.heading4};
+	${fontStyles.headings.h4};
 `;

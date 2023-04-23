@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { Icon } from '../icon/icon';
-import { fontStyleDeclarations } from '../text';
-import { StyledFC } from '../theme/styled';
+import { StyledFC } from '../primitive/primitive-styled';
+import { fontStyles } from '../text';
+import { themeTokens } from '../theme';
 
 /** A tide status that should never happen with real data, but may be used for loading. */
 export const unknownTide: iso.Tide.MeasureStamp = { time: DateTime.now(), height: 0, direction: iso.Tide.Direction.turning, division: iso.Tide.Division.mid, isComputed: false, isAlternate: false, computed: 0 };
@@ -79,7 +80,7 @@ export const TideExtremeIcon: StyledFC<TideExtremeIconProps> = (props) => {
 
 const TideLevelIconContainer = styled.span`
 	display: inline-block;
-	background-color: ${p => p.theme.common.content.backgroundDay};
+	background-color: ${themeTokens.content.backgroundDay};
 	border-radius: 50%;
 
 	position: relative;
@@ -99,7 +100,7 @@ const waterOffsetPercent: Record<keyof typeof iso.Tide.Division, string> = {
 const WaterIcon = styled(Icon) <{ division: iso.Tide.Division; }>`
 	position: absolute;
 	top: ${p => iso.mapNumberEnumValue(iso.Tide.Division, waterOffsetPercent, p.division)};
-	color: ${p => p.theme.badge.water};
+	color: ${themeTokens.badge.water};
 	width: 2rem;
 	height: 2rem;
 `;
@@ -116,7 +117,7 @@ const CenteringContainer = styled.div`
 `;
 
 const ExtremeText = styled.span`
-	${fontStyleDeclarations.leadSmall};
+	${fontStyles.lead.small};
 	color: #FFF;
 `;
 

@@ -1,11 +1,9 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { StyledComponent } from 'styled-components';
 import { ErrorBoundary } from '@/core/error/error-boundary';
 import { AppNavigationProvider } from '@/core/layout/app/app-navigation';
-import { ApplicationLayoutContainer } from '@/core/layout/layout';
-import { Panel, PanelPadding } from '@/core/layout/panel/panel';
-import { Spacing } from '@/core/theme/box';
-import { ThemeContextProvider, themes, useThemeIndex } from '@/core/theme/theme';
+import { ApplicationLayoutContainer, Space } from '@/core/layout/layout-shared';
+import { ThemeContextProvider, themeTokens } from '@/core/theme/theme-root';
 import { BatchResponseProvider } from '@/services/data/data';
 import { DataSeedProvider, useDataSeed } from '@/services/data/data-seed';
 import { lowerBreakpoints } from '@/services/layout/window-layout';
@@ -16,25 +14,46 @@ import * as iso from '@wbtdevlocal/iso';
 import { createControlSelectForEnum, useControlSelect } from './cosmos';
 
 export enum FixtureContainer {
-	/** App background, no spacing, flex. Basically no special container. */
-	none,
-	/** Basically just like the default "none", but the background is the cover background and flex-direction is row. */
-	panelFullscreenFlex,
-	/** Probably what you want. A panel set against the app background, no spacing, no flex. For quick tests. */
-	panel,
-	/** Panel, but with padding already applied. For quick tests. */
-	panelPadding,
+	flexRow,
+	flexColumn,
+	noPadding,
+	padding
 }
 
-export interface FixtureProps {
+export enum FixtureBackground {
+	waterGradient,
+	oneBox,
+	two,
+	twoBox
+}
+
+export interface FixtureSetup {
 	container: FixtureContainer;
+	background: FixtureBackground;
+}
+
+export const fixtureDefault = {
+	/** Default. No padding, no flex, overflow, main background. */
+	docNoPad: { container: FixtureContainer.noPadding, background: FixtureBackground.waterGradient },
+	/** Default. Padding, no flex, overflow, main background. */
+	docPad: { container: FixtureContainer.padding, background: FixtureBackground.waterGradient },
+	/** Flex Column and main background, like the application root. */
+	root: { container: FixtureContainer.flexColumn, background: FixtureBackground.waterGradient },
+	docTwoPad: { container: FixtureContainer.padding, background: FixtureBackground.two },
+	docTwo: { container: FixtureContainer.noPadding, background: FixtureBackground.two }
+} satisfies Record<string, FixtureSetup>;
+
+export interface FixtureProps {
+	/** Container and background for the fixture. */
+	setup?: FixtureSetup;
 	providers?: ProviderWithProps[];
 }
 
 export function create(Component: React.FC, props: FixtureProps): React.FC {
 	return () => {
-		const { container, providers: additionalProviders } = props;
+		const { setup, providers: additionalProviders } = props;
 
+		// #REF_PROVIDERS - update in all areas, if appropriate
 		const providers: ProviderWithProps[] = [
 			provider(DocumentVisibilityProvider, {}),
 			provider(ThemeContextProvider, {}),
@@ -51,7 +70,7 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 
 		return (
 			<ProviderComposer providers={providers}>
-				<TestWrapper container={container} >
+				<TestWrapper setup={setup} >
 					<ErrorBoundary>
 						<Component />
 					</ErrorBoundary>
@@ -61,27 +80,28 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 	};
 }
 
+const fixtureBackgroundOptions = createControlSelectForEnum(FixtureBackground);
+
 const seedOb = createControlSelectForEnum(iso.Batch.Seed) as unknown as Record<(keyof typeof iso.Batch.Seed) | '_real_', iso.Batch.Seed | null>;
 seedOb['_real_'] = null;
 
 interface TestWrapperProps {
-	container: FixtureContainer;
+	setup?: FixtureSetup;
 	children: React.ReactNode;
 }
 
 const TestWrapper: React.FC<TestWrapperProps> = (props) => {
-	const { container } = props;
+	const { setup } = props;
 
 	//const mockApi = useMockApi();
 	const [seed, setSeed] = useDataSeed();
 
-	const [themeIndex, setThemeIndex] = useThemeIndex();
-	const selectedThemeIndex = useControlSelect('Global - Theme', themeOptions, themes[themeIndex].themeInfo.name);
-	React.useEffect(() => {
-		if (themeIndex !== selectedThemeIndex) {
-			setThemeIndex(selectedThemeIndex);
-		}
-	}, [selectedThemeIndex]);
+	const background = useControlSelect('Global - Background', fixtureBackgroundOptions, 'waterGradient');
+
+	const setupWithDefault = setup || fixtureDefault.docNoPad;
+	const setupInfo = React.useMemo(() => {
+		return { ...setupWithDefault, background };
+	}, [setupWithDefault, background]);
 
 	const selectedSeed = useControlSelect('Seed', seedOb, seed || '_real_');
 	React.useEffect(() => {
@@ -90,81 +110,60 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 		}
 	}, [selectedSeed]);
 
-	// const timeout = useControlSelect('Global - Network Speed', networkSpeeds, 'Instant (0)');
-
-	// const responseOverride = useControlSelect('Global - Override Response', globalResponses, 'No Override');
-
-	// React.useEffect(() => {
-	// 	if (mockApi) {
-	// 		mockApi.setOverrides({
-	// 			timeout: timeout,
-	// 			response: responseOverride
-	// 		});
-	// 	}
-	// }, [timeout, responseOverride]);
-
-	let render = <>{props.children}</>;
-	if (container !== FixtureContainer.none) {
-
-		if (container === FixtureContainer.panelFullscreenFlex) {
-			render = <PanelFullscreenFlexLayoutContainer>{render}</PanelFullscreenFlexLayoutContainer>;
-		}
-		else if (container === FixtureContainer.panel) {
-			render = (
-				<PanelContainer>
-					<Panel>
-						{render}
-					</Panel>
-				</PanelContainer>
-			);
-		}
-		else if (container === FixtureContainer.panelPadding) {
-			render = (
-				<PanelContainer>
-					<Panel>
-						<PanelPadding>
-							{render}
-						</PanelPadding>
-					</Panel>
-				</PanelContainer>
-			);
-		}
-	}
-
 	return (
-		<ApplicationLayoutContainer>
-			{render}
-		</ApplicationLayoutContainer>
+		<Fixture_OuterContainer setupInfo={setupInfo}>
+			<Fixture_InnerContainer setupInfo={setupInfo}>
+				{props.children}
+			</Fixture_InnerContainer>
+		</Fixture_OuterContainer>
 	);
 };
 
-const PanelFullscreenFlexLayoutContainer = styled(ApplicationLayoutContainer)`
-	background-color: ${p => p.theme.gradient.cover};
-	flex-direction: row;
-`;
+const Fixture_OuterContainer = styled(ApplicationLayoutContainer).attrs((props: { setupInfo: FixtureSetup; }) => {
+	const { background } = props.setupInfo;
+	const style: Partial<CSSStyleDeclaration> = {};
 
-const PanelContainer = styled.div`
-	padding: ${Spacing.cat12};
-	overflow-y: auto;
-`;
+	if (background === FixtureBackground.waterGradient || background === FixtureBackground.oneBox) {
+		style.backgroundColor = themeTokens.background.waterGradient;
+	}
+	else if (background === FixtureBackground.two || background === FixtureBackground.twoBox) {
+		style.backgroundColor = themeTokens.background.two;
+	}
+	return {
+		style: style
+	};
+})`` as StyledComponent<'div', any, { setupInfo?: FixtureSetup; }, never>;
 
-const themeOptions: { [key: string]: number; } = {};
-themes.forEach((theme, index) => {
-	themeOptions[theme.themeInfo.name] = index;
-});
+const Fixture_InnerContainer = styled(ApplicationLayoutContainer).attrs((props: { setupInfo: FixtureSetup; }) => {
+	const { container, background } = props.setupInfo;
 
-// const networkSpeeds = iso.strict<number | null>()({
-// 	'Default': null,
-// 	'Instant (0)': 0,
-// 	'Quick (.1s)': 100,
-// 	'Medium (.5s)': 500,
-// 	'Slow (1s)': 1_000,
-// 	'Struggling (3s)': 3_000,
-// 	'Timeout': 60_000
-// });
+	const style: Partial<CSSStyleDeclaration> = {};
 
-// const globalResponses = iso.strict<iso.ServerError | false | null>()({
-// 	'No Override': null,
-// 	'Client Error': false,
-// 	'Server Error': createTestServerError(),
-// });
+	// Starting from the baseline of ApplicationLayoutContainer, which is a flex column setup
+	if (container === FixtureContainer.flexColumn) {
+		// Nothing
+	}
+	else if (container === FixtureContainer.flexRow) {
+		style.flexDirection = 'row';
+	}
+	else if (container === FixtureContainer.noPadding) {
+		style.display = 'block';
+		style.overflowY = 'auto';
+	}
+	else if (container === FixtureContainer.padding) {
+		style.display = 'block';
+		style.overflowY = 'auto';
+		style.padding = Space.Edge.value;
+	}
+
+	if (background === FixtureBackground.oneBox) {
+		style.backgroundColor = themeTokens.background.oneBox;
+	}
+	else if (background === FixtureBackground.twoBox) {
+		style.backgroundColor = themeTokens.background.twoBox;
+	}
+
+	return {
+		style: style
+	};
+})`` as StyledComponent<'div', any, { setupInfo?: FixtureSetup; }, never>;

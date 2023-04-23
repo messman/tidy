@@ -7,7 +7,7 @@ module.exports = async function getDefine(isDevelopment) {
 
 	// Version of the server API to use.
 	const apiOrigin = isDevelopment ? '' : 'https://wellsbeachtime-api-v4-0.herokuapp.com';
-	const apiRoot = apiOrigin + '/api/v4-0';
+	const apiRoot = apiOrigin + '/api';
 
 	/*
 		Should match code in the source directory.

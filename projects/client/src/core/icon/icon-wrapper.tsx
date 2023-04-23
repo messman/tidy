@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled, { StyledComponent } from 'styled-components';
-import { Block } from '../theme/box';
-import { ComponentSize } from '../theme/font';
-import { StyledFC } from '../theme/styled';
+import { Block } from '../layout';
+import { ComponentSize } from '../primitive/primitive-design';
+import { StyledFC } from '../primitive/primitive-styled';
 import { IconInputType, SizedIcon } from './icon';
 
 const iconWrapperSpacingSize: Record<ComponentSize, StyledComponent<any, any, any, any>> = {

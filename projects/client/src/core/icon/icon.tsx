@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { EmptyIconName, SVGIconType, SVGIconTypeName } from '@wbtdevlocal/assets';
-import { ComponentSize } from '../theme/font';
-import { StyledFC } from '../theme/styled';
-import { UrlIcon } from './icon-url';
+import { emptyIcon, EmptyIconName, SVGIcon, SVGIconUrlNameLookup } from '@wbtdevlocal/assets';
+import { ComponentSize } from '../primitive/primitive-design';
+import { StyledFC } from '../primitive/primitive-styled';
+import { UrlIcon, useSVGIconUrlCache } from './icon-url';
 
-export type IconInputType = JSX.Element | SVGIconType | StyledFC | SVGIconTypeName | EmptyIconName | null;
+export type IconInputType = JSX.Element | SVGIcon | StyledFC | string | EmptyIconName | null;
 
 export interface IconProps {
 	/**
@@ -20,23 +20,51 @@ export interface IconProps {
 export const Icon: StyledFC<IconProps> = (props) => {
 	/*
 		Icon build process is explained in @wbtdevlocal/assets.
-		Remember: icons are colored through the 'color' property if properly exported from Sketch.
+		Remember: icons are colored through the 'color' property if properly exported.
 	*/
 	const { className, type } = props;
-	if (typeof (type) === 'number') {
-		return <UrlIcon value={type} className={className} />;
+
+	// This does NOT cause re-renders when the cache changes. Safe to have in every icon.
+	const cache = useSVGIconUrlCache();
+
+	if (type === emptyIcon) {
+		// Empty icon
+		return <EmptyIcon className={className} />;
 	}
 	if (!type) {
 		return null;
 	}
 	if (React.isValidElement(type)) {
+		// It's an inline element, and not a component
 		return type;
 	}
-	const IconComponent = (type === 'empty' ? EmptyIcon : type) as StyledFC;
+	if (typeof (type) === 'string') {
+		const iconName = SVGIconUrlNameLookup[type];
+		if (iconName) {
+			// It's a URL for loading an SVG Icon.
+			// Check the cache for the matching component.
+			const entry = cache.getEntry(iconName);
+			if (entry?.SVGIconComponent) {
+				const IconComponent = entry.SVGIconComponent as StyledFC;
+				return <IconComponent className={className} />;
+			}
+			return <UrlIcon iconName={iconName} className={className} />;
+		}
+		return null;
+	}
+	// It's a component, like SVGIcon
+	const IconComponent = type as StyledFC;
+	if (isSVGIcon(type)) {
+		cache.addSVGIconComponent(type);
+	}
 	return (
 		<IconComponent className={className} />
 	);
 };
+
+function isSVGIcon(icon: any): icon is SVGIcon {
+	return !!icon && !!(icon as SVGIcon).iconName;
+}
 
 export interface SizedIconProps extends IconProps {
 	size: ComponentSize;
@@ -83,7 +111,12 @@ export const EmptyIcon = styled.span`
 	This means they need custom width and height declarations.
 	These width and height dimensions come from Figma.
 */
+export const inlineArrowChevronIconHeights = {
+	medium: { height: '1.5rem', width: '.625rem' },
+	small: { height: '1rem', width: '.5rem' }
+} as const satisfies Record<ComponentSize, { width: string, height: string; }>;
+
 export const SizedIconArrowChevronInline = styled(Icon) <SizedIconProps>`
-	width: calc(${p => iconHeights[p.size]} / 3);
-	height: ${p => iconHeights[p.size]};
+	width: ${p => inlineArrowChevronIconHeights[p.size].width};
+	height: ${p => inlineArrowChevronIconHeights[p.size].height};
 `;

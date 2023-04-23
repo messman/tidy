@@ -1,9 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { WrapperButton } from '@/core/form/button';
+import { ClickWrapperButton } from '@/core/form/button';
 import { SizedIcon } from '@/core/icon/icon';
+import { Block } from '@/core/layout';
 import { AppScreen, canScreenCarouselMoveLeft, canScreenCarouselMoveRight, getScreenCarouselMove, useAppNavigation } from '@/core/layout/app/app-navigation';
-import { Block, Spacing } from '@/core/theme/box';
+import { Spacing } from '@/core/primitive/primitive-design';
+import { themeTokens } from '@/core/theme';
 import { icons } from '@wbtdevlocal/assets';
 
 export const appCompactNavHeight = '2.5rem';
@@ -12,32 +14,37 @@ export const AppLayoutCompactNav: React.FC = () => {
 
 	const { screen, setScreen } = useAppNavigation();
 
+	const canMoveLeft = canScreenCarouselMoveLeft(screen) && screen !== AppScreen.a_home;
+	const canMoveRight = canScreenCarouselMoveRight(screen) && screen !== AppScreen.a_home;
+
 	function onClickClose() {
 		setScreen(AppScreen.a_home);
 	}
 	function onClickLeft() {
-		setScreen(getScreenCarouselMove(screen, false));
+		if (canMoveLeft) {
+			setScreen(getScreenCarouselMove(screen, false));
+		}
 	}
 	function onClickRight() {
-		setScreen(getScreenCarouselMove(screen, true));
+		if (canMoveRight) {
+			setScreen(getScreenCarouselMove(screen, true));
+		}
 	}
 
-	const canMoveLeft = canScreenCarouselMoveLeft(screen) && screen !== AppScreen.a_home;
-	const canMoveRight = canScreenCarouselMoveRight(screen) && screen !== AppScreen.a_home;
 
 	return (
 		<Container>
-			<WrapperButton onClick={onClickClose}>
+			<ClickWrapperButton onClick={onClickClose}>
 				<NavSizedIcon size='medium' type={icons.actionClose} isVisible={true} />
-			</WrapperButton>
+			</ClickWrapperButton>
 			<ContainerRight>
-				<WrapperButton onClick={onClickLeft} isDisabled={!canMoveLeft}>
+				<ClickWrapperButton onClick={onClickLeft}>
 					<NavSizedIcon size='medium' type={icons.arrowLeft} isVisible={canMoveLeft} />
-				</WrapperButton>
+				</ClickWrapperButton>
 				<Block.Elf24 />
-				<WrapperButton onClick={onClickRight} isDisabled={!canMoveRight}>
+				<ClickWrapperButton onClick={onClickRight}>
 					<NavSizedIcon size='medium' type={icons.arrowRight} isVisible={canMoveRight} />
-				</WrapperButton>
+				</ClickWrapperButton>
 			</ContainerRight>
 		</Container>
 	);
@@ -46,8 +53,8 @@ export const AppLayoutCompactNav: React.FC = () => {
 const Container = styled.div`
 	position: relative;
 	height: ${appCompactNavHeight};
-	background-color: ${p => p.theme.gradient.light};
-	box-shadow: ${p => p.theme.shadow.d_navigationBottom};
+	background-color: ${themeTokens.background.waterLight};
+	box-shadow: ${themeTokens.shadow.d_navigationBottom};
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

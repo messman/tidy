@@ -4,7 +4,8 @@ import { createContextConsumer } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
 import { GroupContainer, GroupEntry, GroupEntryProps, GroupKeyLabel } from '../group/group';
 import { SizedIcon } from '../icon/icon';
-import { Block } from '../theme/box';
+import { Block } from '../layout';
+import { themeTokens } from '../theme';
 
 export interface SelectedDataKeyOutput {
 	selectedDataKey: string | number | null;
@@ -71,5 +72,5 @@ export const OpenSelectValue: React.FC<OpenSelectValueProps> = (props) => {
 };
 
 const PrimarySizedCheckIcon = styled(SizedIcon)`
-	color: ${p => p.theme.common.brand1.main};
+	color: ${themeTokens.brand.blue};
 `;

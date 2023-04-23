@@ -5,7 +5,7 @@
 		"declarationMap": false,
 		"lib": [
 			"DOM",
-			"ES2021"
+			"ESNext"
 		],
 		"jsx": "react",
 		"outDir": "./ts-build",
@@ -14,12 +14,17 @@
 			"@/*": [
 				"src/*"
 			]
-		}
+		},
+		"typeRoots": [
+			"./types",
+			"./node_modules/@types"
+		],
 	},
 	"exclude": [
 		"node_modules"
 	],
 	"include": [
-		"src/**/*"
+		"src/**/*",
+		"types/**/*"
 	]
 }

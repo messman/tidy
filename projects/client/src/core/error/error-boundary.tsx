@@ -1,9 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { LayoutBreakpointRem } from '@/services/layout/window-layout';
-import { ButtonFullWidthContainer, StandardButton } from '../form/button';
-import { fontStyleDeclarations } from '../text';
-import { Block, Spacing } from '../theme/box';
+import { ButtonFillBrandBlue, ButtonFullWidthContainer } from '../form/button';
+import { Block } from '../layout';
+import { Spacing } from '../primitive/primitive-design';
+import { fontStyles } from '../text';
+import { themeTokens } from '../theme';
 
 interface ErrorBoundaryState {
 	error: Error | null;
@@ -59,7 +61,7 @@ export const ErrorBoundaryCover: React.FC<ErrorBoundaryCoverProps> = (props) => 
 			</ErrorText>
 			<Block.Dog16 />
 			<ButtonFullWidthContainer>
-				<StandardButton onClick={onClickRefresh}>Refresh</StandardButton>
+				<ButtonFillBrandBlue onClick={onClickRefresh}>Refresh</ButtonFillBrandBlue>
 			</ButtonFullWidthContainer>
 		</Container>
 	);
@@ -75,7 +77,7 @@ const Container = styled.div`
 `;
 
 const ErrorText = styled.div`
-	${fontStyleDeclarations.body};
-	color: ${p => p.theme.textDistinct};
+	${fontStyles.text.medium};
+	color: ${themeTokens.text.distinct};
 	max-width: ${LayoutBreakpointRem.c30}rem;
 `;

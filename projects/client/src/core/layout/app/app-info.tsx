@@ -1,12 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { fontStyleDeclarations } from '@/core/text';
-import { FontWeight } from '@/core/theme/font';
+import { FontWeight } from '@/core/primitive/primitive-design';
+import { fontStyles } from '@/core/text';
 import { useBatchResponse } from '@/services/data/data';
 import { getTimeTwelveHourString } from '@/services/time';
 
 const LabelText = styled.div`
-	${fontStyleDeclarations.bodySmall};
+	${fontStyles.text.small};
 	color: #FFF;
 	font-weight: ${FontWeight.medium};
 `;

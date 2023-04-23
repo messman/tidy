@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { CosmosFixture } from '@/test';
-import { FixtureContainer } from '@/test/cosmos-fixture';
+import { fixtureDefault } from '@/test/cosmos-fixture';
 import { icons } from '@wbtdevlocal/assets';
-import { fontStyleDeclarations } from '../text';
-import { Block } from '../theme/box';
+import { Block } from '../layout';
+import { fontStyles } from '../text';
 import { GroupButton, GroupContainer, GroupKeyValue, GroupRaisedContainer } from './group';
 
 export default CosmosFixture.create(() => {
@@ -62,9 +62,9 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	container: FixtureContainer.panelPadding
+	setup: fixtureDefault.docTwoPad
 });
 
 const SectionHeader = styled.div`
-	${fontStyleDeclarations.heading3};
+	${fontStyles.headings.h3};
 `;

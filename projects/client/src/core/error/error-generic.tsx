@@ -2,16 +2,17 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import { SizedIcon } from '../icon/icon';
-import { Paragraph } from '../text';
-import { Spacing } from '../theme/box';
+import { Spacing } from '../primitive/primitive-design';
+import { MediumBodyText } from '../text';
+import { themeTokens } from '../theme';
 
 export const ErrorGeneric: React.FC = () => {
 	return (
 		<Container>
 			<RedErrorIcon size='medium' type={icons.statusErrorSolid} />
-			<Paragraph>
+			<MediumBodyText>
 				Data could not be retrieved.
-			</Paragraph>
+			</MediumBodyText>
 		</Container>
 	);
 };
@@ -23,5 +24,5 @@ const Container = styled.div`
 `;
 
 const RedErrorIcon = styled(SizedIcon)`
-	color: ${p => p.theme.common.status.error};
+	color: ${themeTokens.inform.negative};
 `;

@@ -1,15 +1,17 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import { Block } from '@/core/layout';
 import { PanelPadding } from '@/core/layout/panel/panel';
-import { OutLink } from '@/core/link';
-import { Note } from '@/core/note';
-import { Heading, Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
+import { FontDoc, OutLink } from '@/core/text';
+import { Note } from '@/core/text/note';
 import { DEFINE } from '@/services/define';
 import { AboutIconLargeNamed } from './about-icon';
 import { AboutShare } from './about-share';
 
 export const About: React.FC = () => {
+
+	const Heading = FontDoc.C_Topic.Component;
+	const Paragraph = FontDoc.E_Paragraph.Component;
 
 	return (
 		<PanelPadding>

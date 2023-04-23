@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
-import { fontStyleDeclarations } from '@/core/text';
+import { fontStyles } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { getTimeTwelveHourRange, getTimeTwelveHourString } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 import { BeachTimeRangeVisual } from './beach-time-range-visual';
@@ -57,7 +58,7 @@ export const BeachTimeRangeView: React.FC<BeachTimeRangeViewProps> = (props) => 
 };
 
 const SubtleBodyText = styled.div`
-	${fontStyleDeclarations.body};
-	color: ${p => p.theme.textSubtle};
+	${fontStyles.text.medium};
+	color: ${themeTokens.text.subtle};
 	text-align: right;
 `;

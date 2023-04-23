@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Paragraph } from '@/core/text';
+import { MediumBodyText } from '@/core/text';
 import { CosmosFixture } from '@/test';
-import { FixtureContainer } from '@/test/cosmos-fixture';
+import { fixtureDefault } from '@/test/cosmos-fixture';
 import { useBatchResponse } from './data/data';
 import { DEFINE } from './define';
 
@@ -18,12 +18,12 @@ export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<Paragraph>Build Time: {DEFINE.buildTime} ({new Date(DEFINE.buildTime).toISOString()})</Paragraph>
-			<Paragraph>Build Version: {DEFINE.buildVersion}</Paragraph>
-			<Paragraph>API Root: {DEFINE.apiRoot}</Paragraph>
-			<Paragraph>Local Test Data Reference Time: {referenceTime}</Paragraph>
+			<MediumBodyText>Build Time: {DEFINE.buildTime} ({new Date(DEFINE.buildTime).toISOString()})</MediumBodyText>
+			<MediumBodyText>Build Version: {DEFINE.buildVersion}</MediumBodyText>
+			<MediumBodyText>API Root: {DEFINE.apiRoot}</MediumBodyText>
+			<MediumBodyText>Local Test Data Reference Time: {referenceTime}</MediumBodyText>
 		</>
 	);
 }, {
-	container: FixtureContainer.panelPadding
+	setup: fixtureDefault.docTwoPad
 });

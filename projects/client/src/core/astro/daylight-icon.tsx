@@ -2,10 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import { Icon } from '../icon/icon';
+import { themeTokens } from '../theme';
 
 const WeatherIconContainer = styled.span`
 	display: inline-block;
-	background-color: ${p => p.theme.common.content.backgroundDay};
+	background-color: ${themeTokens.content.backgroundDay};
 	border-radius: 50%;
 	width: 2rem;
 	height: 2rem;
@@ -25,5 +26,5 @@ export const DaylightIcon: React.FC<DaylightIconProps> = (props) => {
 };
 
 const SunIcon = styled(Icon)`
-	color: ${p => p.theme.common.content.sun};
+	color: ${themeTokens.content.sun};
 `;

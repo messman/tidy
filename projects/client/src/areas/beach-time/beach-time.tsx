@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { Block } from '@/core/layout';
 import { PanelPadding } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { DefaultErrorLoad } from '@/core/loader/loader';
-import { Note } from '@/core/note';
-import { Block } from '@/core/theme/box';
+import { Note } from '@/core/text/note';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import * as iso from '@wbtdevlocal/iso';
 import { BeachTimeBadges } from './beach-time-badges';

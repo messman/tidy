@@ -1,8 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { BaseButton, StandardButton } from '@/core/form/button';
-import { Heading, Paragraph } from '@/core/text';
-import { Block, borderRadiusStyle, Spacing } from '@/core/theme/box';
+import { BaseButton, ButtonFillBrandBlue } from '@/core/form/button';
+import { Block } from '@/core/layout';
+import { borderRadiusStyle, Spacing } from '@/core/primitive/primitive-design';
+import { FontDoc } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { useSafeTimer } from '@/services/lifecycle/timer';
 import { setClipboard } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
@@ -58,34 +60,34 @@ export const AboutShare: React.FC = () => {
 
 	return (
 		<>
-			<Heading>Share</Heading>
-			<Paragraph>
+			<FontDoc.C_Topic.Component>Share</FontDoc.C_Topic.Component>
+			<FontDoc.E_Paragraph.Component>
 				You can bookmark this webpage or save it to your mobile device's home screen to view it at any time.
-			</Paragraph>
-			<Paragraph>
+			</FontDoc.E_Paragraph.Component>
+			<FontDoc.E_Paragraph.Component>
 				Others can access this webpage by scanning the QR code below. You can also share the webpage with the sharing buttons.
-			</Paragraph>
+			</FontDoc.E_Paragraph.Component>
 			<Block.Bat08 />
 			<ShareContainer>
 				<QRImage alt='QR code' title='QR code for wellsbeachtime.com' src='/qr-code.svg' />
 				<ButtonContainer>
-					<StandardButton
+					<ButtonFillBrandBlue
 						isDisabled={false}
 						onClick={onClickCopyLink}
 						leftIcon={icons.navigationUrl}
 						justifyContent='center'
 					>
 						{copyLinkText}
-					</StandardButton>
+					</ButtonFillBrandBlue>
 					<Block.Bat08 />
-					<StandardButton
+					<ButtonFillBrandBlue
 						isDisabled={!canShare}
 						onClick={onClickShare}
 						leftIcon={icons.navigationShare}
 						justifyContent='center'
 					>
 						{shareLinkText}
-					</StandardButton>
+					</ButtonFillBrandBlue>
 				</ButtonContainer>
 			</ShareContainer>
 		</>
@@ -103,7 +105,7 @@ const ShareContainer = styled.div`
 const QRImage = styled.img`
 	width: 6rem;
 	height: 6rem;
-	border: 4px solid ${p => p.theme.common.brand1.main};
+	border: 4px solid ${themeTokens.brand.blue};
 	${borderRadiusStyle}
 `;
 

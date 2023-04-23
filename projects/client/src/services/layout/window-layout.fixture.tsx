@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { fontStyleDeclarations } from '@/core/text';
+import { MediumBodyText } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { CosmosFixture } from '@/test';
-import { FixtureContainer } from '@/test/cosmos-fixture';
+import { fixtureDefault } from '@/test/cosmos-fixture';
 import { LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';
 import { isInvalidLayout, LayoutBreakpointRem } from './window-layout';
 
@@ -16,20 +17,16 @@ export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<Text>{LayoutOrientation[windowLayout.orientation]}</Text>
-			<Text>width - {LayoutBreakpointRem[windowLayout.widthBreakpoint]} ({windowLayout.widthBreakpoint})</Text>
-			<Text>height - {LayoutBreakpointRem[windowLayout.heightBreakpoint]} ({windowLayout.heightBreakpoint})</Text>
+			<MediumBodyText>{LayoutOrientation[windowLayout.orientation]}</MediumBodyText>
+			<MediumBodyText>width - {LayoutBreakpointRem[windowLayout.widthBreakpoint]} ({windowLayout.widthBreakpoint})</MediumBodyText>
+			<MediumBodyText>height - {LayoutBreakpointRem[windowLayout.heightBreakpoint]} ({windowLayout.heightBreakpoint})</MediumBodyText>
 			{invalidText}
 		</>
 	);
 }, {
-	container: FixtureContainer.panelPadding
+	setup: fixtureDefault.docTwoPad
 });
 
-const Text = styled.div`
-	${fontStyleDeclarations.body};
-`;
-
-const InvalidText = styled(Text)`
-	color: ${p => p.theme.common.system.red.a_main};
+const InvalidText = styled(MediumBodyText)`
+	color: ${themeTokens.inform.negative};
 `;

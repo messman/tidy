@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BadgeCollection, DaylightBadge, TideLevelBadge, WeatherBadge } from '@/core/badge/badge';
-import { TimeDurationTextUnit } from '@/core/text-unit';
+import { TimeDurationTextUnit } from '@/core/text';
 import { getTideDescription } from '@/services/content/tide-utility';
 import { useBatchResponse } from '@/services/data/data';
 

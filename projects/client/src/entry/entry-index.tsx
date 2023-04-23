@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ApplicationLayout } from '@/areas/index/app-layout';
 import { ErrorBoundary } from '@/core/error/error-boundary';
 import { AppNavigationProvider } from '@/core/layout/app/app-navigation';
-import { ThemeContextProvider } from '@/core/theme/theme';
+import { ThemeContextProvider } from '@/core/theme';
 import { BatchResponseProvider } from '@/services/data/data';
 import { DataSeedProvider } from '@/services/data/data-seed';
 import { lowerBreakpoints } from '@/services/layout/window-layout';

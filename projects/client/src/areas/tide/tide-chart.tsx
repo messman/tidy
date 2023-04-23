@@ -2,9 +2,10 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
 import { MoonPhaseIcon } from '@/core/astro/moon-phase-icon';
-import { fontStyleDeclarations } from '@/core/text';
-import { Block, Spacing } from '@/core/theme/box';
-import { FontWeight } from '@/core/theme/font';
+import { Block } from '@/core/layout';
+import { FontWeight, Spacing } from '@/core/primitive/primitive-design';
+import { fontStyles } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { TideExtremeIcon, TideLevelIcon } from '@/core/tide/tide-level-icon';
 import { useBatchResponse } from '@/services/data/data';
@@ -140,7 +141,7 @@ const DayContainer = styled.div`
 `;
 
 const DayTitle = styled.div`
-	${fontStyleDeclarations.lead};
+	${fontStyles.lead.medium};
 `;
 
 const DayHeader = styled.div`
@@ -153,14 +154,14 @@ const DayHeader = styled.div`
 const RowContainer = styled.div<{ isHighlighted: boolean; }>`
 	display: flex;
 	align-items: center;
-	background-color: ${p => p.isHighlighted ? p.theme.rowHighlight : 'transparent'};
+	background-color: ${p => p.isHighlighted ? themeTokens.filter.selected : 'transparent'};
 	padding: ${Spacing.bat08} ${Spacing.dog16};
 `;
 
 const RowTime = styled.div`
 	flex: 2;
 	min-width: 5.5rem;
-	${fontStyleDeclarations.body};
+	${fontStyles.text.medium};
 	font-weight: ${FontWeight.medium};
 	text-align: center;
 `;
@@ -170,14 +171,14 @@ const RowIcon = styled.div`
 	padding: 0 ${Spacing.ant04};
 	display: flex;
 	justify-content: center;
-	${fontStyleDeclarations.body};
+	${fontStyles.text.medium};
 	font-weight: ${FontWeight.medium};
 `;
 
 const RowHeight = styled.div`
 	flex: 2;
 	min-width: 4.5rem;
-	${fontStyleDeclarations.body};
+	${fontStyles.text.medium};
 	font-weight: ${FontWeight.medium};
 	text-align: center;
 `;
@@ -196,7 +197,7 @@ const RowVisual = styled.div`
 	position: relative;
 	height: ${visualSize};
 	border-radius: ${visualBorder};
-	background: ${p => p.theme.visual.background};
+	background: ${themeTokens.visual.background};
 	overflow: hidden;
 `;
 
@@ -212,7 +213,7 @@ const RowVisualAdjust = styled.div`
 
 const VisualCircleTrail = styled.div<{ percent: number; isMeasured: boolean; }>`
 	position: absolute;
-	background-color: ${p => p.isMeasured ? p.theme.common.system.green.d_lightest : p.theme.visual.tideCoverage};
+	background-color: ${p => p.isMeasured ? themeTokens.rawColor.green.distinct : themeTokens.visual.tideCoverage};
 	width: calc(${p => p.percent}% + ${halfVisualSize});
 	height: ${visualSize};
 	top: 0;
@@ -221,7 +222,7 @@ const VisualCircleTrail = styled.div<{ percent: number; isMeasured: boolean; }>`
 
 const VisualCircle = styled.div<{ percent: number; isMeasured: boolean; }>`
 	position: absolute;
-	background-color: ${p => p.isMeasured ? p.theme.common.system.green.a_main : p.theme.badge.water};
+	background-color: ${p => p.isMeasured ? themeTokens.rawColor.green.subtle : themeTokens.badge.water};
 	width: ${visualSize};
 	height: ${visualSize};
 	border-radius: ${visualBorder};

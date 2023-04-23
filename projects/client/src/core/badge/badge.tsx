@@ -2,9 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import * as iso from '@wbtdevlocal/iso';
 import { DaylightIcon } from '../astro/daylight-icon';
-import { fontStyleDeclarations } from '../text';
-import { Spacing } from '../theme/box';
-import { FontWeight } from '../theme/font';
+import { FontWeight, Spacing } from '../primitive/primitive-design';
+import { fontStyles } from '../text';
+import { themeTokens } from '../theme';
 import { TideLevelIcon } from '../tide/tide-level-icon';
 import { WeatherStatusIcon, WeatherStatusIconProps } from '../weather/weather-icon';
 
@@ -55,7 +55,7 @@ export const DaylightBadge: React.FC<DaylightBadgeProps> = (props) => {
 const BadgeContainer = styled.div`
 	display: inline-flex;
 	align-items: center;
-	background-color: ${p => p.theme.badge.textBackground};
+	background-color: ${themeTokens.badge.textBackground};
 	border-radius: 2rem;
 `;
 
@@ -63,7 +63,7 @@ const BadgeText = styled.div`
 	display: inline-block;
 	margin-left: ${Spacing.ant04};
 	margin-right: ${Spacing.bat08};
-	${fontStyleDeclarations.small};
+	${fontStyles.text.small};
 	font-weight: ${FontWeight.medium};
 `;
 

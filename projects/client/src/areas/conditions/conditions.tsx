@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Line } from '@/core/layout/layout';
+import { Block, SubtleLine } from '@/core/layout';
 import { PanelPadding } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { DefaultErrorLoad } from '@/core/loader/loader';
-import { Block } from '@/core/theme/box';
 import { ConditionsAstro } from './conditions-astro';
 import { ConditionsBasics } from './conditions-basics';
 import { ConditionsHeader } from './conditions-header';
@@ -19,11 +18,11 @@ const ConditionsSuccess: React.FC = () => {
 				<ConditionsBasics />
 			</PanelPadding>
 			<Block.Bat08 />
-			<Line />
+			<SubtleLine />
 			<ConditionsHourly />
-			<Line />
+			<SubtleLine />
 			<ConditionsMore />
-			<Line />
+			<SubtleLine />
 			<Block.Bat08 />
 			<PanelPadding>
 				<ConditionsAstro />

@@ -1,21 +1,19 @@
 import * as React from 'react';
 import * as Cosmos from 'react-cosmos/fixture';
 import styled from 'styled-components';
-import { BaseButton, StandardButton } from '@/core/form/button';
-import { MockApiOutput, useMockApi } from '@/services/network/request-fetch-provider.test';
+import { BaseButton, ButtonFillBrandBlue } from '@/core/form/button';
 import { useEventCallback } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { IconInputType } from '../core/icon/icon';
 import { SpinnerIcon } from '../core/icon/icon-spinner';
-import { createTestServerError } from './data/test-data-utility';
 
 export interface TestButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 }
 
 export function useTestButton(title: string, onClick: () => void): JSX.Element {
-	return <StandardButton onClick={onClick}>{title}</StandardButton>;
+	return <ButtonFillBrandBlue onClick={onClick}>{title}</ButtonFillBrandBlue>;
 }
 
 export type ButtonSetDefinition = { [key: string]: () => void; };
@@ -25,7 +23,7 @@ export function useTestButtons(buttonSetDefinition: ButtonSetDefinition): JSX.El
 	const keys = Object.keys(buttonSetDefinition);
 	const buttons = keys.map<JSX.Element>((key) => {
 		const value = buttonSetDefinition[key];
-		return <StandardButton key={key} onClick={value}>{key}</StandardButton>;
+		return <ButtonFillBrandBlue key={key} onClick={value}>{key}</ButtonFillBrandBlue>;
 	});
 
 	return (
@@ -230,65 +228,4 @@ export function useControlSelectIcon(label: string, initial?: keyof typeof testI
 		default:
 			return null;
 	}
-}
-
-export const controlAPIResultSuccessOption = ['Success'] as const;
-const otherOptions = ['Client Error', 'Server Error'] as const;
-
-export interface ControlAPIResultOnFetch<TApiRoute extends iso.ApiRoute, TOptions extends ReadonlyArray<string>> {
-	(option: TOptions[number], response: (obj: iso.ResponseOf<TApiRoute>) => iso.ResponseOf<TApiRoute>, input: iso.RequestOf<TApiRoute>): iso.ServerError | iso.ResponseOf<TApiRoute>;
-}
-
-/**
- * 
- * The options array must be specified outside of the component, with the 'as const' specifier:
- * ```
- * const options = ['Success', 'Missing Param'] as const;
- * ```
- * See {@link controlAPIResultSuccessOption} as an example.
- * 
- * Specifying in this way adds type safety in the function.
- */
-export function useControlMockAPIResult<TApiRoute extends iso.ApiRoute, TOptions extends ReadonlyArray<string>>(name: string, route: TApiRoute, options: TOptions, onFetch: ControlAPIResultOnFetch<TApiRoute, TOptions>): void {
-
-	const mockApi = useMockApi();
-
-	const allOptions = React.useMemo(() => {
-		return [
-			...otherOptions,
-			...options
-		];
-	}, [options]);
-
-	const chosenOption = useControlSelectFromArray(`Route - ${name}`, allOptions, options[0]);
-
-	// Note: this is normally not allowed. We are doing it here to prevent race conditions.
-	// We want the mock code to always be set before the request code would run.
-	// This is easy when the mock is a child, but if the mock code is a parent it would need to be a provider or something.
-	setMock(mockApi, route, chosenOption, onFetch);
-
-	React.useEffect(() => {
-		setMock(mockApi, route, chosenOption, onFetch);
-	}, [chosenOption, onFetch]);
-}
-
-function setMock<TApiRoute extends iso.ApiRoute, TOptions extends ReadonlyArray<string>>(mockApi: MockApiOutput | null, route: TApiRoute, chosenOption: string, onFetch: ControlAPIResultOnFetch<TApiRoute, TOptions>): void {
-	if (!mockApi) {
-		return;
-	}
-	mockApi.set(route, {
-		timeout: 0,
-		onFetch: (input) => {
-			const otherOption = chosenOption as (typeof otherOptions)[number];
-			if (otherOption === 'Client Error') {
-				return false;
-			}
-			else if (otherOption === 'Server Error') {
-				return createTestServerError();
-			}
-			else {
-				return onFetch(chosenOption, x => x, input);
-			}
-		}
-	});
 }

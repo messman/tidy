@@ -1,11 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { WrapperButton } from '@/core/form/button';
+import { ClickWrapperButton } from '@/core/form/button';
 import { SizedIcon } from '@/core/icon/icon';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
+import { Block } from '@/core/layout';
 import { AppInfo } from '@/core/layout/app/app-info';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
-import { Block, Spacing } from '@/core/theme/box';
+import { Spacing } from '@/core/primitive/primitive-design';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import { appHeaderHeight } from './app-layout-shared';
@@ -20,11 +21,11 @@ export const CompactAppHeader: React.FC = () => {
 
 	const backRender = !isHome ? (
 		<CompactLeftContainer>
-			<WrapperButton onClick={onClickBack}>
+			<ClickWrapperButton onClick={onClickBack}>
 				<CompactLeftContainerInner>
 					<AppHeaderSizedIcon size='medium' type={icons.actionClose} />
 				</CompactLeftContainerInner>
-			</WrapperButton>
+			</ClickWrapperButton>
 		</CompactLeftContainer>
 	) : null;
 

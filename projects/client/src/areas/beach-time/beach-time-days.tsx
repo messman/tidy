@@ -2,11 +2,10 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
 import { MoonPhaseIcon } from '@/core/astro/moon-phase-icon';
-import { LabelText } from '@/core/label';
-import { Line } from '@/core/layout/layout';
-import { fontStyleDeclarations } from '@/core/text';
-import { Block, Spacing } from '@/core/theme/box';
-import { FontWeight } from '@/core/theme/font';
+import { Block, SubtleLine } from '@/core/layout';
+import { FontWeight, Spacing } from '@/core/primitive/primitive-design';
+import { fontStyles, MediumLabelText } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { WeatherStatusIcon } from '@/core/weather/weather-icon';
 import { useBatchResponse } from '@/services/data/data';
 import { getRelativeDayText, getTimeTwelveHourString } from '@/services/time';
@@ -19,7 +18,7 @@ export const BeachTimeDays: React.FC = () => {
 	const days = success!.beach.days;
 
 	const daysRender = days.map((day, i) => {
-		const lineRender = i !== 0 ? <Line /> : null;
+		const lineRender = i !== 0 ? <SubtleLine /> : null;
 		return (
 			<React.Fragment key={day.day.toMillis()}>
 				{lineRender}
@@ -30,11 +29,11 @@ export const BeachTimeDays: React.FC = () => {
 
 	return (
 		<>
-			<Line />
+			<SubtleLine />
 			<PaddedListContainer>
 				{daysRender}
 			</PaddedListContainer>
-			<Line />
+			<SubtleLine />
 		</>
 	);
 };
@@ -69,7 +68,7 @@ const BeachTimeDay: React.FC<BeachTimeDayProps> = (props) => {
 		<BeachTimeDayContainer>
 			<BeachTimeDaySide>
 				<div>
-					<LabelText size='medium'>{dayText}</LabelText>
+					<MediumLabelText>{dayText}</MediumLabelText>
 				</div>
 				<SubtleText>
 					<SubtleTextLabel>{Math.round(weather.maxTemp)}&deg;</SubtleTextLabel>
@@ -109,8 +108,8 @@ const BeachTimeDayRightSide = styled(BeachTimeDaySide)`
 `;
 
 const SubtleText = styled.div`
-	${fontStyleDeclarations.bodySmall};
-	color: ${p => p.theme.textSubtle};
+	${fontStyles.text.small};
+	color: ${themeTokens.text.subtle};
 `;
 
 const SubtleTextLabel = styled.span`
@@ -122,7 +121,7 @@ const IconsContainer = styled.div`
 `;
 
 const LowTidesText = styled.div`
-	${fontStyleDeclarations.bodySmall};
-	color: ${p => p.theme.textSubtle};
+	${fontStyles.text.small};
+	color: ${themeTokens.text.subtle};
 	text-align: right;
 `;

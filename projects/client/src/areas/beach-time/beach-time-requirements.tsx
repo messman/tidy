@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { IconInputType, SizedIcon } from '@/core/icon/icon';
-import { LabelText } from '@/core/label';
-import { Block, Spacing } from '@/core/theme/box';
+import { Block } from '@/core/layout';
+import { Spacing } from '@/core/primitive/primitive-design';
+import { MediumLabelText } from '@/core/text';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
@@ -128,7 +129,7 @@ const Requirement: React.FC<RequirementProps> = (props) => {
 		<RequirementContainer>
 			<SizedIcon type={icon} size='medium' />
 			<Block.Ant04 />
-			<LabelText size='medium'>{children}</LabelText>
+			<MediumLabelText>{children}</MediumLabelText>
 		</RequirementContainer>
 	);
 };

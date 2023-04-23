@@ -55,15 +55,15 @@
 
 // const commonPageContainerStyles = css`
 // 	flex: 1;
-// 	background-color: ${p => p.theme.common.system.blue.d_lightest};
-// 	${fontStyleDeclarations.display1};
-// 	color: ${p => p.theme.textDistinct};
+// 	background-color: ${themeTokens.system.blue.d_lightest};
+// 	${fontStyles.display1};
+// 	color: ${themeTokens.textDistinct};
 // 	padding: ${Spacing.dog16};
 // `;
 
 // const PageAContainer = styled.div`
 // 	${commonPageContainerStyles};
-// 	background-color: ${p => p.theme.common.system.blue.d_lightest};
+// 	background-color: ${themeTokens.system.blue.d_lightest};
 // `;
 
 // let mountA = 0;
@@ -76,7 +76,7 @@
 
 // const PageBContainer = styled.div`
 // 	${commonPageContainerStyles};
-// 	background-color: ${p => p.theme.common.system.green.d_lightest};
+// 	background-color: ${themeTokens.system.green.d_lightest};
 // `;
 
 // let mountB = 0;
@@ -89,7 +89,7 @@
 
 // const PageCContainer = styled.div`
 // 	${commonPageContainerStyles};
-// 	background-color: ${p => p.theme.common.system.red.d_lightest};
+// 	background-color: ${themeTokens.system.red.d_lightest};
 // `;
 
 // let mountC = 0;

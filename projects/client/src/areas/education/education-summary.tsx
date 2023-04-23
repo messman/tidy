@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { Block } from '@/core/layout';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
-import { fontStyleDeclarations, Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
+import { fontStyles, MediumBodyText } from '@/core/text';
 import { HomeSummaryClickPadding } from '../home/home-summary-shared';
 
 export const EducationSummary: React.FC = () => {
@@ -20,15 +20,15 @@ export const EducationSummary: React.FC = () => {
 					How do tides work?
 				</TitleText>
 				<Block.Bat08 />
-				<Paragraph>
+				<MediumBodyText>
 					Learn more about the processes that create the tides you experience.
-				</Paragraph>
+				</MediumBodyText>
 			</HomeSummaryClickPadding>
 		</Panel>
 	);
 };
 
 const TitleText = styled.div`
-	${fontStyleDeclarations.heading5};
+	${fontStyles.headings.h4};
 `;
 

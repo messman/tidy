@@ -2,11 +2,12 @@ import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { Icon, SizedIconArrowChevronInline } from '@/core/icon/icon';
 import { panelPaddingStyle } from '@/core/layout/panel/panel';
-import { Spacing } from '@/core/theme/box';
+import { Spacing } from '@/core/primitive/primitive-design';
+import { themeTokens } from '@/core/theme';
 import { icons } from '@wbtdevlocal/assets';
 
 export const HomeSummarySpinnerIcon = styled(Icon)`
-	color: ${p => p.theme.common.brand1.main};
+	color: ${themeTokens.brand.red};
 	width: 2.5rem;
 	height: 2.5rem;
 `;

@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { DaylightIcon } from '@/core/astro/daylight-icon';
 import { IconInputType } from '@/core/icon/icon';
-import { IconTitle } from '@/core/layout/layout';
-import { Note } from '@/core/note';
-import { Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
+import { Block } from '@/core/layout';
+import { MediumBodyText } from '@/core/text';
+import { Note } from '@/core/text/note';
 import { BaseWeatherIcon } from '@/core/weather/weather-icon';
 import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription, getTimeTwelveHourString } from '@/services/time';
@@ -72,13 +71,15 @@ export const ConditionsAstro: React.FC = () => {
 
 	return (
 		<>
-			<IconTitle iconRender={icon}>{title}</IconTitle>
+			{/* <IconTitle iconRender={icon}>
+				</IconTitle> */}
+			{title}
 			<Block.Bat08 />
-			<Paragraph>
+			<MediumBodyText>
 				Today {tense} {getDurationDescription(today.rise, today.set)} of sunlight.
-			</Paragraph>
+			</MediumBodyText>
 			<Block.Bat08 />
-			<Paragraph>{next.isRise ? 'Sunrise' : 'Sundown'} is at {getTimeTwelveHourString(next.time)}.</Paragraph>
+			<MediumBodyText>{next.isRise ? 'Sunrise' : 'Sundown'} is at {getTimeTwelveHourString(next.time)}.</MediumBodyText>
 			<Block.Bat08 />
 			<Note>
 				Here, sunrise is when the sun breaks over the horizon, and sundown is when the sun fully disappears over the horizon.

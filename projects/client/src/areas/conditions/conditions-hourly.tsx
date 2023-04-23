@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { fontStyleDeclarations } from '@/core/text';
-import { Spacing } from '@/core/theme/box';
-import { FontWeight } from '@/core/theme/font';
+import { FontWeight, Spacing } from '@/core/primitive/primitive-design';
+import { fontStyles } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { WeatherStatusIcon } from '@/core/weather/weather-icon';
 import { useBatchResponse } from '@/services/data/data';
 import { getTimeTwelveHour } from '@/services/time';
@@ -78,28 +78,28 @@ const HourlyContainer = styled.div`
 `;
 
 const TimeText = styled.div`
-	${fontStyleDeclarations.small};
+	${fontStyles.text.small};
 	font-weight: ${FontWeight.medium};
-	color: ${p => p.theme.textDistinct};
+	color: ${themeTokens.text.distinct};
 	margin-bottom: ${Spacing.bat08};
 `;
 
 const TempText = styled.div`
-	${fontStyleDeclarations.body};
+	${fontStyles.text.medium};
 	font-weight: ${FontWeight.medium};
-	color: ${p => p.theme.textSubtle};
+	color: ${themeTokens.text.subtle};
 	margin-top: ${Spacing.bat08};
 `;
 
 const RainIconContainer = styled.div`
 	display: block;
-	background-color: ${p => p.theme.common.content.backgroundDay};
+	background-color: ${themeTokens.content.backgroundDay};
 	border-radius: 2rem;
 	padding-bottom: .625rem;
 `;
 
 const RainIconText = styled.div`
-	${fontStyleDeclarations.tiny};
+	${fontStyles.text.tiny};
 	font-weight: ${FontWeight.medium};
 	text-align: center;
 	color: #FFF;

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Spacing } from '@/core/theme/box';
+import { Spacing } from '@/core/primitive/primitive-design';
 import { CosmosFixture } from '@/test';
-import { FixtureContainer } from '@/test/cosmos-fixture';
+import { fixtureDefault } from '@/test/cosmos-fixture';
 import { Home } from './home';
 
 export default CosmosFixture.create(() => {
@@ -12,7 +12,7 @@ export default CosmosFixture.create(() => {
 		</Container>
 	);
 }, {
-	container: FixtureContainer.none
+	setup: fixtureDefault.root
 });
 
 const Container = styled.div`

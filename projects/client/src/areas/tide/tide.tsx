@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { Block } from '@/core/layout';
 import { PanelPadding } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { DefaultErrorLoad } from '@/core/loader/loader';
-import { Block } from '@/core/theme/box';
 import { TideChart } from './tide-chart';
 import { TideHeader } from './tide-header';
 

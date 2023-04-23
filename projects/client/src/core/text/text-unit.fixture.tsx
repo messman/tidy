@@ -2,11 +2,11 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { SizedIcon } from '@/core/icon/icon';
 import { CosmosFixture } from '@/test';
-import { FixtureContainer } from '@/test/cosmos-fixture';
+import { fixtureDefault } from '@/test/cosmos-fixture';
 import { icons } from '@wbtdevlocal/assets';
-import { Paragraph } from './text';
+import { Block } from '../layout';
+import { MediumBodyText } from './text-shared';
 import { TextUnit, TimeDurationTextUnit, TimeTextUnit } from './text-unit';
-import { Block } from './theme/box';
 
 const localDateTime = DateTime.local();
 
@@ -21,26 +21,26 @@ export default CosmosFixture.create(() => {
 			<Block.Dog16 />
 			<TimeTextUnit dateTime={localDateTime} />
 			<Block.Dog16 />
-			<Paragraph>
+			<MediumBodyText>
 				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={minutesOnlyFromLocal} /> of sunlight.
-			</Paragraph>
-			<Paragraph>
+			</MediumBodyText>
+			<MediumBodyText>
 				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={hoursOnlyFromLocal} /> of sunlight.
-			</Paragraph>
-			<Paragraph>
+			</MediumBodyText>
+			<MediumBodyText>
 				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={fromLocal} /> of sunlight.
-			</Paragraph>
+			</MediumBodyText>
 			<Block.Dog16 />
-			<Paragraph>
+			<MediumBodyText>
 				<SizedIcon type={icons.weatherWind} size='medium' /> <TextUnit text='22' unit='mph ESE' />
-			</Paragraph>
+			</MediumBodyText>
 			<Block.Dog16 />
-			<Paragraph>
+			<MediumBodyText>
 				<TextUnit text='8' unit='ft' />, <TextUnit text='24' unit='m' />, <TextUnit text='8:00' unit='PM' />
-			</Paragraph>
+			</MediumBodyText>
 			<Block.Dog16 />
 		</>
 	);
 }, {
-	container: FixtureContainer.panelPadding
+	setup: fixtureDefault.docTwoPad
 });

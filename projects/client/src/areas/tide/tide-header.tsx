@@ -1,10 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { IconTitle } from '@/core/layout/layout';
-import { OutLink } from '@/core/link';
-import { Note } from '@/core/note';
-import { fontStyleDeclarations, Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
+import { Block } from '@/core/layout';
+import { fontStyles, MediumBodyText, OutLink } from '@/core/text';
+import { Note } from '@/core/text/note';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
 import { TideLevelIcon } from '@/core/tide/tide-level-icon';
 import { getTideTitle } from '@/services/content/tide-utility';
@@ -41,34 +39,37 @@ export const TideHeader: React.FC = () => {
 	}
 
 	const portlandText = tide.measured.isAlternate ? (
-		<Paragraph>
+		<MediumBodyText>
 			Due to station availability issues, the current water level measurement is from Portland and may be less accurate.
-		</Paragraph>
+		</MediumBodyText>
 	) : null;
 
 	const computedText = tide.measured.isComputed ? (
-		<Paragraph>
+		<MediumBodyText>
 			Due to station availability issues, the current water level measurement is mathematically computed and may be less accurate.
-		</Paragraph>
+		</MediumBodyText>
 	) : null;
 
 	return (
 		<>
-			<IconTitle iconRender={<TideLevelIcon tide={measured} />}>{title}</IconTitle>
+			{/* <IconTitle iconRender={<TideLevelIcon tide={measured} />}>{title}</IconTitle> */}
+			{/* <IconTitle iconRender={}></IconTitle> */}
+			<TideLevelIcon tide={measured} />
+			{title}
 			<Block.Bat08 />
 			<LeadText>
 				Expect a {next.isLow ? 'low' : 'high'} of <TideHeightTextUnit height={next.height} precision={1} /> at {getTimeTwelveHourString(next.time)}.
 			</LeadText>
 			<Block.Bat08 />
-			<Paragraph>
+			<MediumBodyText>
 				The water level is currently <TideHeightTextUnit height={measured.height} precision={1} /> above the average low.
 				The beach is most available at a water level below <TideHeightTextUnit height={iso.constant.beachAccessFullyFall} precision={0} />.
-			</Paragraph>
+			</MediumBodyText>
 			{noteRender}
 			<Block.Bat08 />
-			<Paragraph>
+			<MediumBodyText>
 				Tide charts can be printed from <OutLink title='US Harbors' href="https://www.usharbors.com/harbor/maine/wells-harbor-me/tides/">US Harbors</OutLink>.
-			</Paragraph>
+			</MediumBodyText>
 			{portlandText}
 			{computedText}
 		</>
@@ -76,6 +77,6 @@ export const TideHeader: React.FC = () => {
 };
 
 const LeadText = styled.div`
-	${fontStyleDeclarations.lead};
+	${fontStyles.lead.medium};
 `;
 

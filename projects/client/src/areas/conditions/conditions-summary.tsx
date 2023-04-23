@@ -2,13 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
+import { Block, SubtleLine } from '@/core/layout';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
-import { IconTitle, Line } from '@/core/layout/layout';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
-import { Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
-import { BaseWeatherIcon, WeatherStatusIcon } from '@/core/weather/weather-icon';
+import { MediumBodyText } from '@/core/text';
 import { weatherStatusDescription } from '@/services/content/weather-utility';
 import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription } from '@/services/time';
@@ -30,17 +28,17 @@ const ConditionsSummarySuccess: React.FC = () => {
 	return (
 		<>
 			<HomeSummaryClickPadding onClick={onClick} isConnectedBelow={true}>
-				<IconTitle iconRender={
+				{/* <IconTitle iconRender={
 					<WeatherStatusIcon isDay={weather.current.isDaytime} status={weather.current.status} />
 				}>
-					It's {statusDescription.itIsShort} and {Math.round(weather.current.temp)}&deg;.
-				</IconTitle>
+			</IconTitle> */}
+				It's {statusDescription.itIsShort} and {Math.round(weather.current.temp)}&deg;.
 				<Block.Bat08 />
-				<Paragraph>
+				<MediumBodyText>
 					{nextSunEvent.isRise ? 'Sunrise' : 'Sundown'} is in {getDurationDescription(meta.referenceTime, nextSunEvent.time)}.
-				</Paragraph>
+				</MediumBodyText>
 			</HomeSummaryClickPadding>
-			<Line />
+			<SubtleLine />
 			<ConditionsHourly />
 		</>
 	);
@@ -56,11 +54,12 @@ const ConditionsSummaryErrorLoad: React.FC = () => {
 	}
 
 	const title = (
-		<IconTitle
-			iconRender={<BaseWeatherIcon type='empty' />}
-		>
-			Conditions
-		</IconTitle>
+		// <IconTitle
+		// 	iconRender={<BaseWeatherIcon type='empty' />}
+		// >
+		// 	Conditions
+		// </IconTitle>
+		null
 	);
 
 	function wrap(render: JSX.Element) {
@@ -86,7 +85,7 @@ const ConditionsSummaryErrorLoad: React.FC = () => {
 			<TextContainer>
 				{title}
 				<Block.Bat08 />
-				<Paragraph>Loading...</Paragraph>
+				<MediumBodyText>Loading...</MediumBodyText>
 			</TextContainer>
 			<HomeSummarySpinnerIcon type={SpinnerIcon} />
 		</RowContainer>

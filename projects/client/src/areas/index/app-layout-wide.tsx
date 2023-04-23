@@ -7,10 +7,10 @@ import { Education } from '@/areas/education/education';
 import { Tide } from '@/areas/tide/tide';
 import { SizedIcon } from '@/core/icon/icon';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
+import { Block, overflowHiddenScrollStyle } from '@/core/layout';
 import { AppInfo } from '@/core/layout/app/app-info';
-import { overflowHiddenScrollStyle } from '@/core/layout/layout';
 import { Panel } from '@/core/layout/panel/panel';
-import { Block, Spacing } from '@/core/theme/box';
+import { Spacing } from '@/core/primitive/primitive-design';
 import { useBatchResponse } from '@/services/data/data';
 import { appHeaderHeight } from './app-layout-shared';
 

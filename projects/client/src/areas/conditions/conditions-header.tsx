@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { IconTitle } from '@/core/layout/layout';
-import { Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
-import { WeatherStatusIcon } from '@/core/weather/weather-icon';
+import { Block } from '@/core/layout';
+import { MediumBodyText } from '@/core/text';
 import { weatherStatusDescription } from '@/services/content/weather-utility';
 import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription } from '@/services/time';
@@ -16,15 +14,15 @@ export const ConditionsHeader: React.FC = () => {
 
 	return (
 		<>
-			<IconTitle iconRender={
+			{/* <IconTitle iconRender={
 				<WeatherStatusIcon isDay={weather.current.isDaytime} status={weather.current.status} />
 			}>
-				It's {statusDescription.itIsShort} and {Math.round(weather.current.temp)}&deg;.
-			</IconTitle>
+			</IconTitle> */}
+			It's {statusDescription.itIsShort} and {Math.round(weather.current.temp)}&deg;.
 			<Block.Bat08 />
-			<Paragraph>
+			<MediumBodyText>
 				{statusDescription.conditions} {next.isRise ? 'Sunrise' : 'Sundown'} is in {getDurationDescription(meta.referenceTime, next.time)}.
-			</Paragraph>
+			</MediumBodyText>
 		</>
 	);
 };

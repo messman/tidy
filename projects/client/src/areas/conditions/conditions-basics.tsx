@@ -1,13 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Icon } from '@/core/icon/icon';
-import { IconTitle } from '@/core/layout/layout';
-import { fontStyleDeclarations, Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
-import { FontWeight } from '@/core/theme/font';
-import { BaseWeatherIcon } from '@/core/weather/weather-icon';
+import { Block } from '@/core/layout';
+import { FontWeight } from '@/core/primitive/primitive-design';
+import { fontStyles, MediumBodyText } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { useBatchResponse } from '@/services/data/data';
-import { icons } from '@wbtdevlocal/assets';
 
 const tempGradientBottom = -25;
 const tempGradientTop = 120;
@@ -57,16 +54,16 @@ export const ConditionsBasics: React.FC = () => {
 
 	return (
 		<>
-			<IconTitle iconRender={
+			{/* <IconTitle iconRender={
 				<BaseWeatherIcon type={<TemperatureIcon type={icons.weatherTemperature} />} />
 			}>
-				{roundedTemp}&deg;
-			</IconTitle>
+			</IconTitle> */}
+			{roundedTemp}&deg;
 			<Block.Bat08 />
-			<Paragraph>
+			<MediumBodyText>
 				{feelsLike}
 				The dew point is {Math.round(dewPoint)}&deg;, indicating {dewPointIndicating}
-			</Paragraph>
+			</MediumBodyText>
 			<Block.Bat08 />
 			<RangeContainer>
 				<SmallLabel>{Math.round(minTemp)}&deg;</SmallLabel>
@@ -84,14 +81,14 @@ export const ConditionsBasics: React.FC = () => {
 	);
 };
 
-const TemperatureIcon = styled(Icon)`
-	color: #FFF;
-`;
+// const TemperatureIcon = styled(Icon)`
+// 	color: #FFF;
+// `;
 
 const SmallLabel = styled.div`
-	${fontStyleDeclarations.small};
+	${fontStyles.text.small};
 	font-weight: ${FontWeight.medium};
-	color: ${p => p.theme.textSubtle};
+	color: ${themeTokens.text.subtle};
 `;
 
 const RangeContainer = styled.div`
@@ -118,7 +115,7 @@ const VisualContainer = styled.div`
 const VisualBackground = styled.div<{ leftPercent: number; widthPercent: number; }>`
 	position: absolute;
 	height: ${visualSize};
-	background: ${p => p.theme.visual.temperatureGradient};
+	background: ${themeTokens.visual.temperatureGradient};
 	top: 0;
 	left: ${p => p.leftPercent}%;
 	width: ${p => p.widthPercent}%;

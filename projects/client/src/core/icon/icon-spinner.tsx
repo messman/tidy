@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
-import { StyledFC } from '../theme/styled';
+import { StyledFC } from '../primitive/primitive-styled';
 import { Icon } from './icon';
 
 export const SpinnerIcon: StyledFC = (props) => {

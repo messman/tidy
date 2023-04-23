@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { Block } from '@/core/layout';
 import { PanelPadding } from '@/core/layout/panel/panel';
-import { OutLink } from '@/core/link';
-import { Heading, Paragraph } from '@/core/text';
-import { Block } from '@/core/theme/box';
+import { FontDoc, OutLink } from '@/core/text';
 
 export const Education: React.FC = () => {
+
+	const Heading = FontDoc.C_Topic.Component;
+	const Paragraph = FontDoc.E_Paragraph.Component;
+
 	return (
 		<PanelPadding>
 			<div>

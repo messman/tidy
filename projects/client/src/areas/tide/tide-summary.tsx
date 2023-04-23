@@ -2,17 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
-import { LabelText } from '@/core/label';
+import { Block, DistinctLine } from '@/core/layout';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
-import { IconTitle, Line } from '@/core/layout/layout';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
-import { fontStyleDeclarations, Paragraph } from '@/core/text';
-import { TimeTextUnit } from '@/core/text-unit';
-import { Block, Spacing } from '@/core/theme/box';
+import { Spacing } from '@/core/primitive/primitive-design';
+import { fontStyles, MediumBodyText, MediumLabelText, TimeTextUnit } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { TideHeightTextUnit } from '@/core/tide/tide-common';
-import { TideLevelIcon, unknownTide } from '@/core/tide/tide-level-icon';
-import { getTideTitle } from '@/services/content/tide-utility';
 import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription } from '@/services/time';
 import { HomeSummaryClickPadding, HomeSummarySpinnerIcon } from '../home/home-summary-shared';
@@ -27,29 +24,24 @@ const TideSummarySuccess: React.FC = () => {
 	const { measured, relativity } = tide;
 	const { next } = relativity;
 
-	const title = getTideTitle(meta.referenceTime, measured, relativity);
+	// const title = getTideTitle(meta.referenceTime, measured, relativity);
 
 	return (
 		<>
 			<HomeSummaryClickPadding onClick={onClick} isConnectedBelow={true}>
-				<IconTitle
-					iconRender={<TideLevelIcon tide={tide.measured} />}
-				>
-					{title}
-				</IconTitle>
 				<Block.Bat08 />
-				<Paragraph>
+				<MediumBodyText>
 					{next.isLow ? 'Low' : 'High'} tide is in {getDurationDescription(meta.referenceTime, next.time)}.
-				</Paragraph>
+				</MediumBodyText>
 			</HomeSummaryClickPadding>
-			<Line />
+			<DistinctLine />
 			<InfoRowContainer>
-				<LabelText size='medium'>Current height</LabelText>
+				<MediumLabelText>Current height</MediumLabelText>
 				<RowValue><TideHeightTextUnit height={measured.height} precision={1} /></RowValue>
 			</InfoRowContainer>
-			<Line />
+			<DistinctLine />
 			<InfoRowContainer>
-				<LabelText size='medium'>Next tide</LabelText>
+				<MediumLabelText>Next tide</MediumLabelText>
 				<RowValue><TimeTextUnit dateTime={next.time} /></RowValue>
 				<RowValue><TideHeightTextUnit height={next.height} precision={1} /></RowValue>
 			</InfoRowContainer>
@@ -65,8 +57,8 @@ const InfoRowContainer = styled.div`
 `;
 
 const RowValue = styled.div`
-	${fontStyleDeclarations.small};
-	color: ${p => p.theme.textSubtle};
+	${fontStyles.text.small};
+	color: ${themeTokens.text.subtle};
 `;
 
 
@@ -79,11 +71,12 @@ const TideSummaryErrorLoad: React.FC = () => {
 	}
 
 	const title = (
-		<IconTitle
-			iconRender={<TideLevelIcon tide={unknownTide} />}
-		>
-			Tides
-		</IconTitle>
+		// <IconTitle
+		// 	iconRender={<TideLevelIcon tide={unknownTide} />}
+		// >
+		// 	Tides
+		// </IconTitle>
+		null
 	);
 
 	function wrap(render: JSX.Element) {
@@ -109,7 +102,7 @@ const TideSummaryErrorLoad: React.FC = () => {
 			<TextContainer>
 				{title}
 				<Block.Bat08 />
-				<Paragraph>Loading...</Paragraph>
+				<MediumBodyText>Loading...</MediumBodyText>
 			</TextContainer>
 			<HomeSummarySpinnerIcon type={SpinnerIcon} />
 		</RowContainer>
@@ -135,3 +128,31 @@ const TextContainer = styled.div`
 	flex: 1;
 `;
 
+
+
+// export interface IconTitleProps {
+// 	iconRender: JSX.Element;
+// 	children: React.ReactNode;
+// }
+
+// export const IconTitle: React.FC<IconTitleProps> = (props) => {
+// 	const { iconRender, children } = props;
+// 	return (
+// 		<TitleContainer>
+// 			{iconRender}
+// 			<Block.Bat08 />
+// 			<TitleText>
+// 				{children}
+// 			</TitleText>
+// 		</TitleContainer>
+// 	);
+// };
+
+// const TitleContainer = styled.div`
+// 	display: flex;
+// 	align-items: center;
+// `;
+
+// const TitleText = styled.div`
+// 	${fontStyles.heading5};
+// `;

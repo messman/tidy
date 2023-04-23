@@ -260,7 +260,7 @@
 // 	flex-direction: column;
 // 	flex: 0;
 	
-// 	box-shadow: ${p => p.theme.shadow.d_navigation};
+// 	box-shadow: ${themeTokens.shadow.d_navigation};
 	
 // 	top: 0;
 // 	left: 0;

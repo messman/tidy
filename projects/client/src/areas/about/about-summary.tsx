@@ -2,8 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Icon, SizedIcon } from '@/core/icon/icon';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
-import { fontStyleDeclarations } from '@/core/text';
-import { Spacing } from '@/core/theme/box';
+import { Spacing } from '@/core/primitive/primitive-design';
+import { fontStyles } from '@/core/text';
+import { themeTokens } from '@/core/theme';
 import { icons } from '@wbtdevlocal/assets';
 
 export const AboutSummary: React.FC = () => {
@@ -29,7 +30,7 @@ const Container = styled.div`
 	bottom: ${Spacing.cat12};
 	right: ${Spacing.cat12};
 	background-color: #FFF;
-	box-shadow: ${p => p.theme.shadow.g_overlay};
+	box-shadow: ${themeTokens.shadow.g_overlay};
 	display: flex;
 	align-items: center;
 	column-gap: ${Spacing.bat08};
@@ -39,12 +40,12 @@ const Container = styled.div`
 `;
 
 const Title = styled.div`
-	${fontStyleDeclarations.lead};
+	${fontStyles.lead.medium};
 `;
 
 const AboutIconContainer = styled.span`
 	display: inline-block;
-	background: ${p => p.theme.common.umbrellaGradient};
+	background: ${themeTokens.gradient.umbrella};
 	border-radius: 50%;
 	width: 2.5rem;
 	height: 2.5rem;

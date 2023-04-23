@@ -6,7 +6,7 @@ import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
-import { fontStyleDeclarations, Paragraph } from '@/core/text';
+import { fontStyles, MediumBodyText } from '@/core/text';
 import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';
@@ -23,7 +23,7 @@ const BeachTimeSummarySuccess: React.FC = () => {
 		<RowContainer>
 			<TextContainer>
 				<Title>{title}</Title>
-				<Paragraph>{description}</Paragraph>
+				<MediumBodyText>{description}</MediumBodyText>
 			</TextContainer>
 			<ExpressionIcon type={expression} />
 		</RowContainer>
@@ -51,7 +51,7 @@ const BeachTimeSummaryErrorLoad: React.FC = () => {
 		<RowContainer>
 			<TextContainer>
 				<Title>Beach Time</Title>
-				<Paragraph>Loading...</Paragraph>
+				<MediumBodyText>Loading...</MediumBodyText>
 			</TextContainer>
 			<HomeSummarySpinnerIcon type={SpinnerIcon} />
 		</RowContainer>
@@ -77,7 +77,7 @@ export const BeachTimeSummary: React.FC = () => {
 };
 
 const Title = styled.div`
-	${fontStyleDeclarations.heading4};
+	${fontStyles.headings.h4};
 `;
 
 const RowContainer = styled.div`

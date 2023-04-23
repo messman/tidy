@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { defaultIconSvgStyle, Icon, IconInputType } from '../icon/icon';
-import { StyledFC } from '../theme/styled';
+import { StyledFC } from '../primitive/primitive-styled';
+import { themeTokens } from '../theme';
 
 export interface MoonPhaseIconProps {
 	phase: iso.Astro.MoonPhase;
@@ -26,7 +27,7 @@ const MoonPhaseIconContainer = styled.span`
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-	background-color: ${p => p.theme.common.content.backgroundDay};
+	background-color: ${themeTokens.content.backgroundDay};
 	border-radius: 50%;
 	width: 2rem;
 	height: 2rem;

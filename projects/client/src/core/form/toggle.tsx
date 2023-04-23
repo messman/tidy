@@ -2,7 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { AnimationDuration } from '../animation/animation';
 import { GroupEntry, GroupEntryProps, GroupKeyLabel, GroupValue } from '../group/group';
-import { Block } from '../theme/box';
+import { Block } from '../layout';
+import { themeTokens } from '../theme';
 
 export interface GroupKeyValueToggleProps extends Omit<GroupEntryProps, 'hasArrowWhenClickable' | 'onClick'> {
 	label: string;
@@ -69,8 +70,8 @@ const ToggleContainer = styled.div<{ isDisabled: boolean; value: boolean; }>`
 	border-radius: 4rem;
 	box-sizing: border-box;
 	border: ${onePxRem}rem solid transparent;
-	border-color: ${p => p.isDisabled ? p.theme.form.textDisabled : (p.value ? p.theme.common.status.success : p.theme.outlineSubtle)};
-	background-color: ${p => p.isDisabled ? p.theme.form.disabled : (p.value ? p.theme.common.status.success : p.theme.form.background)};
+	border-color: ${p => p.isDisabled ? themeTokens.text.disabled : (p.value ? themeTokens.inform.positive : themeTokens.outline.subtle)};
+	background-color: ${p => p.isDisabled ? themeTokens.form.disabledAvailable : (p.value ? themeTokens.inform.positive : themeTokens.form.available)};
 	cursor: ${p => p.isDisabled ? 'not-allowed' : 'pointer'};
 	position: relative;
 	transition: border-color, background-color ${AnimationDuration.b_zip} ease;
@@ -83,8 +84,8 @@ const ToggleIndicator = styled.div<{ isDisabled: boolean; value: boolean; }>`
 	position: absolute;
 	top: ${circleMargin}rem;
 	left: ${p => p.value ? `${circleOnLeft}rem` : `${circleMargin}rem`};
-	background-color: ${p => p.isDisabled ? p.theme.form.textDisabled : '#FFF'};
-	box-shadow: ${p => p.isDisabled ? 'none' : p.theme.shadow.e_raised};
+	background-color: ${p => p.isDisabled ? themeTokens.text.disabled : '#FFF'};
+	box-shadow: ${p => p.isDisabled ? 'none' : themeTokens.shadow.e_raised};
 	transition: all ${AnimationDuration.b_zip} ease;
 	transition-property: box-shadow, left, background-color;
 `;

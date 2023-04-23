@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { createClassSelectors, createTransitionCallback, OnEndContext, SwitchTransition, SwitchTransitionProps, Transition, TransitionProps } from '@messman/react-common-transition';
-import { AbsoluteToFlexContainer, FlexToParentOfAbsolute } from '../layout/layout';
-import { CssOutput } from '../theme/styled';
+import { AbsoluteToFlexContainer, FlexToParentOfAbsolute } from '../layout';
+import { CssOutput } from '../primitive/primitive-styled';
 
 export enum AnimationDuration {
 	a_min = '.05s',

@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { GroupContainer, GroupKeyValue } from '@/core/group/group';
 import { IconInputType, SizedIcon } from '@/core/icon/icon';
+import { themeTokens } from '@/core/theme';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
@@ -48,9 +49,9 @@ function makeSubtleIcon(icon: IconInputType): JSX.Element {
 }
 
 const SubtleIcon = styled(SizedIcon)`
-	color: ${p => p.theme.textSubtle};
+	color: ${themeTokens.text.subtle};
 
 	path {
-		fill: ${p => p.theme.textSubtle};
+		fill: ${themeTokens.text.subtle};
 	}
 `;

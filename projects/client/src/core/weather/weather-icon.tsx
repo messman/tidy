@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { defaultIconSvgStyle, Icon, IconInputType, IconProps } from '../icon/icon';
-import { StyledFC } from '../theme/styled';
+import { StyledFC } from '../primitive/primitive-styled';
+import { themeTokens } from '../theme';
 
 export interface WeatherStatusIconProps {
 	status: iso.Weather.StatusType;
@@ -29,7 +30,7 @@ export const BaseWeatherIcon: StyledFC<IconProps> = (props) => {
 const WeatherIconContainer = styled.span`
 	${defaultIconSvgStyle};
 	display: inline-block;
-	background-color: ${p => p.theme.common.content.backgroundDay};
+	background-color: ${themeTokens.content.backgroundDay};
 	border-radius: 50%;
 	width: 2rem;
 	height: 2rem;

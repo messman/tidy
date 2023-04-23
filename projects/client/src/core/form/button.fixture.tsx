@@ -1,27 +1,53 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
-import { FixtureContainer } from '@/test/cosmos-fixture';
+import { fixtureDefault } from '@/test/cosmos-fixture';
 import { IconInputType } from '../icon/icon';
-import { Paragraph } from '../text';
-import { Block, Spacing } from '../theme/box';
-import { BaseButton, ButtonProps, StandardButton, WrapperButton } from './button';
+import { Block } from '../layout';
+import { minTouchSize, Spacing } from '../primitive/primitive-design';
+import { MediumBodyText } from '../text';
+import { themeTokens } from '../theme';
+import {
+	BaseButton, ButtonFillBrandBlue, ButtonFillBrandRed, ButtonFillColorOpposite, ButtonNoPadLabel, ButtonProps, ButtonSecondary, ButtonSecondaryWithColorBorder, ButtonSecondaryWithColorText,
+	ButtonSimpleFill, ButtonSimpleLink, ClickWrapperButton
+} from './button';
 
-const buttons: [React.FC<ButtonProps>, string, string][] = [
+const buttons: [React.FC<ButtonProps>, string][] = [
 	[
-		StandardButton,
-		'Standard Button',
-		`
-			The standard button is used to communicate
-			an action the user likely wants to take in line with the purpose of the page.
-		`
+		ButtonFillBrandRed,
+		'Primary - Red',
 	],
 	[
-		WrapperButton,
-		'Wrapper Button',
-		`
-			This button is just used to give a button wrapping around text or other components.
-		`
+		ButtonFillBrandBlue,
+		'Primary - Blue',
+	],
+	[
+		ButtonFillColorOpposite,
+		'Opposite',
+	],
+	[
+		ButtonSecondaryWithColorBorder,
+		'Secondary - Color Border',
+	],
+	[
+		ButtonSecondaryWithColorText,
+		'Secondary - Color Text',
+	],
+	[
+		ButtonSecondary,
+		'Secondary',
+	],
+	[
+		ButtonSimpleFill,
+		'Simple Fill',
+	],
+	[
+		ButtonSimpleLink,
+		'Simple Link',
+	],
+	[
+		ButtonNoPadLabel,
+		'Label',
 	],
 ];
 
@@ -54,7 +80,7 @@ export default {
 			</>
 		);
 	}, {
-		container: FixtureContainer.panelPadding
+		setup: fixtureDefault.docPad
 	}),
 	'Stretched Button': CosmosFixture.create(() => {
 
@@ -84,7 +110,40 @@ export default {
 			</>
 		);
 	}, {
-		container: FixtureContainer.panelPadding
+		setup: fixtureDefault.docPad
+	}),
+	'Click Wrapper Button': CosmosFixture.create(() => {
+
+		const isDisabled = Cosmos.useControlValue('Is Disabled', false);
+
+		function onClick() {
+			if (!isDisabled) {
+				alert('Click!');
+			}
+		}
+
+		return (
+			<>
+				<div>
+					<MediumBodyText>This is some clickable text.</MediumBodyText>
+					<ClickWrapperButton disabled={isDisabled} onClick={onClick}>
+						<ClickWrapperButton_Box>
+							<MediumBodyText>Text</MediumBodyText>
+						</ClickWrapperButton_Box>
+					</ClickWrapperButton>
+				</div>
+				<div>
+					<MediumBodyText>This is some clickable text with padding.</MediumBodyText>
+					<ClickWrapperButton_Special disabled={isDisabled} onClick={onClick}>
+						<ClickWrapperButton_Box>
+							<MediumBodyText>Text</MediumBodyText>
+						</ClickWrapperButton_Box>
+					</ClickWrapperButton_Special>
+				</div>
+			</>
+		);
+	}, {
+		setup: fixtureDefault.docPad
 	})
 };
 
@@ -95,15 +154,15 @@ interface ButtonGroupProps {
 	leftIcon: IconInputType;
 	rightIcon: IconInputType;
 	isLoading: boolean;
-	children: React.ReactNode;
+	children?: React.ReactNode;
 }
 
 const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
 	const { ButtonType, leftIcon, rightIcon, isLoading, children } = props;
 	return (
 		<VerticalMargin>
-			<Paragraph>Here are some examples of the '{children}' style.</Paragraph>
-			<ButtonRow>
+			<MediumBodyText>Here are some examples of the '{children}' style.</MediumBodyText>
+			<ButtonGroup_ButtonContainer>
 				<ButtonType isLoading={isLoading} leftIcon={leftIcon} rightIcon={rightIcon} onClick={noClick}>
 					{children}
 				</ButtonType>
@@ -115,18 +174,18 @@ const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
 				<ButtonType size='small' isLoading={isLoading} leftIcon={leftIcon} rightIcon={rightIcon} onClick={noClick}>
 					Small
 				</ButtonType>
-			</ButtonRow>
+			</ButtonGroup_ButtonContainer>
 		</VerticalMargin>
 	);
 };
 
-const VerticalMargin = styled.div`
-	margin: ${Spacing.dog16} 0;
-`;
-
-const ButtonRow = styled.div`
+const ButtonGroup_ButtonContainer = styled.div`
 	display: flex;
 	align-items: center;
+`;
+
+const VerticalMargin = styled.div`
+	margin: ${Spacing.dog16} 0;
 `;
 
 const ButtonStretchGroup: React.FC<ButtonGroupProps> = (props) => {
@@ -140,7 +199,6 @@ const ButtonStretchGroup: React.FC<ButtonGroupProps> = (props) => {
 			<ButtonType size='small' leftIcon={leftIcon} rightIcon={rightIcon} justifyContent='space-between' onClick={noClick}>
 				Small
 			</ButtonType>
-			<Block.Dog16 />
 		</VerticalMarginStretch>
 	);
 };
@@ -150,4 +208,15 @@ const VerticalMarginStretch = styled.div`
 	${BaseButton} {
 		width: 100%;
 	}
+`;
+
+const ClickWrapperButton_Special = styled(ClickWrapperButton)`
+	min-height: ${minTouchSize};
+	padding: ${Spacing.bat08};
+	display: inline-flex;
+	align-items: center;
+`;
+
+const ClickWrapperButton_Box = styled.div`
+	background-color: ${themeTokens.background.oneBox};
 `;
