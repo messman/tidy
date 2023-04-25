@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Icon, SizedIcon } from '@/core/icon/icon';
-import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Spacing } from '@/core/primitive/primitive-design';
 import { fontStyles } from '@/core/text';
 import { themeTokens } from '@/core/theme';
 import { icons } from '@wbtdevlocal/assets';
+import { AppScreen, useAppNavigation } from '../index/app-navigation';
 
 export const AboutSummary: React.FC = () => {
 	const { setScreen } = useAppNavigation();

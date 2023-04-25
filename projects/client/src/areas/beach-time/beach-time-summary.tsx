@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { Icon } from '@/core/icon/icon';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
-import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { fontStyles, MediumBodyText } from '@/core/text';
@@ -11,6 +10,7 @@ import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from
 import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';
 import { HomeSummaryClickPadding, HomeSummarySpinnerIcon } from '../home/home-summary-shared';
+import { AppScreen, useAppNavigation } from '../index/app-navigation';
 
 const BeachTimeSummarySuccess: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;

@@ -60,14 +60,14 @@ export const GlobalStyles = createGlobalStyle`
 	body {
 		// #REF_BROWSER_STYLE
 		// Background-color here is to cover notches and other browser-covered areas
-		background-color: ${themeTokens.brand.blue};
+		background-color: ${themeTokens.background.two};
 		padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
 		color: ${themeTokens.text.distinct};
 	}
 	
 	#react-root, #root {
 		// #REF_BROWSER_STYLE
-		background-color: ${themeTokens.background.waterGradient};
+		background: ${themeTokens.background.waterGradient};
 	}
 
 	* {

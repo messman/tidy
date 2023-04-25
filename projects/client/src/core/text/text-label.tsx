@@ -3,8 +3,7 @@ import styled, { StyledComponent } from 'styled-components';
 import { IconWrapper, IconWrapperProps } from '../icon/icon-wrapper';
 import { ComponentSize } from '../primitive/primitive-design';
 import { CssOutput, StyledFC } from '../primitive/primitive-styled';
-import { ellipsisStyle } from '../text';
-import { fontStyles } from './text-shared';
+import { ellipsisStyle, fontStyles } from './text-shared';
 
 export const labelDeclarations: Record<ComponentSize, CssOutput> = {
 	medium: fontStyles.text.mediumHeavy,

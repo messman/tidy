@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import { BeachTime } from '@/areas/beach-time/beach-time';
 import { AnimationDuration, TransitionSelector } from '@/core/animation/animation';
 import { overflowHiddenScrollStyle } from '@/core/layout';
-import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
 import { Spacing } from '@/core/primitive/primitive-design';
 import { Transition } from '@messman/react-common-transition';
@@ -15,6 +14,7 @@ import { Home } from '../home/home';
 import { Tide } from '../tide/tide';
 import { CompactAppHeader } from './app-layout-compact-header';
 import { appCompactNavHeight, AppLayoutCompactNav } from './app-layout-compact-nav';
+import { AppScreen, useAppNavigation } from './app-navigation';
 
 interface AppNavigationState {
 	current: AppScreen;

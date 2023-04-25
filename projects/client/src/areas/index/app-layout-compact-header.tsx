@@ -4,12 +4,12 @@ import { ClickWrapperButton } from '@/core/form/button';
 import { SizedIcon } from '@/core/icon/icon';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { Block } from '@/core/layout';
-import { AppInfo } from '@/core/layout/app/app-info';
-import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Spacing } from '@/core/primitive/primitive-design';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
+import { AppInfo } from './app-info';
 import { appHeaderHeight } from './app-layout-shared';
+import { AppScreen, useAppNavigation } from './app-navigation';
 
 export const CompactAppHeader: React.FC = () => {
 	const { isLoading } = useBatchResponse();

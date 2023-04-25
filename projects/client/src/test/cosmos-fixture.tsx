@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled, { StyledComponent } from 'styled-components';
+import { AppNavigationProvider } from '@/areas/index/app-navigation';
 import { ErrorBoundary } from '@/core/error/error-boundary';
-import { AppNavigationProvider } from '@/core/layout/app/app-navigation';
+import { SVGIconUrlLoadProvider } from '@/core/icon/icon-url';
 import { ApplicationLayoutContainer, Space } from '@/core/layout/layout-shared';
 import { ThemeContextProvider, themeTokens } from '@/core/theme/theme-root';
 import { BatchResponseProvider } from '@/services/data/data';
@@ -34,9 +35,9 @@ export interface FixtureSetup {
 
 export const fixtureDefault = {
 	/** Default. No padding, no flex, overflow, main background. */
-	docNoPad: { container: FixtureContainer.noPadding, background: FixtureBackground.waterGradient },
+	docNoPad: { container: FixtureContainer.noPadding, background: FixtureBackground.two },
 	/** Default. Padding, no flex, overflow, main background. */
-	docPad: { container: FixtureContainer.padding, background: FixtureBackground.waterGradient },
+	docPad: { container: FixtureContainer.padding, background: FixtureBackground.two },
 	/** Flex Column and main background, like the application root. */
 	root: { container: FixtureContainer.flexColumn, background: FixtureBackground.waterGradient },
 	docTwoPad: { container: FixtureContainer.padding, background: FixtureBackground.two },
@@ -62,6 +63,7 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 			provider(DataSeedProvider, {}),
 			provider(BatchResponseProvider, {}),
 			provider(AppNavigationProvider, {}),
+			provider(SVGIconUrlLoadProvider, {})
 		];
 
 		if (additionalProviders) {
@@ -80,7 +82,6 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 	};
 }
 
-const fixtureBackgroundOptions = createControlSelectForEnum(FixtureBackground);
 
 const seedOb = createControlSelectForEnum(iso.Batch.Seed) as unknown as Record<(keyof typeof iso.Batch.Seed) | '_real_', iso.Batch.Seed | null>;
 seedOb['_real_'] = null;
@@ -93,15 +94,9 @@ interface TestWrapperProps {
 const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 	const { setup } = props;
 
-	//const mockApi = useMockApi();
 	const [seed, setSeed] = useDataSeed();
 
-	const background = useControlSelect('Global - Background', fixtureBackgroundOptions, 'waterGradient');
-
 	const setupWithDefault = setup || fixtureDefault.docNoPad;
-	const setupInfo = React.useMemo(() => {
-		return { ...setupWithDefault, background };
-	}, [setupWithDefault, background]);
 
 	const selectedSeed = useControlSelect('Seed', seedOb, seed || '_real_');
 	React.useEffect(() => {
@@ -111,8 +106,8 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 	}, [selectedSeed]);
 
 	return (
-		<Fixture_OuterContainer setupInfo={setupInfo}>
-			<Fixture_InnerContainer setupInfo={setupInfo}>
+		<Fixture_OuterContainer setupInfo={setupWithDefault}>
+			<Fixture_InnerContainer setupInfo={setupWithDefault}>
 				{props.children}
 			</Fixture_InnerContainer>
 		</Fixture_OuterContainer>

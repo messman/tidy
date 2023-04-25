@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { ClickWrapperButton } from '@/core/form/button';
 import { SizedIcon } from '@/core/icon/icon';
 import { Block } from '@/core/layout';
-import { AppScreen, canScreenCarouselMoveLeft, canScreenCarouselMoveRight, getScreenCarouselMove, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Spacing } from '@/core/primitive/primitive-design';
 import { themeTokens } from '@/core/theme';
 import { icons } from '@wbtdevlocal/assets';
+import { AppScreen, canScreenCarouselMoveLeft, canScreenCarouselMoveRight, getScreenCarouselMove, useAppNavigation } from './app-navigation';
 
 export const appCompactNavHeight = '2.5rem';
 

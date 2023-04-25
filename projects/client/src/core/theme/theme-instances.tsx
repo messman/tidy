@@ -1,8 +1,6 @@
 import { ThemeTypes } from './theme-types';
 
 export const lightTokens: ThemeTypes.Tokens = {
-	//background: 
-
 	/** Base colors that are used in a variety of contexts and have no meaning other than as contrast. */
 	rawColor: {
 		red: {
@@ -34,7 +32,7 @@ export const lightTokens: ThemeTypes.Tokens = {
 	background: {
 		waterLight: '#3794EB',
 		waterDark: '#2572BA',
-		waterGradient: `linear-gradient(172.75deg, #3794EB 10.5%, #2572BA 84.5%)`,
+		waterGradient: `linear-gradient(172.78deg, #5EC7F4 10.6%, #45A8FC 40.05%, #0E569A 84.48%);`,
 		oneBox: '#FFFFFF',
 		two: '#FFFFFF',
 		twoBox: '#F8F9FA',

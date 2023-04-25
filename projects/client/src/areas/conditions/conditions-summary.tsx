@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { ErrorGeneric } from '@/core/error/error-generic';
 import { SpinnerIcon } from '@/core/icon/icon-spinner';
 import { Block, SubtleLine } from '@/core/layout';
-import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
 import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
 import { MediumBodyText } from '@/core/text';
@@ -12,6 +11,7 @@ import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 import { HomeSummaryClickPadding, HomeSummarySpinnerIcon } from '../home/home-summary-shared';
+import { AppScreen, useAppNavigation } from '../index/app-navigation';
 import { ConditionsHourly } from './conditions-hourly';
 
 const ConditionsSummarySuccess: React.FC = () => {

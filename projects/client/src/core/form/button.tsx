@@ -43,6 +43,8 @@ export const buttonResetStyles = css`
 	border-radius: 0;
 	color: inherit;
 	padding: 0;
+	margin: 0;
+
 	cursor: pointer;
 	font: inherit;
 

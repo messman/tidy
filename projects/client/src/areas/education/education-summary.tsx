@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Block } from '@/core/layout';
-import { AppScreen, useAppNavigation } from '@/core/layout/app/app-navigation';
 import { Panel } from '@/core/layout/panel/panel';
 import { fontStyles, MediumBodyText } from '@/core/text';
 import { HomeSummaryClickPadding } from '../home/home-summary-shared';
+import { AppScreen, useAppNavigation } from '../index/app-navigation';
 
 export const EducationSummary: React.FC = () => {
 	const { setScreen } = useAppNavigation();
