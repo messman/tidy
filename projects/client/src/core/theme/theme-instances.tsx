@@ -49,7 +49,7 @@ export const lightTokens: ThemeTypes.Tokens = {
 	},
 
 	brand: {
-		red: '#B44646',
+		red: '#D84747',
 		blue: '#3794EB'
 	},
 
@@ -57,7 +57,7 @@ export const lightTokens: ThemeTypes.Tokens = {
 		distinct: '#C1C1C1',
 		subtle: '#DADADA',
 		subtleLightOnly: '#DADADA',
-		accessible: '#B44646'
+		accessible: '#D84747'
 	},
 
 	filter: {
