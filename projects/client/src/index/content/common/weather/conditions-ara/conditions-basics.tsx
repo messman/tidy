@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Block } from '@/core/layout';
-import { FontWeight } from '@/core/primitive/primitive-design';
-import { fontStyles, MediumBodyText } from '@/core/text';
-import { themeTokens } from '@/core/theme';
+import { Block } from '@/index/core/layout/layout-shared';
+import { FontWeight } from '@/index/core/primitive/primitive-design';
+import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { useBatchResponse } from '@/services/data/data';
 
 const tempGradientBottom = -25;
@@ -115,7 +115,7 @@ const VisualContainer = styled.div`
 const VisualBackground = styled.div<{ leftPercent: number; widthPercent: number; }>`
 	position: absolute;
 	height: ${visualSize};
-	background: ${themeTokens.visual.temperatureGradient};
+	background: ${themeTokens.content.temperatureGradient};
 	top: 0;
 	left: ${p => p.leftPercent}%;
 	width: ${p => p.widthPercent}%;

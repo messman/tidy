@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { ButtonSecondary } from '@/core/form/button';
-import { themeTokens } from '@/core/theme';
+import { ButtonFillBrandBlue } from '@/index/core/form/button';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { ElementIntersect, useElementIntersect } from '@messman/react-common';
 import { Swipe } from './layout-swipe';
 
@@ -68,9 +68,9 @@ export default {
 					active: {active}
 				</div>
 				<div>
-					<ButtonSecondary onClick={createOnClickFor(intersectRefRed)}>Red</ButtonSecondary>
-					<ButtonSecondary onClick={createOnClickFor(intersectRefBlue)}>Blue</ButtonSecondary>
-					<ButtonSecondary onClick={createOnClickFor(intersectRefGreen)}>Green</ButtonSecondary>
+					<ButtonFillBrandBlue onClick={createOnClickFor(intersectRefRed)}>Red</ButtonFillBrandBlue>
+					<ButtonFillBrandBlue onClick={createOnClickFor(intersectRefBlue)}>Blue</ButtonFillBrandBlue>
+					<ButtonFillBrandBlue onClick={createOnClickFor(intersectRefGreen)}>Green</ButtonFillBrandBlue>
 				</div>
 				<Multi_Container ref={ref}>
 					<Multi_Red ref={intersectRefRed} />
@@ -80,7 +80,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: fixtureDefault.root
+		setup: FixtureSetup.root
 	}),
 	'Swipe': CosmosFixture.create(() => {
 
@@ -147,7 +147,7 @@ export default {
 			</Swipe_RootContainer >
 		);
 	}, {
-		setup: fixtureDefault.root
+		setup: FixtureSetup.root
 	})
 };
 

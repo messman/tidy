@@ -1,10 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { BaseButton, ButtonFillBrandBlue } from '@/core/form/button';
-import { Block } from '@/core/layout';
-import { borderRadiusStyle, Spacing } from '@/core/primitive/primitive-design';
-import { FontDoc } from '@/core/text';
-import { themeTokens } from '@/core/theme';
+import { BaseButton, ButtonFillBrandBlue } from '@/index/core/form/button';
+import { Block } from '@/index/core/layout/layout-shared';
+import { borderRadiusStyle, Spacing } from '@/index/core/primitive/primitive-design';
+import { FontDoc } from '@/index/core/text/text-shared';
 import { useSafeTimer } from '@/services/lifecycle/timer';
 import { setClipboard } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
@@ -105,7 +104,6 @@ const ShareContainer = styled.div`
 const QRImage = styled.img`
 	width: 6rem;
 	height: 6rem;
-	border: 4px solid ${themeTokens.brand.blue};
 	${borderRadiusStyle}
 `;
 

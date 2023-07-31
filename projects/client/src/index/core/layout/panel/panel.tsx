@@ -1,12 +1,11 @@
 import styled, { css } from 'styled-components';
-import { borderRadiusStyle, Spacing } from '@/core/primitive/primitive-design';
-import { fontStyles } from '@/core/text';
-import { themeTokens } from '@/core/theme';
+import { borderRadiusStyle, Spacing } from '@/index/core/primitive/primitive-design';
+import { fontStyles } from '../../text/text-shared';
+import { themeTokens } from '../../theme/theme-root';
 
 export const Panel = styled.div`
-	background-color: ${themeTokens.background.oneBox};
+	background-color: ${themeTokens.background.glass};
 	${borderRadiusStyle};
-	box-shadow: ${themeTokens.shadow.b_card};
 `;
 
 export const panelPaddingValue = Spacing.dog16;

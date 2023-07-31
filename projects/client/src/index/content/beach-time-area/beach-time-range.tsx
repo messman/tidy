@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
-import { fontStyles } from '@/core/text';
-import { themeTokens } from '@/core/theme';
+import { fontStyles } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { getTimeTwelveHourRange, getTimeTwelveHourString } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
 import { BeachTimeRangeVisual } from './beach-time-range-visual';

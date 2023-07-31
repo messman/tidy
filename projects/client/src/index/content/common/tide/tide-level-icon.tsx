@@ -1,12 +1,11 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
+import { Icon } from '@/index/core/icon/icon';
+import { StyledFC } from '@/index/core/primitive/primitive-styled';
+import { fontStyles } from '@/index/core/text/text-shared';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
-import { Icon } from '../icon/icon';
-import { StyledFC } from '../primitive/primitive-styled';
-import { fontStyles } from '../text';
-import { themeTokens } from '../theme';
 
 /** A tide status that should never happen with real data, but may be used for loading. */
 export const unknownTide: iso.Tide.MeasureStamp = { time: DateTime.now(), height: 0, direction: iso.Tide.Direction.turning, division: iso.Tide.Division.mid, isComputed: false, isAlternate: false, computed: 0 };
@@ -80,7 +79,6 @@ export const TideExtremeIcon: StyledFC<TideExtremeIconProps> = (props) => {
 
 const TideLevelIconContainer = styled.span`
 	display: inline-block;
-	background-color: ${themeTokens.content.backgroundDay};
 	border-radius: 50%;
 
 	position: relative;
@@ -100,7 +98,6 @@ const waterOffsetPercent: Record<keyof typeof iso.Tide.Division, string> = {
 const WaterIcon = styled(Icon) <{ division: iso.Tide.Division; }>`
 	position: absolute;
 	top: ${p => iso.mapNumberEnumValue(iso.Tide.Division, waterOffsetPercent, p.division)};
-	color: ${themeTokens.badge.water};
 	width: 2rem;
 	height: 2rem;
 `;

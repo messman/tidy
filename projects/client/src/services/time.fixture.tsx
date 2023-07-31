@@ -1,10 +1,11 @@
 import { DateTime, DurationLikeObject } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
-import { MediumBodyText, TimeTextUnit } from '@/core/text';
-import { themeTokens } from '@/core/theme';
+import { MediumBodyText } from '@/index/core/text/text-shared';
+import { TimeTextUnit } from '@/index/core/text/text-unit';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { getDurationDescription } from './time';
 
 export default CosmosFixture.create(() => {
@@ -68,7 +69,7 @@ export default CosmosFixture.create(() => {
 	);
 
 }, {
-	setup: fixtureDefault.docTwoPad
+	setup: FixtureSetup.root
 });
 
 const StyledTable = styled.table`

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Block } from '@/core/layout';
-import { fontStyles, MediumBodyText, OutLink } from '@/core/text';
-import { Note } from '@/core/text/note';
-import { TideHeightTextUnit } from '@/core/tide/tide-common';
-import { TideLevelIcon } from '@/core/tide/tide-level-icon';
+import { Block } from '@/index/core/layout/layout-shared';
+import { OutLink } from '@/index/core/text/text-link';
+import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { getTideTitle } from '@/services/content/tide-utility';
 import { useBatchResponse } from '@/services/data/data';
 import { getTimeTwelveHourString } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
+import { TideHeightTextUnit } from '../tide-common';
+import { TideLevelIcon } from '../tide-level-icon';
 
 export const TideHeader: React.FC = () => {
 	const { meta, tide } = useBatchResponse().success!;
@@ -30,9 +30,6 @@ export const TideHeader: React.FC = () => {
 			noteRender = (
 				<>
 					<Block.Bat08 />
-					<Note>
-						{text}, which may indicate adverse weather conditions.
-					</Note>
 				</>
 			);
 		}

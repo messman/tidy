@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
+import { TextUnit } from '@/index/core/text/text-unit';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { SVGPath } from '@/services/draw/bezier';
-import { TextUnit } from '../text';
-import { themeTokens } from '../theme';
 
 const svgStyle = css`
 	position: absolute;
@@ -16,7 +16,7 @@ export const FillSVG = styled(SVGPath)`
 	${svgStyle}
 
 	width: ${p => p.destRect.right - p.destRect.left}px;
-	fill: ${themeTokens.badge.water};
+	fill: ${themeTokens.background.tint.medium};
 	opacity: .2;
 `;
 
@@ -24,7 +24,7 @@ export const StrokeSVG = styled(SVGPath)`
 	${svgStyle}
 
 	width: ${p => p.destRect.right - p.destRect.left}px;
-	stroke: ${themeTokens.badge.water};
+	stroke: ${themeTokens.background.tint.medium};
 	stroke-width: 6px;
 	fill: transparent;
 `;

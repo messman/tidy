@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { AppLayout } from './layout-app';
 
 export default CosmosFixture.create(() => {
@@ -9,5 +9,5 @@ export default CosmosFixture.create(() => {
 		<AppLayout />
 	);
 }, {
-	setup: fixtureDefault.root
+	setup: FixtureSetup.root
 });

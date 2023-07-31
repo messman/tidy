@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
-import { Block } from '../layout';
+import { FixtureSetup } from '@/test/cosmos-fixture';
+import { Block } from '../layout/layout-shared';
 import { Spacing } from '../primitive/primitive-design';
 import { themeTokens } from '../theme/theme-root';
 import { ellipsisStyle, FontDoc, fontStyleDefinitions, fontStyles } from './text-shared';
@@ -57,7 +57,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	}),
 	'Text Ellipses': CosmosFixture.create(() => {
 
@@ -74,7 +74,7 @@ export default {
 			</EllipsesContainer>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	}),
 	'Text Hierarchy': CosmosFixture.create(() => {
 
@@ -138,7 +138,7 @@ export default {
 			</div>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	})
 
 };
@@ -154,8 +154,7 @@ interface EllipsesTextProps {
 }
 
 const EllipsesContainer = styled.div<EllipsesTextProps>`
-	background-color: ${themeTokens.background.oneBox};
-	box-shadow: ${themeTokens.shadow.b_card};
+	background-color: ${themeTokens.background.glass};
 	padding: ${Spacing.dog16};
 	border: 1px solid ${themeTokens.text.subtle};
 	width: ${p => p.$width};

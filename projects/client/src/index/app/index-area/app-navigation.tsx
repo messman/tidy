@@ -3,9 +3,7 @@ import { createContextConsumer } from '@messman/react-common';
 
 /** Value indicates order. */
 export enum AppScreen {
-	a_home = 100,
 	b_beachTime = 101,
-	c_tide = 102,
 	d_conditions = 103,
 	e_education = 104,
 	f_about = 105
@@ -41,7 +39,7 @@ export const AppNavigationProvider: React.FC<React.PropsWithChildren> = (props) 
 
 	const [state, setState] = React.useState<AppNavigationState>(() => {
 		return {
-			screen: AppScreen.a_home
+			screen: AppScreen.d_conditions
 		};
 	});
 

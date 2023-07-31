@@ -1,17 +1,15 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { BeachTime } from '@/areas/beach-time/beach-time';
-import { AnimationDuration, TransitionSelector } from '@/core/animation/animation';
-import { overflowHiddenScrollStyle } from '@/core/layout';
-import { Panel } from '@/core/layout/panel/panel';
-import { Spacing } from '@/core/primitive/primitive-design';
+import { About } from '@/index/content/about/about-area/about';
+import { BeachTime } from '@/index/content/beach-time-area/beach-time';
+import { Conditions } from '@/index/content/common/weather/conditions-ara/conditions';
+import { Education } from '@/index/content/learn/education-area/education';
+import { AnimationDuration, TransitionSelector } from '@/index/core/animation/animation';
+import { overflowHiddenScrollStyle } from '@/index/core/layout/layout-shared';
+import { Panel } from '@/index/core/layout/panel/panel';
+import { Spacing } from '@/index/core/primitive/primitive-design';
 import { Transition } from '@messman/react-common-transition';
 import * as iso from '@wbtdevlocal/iso';
-import { About } from '../about/about';
-import { Conditions } from '../conditions/conditions';
-import { Education } from '../education/education';
-import { Home } from '../home/home';
-import { Tide } from '../tide/tide';
 import { CompactAppHeader } from './app-layout-compact-header';
 import { appCompactNavHeight, AppLayoutCompactNav } from './app-layout-compact-nav';
 import { AppScreen, useAppNavigation } from './app-navigation';
@@ -42,7 +40,7 @@ export const CompactApplicationLayout: React.FC<React.PropsWithChildren> = () =>
 	let AppScreenComponent = iso.mapNumberEnumValue(AppScreen, appScreenComponent, current);
 	let screenRender = <AppScreenComponent />;
 
-	screenRender = current === AppScreen.a_home ? (
+	screenRender = current === AppScreen.b_beachTime ? (
 		<HomeScroller>
 			{screenRender}
 		</HomeScroller>
@@ -58,7 +56,7 @@ export const CompactApplicationLayout: React.FC<React.PropsWithChildren> = () =>
 	const inScreen = isExit ? next : current;
 	const outScreen = isExit ? current : previous;
 
-	if (inScreen === AppScreen.a_home || outScreen === AppScreen.a_home) {
+	if (inScreen === AppScreen.b_beachTime || outScreen === AppScreen.b_beachTime) {
 		TransitionComponent = FadePopTransitionContainer;
 	}
 	else if ((isExit && next > current) || (!isExit && current < previous)) {
@@ -73,7 +71,7 @@ export const CompactApplicationLayout: React.FC<React.PropsWithChildren> = () =>
 					{screenRender}
 				</TransitionComponent>
 			</Transition>
-			<Transition isActive={next !== AppScreen.a_home}>
+			<Transition isActive={next !== AppScreen.b_beachTime}>
 				<NavigationTransitionContainer>
 					<AppLayoutCompactNav />
 				</NavigationTransitionContainer>
@@ -82,10 +80,8 @@ export const CompactApplicationLayout: React.FC<React.PropsWithChildren> = () =>
 	);
 };
 
-const appScreenComponent: Record<keyof typeof AppScreen, React.FC> = {
-	a_home: Home,
+const appScreenComponent = {
 	b_beachTime: BeachTime,
-	c_tide: Tide,
 	d_conditions: Conditions,
 	e_education: Education,
 	f_about: About

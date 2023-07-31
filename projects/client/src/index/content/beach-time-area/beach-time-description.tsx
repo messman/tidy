@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Block } from '@/core/layout';
-import { fontStyles, MediumBodyText } from '@/core/text';
+import { Block } from '@/index/core/layout/layout-shared';
+import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';

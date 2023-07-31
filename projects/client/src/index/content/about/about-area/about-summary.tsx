@@ -1,11 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Icon, SizedIcon } from '@/core/icon/icon';
-import { Spacing } from '@/core/primitive/primitive-design';
-import { fontStyles } from '@/core/text';
-import { themeTokens } from '@/core/theme';
+import { AppScreen, useAppNavigation } from '@/index/app/index-area/app-navigation';
+import { Icon, SizedIcon } from '@/index/core/icon/icon';
+import { Spacing } from '@/index/core/primitive/primitive-design';
+import { fontStyles } from '@/index/core/text/text-shared';
 import { icons } from '@wbtdevlocal/assets';
-import { AppScreen, useAppNavigation } from '../index/app-navigation';
 
 export const AboutSummary: React.FC = () => {
 	const { setScreen } = useAppNavigation();
@@ -30,7 +29,6 @@ const Container = styled.div`
 	bottom: ${Spacing.cat12};
 	right: ${Spacing.cat12};
 	background-color: #FFF;
-	box-shadow: ${themeTokens.shadow.g_overlay};
 	display: flex;
 	align-items: center;
 	column-gap: ${Spacing.bat08};
@@ -45,7 +43,6 @@ const Title = styled.div`
 
 const AboutIconContainer = styled.span`
 	display: inline-block;
-	background: ${themeTokens.gradient.umbrella};
 	border-radius: 50%;
 	width: 2.5rem;
 	height: 2.5rem;

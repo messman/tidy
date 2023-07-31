@@ -1,16 +1,16 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
-import { MoonPhaseIcon } from '@/core/astro/moon-phase-icon';
-import { Block } from '@/core/layout';
-import { FontWeight, Spacing } from '@/core/primitive/primitive-design';
-import { fontStyles } from '@/core/text';
-import { themeTokens } from '@/core/theme';
-import { TideHeightTextUnit } from '@/core/tide/tide-common';
-import { TideExtremeIcon, TideLevelIcon } from '@/core/tide/tide-level-icon';
+import { Block } from '@/index/core/layout/layout-shared';
+import { FontWeight, Spacing } from '@/index/core/primitive/primitive-design';
+import { fontStyles } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { useBatchResponse } from '@/services/data/data';
 import { getDateDayOfWeek, getRelativeDayText, getTimeTwelveHourString } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
+import { MoonPhaseIcon } from '../../astro/moon-phase-icon';
+import { TideHeightTextUnit } from '../tide-common';
+import { TideExtremeIcon, TideLevelIcon } from '../tide-level-icon';
 
 export const TideChart: React.FC = () => {
 	const { tide, meta } = useBatchResponse().success!;
@@ -154,7 +154,6 @@ const DayHeader = styled.div`
 const RowContainer = styled.div<{ isHighlighted: boolean; }>`
 	display: flex;
 	align-items: center;
-	background-color: ${p => p.isHighlighted ? themeTokens.filter.selected : 'transparent'};
 	padding: ${Spacing.bat08} ${Spacing.dog16};
 `;
 
@@ -197,7 +196,7 @@ const RowVisual = styled.div`
 	position: relative;
 	height: ${visualSize};
 	border-radius: ${visualBorder};
-	background: ${themeTokens.visual.background};
+	background: ${themeTokens.background.tint.medium};
 	overflow: hidden;
 `;
 
@@ -213,7 +212,7 @@ const RowVisualAdjust = styled.div`
 
 const VisualCircleTrail = styled.div<{ percent: number; isMeasured: boolean; }>`
 	position: absolute;
-	background-color: ${p => p.isMeasured ? themeTokens.rawColor.green.distinct : themeTokens.visual.tideCoverage};
+	background-color: ${p => p.isMeasured ? themeTokens.rawColor.green.distinct : themeTokens.background.tint.medium};
 	width: calc(${p => p.percent}% + ${halfVisualSize});
 	height: ${visualSize};
 	top: 0;
@@ -222,7 +221,7 @@ const VisualCircleTrail = styled.div<{ percent: number; isMeasured: boolean; }>`
 
 const VisualCircle = styled.div<{ percent: number; isMeasured: boolean; }>`
 	position: absolute;
-	background-color: ${p => p.isMeasured ? themeTokens.rawColor.green.subtle : themeTokens.badge.water};
+	background-color: ${p => p.isMeasured ? themeTokens.rawColor.green.subtle : themeTokens.background.tint.medium};
 	width: ${visualSize};
 	height: ${visualSize};
 	border-radius: ${visualBorder};

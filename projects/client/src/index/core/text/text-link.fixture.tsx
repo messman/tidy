@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
-import { Block } from '../layout';
+import { FixtureSetup } from '@/test/cosmos-fixture';
+import { Block } from '../layout/layout-shared';
 import { themeTokens } from '../theme/theme-root';
 import { OutLink } from './text-link';
 import { fontStyles } from './text-shared';
@@ -55,7 +55,7 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docPad
+	setup: FixtureSetup.root
 });
 
 const LeadLargeText = styled.strong`

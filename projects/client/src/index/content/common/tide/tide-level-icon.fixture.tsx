@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import { Block } from '@/index/core/layout/layout-shared';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import * as iso from '@wbtdevlocal/iso';
-import { Block } from '../layout';
 import { TideExtremeIcon, TideLevelIcon } from './tide-level-icon';
 
 export default CosmosFixture.create(() => {
@@ -38,5 +38,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docTwoPad
+	setup: FixtureSetup.root
 });

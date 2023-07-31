@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import * as iso from '@wbtdevlocal/iso';
 import { MoonPhaseIcon } from './moon-phase-icon';
 
@@ -19,5 +19,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docTwoPad
+	setup: FixtureSetup.root
 });

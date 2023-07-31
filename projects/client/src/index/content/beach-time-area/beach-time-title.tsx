@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PanelTitle } from '@/core/layout/panel/panel';
+import { PanelTitle } from '@/index/core/layout/panel/panel';
 import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';

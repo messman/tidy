@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled, { StyledComponent } from 'styled-components';
-import { Block } from '../layout';
+import { Block } from '../layout/layout-shared';
 import { ComponentSize } from '../primitive/primitive-design';
 import { StyledFC } from '../primitive/primitive-styled';
 import { IconInputType, SizedIcon } from './icon';

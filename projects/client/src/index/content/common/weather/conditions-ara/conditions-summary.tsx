@@ -1,44 +1,34 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ErrorGeneric } from '@/core/error/error-generic';
-import { SpinnerIcon } from '@/core/icon/icon-spinner';
-import { Block, SubtleLine } from '@/core/layout';
-import { Panel } from '@/core/layout/panel/panel';
-import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
-import { MediumBodyText } from '@/core/text';
+import { ErrorGeneric } from '@/index/core/error/error-generic';
+import { Block } from '@/index/core/layout/layout-shared';
+import { Panel } from '@/index/core/layout/panel/panel';
+import { wrapForBatchLoad } from '@/index/core/loader/batch-load-control';
+import { MediumBodyText } from '@/index/core/text/text-shared';
 import { weatherStatusDescription } from '@/services/content/weather-utility';
 import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
-import { HomeSummaryClickPadding, HomeSummarySpinnerIcon } from '../home/home-summary-shared';
-import { AppScreen, useAppNavigation } from '../index/app-navigation';
 import { ConditionsHourly } from './conditions-hourly';
 
 const ConditionsSummarySuccess: React.FC = () => {
 	const { meta, weather, astro } = useBatchResponse().success!;
-	const { setScreen } = useAppNavigation();
 
-	function onClick() {
-		setScreen(AppScreen.d_conditions);
-	}
 
 	const statusDescription = iso.mapNumberEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
 	const nextSunEvent = astro.sun.relativity.next;
 
 	return (
 		<>
-			<HomeSummaryClickPadding onClick={onClick} isConnectedBelow={true}>
-				{/* <IconTitle iconRender={
+			{/* <IconTitle iconRender={
 					<WeatherStatusIcon isDay={weather.current.isDaytime} status={weather.current.status} />
 				}>
 			</IconTitle> */}
-				It's {statusDescription.itIsShort} and {Math.round(weather.current.temp)}&deg;.
-				<Block.Bat08 />
-				<MediumBodyText>
-					{nextSunEvent.isRise ? 'Sunrise' : 'Sundown'} is in {getDurationDescription(meta.referenceTime, nextSunEvent.time)}.
-				</MediumBodyText>
-			</HomeSummaryClickPadding>
-			<SubtleLine />
+			It's {statusDescription.itIsShort} and {Math.round(weather.current.temp)}&deg;.
+			<Block.Bat08 />
+			<MediumBodyText>
+				{nextSunEvent.isRise ? 'Sunrise' : 'Sundown'} is in {getDurationDescription(meta.referenceTime, nextSunEvent.time)}.
+			</MediumBodyText>
 			<ConditionsHourly />
 		</>
 	);
@@ -47,11 +37,7 @@ const ConditionsSummarySuccess: React.FC = () => {
 
 const ConditionsSummaryErrorLoad: React.FC = () => {
 	const { error } = useBatchResponse();
-	const { setScreen } = useAppNavigation();
 
-	function onClick() {
-		setScreen(AppScreen.d_conditions);
-	}
 
 	const title = (
 		// <IconTitle
@@ -64,9 +50,7 @@ const ConditionsSummaryErrorLoad: React.FC = () => {
 
 	function wrap(render: JSX.Element) {
 		return (
-			<HomeSummaryClickPadding onClick={onClick}>
-				{render}
-			</HomeSummaryClickPadding>
+			<>{render}</>
 		);
 	}
 
@@ -87,7 +71,6 @@ const ConditionsSummaryErrorLoad: React.FC = () => {
 				<Block.Bat08 />
 				<MediumBodyText>Loading...</MediumBodyText>
 			</TextContainer>
-			<HomeSummarySpinnerIcon type={SpinnerIcon} />
 		</RowContainer>
 	);
 };

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ClickWrapperButton } from '@/core/form/button';
-import { SizedIcon } from '@/core/icon/icon';
-import { Block } from '@/core/layout';
-import { Spacing } from '@/core/primitive/primitive-design';
-import { themeTokens } from '@/core/theme';
+import { ClickWrapperButton } from '@/index/core/form/button';
+import { SizedIcon } from '@/index/core/icon/icon';
+import { Block } from '@/index/core/layout/layout-shared';
+import { Spacing } from '@/index/core/primitive/primitive-design';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 import { AppScreen, canScreenCarouselMoveLeft, canScreenCarouselMoveRight, getScreenCarouselMove, useAppNavigation } from './app-navigation';
 
@@ -14,11 +14,11 @@ export const AppLayoutCompactNav: React.FC = () => {
 
 	const { screen, setScreen } = useAppNavigation();
 
-	const canMoveLeft = canScreenCarouselMoveLeft(screen) && screen !== AppScreen.a_home;
-	const canMoveRight = canScreenCarouselMoveRight(screen) && screen !== AppScreen.a_home;
+	const canMoveLeft = canScreenCarouselMoveLeft(screen) && screen !== AppScreen.b_beachTime;
+	const canMoveRight = canScreenCarouselMoveRight(screen) && screen !== AppScreen.b_beachTime;
 
 	function onClickClose() {
-		setScreen(AppScreen.a_home);
+		setScreen(AppScreen.b_beachTime);
 	}
 	function onClickLeft() {
 		if (canMoveLeft) {
@@ -53,8 +53,7 @@ export const AppLayoutCompactNav: React.FC = () => {
 const Container = styled.div`
 	position: relative;
 	height: ${appCompactNavHeight};
-	background-color: ${themeTokens.background.waterLight};
-	box-shadow: ${themeTokens.shadow.d_navigationBottom};
+	background-color: ${themeTokens.background.gradient};
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Block } from '@/core/layout';
-import { PanelPadding } from '@/core/layout/panel/panel';
-import { FontDoc, OutLink } from '@/core/text';
+import { Block } from '@/index/core/layout/layout-shared';
+import { PanelPadding } from '@/index/core/layout/panel/panel';
+import { OutLink } from '@/index/core/text/text-link';
+import { FontDoc } from '@/index/core/text/text-shared';
 
 export const Education: React.FC = () => {
 

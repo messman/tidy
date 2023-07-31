@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import * as iso from '@wbtdevlocal/iso';
-import { Block } from '../layout';
+import { Block } from '../layout/layout-shared';
 import { BadgeCollection, DaylightBadge, TideLevelBadge, WeatherBadge } from './badge';
 
 export default CosmosFixture.create(() => {
@@ -75,5 +75,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docTwoPad
+	setup: FixtureSetup.root
 });

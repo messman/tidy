@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Block } from '@/core/layout';
-import { MediumBodyText } from '@/core/text';
+import { Block } from '@/index/core/layout/layout-shared';
+import { MediumBodyText } from '@/index/core/text/text-shared';
 import { weatherStatusDescription } from '@/services/content/weather-utility';
 import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription } from '@/services/time';

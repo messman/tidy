@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { Block } from '@/core/layout';
-import { PanelPadding } from '@/core/layout/panel/panel';
-import { FontDoc, OutLink } from '@/core/text';
-import { Note } from '@/core/text/note';
+import { Block } from '@/index/core/layout/layout-shared';
+import { PanelPadding } from '@/index/core/layout/panel/panel';
+import { OutLink } from '@/index/core/text/text-link';
+import { FontDoc } from '@/index/core/text/text-shared';
 import { DEFINE } from '@/services/define';
 import { AboutIconLargeNamed } from './about-icon';
 import { AboutShare } from './about-share';
@@ -38,13 +38,11 @@ export const About: React.FC = () => {
 					in Portland.
 				</Paragraph>
 				<Block.Bat08 />
-				<Note>
-					Please do your part to keep Wells a clean and beautiful place.
-					Properly dispose of all waste and ensure trash cannot be blown or washed into the marsh or ocean.
-					Reduce your consumption of single-use, non-recyclable, and non-compostable materials.
-					Do not walk on the marsh or otherwise disturb the ecosystem.
-					Thank you!
-				</Note>
+				Please do your part to keep Wells a clean and beautiful place.
+				Properly dispose of all waste and ensure trash cannot be blown or washed into the marsh or ocean.
+				Reduce your consumption of single-use, non-recyclable, and non-compostable materials.
+				Do not walk on the marsh or otherwise disturb the ecosystem.
+				Thank you!
 			</div>
 			<Block.Elf24 />
 			<div>

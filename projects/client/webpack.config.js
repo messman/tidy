@@ -44,7 +44,7 @@ module.exports = async () => {
 
 	/** @type { Configuration['entry'] } */
 	const entry = {
-		index: './src/entry/entry-index.tsx'
+		index: './src/index/entry-index.tsx'
 	};
 	/** @type { Configuration['output'] } */
 	const output = {
@@ -167,7 +167,7 @@ module.exports = async () => {
 	/** @type {any} */
 	const htmlPlugin = new HTMLWebpackPlugin({
 		filename: './index.html',
-		template: './src/index.template.ejs',
+		template: './src/index/index.template.ejs',
 		minify: false,
 		xhtml: true, // Use XHTML-compliance
 		cache: false // https://github.com/webpack/webpack/issues/10761

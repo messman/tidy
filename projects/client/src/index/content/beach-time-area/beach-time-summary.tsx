@@ -1,16 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ErrorGeneric } from '@/core/error/error-generic';
-import { Icon } from '@/core/icon/icon';
-import { SpinnerIcon } from '@/core/icon/icon-spinner';
-import { Panel } from '@/core/layout/panel/panel';
-import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
-import { fontStyles, MediumBodyText } from '@/core/text';
+import { ErrorGeneric } from '@/index/core/error/error-generic';
+import { Icon } from '@/index/core/icon/icon';
+import { Panel } from '@/index/core/layout/panel/panel';
+import { wrapForBatchLoad } from '@/index/core/loader/batch-load-control';
+import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
 import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';
-import { HomeSummaryClickPadding, HomeSummarySpinnerIcon } from '../home/home-summary-shared';
-import { AppScreen, useAppNavigation } from '../index/app-navigation';
 
 const BeachTimeSummarySuccess: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;
@@ -53,7 +50,6 @@ const BeachTimeSummaryErrorLoad: React.FC = () => {
 				<Title>Beach Time</Title>
 				<MediumBodyText>Loading...</MediumBodyText>
 			</TextContainer>
-			<HomeSummarySpinnerIcon type={SpinnerIcon} />
 		</RowContainer>
 	);
 };
@@ -61,17 +57,10 @@ const BeachTimeSummaryErrorLoad: React.FC = () => {
 const Wrapped = wrapForBatchLoad(BeachTimeSummaryErrorLoad, BeachTimeSummarySuccess);
 
 export const BeachTimeSummary: React.FC = () => {
-	const { setScreen } = useAppNavigation();
-
-	function onClick() {
-		setScreen(AppScreen.b_beachTime);
-	}
 
 	return (
 		<Panel>
-			<HomeSummaryClickPadding onClick={onClick}>
-				<Wrapped />
-			</HomeSummaryClickPadding>
+			<Wrapped />
 		</Panel>
 	);
 };

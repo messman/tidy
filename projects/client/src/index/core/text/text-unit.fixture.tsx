@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { SizedIcon } from '@/core/icon/icon';
+import { SizedIcon } from '@/index/core/icon/icon';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { icons } from '@wbtdevlocal/assets';
-import { Block } from '../layout';
+import { Block } from '../layout/layout-shared';
 import { MediumBodyText } from './text-shared';
 import { TextUnit, TimeDurationTextUnit, TimeTextUnit } from './text-unit';
 
@@ -42,5 +42,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docTwoPad
+	setup: FixtureSetup.root
 });

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { MediumBodyText } from '@/core/text';
-import { themeTokens } from '@/core/theme';
+import { MediumBodyText } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { LayoutOrientation, useWindowMediaLayout } from '@messman/react-common';
 import { isInvalidLayout, LayoutBreakpointRem } from './window-layout';
 
@@ -24,9 +24,9 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docTwoPad
+	setup: FixtureSetup.root
 });
 
 const InvalidText = styled(MediumBodyText)`
-	color: ${themeTokens.inform.negative};
+	color: ${themeTokens.inform.unsure};
 `;

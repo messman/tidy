@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { defaultIconSvgStyle, Icon, IconInputType } from '@/index/core/icon/icon';
+import { StyledFC } from '@/index/core/primitive/primitive-styled';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
-import { defaultIconSvgStyle, Icon, IconInputType } from '../icon/icon';
-import { StyledFC } from '../primitive/primitive-styled';
-import { themeTokens } from '../theme';
 
 export interface MoonPhaseIconProps {
 	phase: iso.Astro.MoonPhase;
@@ -27,7 +27,7 @@ const MoonPhaseIconContainer = styled.span`
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-	background-color: ${themeTokens.content.backgroundDay};
+	background-color: ${themeTokens.lunar.background};
 	border-radius: 50%;
 	width: 2rem;
 	height: 2rem;

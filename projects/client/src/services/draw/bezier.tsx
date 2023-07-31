@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyledFC } from '@/core/primitive/primitive-styled';
+import { StyledFC } from '@/index/core/primitive/primitive-styled';
 
 function roundVal(num: number): number {
 	return Math.round(num * 100) / 100;

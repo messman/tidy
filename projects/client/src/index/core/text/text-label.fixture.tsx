@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Cosmos, CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
-import { Block, SubtleLine } from '../layout';
+import { FixtureSetup } from '@/test/cosmos-fixture';
+import { Block } from '../layout/layout-shared';
 import { IconLabel, MediumLabelText, SmallLabelText } from './text-label';
 
 export default CosmosFixture.create(() => {
@@ -21,7 +21,6 @@ export default CosmosFixture.create(() => {
 				Small Label Text
 			</SmallLabelText>
 			<Block.Dog16 />
-			<SubtleLine />
 			<Block.Dog16 />
 			<IconLabel size='medium' leftIcon={leftIcon} rightIcon={rightIcon} justifyContent={justifyContent}>
 				Medium Label Text
@@ -33,5 +32,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docPad
+	setup: FixtureSetup.root
 });

@@ -1,6 +1,19 @@
-import { ThemeTypes } from './theme-types';
+/**
+ * Takes in a Figma hex color definition like `("AABBCC", 0)` and creates an alpha hexadecimal notation like `"#AABBCC00`
+ * Converts [0, 100] to 00-FF. 
+ * @param hex The value without the hash symbol, like `AABBCC`.
+ * @param percent The percent opacity/alpha, like `88`.
+*/
+function alphaHex(hex: string, percent: number): string {
+	return `#${hex}${Math.floor((percent / 100) * 255).toString(16).toUpperCase().padStart(2, '0')}`;
+}
 
-export const lightTokens: ThemeTypes.Tokens = {
+export type RawColorSet = {
+	distinct: string;
+	subtle: string;
+};
+
+export const lightTokens = {
 	/** Base colors that are used in a variety of contexts and have no meaning other than as contrast. */
 	rawColor: {
 		red: {
@@ -30,105 +43,72 @@ export const lightTokens: ThemeTypes.Tokens = {
 	},
 
 	background: {
-		waterLight: '#3794EB',
-		waterDark: '#2572BA',
-		waterGradient: `linear-gradient(172.78deg, #5EC7F4 10.6%, #45A8FC 40.05%, #0E569A 84.48%);`,
-		oneBox: '#FFFFFF',
-		two: '#FFFFFF',
-		twoBox: '#F8F9FA',
-		overlayCover: 'rgba(251, 251, 251, 0.65)',
+		/** For top navigation. */
+		light: '#FFF',
+		/** For bottom navigation and side gutters. */
+		dark: '#206981',
+		gradient: 'radial-gradient(1055.01% 100.76% at 39.01% -0.00%, #83DAF5 13.54%, #287AC6 100%)',
+		glass: {
+			gradient: 'linear-gradient(0deg, rgba(1, 8, 14, 0.21) 0%, rgba(1, 8, 14, 0.21) 100%), linear-gradient(0deg, rgba(4, 135, 255, 0.22) 0%, rgba(4, 135, 255, 0.22) 100%), rgba(18, 19, 19, 0.26)',
+			blendMode: 'background-blend-mode: luminosity, soft-light, soft-light'
+		},
+		tint: {
+			lightest: 'rgba(219, 235, 248, 0.15)',
+			lighter: 'rgba(222, 236, 246, 0.08)',
+			medium: 'rgba(0, 38, 60, 0.20)',
+			darker: 'rgba(0, 38, 60, 0.30)',
+			darkest: 'rgba(0, 38, 60, 0.50)',
+		}
 	},
 
 	text: {
-		distinct: '#202024',
-		subtle: '#5D5D68',
-		link: '#3794EB',
-		disabled: '#86868e',
-		distinctOnSaturatedFill: '#FFFFFF',
-		distinctOnOppositeFill: '#FFFFFF',
-	},
-
-	brand: {
-		red: '#D84747',
-		blue: '#3794EB'
+		/** High contrast. Not for body text. */
+		distinct: '#FFF',
+		/** Lesser contrast. Body text. */
+		subtle: alphaHex('E9F7FF', 65),
+		/** On the background directly, where the text needs to be darker. */
+		onBackground: alphaHex('010C15', 60),
+		link: 'red',
 	},
 
 	outline: {
-		distinct: '#C1C1C1',
-		subtle: '#DADADA',
-		subtleLightOnly: '#DADADA',
-		accessible: '#D84747'
-	},
-
-	filter: {
-		selected: '#F5F8FA',
-		hover: '#F5F8FA',
-	},
-
-	form: {
-		bordered: '#FFFFFF',
-		available: '#FFFFFF',
-		subtle: 'rgba(222, 222, 222, 0.3)',
-		distinct: 'rgba(180, 180, 180, 0.3)',
-		opposite: '#353535',
-		disabledBordered: 'rgba(220, 220, 220, 0.3)',
-		disabledAvailable: '#F0F0F0',
-		disabledSubtle: '#EFEFEF',
-		disabledDistinct: '#D7D7D7',
-		disabledOpposite: '#EFEFEF',
+		accessibility: "red",
 	},
 
 	inform: {
-		positive: '#06C270',
-		negative: '#FF3B3B',
-		info: '#3082FC',
-		unsure: '#E5AA0F',
-		disabled: '#B1B1B1',
+		positive: '#3ACE15',
+		unsure: '#EDDB37',
 	},
 
-	gradient: {
-		umbrella: 'linear-gradient(180deg, #3794EB 0%, #2572BA 100%)'
+	lunar: {
+		background: '#09102D',
+		dark: '#525252',
+		light: '#D9D9D9',
+	},
+
+	beachDiagram: {
+		ocean: alphaHex('0E6FC9', 90),
+		sand: '#E7DEC0',
+	},
+
+	tideBar: {
+		line: alphaHex('002B52', 39),
+		lineTip: alphaHex('002B52', 39),
+		lineNow: alphaHex('FFFFFF', 50),
+		lineTipNow: '#FFFFFF',
 	},
 
 	content: {
-		backgroundDay: '#489EEE',
-		sun: '#F2DD1C',
-		moon: '#FAF1D0',
-		cloudLight: '#F4F4F4',
-		cloudDark: '#DFDFDF',
+		sun: '#FFDA17',
+		moon: '#FFF5D0',
+		cloud: '#FFFFFF',
 		snow: '#FFFFFF',
-		rain: '#1262AD',
-		lightning: '#ECD581',
-		heat: '#961C2F',
+		rain: '#30C1FF',
+		lightning: '#FFD601',
+		heat: '#FF8761',
 		cold: '#B2D7F9',
-	},
-
-	note: {
-		outline: '#ECDD7E',
-		background: '#FFFDF0',
-	},
-
-
-	badge: {
-		water: '#1A66AB',
-		textBackground: '#E4EFF9',
-	},
-
-	visual: {
-		background: '#E4EFF9',
-		tideCoverage: '#7bc0f9',
+		/** Should cover -25 to 120. */
 		temperatureGradient: 'linear-gradient(90deg, #8A47DF 0%, #5189DD 15.79%, #52C4D3 35.92%, #61E1A3 50.08%, #E1C847 60.82%, #E24747 85.9%, #E247DC 100%)',
 	},
 
-	shadow: {
-		inset: `inset 0 0 4px 0 rgba(96,97,112,0.16)`,
-		a_none: `none`,
-		b_card: `0 0 1px 0 rgba(40,41,61,0.08), 0 1px 2px 0 rgba(96,97,112,0.16)`,
-		c_button: `0 0 1px 0 rgba(40,41,61,0.08), 0 2px 4px 0 rgba(96,97,112,0.16)`,
-		d_navigation: `0 0 2px 0 rgba(40,41,61,0.08), 0 4px 8px 0 rgba(96,97,112,0.16)`,
-		d_navigationBottom: `0 0 2px 0 rgba(40,41,61,0.08), 0 -4px 8px 0 rgba(96,97,112,0.16)`,
-		e_raised: `0 2px 4px 0 rgba(40,41,61,0.08), 0 8px 16px 0 rgba(96,97,112,0.16)`,
-		f_picker: `0 2px 8px 0 rgba(40,41,61,0.08), 0 16px 24px 0 rgba(96,97,112,0.16)`,
-		g_overlay: `0 2px 8px 0 rgba(40,41,61,0.08), 0 20px 32px 0 rgba(96,97,112,0.16)`,
-	}
-};
+} as const;

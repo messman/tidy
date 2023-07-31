@@ -1,12 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { FontWeight, Spacing } from '@/core/primitive/primitive-design';
-import { fontStyles } from '@/core/text';
-import { themeTokens } from '@/core/theme';
-import { WeatherStatusIcon } from '@/core/weather/weather-icon';
+import { FontWeight, Spacing } from '@/index/core/primitive/primitive-design';
+import { fontStyles } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { useBatchResponse } from '@/services/data/data';
 import { getTimeTwelveHour } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
+import { WeatherStatusIcon } from '../weather-icon';
 
 export const ConditionsHourly: React.FC = () => {
 	const { meta, weather } = useBatchResponse().success!;
@@ -93,7 +93,6 @@ const TempText = styled.div`
 
 const RainIconContainer = styled.div`
 	display: block;
-	background-color: ${themeTokens.content.backgroundDay};
 	border-radius: 2rem;
 	padding-bottom: .625rem;
 `;

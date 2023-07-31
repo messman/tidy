@@ -1,12 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Icon } from '@/core/icon/icon';
-import { SpinnerIcon } from '@/core/icon/icon-spinner';
+import { Icon } from '@/index/core/icon/icon';
+import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
 import { useBatchResponse } from '@/services/data/data';
-import { Block } from '../layout';
+import { Block } from '../layout/layout-shared';
 import { PanelPadding } from '../layout/panel/panel';
-import { MediumBodyText } from '../text';
-import { themeTokens } from '../theme';
+import { MediumBodyText } from '../text/text-shared';
+import { themeTokens } from '../theme/theme-root';
 
 export const DefaultErrorLoad: React.FC = () => {
 	const { error } = useBatchResponse();
@@ -31,7 +31,7 @@ const CenterContainer = styled.div`
 `;
 
 const LargeSpinnerIcon = styled(Icon)`
-	color: ${themeTokens.brand.blue};
+	color: ${themeTokens.inform.unsure};
 	width: 2.5rem;
 	height: 2.5rem;
 `;

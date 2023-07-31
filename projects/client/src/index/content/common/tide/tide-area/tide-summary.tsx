@@ -1,26 +1,20 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ErrorGeneric } from '@/core/error/error-generic';
-import { SpinnerIcon } from '@/core/icon/icon-spinner';
-import { Block, DistinctLine } from '@/core/layout';
-import { Panel } from '@/core/layout/panel/panel';
-import { wrapForBatchLoad } from '@/core/loader/batch-load-control';
-import { Spacing } from '@/core/primitive/primitive-design';
-import { fontStyles, MediumBodyText, MediumLabelText, TimeTextUnit } from '@/core/text';
-import { themeTokens } from '@/core/theme';
-import { TideHeightTextUnit } from '@/core/tide/tide-common';
+import { ErrorGeneric } from '@/index/core/error/error-generic';
+import { Block } from '@/index/core/layout/layout-shared';
+import { Panel } from '@/index/core/layout/panel/panel';
+import { wrapForBatchLoad } from '@/index/core/loader/batch-load-control';
+import { Spacing } from '@/index/core/primitive/primitive-design';
+import { MediumLabelText } from '@/index/core/text/text-label';
+import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
+import { TimeTextUnit } from '@/index/core/text/text-unit';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription } from '@/services/time';
-import { HomeSummaryClickPadding, HomeSummarySpinnerIcon } from '../home/home-summary-shared';
-import { AppScreen, useAppNavigation } from '../index/app-navigation';
+import { TideHeightTextUnit } from '../tide-common';
 
 const TideSummarySuccess: React.FC = () => {
 	const { meta, tide } = useBatchResponse().success!;
-	const { setScreen } = useAppNavigation();
-
-	function onClick() {
-		setScreen(AppScreen.c_tide);
-	}
 	const { measured, relativity } = tide;
 	const { next } = relativity;
 
@@ -28,18 +22,14 @@ const TideSummarySuccess: React.FC = () => {
 
 	return (
 		<>
-			<HomeSummaryClickPadding onClick={onClick} isConnectedBelow={true}>
-				<Block.Bat08 />
-				<MediumBodyText>
-					{next.isLow ? 'Low' : 'High'} tide is in {getDurationDescription(meta.referenceTime, next.time)}.
-				</MediumBodyText>
-			</HomeSummaryClickPadding>
-			<DistinctLine />
+			<Block.Bat08 />
+			<MediumBodyText>
+				{next.isLow ? 'Low' : 'High'} tide is in {getDurationDescription(meta.referenceTime, next.time)}.
+			</MediumBodyText>
 			<InfoRowContainer>
 				<MediumLabelText>Current height</MediumLabelText>
 				<RowValue><TideHeightTextUnit height={measured.height} precision={1} /></RowValue>
 			</InfoRowContainer>
-			<DistinctLine />
 			<InfoRowContainer>
 				<MediumLabelText>Next tide</MediumLabelText>
 				<RowValue><TimeTextUnit dateTime={next.time} /></RowValue>
@@ -64,11 +54,7 @@ const RowValue = styled.div`
 
 const TideSummaryErrorLoad: React.FC = () => {
 	const { error } = useBatchResponse();
-	const { setScreen } = useAppNavigation();
 
-	function onClick() {
-		setScreen(AppScreen.c_tide);
-	}
 
 	const title = (
 		// <IconTitle
@@ -81,9 +67,7 @@ const TideSummaryErrorLoad: React.FC = () => {
 
 	function wrap(render: JSX.Element) {
 		return (
-			<HomeSummaryClickPadding onClick={onClick}>
-				{render}
-			</HomeSummaryClickPadding>
+			<>{render}</>
 		);
 	}
 
@@ -104,7 +88,6 @@ const TideSummaryErrorLoad: React.FC = () => {
 				<Block.Bat08 />
 				<MediumBodyText>Loading...</MediumBodyText>
 			</TextContainer>
-			<HomeSummarySpinnerIcon type={SpinnerIcon} />
 		</RowContainer>
 	);
 };

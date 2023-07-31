@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { FontWeight } from '@/core/primitive/primitive-design';
-import { fontStyles } from '@/core/text';
+import { FontWeight } from '@/index/core/primitive/primitive-design';
+import { fontStyles } from '@/index/core/text/text-shared';
 import { useBatchResponse } from '@/services/data/data';
 import { getTimeTwelveHourString } from '@/services/time';
 

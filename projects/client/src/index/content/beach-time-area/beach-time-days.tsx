@@ -1,15 +1,16 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
-import { MoonPhaseIcon } from '@/core/astro/moon-phase-icon';
-import { Block, SubtleLine } from '@/core/layout';
-import { FontWeight, Spacing } from '@/core/primitive/primitive-design';
-import { fontStyles, MediumLabelText } from '@/core/text';
-import { themeTokens } from '@/core/theme';
-import { WeatherStatusIcon } from '@/core/weather/weather-icon';
+import { Block } from '@/index/core/layout/layout-shared';
+import { FontWeight, Spacing } from '@/index/core/primitive/primitive-design';
+import { MediumLabelText } from '@/index/core/text/text-label';
+import { fontStyles } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { useBatchResponse } from '@/services/data/data';
 import { getRelativeDayText, getTimeTwelveHourString } from '@/services/time';
 import * as iso from '@wbtdevlocal/iso';
+import { MoonPhaseIcon } from '../common/astro/moon-phase-icon';
+import { WeatherStatusIcon } from '../common/weather/weather-icon';
 import { BeachTimeRangeView } from './beach-time-range';
 
 export const BeachTimeDays: React.FC = () => {
@@ -18,7 +19,7 @@ export const BeachTimeDays: React.FC = () => {
 	const days = success!.beach.days;
 
 	const daysRender = days.map((day, i) => {
-		const lineRender = i !== 0 ? <SubtleLine /> : null;
+		const lineRender = i !== 0 ? <div /> : null;
 		return (
 			<React.Fragment key={day.day.toMillis()}>
 				{lineRender}
@@ -29,11 +30,9 @@ export const BeachTimeDays: React.FC = () => {
 
 	return (
 		<>
-			<SubtleLine />
 			<PaddedListContainer>
 				{daysRender}
 			</PaddedListContainer>
-			<SubtleLine />
 		</>
 	);
 };

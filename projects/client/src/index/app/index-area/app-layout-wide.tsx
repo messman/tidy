@@ -1,15 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { About } from '@/areas/about/about';
-import { BeachTime } from '@/areas/beach-time/beach-time';
-import { Conditions } from '@/areas/conditions/conditions';
-import { Education } from '@/areas/education/education';
-import { Tide } from '@/areas/tide/tide';
-import { SizedIcon } from '@/core/icon/icon';
-import { SpinnerIcon } from '@/core/icon/icon-spinner';
-import { Block, overflowHiddenScrollStyle } from '@/core/layout';
-import { Panel } from '@/core/layout/panel/panel';
-import { Spacing } from '@/core/primitive/primitive-design';
+import { About } from '@/index/content/about/about-area/about';
+import { BeachTime } from '@/index/content/beach-time-area/beach-time';
+import { Conditions } from '@/index/content/common/weather/conditions-ara/conditions';
+import { Education } from '@/index/content/learn/education-area/education';
+import { SizedIcon } from '@/index/core/icon/icon';
+import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
+import { Block, overflowHiddenScrollStyle } from '@/index/core/layout/layout-shared';
+import { Panel } from '@/index/core/layout/panel/panel';
+import { Spacing } from '@/index/core/primitive/primitive-design';
 import { useBatchResponse } from '@/services/data/data';
 import { AppInfo } from './app-info';
 import { appHeaderHeight } from './app-layout-shared';
@@ -43,7 +42,6 @@ export const WideApplicationLayout: React.FC<React.PropsWithChildren> = () => {
 				</PanelScroller>
 				<PanelScroller>
 					<Panel>
-						<Tide />
 					</Panel>
 				</PanelScroller>
 				<PanelScroller>

@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
-import { borderRadiusStyle, borderRadiusValue, Spacing } from '@/core/primitive/primitive-design';
-import { themeTokens } from '@/core/theme';
+import { borderRadiusStyle, borderRadiusValue, Spacing } from '@/index/core/primitive/primitive-design';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import * as iso from '@wbtdevlocal/iso';
 
 export interface BeachTimeRangeVisualProps {
@@ -84,7 +84,7 @@ const CenterContainer = styled.div`
 	position: relative;
 	overflow: hidden;
 	margin: ${Spacing.bat08} 0;
-	background-color: ${themeTokens.visual.background};
+	background-color: ${themeTokens.background.tint.medium};
 	width: 100%;
 	height: .5rem;
 	${borderRadiusStyle};

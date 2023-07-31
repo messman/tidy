@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { Spacing } from '../primitive/primitive-design';
 import { fontStyles, MediumBodyText } from '../text/text-shared';
 import { themeTokens } from '../theme/theme-root';
-import { EdgeContainer, edgeContainerFullBleedStyle } from './layout-shared';
+import { EdgeContainer } from './layout-shared';
 
 export default {
 	'Block': CosmosFixture.create(() => {
@@ -24,7 +24,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	}),
 	'Bleed': CosmosFixture.create(() => {
 
@@ -32,16 +32,13 @@ export default {
 			<EdgeContainer>
 				<MediumBodyText>Text here.</MediumBodyText>
 				<div>
-
-					<Bleed_Full>
-						<MediumBodyText>Text here.</MediumBodyText>
-					</Bleed_Full>
+					<MediumBodyText>Text here.</MediumBodyText>
 				</div>
 				<MediumBodyText>Text here.</MediumBodyText>
 			</EdgeContainer>
 		);
 	}, {
-		setup: fixtureDefault.docNoPad
+		setup: FixtureSetup.root
 	}),
 	'Stretch': CosmosFixture.create(() => {
 
@@ -53,7 +50,7 @@ export default {
 			</Stretch_Container>
 		);
 	}, {
-		setup: fixtureDefault.docNoPad
+		setup: FixtureSetup.root
 	})
 };
 
@@ -87,11 +84,6 @@ const ColorBox = styled.div<SpacingEntryProps>`
 	margin: ${Spacing.dog16};
 `;
 
-
-const Bleed_Full = styled.div`
-	${edgeContainerFullBleedStyle}
-	background-color: ${themeTokens.filter.selected};
-`;
 
 const Stretch_Container = styled.div`
 	display: flex;

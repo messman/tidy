@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as Cosmos from 'react-cosmos/fixture';
 import styled from 'styled-components';
-import { BaseButton, ButtonFillBrandBlue } from '@/core/form/button';
+import { BaseButton, ButtonFillBrandBlue } from '@/index/core/form/button';
+import { IconInputType } from '@/index/core/icon/icon';
+import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
 import { useEventCallback } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
-import { IconInputType } from '../core/icon/icon';
-import { SpinnerIcon } from '../core/icon/icon-spinner';
 
 export interface TestButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 

@@ -1,17 +1,17 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import { AppNavigationProvider } from '@/areas/index/app-navigation';
-import { ErrorBoundary } from '@/core/error/error-boundary';
-import { SVGIconUrlLoadProvider } from '@/core/icon/icon-url';
-import { ThemeContextProvider } from '@/core/theme';
+import { ErrorBoundary } from '@/index/core/error/error-boundary';
+import { SVGIconUrlLoadProvider } from '@/index/core/icon/icon-url';
 import { BatchResponseProvider } from '@/services/data/data';
 import { DataSeedProvider } from '@/services/data/data-seed';
 import { lowerBreakpoints } from '@/services/layout/window-layout';
 import { RequestFetchProvider } from '@/services/network/request-fetch-provider';
 import { provider, ProviderComposer, ProviderWithProps } from '@/services/provider-utility';
 import { DocumentVisibilityProvider, WindowDimensionsProvider, WindowMediaLayoutProvider } from '@messman/react-common';
-import { AppLayout } from './layout';
+import { AppNavigationProvider } from './app/index-area/app-navigation';
+import { AppLayout } from './app/layout';
+import { ThemeContextProvider } from './core/theme/theme-root';
 
 const App: React.FC = () => {
 

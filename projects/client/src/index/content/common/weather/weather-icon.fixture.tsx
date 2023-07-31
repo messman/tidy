@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { icons } from '@wbtdevlocal/assets';
 import { BaseWeatherIcon } from './weather-icon';
 
@@ -33,5 +33,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docPad
+	setup: FixtureSetup.root
 });

@@ -4,16 +4,6 @@ import { Spacing } from '../primitive/primitive-design';
 import { StyledForwardRef } from '../primitive/primitive-styled';
 import { themeTokens } from '../theme/theme-root';
 
-export const SubtleLine = styled.div`
-	height: 1px;
-	background-color: ${themeTokens.outline.subtle};
-`;
-
-export const DistinctLine = styled.div`
-	height: 1px;
-	background-color: ${themeTokens.outline.distinct};
-`;
-
 function createPadding(padding: string) {
 	return styled.div`
 		padding: ${padding};
@@ -109,7 +99,7 @@ export const outlineAccessibilityStyle = css`
 		outline: none;
 	}
 	:focus-visible {
-		outline: 2px dashed ${themeTokens.outline.accessible};
+		outline: 2px dashed ${themeTokens.outline.accessibility};
 		/* outline-offset: .25rem; */
 	}
 `;

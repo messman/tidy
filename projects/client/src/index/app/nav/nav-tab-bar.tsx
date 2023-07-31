@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { themeTokens } from '@/core/theme';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { navTabBarSize } from './nav-shared';
 
 export interface NavTabBarProps extends Omit<NavTabBarBaseProps, 'isLower'> { }
@@ -34,8 +34,7 @@ const NavTabBarBase_Container = styled.div<{ isLower: boolean; }>`
 	position: relative;
 	display: flex;
 	justify-content: center;
-	background-color: ${themeTokens.background.two};
-	box-shadow: ${p => p.isLower ? themeTokens.shadow.d_navigationBottom : themeTokens.shadow.d_navigation};
+	background-color: ${themeTokens.background.dark};
 `;
 
 const NavTabBarBase_TabsList = styled.div`
@@ -47,7 +46,6 @@ const barStyle = css`
 	height: ${navTabBarSize};
 	width: 100%;
 	position: absolute;
-	background-color: ${themeTokens.outline.distinct};
 `;
 
 const NavTabBarBase_UpperBar = styled.div`

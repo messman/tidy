@@ -1,6 +1,6 @@
 
 import { DateTime } from 'luxon';
-import { IconInputType } from '@/core/icon/icon';
+import { IconInputType } from '@/index/core/icon/icon';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 import { getDurationDescription, getTimeTwelveHourRange, getTimeTwelveHourString } from '../time';

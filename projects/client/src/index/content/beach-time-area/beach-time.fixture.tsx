@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { BeachTime } from './beach-time';
 
 export default CosmosFixture.create(() => {
@@ -8,5 +8,5 @@ export default CosmosFixture.create(() => {
 		<BeachTime />
 	);
 }, {
-	setup: fixtureDefault.docTwo
+	setup: FixtureSetup.root
 });

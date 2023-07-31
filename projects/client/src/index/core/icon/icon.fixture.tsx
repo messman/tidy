@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { icons, SVGIconUrl } from '@wbtdevlocal/assets';
-import { MediumBodyText } from '../text';
+import { MediumBodyText } from '../text/text-shared';
 import { themeTokens } from '../theme/theme-root';
 import { Icon, SizedIcon } from './icon';
 import { SpinnerIcon } from './icon-spinner';
@@ -38,7 +38,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	}),
 	'URL Load': CosmosFixture.create(() => {
 
@@ -68,7 +68,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	})
 };
 

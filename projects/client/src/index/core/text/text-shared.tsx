@@ -1,5 +1,5 @@
 import styled, { css, StyledComponent } from 'styled-components';
-import { Space } from '../layout';
+import { Space } from '../layout/layout-shared';
 import { fontDefaultSize, fontFamily, FontWeight } from '../primitive/primitive-design';
 import { CssOutput } from '../primitive/primitive-styled';
 import { themeTokens } from '../theme/theme-root';

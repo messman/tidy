@@ -2,10 +2,10 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { LayoutBreakpointRem } from '@/services/layout/window-layout';
 import { ButtonFillBrandBlue, ButtonFullWidthContainer } from '../form/button';
-import { Block } from '../layout';
+import { Block } from '../layout/layout-shared';
 import { Spacing } from '../primitive/primitive-design';
-import { fontStyles } from '../text';
-import { themeTokens } from '../theme';
+import { fontStyles } from '../text/text-shared';
+import { themeTokens } from '../theme/theme-root';
 
 interface ErrorBoundaryState {
 	error: Error | null;

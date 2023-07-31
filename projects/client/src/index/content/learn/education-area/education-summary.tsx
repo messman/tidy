@@ -1,29 +1,21 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Block } from '@/core/layout';
-import { Panel } from '@/core/layout/panel/panel';
-import { fontStyles, MediumBodyText } from '@/core/text';
-import { HomeSummaryClickPadding } from '../home/home-summary-shared';
-import { AppScreen, useAppNavigation } from '../index/app-navigation';
+import { Block } from '@/index/core/layout/layout-shared';
+import { Panel } from '@/index/core/layout/panel/panel';
+import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 
 export const EducationSummary: React.FC = () => {
-	const { setScreen } = useAppNavigation();
 
-	function onClick() {
-		setScreen(AppScreen.e_education);
-	}
 
 	return (
 		<Panel>
-			<HomeSummaryClickPadding onClick={onClick}>
-				<TitleText>
-					How do tides work?
-				</TitleText>
-				<Block.Bat08 />
-				<MediumBodyText>
-					Learn more about the processes that create the tides you experience.
-				</MediumBodyText>
-			</HomeSummaryClickPadding>
+			<TitleText>
+				How do tides work?
+			</TitleText>
+			<Block.Bat08 />
+			<MediumBodyText>
+				Learn more about the processes that create the tides you experience.
+			</MediumBodyText>
 		</Panel>
 	);
 };

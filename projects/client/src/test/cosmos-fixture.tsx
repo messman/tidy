@@ -1,10 +1,9 @@
 import * as React from 'react';
-import styled, { StyledComponent } from 'styled-components';
-import { AppNavigationProvider } from '@/areas/index/app-navigation';
-import { ErrorBoundary } from '@/core/error/error-boundary';
-import { SVGIconUrlLoadProvider } from '@/core/icon/icon-url';
-import { ApplicationLayoutContainer, Space } from '@/core/layout/layout-shared';
-import { ThemeContextProvider, themeTokens } from '@/core/theme/theme-root';
+import { AppNavigationProvider } from '@/index/app/index-area/app-navigation';
+import { ErrorBoundary } from '@/index/core/error/error-boundary';
+import { SVGIconUrlLoadProvider } from '@/index/core/icon/icon-url';
+import { ApplicationLayoutContainer } from '@/index/core/layout/layout-shared';
+import { ThemeContextProvider } from '@/index/core/theme/theme-root';
 import { BatchResponseProvider } from '@/services/data/data';
 import { DataSeedProvider, useDataSeed } from '@/services/data/data-seed';
 import { lowerBreakpoints } from '@/services/layout/window-layout';
@@ -14,35 +13,12 @@ import { DocumentVisibilityProvider, WindowMediaLayoutProvider } from '@messman/
 import * as iso from '@wbtdevlocal/iso';
 import { createControlSelectForEnum, useControlSelect } from './cosmos';
 
-export enum FixtureContainer {
-	flexRow,
-	flexColumn,
-	noPadding,
-	padding
+export enum FixtureSetup {
+	/** Flex container and the main background, just like the app root. */
+	root,
+	/** A padded glass card. */
+	glass
 }
-
-export enum FixtureBackground {
-	waterGradient,
-	oneBox,
-	two,
-	twoBox
-}
-
-export interface FixtureSetup {
-	container: FixtureContainer;
-	background: FixtureBackground;
-}
-
-export const fixtureDefault = {
-	/** Default. No padding, no flex, overflow, main background. */
-	docNoPad: { container: FixtureContainer.noPadding, background: FixtureBackground.two },
-	/** Default. Padding, no flex, overflow, main background. */
-	docPad: { container: FixtureContainer.padding, background: FixtureBackground.two },
-	/** Flex Column and main background, like the application root. */
-	root: { container: FixtureContainer.flexColumn, background: FixtureBackground.waterGradient },
-	docTwoPad: { container: FixtureContainer.padding, background: FixtureBackground.two },
-	docTwo: { container: FixtureContainer.noPadding, background: FixtureBackground.two }
-} satisfies Record<string, FixtureSetup>;
 
 export interface FixtureProps {
 	/** Container and background for the fixture. */
@@ -92,11 +68,11 @@ interface TestWrapperProps {
 }
 
 const TestWrapper: React.FC<TestWrapperProps> = (props) => {
-	const { setup } = props;
+	const { setup, children } = props;
 
 	const [seed, setSeed] = useDataSeed();
 
-	const setupWithDefault = setup || fixtureDefault.docNoPad;
+	const setupWithDefault = setup || FixtureSetup.root;
 
 	const selectedSeed = useControlSelect('Seed', seedOb, seed || '_real_');
 	React.useEffect(() => {
@@ -105,60 +81,18 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 		}
 	}, [selectedSeed]);
 
-	return (
-		<Fixture_OuterContainer setupInfo={setupWithDefault}>
-			<Fixture_InnerContainer setupInfo={setupWithDefault}>
-				{props.children}
-			</Fixture_InnerContainer>
-		</Fixture_OuterContainer>
-	);
+	if (setupWithDefault === FixtureSetup.root) {
+		return (
+			<ApplicationLayoutContainer>
+				{children}
+			</ApplicationLayoutContainer>
+		);
+	}
+	else {
+		return (
+			<ApplicationLayoutContainer>
+				{children}
+			</ApplicationLayoutContainer>
+		);
+	}
 };
-
-const Fixture_OuterContainer = styled(ApplicationLayoutContainer).attrs((props: { setupInfo: FixtureSetup; }) => {
-	const { background } = props.setupInfo;
-	const style: Partial<CSSStyleDeclaration> = {};
-
-	if (background === FixtureBackground.waterGradient || background === FixtureBackground.oneBox) {
-		style.backgroundColor = themeTokens.background.waterGradient;
-	}
-	else if (background === FixtureBackground.two || background === FixtureBackground.twoBox) {
-		style.backgroundColor = themeTokens.background.two;
-	}
-	return {
-		style: style
-	};
-})`` as StyledComponent<'div', any, { setupInfo?: FixtureSetup; }, never>;
-
-const Fixture_InnerContainer = styled(ApplicationLayoutContainer).attrs((props: { setupInfo: FixtureSetup; }) => {
-	const { container, background } = props.setupInfo;
-
-	const style: Partial<CSSStyleDeclaration> = {};
-
-	// Starting from the baseline of ApplicationLayoutContainer, which is a flex column setup
-	if (container === FixtureContainer.flexColumn) {
-		// Nothing
-	}
-	else if (container === FixtureContainer.flexRow) {
-		style.flexDirection = 'row';
-	}
-	else if (container === FixtureContainer.noPadding) {
-		style.display = 'block';
-		style.overflowY = 'auto';
-	}
-	else if (container === FixtureContainer.padding) {
-		style.display = 'block';
-		style.overflowY = 'auto';
-		style.padding = Space.Edge.value;
-	}
-
-	if (background === FixtureBackground.oneBox) {
-		style.backgroundColor = themeTokens.background.oneBox;
-	}
-	else if (background === FixtureBackground.twoBox) {
-		style.backgroundColor = themeTokens.background.twoBox;
-	}
-
-	return {
-		style: style
-	};
-})`` as StyledComponent<'div', any, { setupInfo?: FixtureSetup; }, never>;

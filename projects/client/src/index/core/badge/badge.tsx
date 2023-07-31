@@ -1,12 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { DaylightIcon } from '@/index/content/common/astro/daylight-icon';
+import { TideLevelIcon } from '@/index/content/common/tide/tide-level-icon';
+import { WeatherStatusIcon, WeatherStatusIconProps } from '@/index/content/common/weather/weather-icon';
 import * as iso from '@wbtdevlocal/iso';
-import { DaylightIcon } from '../astro/daylight-icon';
 import { FontWeight, Spacing } from '../primitive/primitive-design';
-import { fontStyles } from '../text';
-import { themeTokens } from '../theme';
-import { TideLevelIcon } from '../tide/tide-level-icon';
-import { WeatherStatusIcon, WeatherStatusIconProps } from '../weather/weather-icon';
+import { fontStyles } from '../text/text-shared';
 
 export interface WeatherBadgeProps extends WeatherStatusIconProps {
 	children: React.ReactNode;
@@ -55,7 +54,6 @@ export const DaylightBadge: React.FC<DaylightBadgeProps> = (props) => {
 const BadgeContainer = styled.div`
 	display: inline-flex;
 	align-items: center;
-	background-color: ${themeTokens.badge.textBackground};
 	border-radius: 2rem;
 `;
 

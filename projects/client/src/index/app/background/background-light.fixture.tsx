@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
 import { useControlValue } from '@/test/cosmos';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { Light } from './background-light';
 
 export default CosmosFixture.create(() => {
@@ -15,5 +15,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.root
+	setup: FixtureSetup.root
 });

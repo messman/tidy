@@ -1,16 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { IconInputType } from '../icon/icon';
-import { Block } from '../layout';
+import { Block } from '../layout/layout-shared';
 import { minTouchSize, Spacing } from '../primitive/primitive-design';
-import { MediumBodyText } from '../text';
-import { themeTokens } from '../theme';
-import {
-	BaseButton, ButtonFillBrandBlue, ButtonFillBrandRed, ButtonFillColorOpposite, ButtonNoPadLabel, ButtonProps, ButtonSecondary, ButtonSecondaryWithColorBorder, ButtonSecondaryWithColorText,
-	ButtonSimpleFill, ButtonSimpleLink, ClickWrapperButton
-} from './button';
+import { MediumBodyText } from '../text/text-shared';
+import { BaseButton, ButtonFillBrandBlue, ButtonFillBrandRed, ButtonProps, ButtonSimpleLink, ClickWrapperButton } from './button';
 
 const buttons: [React.FC<ButtonProps>, string][] = [
 	[
@@ -22,32 +18,8 @@ const buttons: [React.FC<ButtonProps>, string][] = [
 		'Primary - Blue',
 	],
 	[
-		ButtonFillColorOpposite,
-		'Opposite',
-	],
-	[
-		ButtonSecondaryWithColorBorder,
-		'Secondary - Color Border',
-	],
-	[
-		ButtonSecondaryWithColorText,
-		'Secondary - Color Text',
-	],
-	[
-		ButtonSecondary,
-		'Secondary',
-	],
-	[
-		ButtonSimpleFill,
-		'Simple Fill',
-	],
-	[
 		ButtonSimpleLink,
 		'Simple Link',
-	],
-	[
-		ButtonNoPadLabel,
-		'Label',
 	],
 ];
 
@@ -80,7 +52,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	}),
 	'Stretched Button': CosmosFixture.create(() => {
 
@@ -110,7 +82,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	}),
 	'Click Wrapper Button': CosmosFixture.create(() => {
 
@@ -143,7 +115,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: fixtureDefault.docPad
+		setup: FixtureSetup.root
 	})
 };
 
@@ -218,5 +190,4 @@ const ClickWrapperButton_Special = styled(ClickWrapperButton)`
 `;
 
 const ClickWrapperButton_Box = styled.div`
-	background-color: ${themeTokens.background.oneBox};
 `;

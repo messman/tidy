@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { DaylightIcon } from '@/core/astro/daylight-icon';
-import { IconInputType } from '@/core/icon/icon';
-import { Block } from '@/core/layout';
-import { MediumBodyText } from '@/core/text';
-import { Note } from '@/core/text/note';
-import { BaseWeatherIcon } from '@/core/weather/weather-icon';
+import { IconInputType } from '@/index/core/icon/icon';
+import { Block } from '@/index/core/layout/layout-shared';
+import { MediumBodyText } from '@/index/core/text/text-shared';
 import { useBatchResponse } from '@/services/data/data';
 import { getDurationDescription, getTimeTwelveHourString } from '@/services/time';
 import { icons } from '@wbtdevlocal/assets';
+import { DaylightIcon } from '../../astro/daylight-icon';
+import { BaseWeatherIcon } from '../weather-icon';
 
 export const ConditionsAstro: React.FC = () => {
 	const { meta, astro } = useBatchResponse().success!;
@@ -81,9 +80,6 @@ export const ConditionsAstro: React.FC = () => {
 			<Block.Bat08 />
 			<MediumBodyText>{next.isRise ? 'Sunrise' : 'Sundown'} is at {getTimeTwelveHourString(next.time)}.</MediumBodyText>
 			<Block.Bat08 />
-			<Note>
-				Here, sunrise is when the sun breaks over the horizon, and sundown is when the sun fully disappears over the horizon.
-			</Note>
 		</>
 	);
 };

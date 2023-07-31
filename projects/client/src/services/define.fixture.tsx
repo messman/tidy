@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { MediumBodyText } from '@/core/text';
+import { MediumBodyText } from '@/index/core/text/text-shared';
 import { CosmosFixture } from '@/test';
-import { fixtureDefault } from '@/test/cosmos-fixture';
+import { FixtureSetup } from '@/test/cosmos-fixture';
 import { useBatchResponse } from './data/data';
 import { DEFINE } from './define';
 
@@ -25,5 +25,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: fixtureDefault.docTwoPad
+	setup: FixtureSetup.root
 });

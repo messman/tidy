@@ -1,13 +1,11 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { AnimationDuration } from '../animation/animation';
 import { SizedIcon } from '../icon/icon';
 import { SpinnerIcon } from '../icon/icon-spinner';
-import { outlineAccessibilityStyle, Space } from '../layout';
+import { outlineAccessibilityStyle, Space } from '../layout/layout-shared';
 import { borderRadiusStyle, ComponentSize, Spacing } from '../primitive/primitive-design';
 import { AttrsComponent, Styled } from '../primitive/primitive-styled';
-import { IconLabel, IconLabelProps } from '../text';
-import { themeTokens } from '../theme';
+import { IconLabel, IconLabelProps } from '../text/text-label';
 
 const buttonPaddings: Record<ComponentSize, string> = {
 	medium: `${Spacing.cat12} ${Spacing.dog16}`,
@@ -149,90 +147,22 @@ export const regularButtonStyles = css<ButtonProps>`
 	:disabled {
 		box-shadow: none;
 		border-color: transparent;
-		background: ${themeTokens.form.disabledBordered};
-		color: ${themeTokens.text.disabled};
-	}
-`;
-
-/** Not every button has a shadow. */
-export const buttonShadowStyles = css`
-	box-shadow: none;
-	transition: box-shadow ${AnimationDuration.b_zip} ease;
-	:hover {
-	 	box-shadow: ${themeTokens.shadow.e_raised};
-	}
-	:active {
-		box-shadow: ${themeTokens.shadow.b_card};
-	}
-	:disabled {
-		box-shadow: none;
 	}
 `;
 
 /** Usually the primary button in a list. */
 export const ButtonFillBrandRed = styled(BaseButton)`
 	${regularButtonStyles};
-	${buttonShadowStyles};
 	
-	background-color: ${themeTokens.brand.red};
-	color: ${themeTokens.text.distinctOnSaturatedFill};
+	background-color: ${'red'};
 `;
 
 /** Usually the primary button in a list. */
 export const ButtonFillBrandBlue = styled(BaseButton)`
 	${regularButtonStyles};
-	${buttonShadowStyles};
 	
-	background-color: ${themeTokens.brand.blue};
-	color: ${themeTokens.text.distinctOnSaturatedFill};
 `;
 
-/** Specialty button that is rarely used. */
-export const ButtonFillColorOpposite = styled(BaseButton)`
-	${regularButtonStyles};
-	${buttonShadowStyles};
-	
-	background-color: ${themeTokens.form.opposite};
-	color: ${themeTokens.text.distinctOnOppositeFill};
-`;
-
-/** A more special version of the secondary button using color text. */
-export const ButtonSecondaryWithColorText = styled(BaseButton)`
-	${regularButtonStyles};
-	${buttonShadowStyles};
-
-	background-color: ${themeTokens.form.bordered};
-	border-color: ${themeTokens.outline.subtleLightOnly};
-	color: ${themeTokens.brand.red};
-`;
-
-/** A more special version of the secondary button using color text and a color border. */
-export const ButtonSecondaryWithColorBorder = styled(BaseButton)`
-	${regularButtonStyles};
-	${buttonShadowStyles};
-
-	background-color: ${themeTokens.form.bordered};
-	border-color: ${themeTokens.brand.red};
-	color: ${themeTokens.brand.red};
-`;
-
-/** Your standard secondary button. */
-export const ButtonSecondary = styled(BaseButton)`
-	${regularButtonStyles};
-	${buttonShadowStyles};
-
-	background-color: ${themeTokens.form.bordered};
-	border-color: ${themeTokens.outline.subtleLightOnly};
-	color: ${themeTokens.text.distinct};
-`;
-
-/** A button used with other simple buttons, but that looks like a regular button. */
-export const ButtonSimpleFill = styled(BaseButton)`
-	${regularButtonStyles};
-
-	background-color: ${themeTokens.form.subtle};
-	color: ${themeTokens.brand.red};
-`;
 
 const buttonPaddingsSimpleLink: Record<ComponentSize, string> = {
 	medium: `${Spacing.cat12}`,
@@ -251,24 +181,7 @@ export const ButtonSimpleLink = styled(BaseButton)`
 	:disabled {
 		background-color: transparent;
 	}
-	color: ${themeTokens.brand.red};
-`;
-
-/**
- * Like the simple link button, but with no defined background/padding/border.
- * For adding clicks to labels. Use {@link ClickWrapperButton} otherwise.
- * */
-export const ButtonNoPadLabel = styled(BaseButton)`
-	${regularButtonStyles};
-
-	// Remove background
-	background-color: transparent;
-	padding: 0;
-	border: none;
-	:disabled {
-		background-color: transparent;
-	}
-	color: ${themeTokens.brand.red};
+	color: ${'red'};
 `;
 
 /**

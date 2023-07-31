@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Canvas, CanvasRender, RenderInput } from './canvas';
 
-const DEBUG = false;
+//const DEBUG = false;
 
 interface BubblesProps {
 	isActive: boolean;
@@ -110,8 +110,8 @@ function createBubbleRender(): CanvasRender {
 	}
 
 	function drawBubble(now: number, ctx: CanvasRenderingContext2D, group: BubbleGroup, size: number, index: number): boolean {
-		const { createdAt, startX, style } = group;
-		const { color } = styleBehaviors[style];
+		const { createdAt, startX } = group;
+		//const { color } = styleBehaviors[style];
 
 		const speed = pickFrom(bubbleSpeedRange, 1 - size);
 		const diameter = pickFrom(bubbleDiameterRange, size);

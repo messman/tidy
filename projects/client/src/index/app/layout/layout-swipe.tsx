@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { themeTokens } from '@/core/theme';
+import { themeTokens } from '@/index/core/theme/theme-root';
 
 export interface SwipeProps {
 	contentRef: React.RefObject<HTMLElement> | null;

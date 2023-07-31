@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ClickWrapperButton } from '@/core/form/button';
-import { SizedIcon } from '@/core/icon/icon';
-import { SpinnerIcon } from '@/core/icon/icon-spinner';
-import { Block } from '@/core/layout';
-import { Spacing } from '@/core/primitive/primitive-design';
+import { ClickWrapperButton } from '@/index/core/form/button';
+import { SizedIcon } from '@/index/core/icon/icon';
+import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
+import { Block } from '@/index/core/layout/layout-shared';
+import { Spacing } from '@/index/core/primitive/primitive-design';
 import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import { AppInfo } from './app-info';
@@ -14,9 +14,9 @@ import { AppScreen, useAppNavigation } from './app-navigation';
 export const CompactAppHeader: React.FC = () => {
 	const { isLoading } = useBatchResponse();
 	const { screen, setScreen } = useAppNavigation();
-	const isHome = screen === AppScreen.a_home;
+	const isHome = screen === AppScreen.b_beachTime;
 	function onClickBack() {
-		setScreen(AppScreen.a_home);
+		setScreen(AppScreen.b_beachTime);
 	}
 
 	const backRender = !isHome ? (

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import { SizedIcon } from '../icon/icon';
 import { Spacing } from '../primitive/primitive-design';
-import { MediumBodyText } from '../text';
-import { themeTokens } from '../theme';
+import { MediumBodyText } from '../text/text-shared';
+import { themeTokens } from '../theme/theme-root';
 
 export const ErrorGeneric: React.FC = () => {
 	return (
@@ -24,5 +24,5 @@ const Container = styled.div`
 `;
 
 const RedErrorIcon = styled(SizedIcon)`
-	color: ${themeTokens.inform.negative};
+	color: ${themeTokens.inform.unsure};
 `;
