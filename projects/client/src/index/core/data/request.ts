@@ -1,5 +1,5 @@
+import { DEFINE } from '@/index/define';
 import * as iso from '@wbtdevlocal/iso';
-import { DEFINE } from '../define';
 
 export interface RequestResultPathInfo {
 	/** After replacements / insertions / params. */

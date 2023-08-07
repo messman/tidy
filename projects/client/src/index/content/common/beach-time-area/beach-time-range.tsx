@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
-import { getTimeTwelveHourRange, getTimeTwelveHourString } from '@/services/time';
+import { getTimeTwelveHourRange, getTimeTwelveHourString } from '@/index/core/time/time';
 import * as iso from '@wbtdevlocal/iso';
 import { BeachTimeRangeVisual } from './beach-time-range-visual';
 

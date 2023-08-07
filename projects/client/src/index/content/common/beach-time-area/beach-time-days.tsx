@@ -1,16 +1,16 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponse } from '@/index/core/data/data';
 import { Block } from '@/index/core/layout/layout-shared';
 import { FontWeight, Spacing } from '@/index/core/primitive/primitive-design';
 import { MediumLabelText } from '@/index/core/text/text-label';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
-import { useBatchResponse } from '@/services/data/data';
-import { getRelativeDayText, getTimeTwelveHourString } from '@/services/time';
+import { getRelativeDayText, getTimeTwelveHourString } from '@/index/core/time/time';
 import * as iso from '@wbtdevlocal/iso';
-import { MoonPhaseIcon } from '../common/astro/moon-phase-icon';
-import { WeatherStatusIcon } from '../common/weather/weather-icon';
+import { MoonPhaseIcon } from '../astro/moon-phase-icon';
+import { WeatherStatusIcon } from '../weather/weather-icon';
 import { BeachTimeRangeView } from './beach-time-range';
 
 export const BeachTimeDays: React.FC = () => {

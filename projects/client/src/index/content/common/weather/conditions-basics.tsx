@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponse } from '@/index/core/data/data';
 import { Block } from '@/index/core/layout/layout-shared';
 import { FontWeight } from '@/index/core/primitive/primitive-design';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
-import { useBatchResponse } from '@/services/data/data';
 
 const tempGradientBottom = -25;
 const tempGradientTop = 120;

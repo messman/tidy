@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { DEFINE } from '@/index/define';
 import { UseLocalStorageReturn } from '@messman/react-common';
 import * as iso from '@wbtdevlocal/iso';
-import { DEFINE } from '../define';
 import { localStore } from './local-storage';
 
 const DataSeedContext = React.createContext<UseLocalStorageReturn<iso.Batch.Seed | null>>(null!);

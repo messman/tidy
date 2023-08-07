@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useBatchResponse } from '@/index/core/data/data';
 import { Block } from '@/index/core/layout/layout-shared';
 import { MediumBodyText } from '@/index/core/text/text-shared';
-import { weatherStatusDescription } from '@/services/content/weather-utility';
-import { useBatchResponse } from '@/services/data/data';
-import { getDurationDescription } from '@/services/time';
+import { getDurationDescription } from '@/index/core/time/time';
 import * as iso from '@wbtdevlocal/iso';
+import { weatherStatusDescription } from './weather-utility';
 
 export const ConditionsHeader: React.FC = () => {
 	const { meta, weather, astro } = useBatchResponse().success!;

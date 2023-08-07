@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { LayoutBreakpointRem } from '@/services/layout/window-layout';
+import { LayoutBreakpointRem } from '@/index/core/layout/window-layout';
 import { ElementIntersect, useElementIntersect, useWindowMediaLayout } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
 import { NavTabBarLower, NavTabBarUpper, NavTabLower, NavTabUpper } from '../nav';

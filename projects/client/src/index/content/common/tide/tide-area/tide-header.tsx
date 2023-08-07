@@ -1,14 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponse } from '@/index/core/data/data';
 import { Block } from '@/index/core/layout/layout-shared';
 import { OutLink } from '@/index/core/text/text-link';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
-import { getTideTitle } from '@/services/content/tide-utility';
-import { useBatchResponse } from '@/services/data/data';
-import { getTimeTwelveHourString } from '@/services/time';
+import { getTimeTwelveHourString } from '@/index/core/time/time';
 import * as iso from '@wbtdevlocal/iso';
 import { TideHeightTextUnit } from '../tide-common';
 import { TideLevelIcon } from '../tide-level-icon';
+import { getTideTitle } from '../tide-utility';
 
 export const TideHeader: React.FC = () => {
 	const { meta, tide } = useBatchResponse().success!;

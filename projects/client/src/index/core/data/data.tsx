@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { CONSTANT } from '@/index/constant';
 import { createContextConsumer } from '@messman/react-common';
 import * as iso from '@wbtdevlocal/iso';
-import { CONSTANT } from '../constant';
 import { useSafeTimer } from '../lifecycle/timer';
-import { RequestResult, RequestResultError } from '../network/request';
-import { ApiRequestOptions, useApiRequest } from '../network/request-hook';
 import { useDataSeed } from './data-seed';
+import { RequestResult, RequestResultError } from './request';
+import { ApiRequestOptions, useApiRequest } from './request-hook';
 
 const [BatchResponseContextProvider, useBatchResponseContext] = createContextConsumer<BatchResponseOutput>(null!);
 

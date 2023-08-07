@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Block } from '@/index/core/layout/layout-shared';
-import { PanelPadding } from '@/index/core/layout/panel/panel';
+import { PanelPadding } from '@/index/core/layout/panel';
 import { OutLink } from '@/index/core/text/text-link';
 import { FontDoc } from '@/index/core/text/text-shared';
 

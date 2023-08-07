@@ -1,16 +1,16 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
+import { useBatchResponse } from '@/index/core/data/data';
 import { ErrorGeneric } from '@/index/core/error/error-generic';
 import { Block } from '@/index/core/layout/layout-shared';
-import { Panel } from '@/index/core/layout/panel/panel';
-import { wrapForBatchLoad } from '@/index/core/loader/batch-load-control';
+import { Panel } from '@/index/core/layout/panel';
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { MediumLabelText } from '@/index/core/text/text-label';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { TimeTextUnit } from '@/index/core/text/text-unit';
 import { themeTokens } from '@/index/core/theme/theme-root';
-import { useBatchResponse } from '@/services/data/data';
-import { getDurationDescription } from '@/services/time';
+import { getDurationDescription } from '@/index/core/time/time';
 import { TideHeightTextUnit } from '../tide-common';
 
 const TideSummarySuccess: React.FC = () => {

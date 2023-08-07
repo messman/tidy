@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MediumBodyText } from '@/index/core/text/text-shared';
 import { CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
-import { useBatchResponse } from './data/data';
+import { useBatchResponse } from './core/data/data';
 import { DEFINE } from './define';
 
 export default CosmosFixture.create(() => {

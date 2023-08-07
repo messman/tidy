@@ -1,4 +1,4 @@
-import { RequestResultServerError } from '@/services/network/request';
+import { RequestResultServerError } from '@/index/core/data/request';
 import { getUnique } from '@messman/react-common';
 import * as iso from '@wbtdevlocal/iso';
 

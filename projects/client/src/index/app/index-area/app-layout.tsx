@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isCompactWidthLayout } from '@/services/layout/window-layout';
+import { isCompactWidthLayout } from '@/index/core/layout/window-layout';
 import { useWindowMediaLayout } from '@messman/react-common';
 import { CompactApplicationLayout } from './app-layout-compact';
 import { WideApplicationLayout } from './app-layout-wide';

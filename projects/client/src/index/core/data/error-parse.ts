@@ -1,5 +1,5 @@
-import { ClientErrorForm, RequestResultError } from '@/services/network/request';
 import * as iso from '@wbtdevlocal/iso';
+import { ClientErrorForm, RequestResultError } from './request';
 
 export interface RequestResultErrorParseOutput {
 	title: string;

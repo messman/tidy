@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponse } from '@/index/core/data/data';
 import { ClickWrapperButton } from '@/index/core/form/button';
 import { SizedIcon } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
 import { Block } from '@/index/core/layout/layout-shared';
 import { Spacing } from '@/index/core/primitive/primitive-design';
-import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import { AppInfo } from './app-info';
 import { appHeaderHeight } from './app-layout-shared';

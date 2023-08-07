@@ -3,15 +3,15 @@ import * as ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { ErrorBoundary } from '@/index/core/error/error-boundary';
 import { SVGIconUrlLoadProvider } from '@/index/core/icon/icon-url';
-import { BatchResponseProvider } from '@/services/data/data';
-import { DataSeedProvider } from '@/services/data/data-seed';
-import { lowerBreakpoints } from '@/services/layout/window-layout';
-import { RequestFetchProvider } from '@/services/network/request-fetch-provider';
-import { provider, ProviderComposer, ProviderWithProps } from '@/services/provider-utility';
 import { DocumentVisibilityProvider, WindowDimensionsProvider, WindowMediaLayoutProvider } from '@messman/react-common';
 import { AppNavigationProvider } from './app/index-area/app-navigation';
-import { AppLayout } from './app/layout';
+import { AppLayout } from './app/layout/layout-app';
+import { BatchResponseProvider } from './core/data/data';
+import { DataSeedProvider } from './core/data/data-seed';
+import { RequestFetchProvider } from './core/data/request-fetch-provider';
+import { lowerBreakpoints } from './core/layout/window-layout';
 import { ThemeContextProvider } from './core/theme/theme-root';
+import { provider, ProviderComposer, ProviderWithProps } from './utility/provider-utility';
 
 const App: React.FC = () => {
 

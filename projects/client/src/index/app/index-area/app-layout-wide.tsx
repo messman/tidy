@@ -1,15 +1,15 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { About } from '@/index/content/about/about-area/about';
-import { BeachTime } from '@/index/content/beach-time-area/beach-time';
-import { Conditions } from '@/index/content/common/weather/conditions-ara/conditions';
-import { Education } from '@/index/content/learn/education-area/education';
+import { About } from '@/index/content/about/about';
+import { BeachTime } from '@/index/content/common/beach-time-area/beach-time';
+import { Conditions } from '@/index/content/common/weather/conditions';
+import { Education } from '@/index/content/learn/learn';
+import { useBatchResponse } from '@/index/core/data/data';
 import { SizedIcon } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
 import { Block, overflowHiddenScrollStyle } from '@/index/core/layout/layout-shared';
-import { Panel } from '@/index/core/layout/panel/panel';
+import { Panel } from '@/index/core/layout/panel';
 import { Spacing } from '@/index/core/primitive/primitive-design';
-import { useBatchResponse } from '@/services/data/data';
 import { AppInfo } from './app-info';
 import { appHeaderHeight } from './app-layout-shared';
 

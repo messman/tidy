@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
+import { percentTimeBetween } from '@/index/core/time/time';
 import * as iso from '@wbtdevlocal/iso';
-import { percentTimeBetween } from '../time';
 
 export function getTideTitle(referenceTime: DateTime, measured: iso.Tide.MeasureStamp, relativity: iso.Tide.Relativity): string {
 	const { previous, current, next } = relativity;

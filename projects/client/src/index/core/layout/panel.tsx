@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { borderRadiusStyle, Spacing } from '@/index/core/primitive/primitive-design';
-import { fontStyles } from '../../text/text-shared';
-import { themeTokens } from '../../theme/theme-root';
+import { fontStyles } from '../text/text-shared';
+import { themeTokens } from '../theme/theme-root';
 
 export const Panel = styled.div`
 	background-color: ${themeTokens.background.glass};

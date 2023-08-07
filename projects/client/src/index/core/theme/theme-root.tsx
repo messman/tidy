@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
-import { localStore } from '@/services/data/local-storage';
 import { isObjectLiteral } from '@wbtdevlocal/iso';
+import { localStore } from '../data/local-storage';
 import { fontDefaultSize, fontFamily, FontWeight } from '../primitive/primitive-design';
 import { lightTokens } from './theme-instances';
 import { ThemeInfo } from './theme-types';

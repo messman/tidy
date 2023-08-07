@@ -1,13 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
+import { useBatchResponse } from '@/index/core/data/data';
 import { ErrorGeneric } from '@/index/core/error/error-generic';
 import { Icon } from '@/index/core/icon/icon';
-import { Panel } from '@/index/core/layout/panel/panel';
-import { wrapForBatchLoad } from '@/index/core/loader/batch-load-control';
+import { Panel } from '@/index/core/layout/panel';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
-import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
-import { useBatchResponse } from '@/services/data/data';
 import * as iso from '@wbtdevlocal/iso';
+import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from './beach-time-utility';
 
 const BeachTimeSummarySuccess: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;

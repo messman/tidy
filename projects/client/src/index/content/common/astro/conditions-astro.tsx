@@ -1,12 +1,12 @@
 import * as React from 'react';
+import { useBatchResponse } from '@/index/core/data/data';
 import { IconInputType } from '@/index/core/icon/icon';
 import { Block } from '@/index/core/layout/layout-shared';
 import { MediumBodyText } from '@/index/core/text/text-shared';
-import { useBatchResponse } from '@/services/data/data';
-import { getDurationDescription, getTimeTwelveHourString } from '@/services/time';
+import { getDurationDescription, getTimeTwelveHourString } from '@/index/core/time/time';
 import { icons } from '@wbtdevlocal/assets';
-import { DaylightIcon } from '../../astro/daylight-icon';
-import { BaseWeatherIcon } from '../weather-icon';
+import { BaseWeatherIcon } from '../weather/weather-icon';
+import { DaylightIcon } from './daylight-icon';
 
 export const ConditionsAstro: React.FC = () => {
 	const { meta, astro } = useBatchResponse().success!;

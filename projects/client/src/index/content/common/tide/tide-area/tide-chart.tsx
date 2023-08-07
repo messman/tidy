@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponse } from '@/index/core/data/data';
 import { Block } from '@/index/core/layout/layout-shared';
 import { FontWeight, Spacing } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
-import { useBatchResponse } from '@/services/data/data';
-import { getDateDayOfWeek, getRelativeDayText, getTimeTwelveHourString } from '@/services/time';
+import { getDateDayOfWeek, getRelativeDayText, getTimeTwelveHourString } from '@/index/core/time/time';
 import * as iso from '@wbtdevlocal/iso';
 import { MoonPhaseIcon } from '../../astro/moon-phase-icon';
 import { TideHeightTextUnit } from '../tide-common';

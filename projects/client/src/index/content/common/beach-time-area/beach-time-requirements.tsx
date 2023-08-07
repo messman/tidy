@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponse } from '@/index/core/data/data';
 import { IconInputType, SizedIcon } from '@/index/core/icon/icon';
 import { Block } from '@/index/core/layout/layout-shared';
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { MediumLabelText } from '@/index/core/text/text-label';
-import { useBatchResponse } from '@/services/data/data';
 import { icons } from '@wbtdevlocal/assets';
 import * as iso from '@wbtdevlocal/iso';
 

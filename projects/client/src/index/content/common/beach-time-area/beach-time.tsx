@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
+import { DefaultErrorLoad } from '@/index/core/data/loader';
 import { Block } from '@/index/core/layout/layout-shared';
-import { PanelPadding } from '@/index/core/layout/panel/panel';
-import { wrapForBatchLoad } from '@/index/core/loader/batch-load-control';
-import { DefaultErrorLoad } from '@/index/core/loader/loader';
+import { PanelPadding } from '@/index/core/layout/panel';
 import * as iso from '@wbtdevlocal/iso';
-import { TideHeightTextUnit } from '../common/tide/tide-common';
+import { TideHeightTextUnit } from '../tide/tide-common';
 import { BeachTimeBadges } from './beach-time-badges';
 import { BeachTimeDays } from './beach-time-days';
 import { BeachTimeDescription } from './beach-time-description';

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponse } from '@/index/core/data/data';
 import { FontWeight } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
-import { useBatchResponse } from '@/services/data/data';
-import { getTimeTwelveHourString } from '@/services/time';
+import { getTimeTwelveHourString } from '@/index/core/time/time';
 
 const LabelText = styled.div`
 	${fontStyles.text.small};

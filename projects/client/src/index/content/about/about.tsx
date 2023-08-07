@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { Block } from '@/index/core/layout/layout-shared';
-import { PanelPadding } from '@/index/core/layout/panel/panel';
+import { PanelPadding } from '@/index/core/layout/panel';
 import { OutLink } from '@/index/core/text/text-link';
 import { FontDoc } from '@/index/core/text/text-shared';
-import { DEFINE } from '@/services/define';
+import { DEFINE } from '@/index/define';
 import { AboutIconLargeNamed } from './about-icon';
 import { AboutShare } from './about-share';
 

@@ -2,11 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Icon } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
-import { useBatchResponse } from '@/services/data/data';
 import { Block } from '../layout/layout-shared';
-import { PanelPadding } from '../layout/panel/panel';
+import { PanelPadding } from '../layout/panel';
 import { MediumBodyText } from '../text/text-shared';
 import { themeTokens } from '../theme/theme-root';
+import { useBatchResponse } from './data';
 
 export const DefaultErrorLoad: React.FC = () => {
 	const { error } = useBatchResponse();

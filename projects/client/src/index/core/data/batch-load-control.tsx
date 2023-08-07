@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useBatchResponse } from '@/services/data/data';
+import { useBatchResponse } from './data';
 
 export function wrapForBatchLoad(ErrorAndLoadComponent: React.FC, SuccessComponent: React.FC): React.FC {
 	return function () {

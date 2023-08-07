@@ -1,12 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponse } from '@/index/core/data/data';
 import { FontWeight, Spacing } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
-import { useBatchResponse } from '@/services/data/data';
-import { getTimeTwelveHour } from '@/services/time';
+import { getTimeTwelveHour } from '@/index/core/time/time';
 import * as iso from '@wbtdevlocal/iso';
-import { WeatherStatusIcon } from '../weather-icon';
+import { WeatherStatusIcon } from './weather-icon';
 
 export const ConditionsHourly: React.FC = () => {
 	const { meta, weather } = useBatchResponse().success!;

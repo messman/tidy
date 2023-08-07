@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { PanelTitle } from '@/index/core/layout/panel/panel';
-import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from '@/services/content/beach-time-utility';
-import { useBatchResponse } from '@/services/data/data';
+import { useBatchResponse } from '@/index/core/data/data';
+import { PanelTitle } from '@/index/core/layout/panel';
 import * as iso from '@wbtdevlocal/iso';
+import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from './beach-time-utility';
 
 export const BeachTimeTitle: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;
