@@ -3,7 +3,7 @@ import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
 import { DefaultErrorLoad } from '@/index/core/data/loader';
 import { Block } from '@/index/core/layout/layout-shared';
 import { PanelPadding } from '@/index/core/layout/panel';
-import * as iso from '@wbtdevlocal/iso';
+import { constant } from '@wbtdevlocal/iso';
 import { TideHeightTextUnit } from '../tide/tide-common';
 import { BeachTimeBadges } from './beach-time-badges';
 import { BeachTimeDays } from './beach-time-days';
@@ -26,8 +26,8 @@ export const BeachTimeSuccess: React.FC = () => {
 			<PanelPadding>
 				"Beach time" is an approximation of the time range when the beach is suitable to visit.
 				Beach time is based on available data for tides, sunlight, and weather (excluding wind and temperature).
-				Beach space starts disappearing quickly when the rising tide passes <TideHeightTextUnit height={iso.constant.beachAccessEarlyRise} precision={0} />,
-				and the beach opens back up when the falling tide passes <TideHeightTextUnit height={iso.constant.beachAccessFullyFall} precision={0} />.
+				Beach space starts disappearing quickly when the rising tide passes <TideHeightTextUnit height={constant.beachAccessEarlyRise} precision={0} />,
+				and the beach opens back up when the falling tide passes <TideHeightTextUnit height={constant.beachAccessFullyFall} precision={0} />.
 				Data is not guaranteed accurate, and is less accurate the further it is based from the current time.
 			</PanelPadding>
 		</>

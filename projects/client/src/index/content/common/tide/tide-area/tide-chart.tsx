@@ -7,7 +7,7 @@ import { FontWeight, Spacing } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getDateDayOfWeek, getRelativeDayText, getTimeTwelveHourString } from '@/index/core/time/time';
-import * as iso from '@wbtdevlocal/iso';
+import { TideContentDay, TidePoint, TidePointExtreme } from '@wbtdevlocal/iso';
 import { MoonPhaseIcon } from '../../astro/moon-phase-icon';
 import { TideHeightTextUnit } from '../tide-common';
 import { TideExtremeIcon, TideLevelIcon } from '../tide-level-icon';
@@ -44,9 +44,9 @@ export const TideChart: React.FC = () => {
 interface TideChartDayProps {
 	minHeight: number;
 	maxHeight: number;
-	measured: iso.Tide.MeasureStamp;
+	measured: TidePoint;
 	referenceTime: DateTime;
-	day: iso.Batch.TideContentDay;
+	day: TideContentDay;
 }
 
 const TideChartDay: React.FC<TideChartDayProps> = (props) => {
@@ -65,7 +65,7 @@ const TideChartDay: React.FC<TideChartDayProps> = (props) => {
 	const dateText = getDateDayOfWeek(date);
 	const titleText = (relativeDayText ? (relativeDayText + ', ') : '') + dateText;
 
-	let all: (iso.Tide.ExtremeStamp | iso.Tide.MeasureStamp)[] = [...day.extremes];
+	let all: (TidePointExtreme | TidePoint)[] = [...day.extremes];
 	if (referenceTime.hasSame(date, 'day')) {
 		// Inefficient but there's only a few for one day.
 		const index = all.findIndex((extreme) => {
@@ -108,7 +108,7 @@ const TideChartDay: React.FC<TideChartDayProps> = (props) => {
 			);
 		}
 		else {
-			const extremeStamp = stamp as iso.Tide.ExtremeStamp;
+			const extremeStamp = stamp as TidePointExtreme;
 			return (
 				<RowContainer key={key} isHighlighted={false}>
 					<RowTime>{getTimeTwelveHourString(stamp.time)}</RowTime>

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 /** Division of a tide, used primarily for UI. */
-export enum Division {
+export enum TideLevelDivision {
 	/** Lower third. */
 	low,
 	/** Middle third. */
@@ -11,7 +11,7 @@ export enum Division {
 }
 
 /** The direction of the tides. */
-export enum Direction {
+export enum TideLevelDirection {
 	rising,
 	turning,
 	falling
@@ -21,7 +21,7 @@ export enum Direction {
  * A measurement/estimation of the tides at a given time.
  * Note - this information is not always guaranteed accurate or from the right location.
  */
-export interface MeasureStampBase {
+export interface TidePointBase {
 	/** Whether we had to grab water level from the backup location. */
 	isAlternate: boolean;
 	/** Whether the water level is the computed value. */
@@ -41,20 +41,20 @@ export interface MeasureStampBase {
 /**
  * A measurement/estimation of the tides at a given time.
  */
-export interface MeasureStamp extends MeasureStampBase {
-	division: Division;
-	direction: Direction;
+export interface TidePoint extends TidePointBase {
+	division: TideLevelDivision;
+	direction: TideLevelDirection;
 }
 
-export interface ExtremeStamp {
+export interface TidePointExtreme {
 	time: DateTime;
 	height: number,
 	isLow: boolean;
 }
 
-export interface Relativity {
-	previous: ExtremeStamp;
+export interface TideRelativity {
+	previous: TidePointExtreme;
 	/** May be set if we are "close enough" to a tide extreme. */
-	current: ExtremeStamp | null;
-	next: ExtremeStamp;
+	current: TidePointExtreme | null;
+	next: TidePointExtreme;
 }

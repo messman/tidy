@@ -3,16 +3,16 @@ import styled from 'styled-components';
 import { defaultIconSvgStyle, Icon, IconInputType, IconProps } from '@/index/core/icon/icon';
 import { StyledFC } from '@/index/core/primitive/primitive-styled';
 import { icons } from '@wbtdevlocal/assets';
-import * as iso from '@wbtdevlocal/iso';
+import { mapNumberEnumValue, WeatherStatusType } from '@wbtdevlocal/iso';
 
 export interface WeatherStatusIconProps {
-	status: iso.Weather.StatusType;
+	status: WeatherStatusType;
 	isDay: boolean;
 }
 
 export const WeatherStatusIcon: React.FC<WeatherStatusIconProps> = (props) => {
 	const { isDay, status } = props;
-	const statusTypeIcon = iso.mapNumberEnumValue(iso.Weather.StatusType, statusTypeIconMap, status);
+	const statusTypeIcon = mapNumberEnumValue(WeatherStatusType, statusTypeIconMap, status);
 	return (
 		<BaseWeatherIcon type={isDay ? statusTypeIcon.day : statusTypeIcon.night} />
 	);
@@ -43,7 +43,7 @@ export interface StatusTypeIcon {
 	day: IconInputType;
 	night: IconInputType;
 }
-export const statusTypeIconMap: Record<keyof typeof iso.Weather.StatusType, StatusTypeIcon> = {
+export const statusTypeIconMap: Record<keyof typeof WeatherStatusType, StatusTypeIcon> = {
 	unknown: {
 		day: icons.weatherQuestion,
 		night: icons.weatherQuestion

@@ -10,7 +10,7 @@ import { lowerBreakpoints } from '@/index/core/layout/window-layout';
 import { ThemeContextProvider } from '@/index/core/theme/theme-root';
 import { provider, ProviderComposer, ProviderWithProps } from '@/index/utility/provider-utility';
 import { DocumentVisibilityProvider, WindowMediaLayoutProvider } from '@messman/react-common';
-import * as iso from '@wbtdevlocal/iso';
+import { Seed } from '@wbtdevlocal/iso';
 import { createControlSelectForEnum, useControlSelect } from './cosmos';
 
 export enum FixtureSetup {
@@ -59,7 +59,7 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 }
 
 
-const seedOb = createControlSelectForEnum(iso.Batch.Seed) as unknown as Record<(keyof typeof iso.Batch.Seed) | '_real_', iso.Batch.Seed | null>;
+const seedOb = createControlSelectForEnum(Seed) as unknown as Record<(keyof typeof Seed) | '_real_', Seed | null>;
 seedOb['_real_'] = null;
 
 interface TestWrapperProps {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createTestServerError } from '@/test/data/test-data-utility';
 import { createContextConsumer } from '@messman/react-common';
-import * as iso from '@wbtdevlocal/iso';
+import { ApiRoute, ApiRouteResponse, isServerError, RequestOf, ResponseOf, ServerError } from '@wbtdevlocal/iso';
 import { FetchFunc } from './request';
 import { RequestFetchContextProvider, RequestFetchProviderOutput } from './request-fetch-provider';
 
@@ -10,42 +10,42 @@ import { RequestFetchContextProvider, RequestFetchProviderOutput } from './reque
 	Function signature should roughly match that function.
 */
 
-export interface MockOnFetchFunc<TApiRoute extends iso.ApiRoute> {
-	(input: iso.RequestOf<TApiRoute>, route: TApiRoute): iso.ServerError | iso.ResponseOf<TApiRoute> | false;
+export interface MockOnFetchFunc<TApiRoute extends ApiRoute> {
+	(input: RequestOf<TApiRoute>, route: TApiRoute): ServerError | ResponseOf<TApiRoute> | false;
 }
 
-export const defaultFailureMockFetch: MockOnFetchFunc<iso.ApiRoute> = (_input, _route) => {
+export const defaultFailureMockFetch: MockOnFetchFunc<ApiRoute> = (_input, _route) => {
 	return createTestServerError();
 };
 
-export interface MockApiEntry<TApiRoute extends iso.ApiRoute> {
+export interface MockApiEntry<TApiRoute extends ApiRoute> {
 	timeout: number;
 	onFetch: MockOnFetchFunc<TApiRoute>;
 }
 
 export interface MockApiOverrides {
 	timeout: number | null;
-	response: iso.ServerError | false | null;
+	response: ServerError | false | null;
 }
 
 export interface MockApiOutput {
 	setOverrides: (overrides: MockApiOverrides | null) => void;
 	getOverrides: () => MockApiOverrides | null;
-	set: <TApiRoute extends iso.ApiRoute>(route: TApiRoute, entry: MockApiEntry<TApiRoute> | null) => void;
-	get: <TApiRoute extends iso.ApiRoute>(route: TApiRoute) => MockApiEntry<TApiRoute> | null;
+	set: <TApiRoute extends ApiRoute>(route: TApiRoute, entry: MockApiEntry<TApiRoute> | null) => void;
+	get: <TApiRoute extends ApiRoute>(route: TApiRoute) => MockApiEntry<TApiRoute> | null;
 };
 
 const [MockApiProviderContext, useMockApiContext] = createContextConsumer<MockApiOutput>();
 export const useMockApi = useMockApiContext;
 
-type MockApiMap = Map<iso.ApiRoute, MockApiEntry<iso.ApiRoute>>;
+type MockApiMap = Map<ApiRoute, MockApiEntry<ApiRoute>>;
 
 export const MockApiProvider: React.FC<React.PropsWithChildren> = (props) => {
 
 	const overridesRef = React.useRef<MockApiOverrides | null>(null);
 	const mapRef = React.useRef<MockApiMap>(null!);
 	if (!mapRef.current) {
-		mapRef.current = new Map<iso.ApiRoute, MockApiEntry<iso.ApiRoute>>();
+		mapRef.current = new Map<ApiRoute, MockApiEntry<ApiRoute>>();
 	}
 
 	const output = React.useMemo<MockApiOutput>(() => {
@@ -120,7 +120,7 @@ const TestRequestProvider: React.FC<React.PropsWithChildren> = (props) => {
 	);
 };
 
-function createMockFetch<TApiRoute extends iso.ApiRoute>(route: TApiRoute, input: iso.RequestOf<TApiRoute>, timeout: number, onFetch: MockOnFetchFunc<TApiRoute>, overrideResponse: iso.ServerError | iso.ApiRouteResponse | false | null): FetchFunc {
+function createMockFetch<TApiRoute extends ApiRoute>(route: TApiRoute, input: RequestOf<TApiRoute>, timeout: number, onFetch: MockOnFetchFunc<TApiRoute>, overrideResponse: ServerError | ApiRouteResponse | false | null): FetchFunc {
 
 	return function (_url: string, init: RequestInit) {
 		return new Promise((resolve, reject) => {
@@ -131,7 +131,7 @@ function createMockFetch<TApiRoute extends iso.ApiRoute>(route: TApiRoute, input
 				if (response === false) {
 					reject(new Error('Mock API - simulated network issue'));
 				}
-				else if (iso.isServerError(response)) {
+				else if (isServerError(response)) {
 					resolve(new Response(asBlob({ a: null, _err: response }), { status: 500, statusText: 'mock error' }));
 				}
 				else {
@@ -147,6 +147,6 @@ function createMockFetch<TApiRoute extends iso.ApiRoute>(route: TApiRoute, input
 	};
 }
 
-function asBlob(obj: iso.ApiRouteResponse): Blob {
+function asBlob(obj: ApiRouteResponse): Blob {
 	return new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
 }

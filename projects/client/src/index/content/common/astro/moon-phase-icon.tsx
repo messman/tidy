@@ -4,16 +4,16 @@ import { defaultIconSvgStyle, Icon, IconInputType } from '@/index/core/icon/icon
 import { StyledFC } from '@/index/core/primitive/primitive-styled';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
-import * as iso from '@wbtdevlocal/iso';
+import { AstroLunarPhase, mapNumberEnumValue } from '@wbtdevlocal/iso';
 
 export interface MoonPhaseIconProps {
-	phase: iso.Astro.MoonPhase;
+	phase: AstroLunarPhase;
 }
 
 export const MoonPhaseIcon: StyledFC<MoonPhaseIconProps> = (props) => {
 	const { phase } = props;
 
-	const icon = iso.mapNumberEnumValue(iso.Astro.MoonPhase, moonPhaseIcon, phase);
+	const icon = mapNumberEnumValue(AstroLunarPhase, moonPhaseIcon, phase);
 
 	return (
 		<MoonPhaseIconContainer>
@@ -36,7 +36,7 @@ const MoonPhaseIconContainer = styled.span`
 	padding: .25rem;
 `;
 
-const moonPhaseIcon: Record<keyof typeof iso.Astro.MoonPhase, IconInputType> = {
+const moonPhaseIcon: Record<keyof typeof AstroLunarPhase, IconInputType> = {
 	a_new: icons.moonNew,
 	b_waxingCrescent: icons.moonWaxingCrescent,
 	c_firstQuarter: icons.moonFirstQuarter,

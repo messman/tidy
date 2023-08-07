@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import { percentTimeBetween } from '@/index/core/time/time';
-import * as iso from '@wbtdevlocal/iso';
+import { TideLevelDirection, TideLevelDivision, TidePoint, TideRelativity } from '@wbtdevlocal/iso';
 
-export function getTideTitle(referenceTime: DateTime, measured: iso.Tide.MeasureStamp, relativity: iso.Tide.Relativity): string {
+export function getTideTitle(referenceTime: DateTime, measured: TidePoint, relativity: TideRelativity): string {
 	const { previous, current, next } = relativity;
 
 	if (current) {
@@ -15,26 +15,26 @@ export function getTideTitle(referenceTime: DateTime, measured: iso.Tide.Measure
 			return `It's almost ${next.isLow ? 'low' : 'high'} tide.`;
 		}
 		else {
-			return `The tide is ${measured.direction === iso.Tide.Direction.falling ? 'falling' : (measured.direction === iso.Tide.Direction.rising ? 'rising' : 'turning')}.`;
+			return `The tide is ${measured.direction === TideLevelDirection.falling ? 'falling' : (measured.direction === TideLevelDirection.rising ? 'rising' : 'turning')}.`;
 		}
 	}
 }
 
-export function getTideDescription(tide: iso.Tide.MeasureStamp): string {
+export function getTideDescription(tide: TidePoint): string {
 	const { direction, division } = tide;
 
-	if (direction === iso.Tide.Direction.turning) {
-		if (division === iso.Tide.Division.low) {
+	if (direction === TideLevelDirection.turning) {
+		if (division === TideLevelDivision.low) {
 			return 'Low';
 		}
-		else if (division === iso.Tide.Division.high) {
+		else if (division === TideLevelDivision.high) {
 			return 'High';
 		}
 	}
-	else if (direction === iso.Tide.Direction.rising) {
+	else if (direction === TideLevelDirection.rising) {
 		return 'Rising';
 	}
-	else if (direction === iso.Tide.Direction.falling) {
+	else if (direction === TideLevelDirection.falling) {
 		return 'Falling';
 	}
 	return 'Unknown';

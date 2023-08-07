@@ -6,7 +6,7 @@ import { Block } from '@/index/core/layout/layout-shared';
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { MediumLabelText } from '@/index/core/text/text-label';
 import { icons } from '@wbtdevlocal/assets';
-import * as iso from '@wbtdevlocal/iso';
+import { BeachTimeStatus, BeachTimeSunMarkStatus, BeachTimeTideMarkStatus } from '@wbtdevlocal/iso';
 
 /*
 	Spacing is a little weird in this component just because we start with icons on the left side
@@ -46,16 +46,16 @@ export const BeachTimeRequirements: React.FC = () => {
 
 	let tideText: string = null!;
 	let tideIcon: IconInputType = null!;
-	if (tide.beachTimeStatus === iso.Batch.BeachTimeStatus.best) {
+	if (tide.beachTimeStatus === BeachTimeStatus.best) {
 		tideText = `The tide is low enough`;
 		tideIcon = icons.expressionHappy;
 	}
-	else if (tide.beachTimeStatus === iso.Batch.BeachTimeStatus.okay) {
-		if (tide.tideMarkStatus === iso.Batch.BeachTimeTideMarkStatus.earlyFall) {
+	else if (tide.beachTimeStatus === BeachTimeStatus.okay) {
+		if (tide.tideMarkStatus === BeachTimeTideMarkStatus.earlyFall) {
 			tideText = `The tide is falling, but still high`;
 			tideIcon = icons.expressionStraight;
 		}
-		else if (tide.tideMarkStatus === iso.Batch.BeachTimeTideMarkStatus.earlyRise) {
+		else if (tide.tideMarkStatus === BeachTimeTideMarkStatus.earlyRise) {
 			tideText = `The tide is quickly covering the beach`;
 			tideIcon = icons.expressionStraight;
 		}
@@ -67,11 +67,11 @@ export const BeachTimeRequirements: React.FC = () => {
 
 	let weatherText: string = null!;
 	let weatherIcon: IconInputType = null!;
-	if (weather.beachTimeStatus === iso.Batch.BeachTimeStatus.best) {
+	if (weather.beachTimeStatus === BeachTimeStatus.best) {
 		weatherText = `The weather is looking good`;
 		weatherIcon = icons.expressionHappy;
 	}
-	else if (weather.beachTimeStatus === iso.Batch.BeachTimeStatus.okay) {
+	else if (weather.beachTimeStatus === BeachTimeStatus.okay) {
 		weatherText = `The weather could be better`;
 		weatherIcon = icons.expressionStraight;
 	}
@@ -82,16 +82,16 @@ export const BeachTimeRequirements: React.FC = () => {
 
 	let sunText: string = null!;
 	let sunIcon: IconInputType = null!;
-	if (sun.beachTimeStatus === iso.Batch.BeachTimeStatus.best) {
+	if (sun.beachTimeStatus === BeachTimeStatus.best) {
 		sunText = `It's daytime`;
 		sunIcon = icons.expressionHappy;
 	}
-	else if (sun.beachTimeStatus === iso.Batch.BeachTimeStatus.okay) {
-		if (sun.sunMarkStatus === iso.Batch.BeachTimeSunMarkStatus.predawn) {
+	else if (sun.beachTimeStatus === BeachTimeStatus.okay) {
+		if (sun.sunMarkStatus === BeachTimeSunMarkStatus.predawn) {
 			sunText = `The sun hasn't risen yet, but there is decent light`;
 			sunIcon = icons.expressionStraight;
 		}
-		else if (sun.sunMarkStatus === iso.Batch.BeachTimeSunMarkStatus.sunset) {
+		else if (sun.sunMarkStatus === BeachTimeSunMarkStatus.sunset) {
 			sunText = `The sun has set, but there's still enough light`;
 			sunIcon = icons.expressionStraight;
 		}

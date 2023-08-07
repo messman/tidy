@@ -3,9 +3,9 @@ import { DateTime } from 'luxon';
 import { IconInputType } from '@/index/core/icon/icon';
 import { getDurationDescription, getTimeTwelveHourRange, getTimeTwelveHourString } from '@/index/core/time/time';
 import { icons } from '@wbtdevlocal/assets';
-import * as iso from '@wbtdevlocal/iso';
+import { BeachContent, BeachTimeStatus } from '@wbtdevlocal/iso';
 
-export enum BeachTimeStatus {
+export enum BeachTimeContextualStatus {
 	current,
 	currentEndingSoon,
 	nextSoon,
@@ -14,29 +14,29 @@ export enum BeachTimeStatus {
 	other
 }
 
-export function getBeachTimeStatus(beach: iso.Batch.BeachContent, referenceTime: DateTime): BeachTimeStatus {
+export function getBeachTimeStatus(beach: BeachContent, referenceTime: DateTime): BeachTimeContextualStatus {
 	const { firstStopReason, next } = beach;
 
 	if (firstStopReason) {
 		if (firstStopReason.time.diff(referenceTime, 'minutes').minutes <= 60) {
-			return BeachTimeStatus.currentEndingSoon;
+			return BeachTimeContextualStatus.currentEndingSoon;
 		}
 		else {
-			return BeachTimeStatus.current;
+			return BeachTimeContextualStatus.current;
 		}
 	}
 	else if (next) {
 		if (next.start.diff(referenceTime, 'minutes').minutes <= 60) {
-			return BeachTimeStatus.nextSoon;
+			return BeachTimeContextualStatus.nextSoon;
 		}
 		else if (next.start.hasSame(referenceTime, 'day')) {
-			return BeachTimeStatus.nextLater;
+			return BeachTimeContextualStatus.nextLater;
 		}
 		else if (next.start.hasSame(referenceTime.plus({ days: 1 }), 'day')) {
-			return BeachTimeStatus.nextTomorrow;
+			return BeachTimeContextualStatus.nextTomorrow;
 		}
 	}
-	return BeachTimeStatus.other;
+	return BeachTimeContextualStatus.other;
 }
 
 
@@ -47,9 +47,9 @@ export interface BeachTimeTextInfo {
 	expression: IconInputType;
 }
 
-export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (beach: iso.Batch.BeachContent, referenceTime: DateTime) => BeachTimeTextInfo> = {
+export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeContextualStatus, (beach: BeachContent, referenceTime: DateTime) => BeachTimeTextInfo> = {
 	current: (beach) => {
-		const isBest = beach.status === iso.Batch.BeachTimeStatus.best;
+		const isBest = beach.status === BeachTimeStatus.best;
 
 		return {
 			title: `It's beach time${isBest ? '!' : '.'}`,
@@ -73,7 +73,7 @@ export const beachTimeStatusTextInfoFunc: Record<keyof typeof BeachTimeStatus, (
 			title: `It's beach time.`,
 			range: `Ends ${getTimeTwelveHourString(firstStopReason!.time)}`,
 			description: description,
-			expression: beach.status === iso.Batch.BeachTimeStatus.best ? icons.expressionHappy : icons.expressionStraight
+			expression: beach.status === BeachTimeStatus.best ? icons.expressionHappy : icons.expressionStraight
 		};
 	},
 	nextSoon: (beach, referenceTime) => {

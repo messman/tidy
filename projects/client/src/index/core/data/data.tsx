@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CONSTANT } from '@/index/constant';
 import { createContextConsumer } from '@messman/react-common';
-import * as iso from '@wbtdevlocal/iso';
+import { ApiRouteBatchLatest, ApiRouteBatchSeed, apiRoutes, BatchContent } from '@wbtdevlocal/iso';
 import { useSafeTimer } from '../lifecycle/timer';
 import { useDataSeed } from './data-seed';
 import { RequestResult, RequestResultError } from './request';
@@ -14,7 +14,7 @@ export const useBatchResponse = useBatchResponseContext;
 export interface BatchResponseState {
 	isLoading: boolean;
 	error: RequestResultError | null;
-	success: iso.Batch.BatchContent | null;
+	success: BatchContent | null;
 }
 
 export interface BatchResponseOutput extends BatchResponseState {
@@ -37,7 +37,7 @@ export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) 
 		makeRequest();
 	});
 
-	function onResult(result: RequestResult<iso.Batch.LatestAPI.ApiRouteBatchLatest.ResponseInner | iso.Batch.SeedAPI.ApiRouteBatchSeed.ResponseInner>) {
+	function onResult(result: RequestResult<ApiRouteBatchLatest.ResponseInner | ApiRouteBatchSeed.ResponseInner>) {
 		if (!result.isSuccess) {
 			// Error handling
 			setState({
@@ -61,8 +61,8 @@ export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) 
 		change(CONSTANT.appRefreshTimeout);
 	}
 
-	const { start: startLatest } = useApiRequest(iso.apiRoutes.batch.latest, onResult);
-	const { start: startSeed } = useApiRequest(iso.apiRoutes.batch.seed, onResult);
+	const { start: startLatest } = useApiRequest(apiRoutes.batch.latest, onResult);
+	const { start: startSeed } = useApiRequest(apiRoutes.batch.seed, onResult);
 
 	const makeRequest = React.useCallback(() => {
 		const requestOptions: ApiRequestOptions = {

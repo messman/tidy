@@ -5,7 +5,7 @@ import { Block } from '@/index/core/layout/layout-shared';
 import { OutLink } from '@/index/core/text/text-link';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { getTimeTwelveHourString } from '@/index/core/time/time';
-import * as iso from '@wbtdevlocal/iso';
+import { constant } from '@wbtdevlocal/iso';
 import { TideHeightTextUnit } from '../tide-common';
 import { TideLevelIcon } from '../tide-level-icon';
 import { getTideTitle } from '../tide-utility';
@@ -60,7 +60,7 @@ export const TideHeader: React.FC = () => {
 			<Block.Bat08 />
 			<MediumBodyText>
 				The water level is currently <TideHeightTextUnit height={measured.height} precision={1} /> above the average low.
-				The beach is most available at a water level below <TideHeightTextUnit height={iso.constant.beachAccessFullyFall} precision={0} />.
+				The beach is most available at a water level below <TideHeightTextUnit height={constant.beachAccessFullyFall} precision={0} />.
 			</MediumBodyText>
 			{noteRender}
 			<Block.Bat08 />

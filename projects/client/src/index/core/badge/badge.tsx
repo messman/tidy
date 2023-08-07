@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { DaylightIcon } from '@/index/content/common/astro/daylight-icon';
 import { TideLevelIcon } from '@/index/content/common/tide/tide-level-icon';
 import { WeatherStatusIcon, WeatherStatusIconProps } from '@/index/content/common/weather/weather-icon';
-import * as iso from '@wbtdevlocal/iso';
+import { TidePoint } from '@wbtdevlocal/iso';
 import { FontWeight, Spacing } from '../primitive/primitive-design';
 import { fontStyles } from '../text/text-shared';
 
@@ -22,7 +22,7 @@ export const WeatherBadge: React.FC<WeatherBadgeProps> = (props) => {
 };
 
 export interface TideLevelBadgeProps {
-	tide: iso.Tide.MeasureStamp;
+	tide: TidePoint;
 	children: React.ReactNode;
 }
 

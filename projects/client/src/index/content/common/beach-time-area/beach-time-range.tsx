@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getTimeTwelveHourRange, getTimeTwelveHourString } from '@/index/core/time/time';
-import * as iso from '@wbtdevlocal/iso';
+import { BeachTimeDay } from '@wbtdevlocal/iso';
 import { BeachTimeRangeVisual } from './beach-time-range-visual';
 
 export interface BeachTimeRangeViewProps {
 	referenceTime: DateTime;
-	day: iso.Batch.BeachTimeDay;
+	day: BeachTimeDay;
 }
 
 export const BeachTimeRangeView: React.FC<BeachTimeRangeViewProps> = (props) => {

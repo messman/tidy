@@ -1,4 +1,4 @@
-export enum StatusType {
+export enum WeatherStatusType {
 	unknown,
 	clear,
 	clear_hot,

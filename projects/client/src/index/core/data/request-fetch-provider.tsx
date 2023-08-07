@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createContextConsumer } from '@messman/react-common';
-import * as iso from '@wbtdevlocal/iso';
+import { ApiRoute, RequestOf } from '@wbtdevlocal/iso';
 import { FetchFunc } from './request';
 
-export type CreateFetchFunc = <TApiRoute extends iso.ApiRoute>(route: iso.ApiRoute, input: iso.RequestOf<TApiRoute>) => FetchFunc;
+export type CreateFetchFunc = <TApiRoute extends ApiRoute>(route: ApiRoute, input: RequestOf<TApiRoute>) => FetchFunc;
 
 
 export interface RequestFetchProviderOutput {

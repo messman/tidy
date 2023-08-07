@@ -1,46 +1,46 @@
 import { DateTime } from 'luxon';
 
-export interface BodyEvent {
+export interface AstroBodyEvent {
 	/** The time of the astro event. */
 	time: DateTime,
 	/** Whether or not the event is a rise (otherwise, it's a set). */
 	isRise: boolean;
 }
 
-export interface SunDay {
+export interface AstroSunDay {
 	rise: DateTime;
 	set: DateTime;
 }
 
 /** As in, viewed from the Earth in one place. */
-export interface LunarDay {
+export interface AstroLunarDay {
 	/** May be on a different day than set. */
 	rise: DateTime;
 	/** May be on a different day than rise. */
 	set: DateTime;
 }
 
-export interface Day {
-	sun: SunDay;
+export interface AstroDay {
+	sun: AstroSunDay;
 	/** Moon phase is assumed to be at noon because we have no specifics. */
-	moon: MoonPhase;
+	moon: AstroLunarPhase;
 }
 
-export interface MoonPhaseDay {
+export interface AstroLunarPhaseDay {
 	/** Start of the day. */
 	time: DateTime;
 	/** Moon phase is assumed to be at noon because we have no specifics. */
-	moon: MoonPhase;
+	moon: AstroLunarPhase;
 }
 
-export interface SunRelativity {
-	previous: BodyEvent;
+export interface AstroSunRelativity {
+	previous: AstroBodyEvent;
 	/** May be set if we are close enough to a sun event. */
-	current: BodyEvent | null;
-	next: BodyEvent;
+	current: AstroBodyEvent | null;
+	next: AstroBodyEvent;
 }
 
-export enum MoonPhase {
+export enum AstroLunarPhase {
 	/** New Moon */
 	a_new,
 	/** Waxing Crescent */

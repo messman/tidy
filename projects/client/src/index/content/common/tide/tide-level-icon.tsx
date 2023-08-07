@@ -5,13 +5,13 @@ import { Icon } from '@/index/core/icon/icon';
 import { StyledFC } from '@/index/core/primitive/primitive-styled';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { icons } from '@wbtdevlocal/assets';
-import * as iso from '@wbtdevlocal/iso';
+import { mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePoint } from '@wbtdevlocal/iso';
 
 /** A tide status that should never happen with real data, but may be used for loading. */
-export const unknownTide: iso.Tide.MeasureStamp = { time: DateTime.now(), height: 0, direction: iso.Tide.Direction.turning, division: iso.Tide.Division.mid, isComputed: false, isAlternate: false, computed: 0 };
+export const unknownTide: TidePoint = { time: DateTime.now(), height: 0, direction: TideLevelDirection.turning, division: TideLevelDivision.mid, isComputed: false, isAlternate: false, computed: 0 };
 
 export interface TideLevelIconProps {
-	tide: iso.Tide.MeasureStamp;
+	tide: TidePoint;
 }
 
 export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {
@@ -19,19 +19,19 @@ export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {
 
 	let icon: JSX.Element | null = null;
 
-	if (direction === iso.Tide.Direction.turning) {
-		if (division === iso.Tide.Division.low) {
+	if (direction === TideLevelDirection.turning) {
+		if (division === TideLevelDivision.low) {
 			icon = <ExtremeText>LO</ExtremeText>;
 		}
-		else if (division === iso.Tide.Division.high) {
+		else if (division === TideLevelDivision.high) {
 			icon = <ExtremeText>HI</ExtremeText>;
 		}
-		else if (division === iso.Tide.Division.mid) {
+		else if (division === TideLevelDivision.mid) {
 			// Used for loading
 		}
 	}
-	else if (direction === iso.Tide.Direction.rising) {
-		if (division === iso.Tide.Division.mid) {
+	else if (direction === TideLevelDirection.rising) {
+		if (division === TideLevelDivision.mid) {
 			icon = <ArrowIcon type={icons.tideUpLong} />;
 		}
 		else {
@@ -39,8 +39,8 @@ export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {
 			icon = <ArrowIcon type={icons.tideUp} />;
 		}
 	}
-	else if (direction === iso.Tide.Direction.falling) {
-		if (division === iso.Tide.Division.mid) {
+	else if (direction === TideLevelDirection.falling) {
+		if (division === TideLevelDivision.mid) {
 			icon = <ArrowIcon type={icons.tideDownLong} />;
 		}
 		else {
@@ -69,7 +69,7 @@ export const TideExtremeIcon: StyledFC<TideExtremeIconProps> = (props) => {
 	const { isLow } = props;
 	return (
 		<TideLevelIconContainer>
-			<WaterIcon type={icons.tideWave} division={isLow ? iso.Tide.Division.low : iso.Tide.Division.high} />
+			<WaterIcon type={icons.tideWave} division={isLow ? TideLevelDivision.low : TideLevelDivision.high} />
 			<CenteringContainer>
 				<ExtremeText>{isLow ? 'LO' : 'HI'}</ExtremeText>
 			</CenteringContainer>
@@ -89,15 +89,15 @@ const TideLevelIconContainer = styled.span`
 	overflow: hidden;
 `;
 
-const waterOffsetPercent: Record<keyof typeof iso.Tide.Division, string> = {
+const waterOffsetPercent: Record<keyof typeof TideLevelDivision, string> = {
 	high: '6.25%',
 	mid: '34.375%',
 	low: '65.625%'
 };
 
-const WaterIcon = styled(Icon) <{ division: iso.Tide.Division; }>`
+const WaterIcon = styled(Icon) <{ division: TideLevelDivision; }>`
 	position: absolute;
-	top: ${p => iso.mapNumberEnumValue(iso.Tide.Division, waterOffsetPercent, p.division)};
+	top: ${p => mapNumberEnumValue(TideLevelDivision, waterOffsetPercent, p.division)};
 	width: 2rem;
 	height: 2rem;
 `;

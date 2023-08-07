@@ -1,4 +1,4 @@
-import { constrainObject } from '../utility';
+import { constrainObject } from '../utility/object';
 
 /** The top-level category of a server error. */
 export enum ServerErrorFormParent {

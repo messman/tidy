@@ -6,14 +6,14 @@ import { ErrorGeneric } from '@/index/core/error/error-generic';
 import { Icon } from '@/index/core/icon/icon';
 import { Panel } from '@/index/core/layout/panel';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
-import * as iso from '@wbtdevlocal/iso';
-import { BeachTimeStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from './beach-time-utility';
+import { mapNumberEnumValue } from '@wbtdevlocal/iso';
+import { BeachTimeContextualStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from './beach-time-utility';
 
 const BeachTimeSummarySuccess: React.FC = () => {
 	const { meta, beach } = useBatchResponse().success!;
 
 	const beachTimeStatus = getBeachTimeStatus(beach, meta.referenceTime);
-	const textInfoFunc = iso.mapNumberEnumValue(BeachTimeStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
+	const textInfoFunc = mapNumberEnumValue(BeachTimeContextualStatus, beachTimeStatusTextInfoFunc, beachTimeStatus);
 	const { title, description, expression } = textInfoFunc(beach, meta.referenceTime);
 
 	return (

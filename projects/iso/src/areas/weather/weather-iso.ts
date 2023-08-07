@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon';
-import { StatusType } from './weather-status-type';
+import { WeatherStatusType } from './weather-status-type';
 
-export interface CommonCurrentHourly {
+export interface WeatherPointBase {
 	/** Time of the weather status. */
 	time: DateTime;
 	/** The description of the weather at the time. */
-	status: StatusType;
+	status: WeatherStatusType;
 	/** The temperature, in degrees fahrenheit. */
 	temp: number;
 	/** The temperature "feels like", in degrees fahrenheit. */
@@ -13,7 +13,7 @@ export interface CommonCurrentHourly {
 	/** The wind speed, in miles per hour. */
 	wind: number;
 	/** The wind direction. */
-	windDirection: WindDirection;
+	windDirection: WeatherWindDirection;
 	/** The dew point, in degrees fahrenheit. */
 	dewPoint: number;
 	/** UV Index. */
@@ -29,29 +29,29 @@ export interface CommonCurrentHourly {
 	/** Probability of precipitation, [0, 1] */
 	pop: number;
 	/** Easy-to-check indicator of whether the weather is good. */
-	indicator: Indicator;
+	indicator: WeatherIndicator;
 }
 
-export enum Indicator {
+export enum WeatherIndicator {
 	bad,
 	okay,
 	best
 }
 
 /** Contains information for current weather. */
-export interface Current extends CommonCurrentHourly {
+export interface WeatherPointCurrent extends WeatherPointBase {
 
 }
 
 /** Contains information for current and hourly weather. */
-export interface Hourly extends CommonCurrentHourly {
+export interface WeatherPointHourly extends WeatherPointBase {
 }
 
-export interface Day {
+export interface WeatherPointDaily {
 	/** Time of the weather status. Start of the day. */
 	time: DateTime;
 	/** The description of the weather on the day. */
-	status: StatusType;
+	status: WeatherStatusType;
 	/** Minimum expected temperature. */
 	minTemp: number;
 	/** Maximum expected temperature. */
@@ -59,10 +59,10 @@ export interface Day {
 	/** Probability of precipitation, [0, 1] */
 	pop: number;
 	/** Easy-to-check indicator of whether the weather is good. */
-	indicator: Indicator;
+	indicator: WeatherIndicator;
 }
 
-export enum WindDirection {
+export enum WeatherWindDirection {
 	N = 0,
 	NNE,
 	NE,

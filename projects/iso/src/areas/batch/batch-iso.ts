@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
-import { enumKeys } from '../../utility';
-import * as Astro from '../astro';
-import * as Tide from '../tide';
-import * as Weather from '../weather';
+import { enumKeys } from '../../utility/enum';
+import { AstroBodyEvent, AstroDay, AstroLunarDay, AstroLunarPhase, AstroSunDay, AstroSunRelativity } from '../astro/astro-iso';
+import { TidePoint, TidePointExtreme, TideRelativity } from '../tide/tide-iso';
+import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly } from '../weather/weather-iso';
 
 export enum Seed {
 	avocado = 'avocado',
@@ -62,11 +62,11 @@ export interface BeachTimeDay {
 	/** The day, likely without time. */
 	day: DateTime;
 	/** Weather information for the day. */
-	weather: Weather.Day;
+	weather: WeatherPointDaily;
 	/** Astro events for the day. */
-	astro: Astro.Day;
+	astro: AstroDay;
 	/** Low tides for the day. */
-	tideLows: Tide.ExtremeStamp[];
+	tideLows: TidePointExtreme[];
 	/** Ranges, if any. */
 	ranges: BeachTimeRange[];
 }
@@ -133,12 +133,12 @@ export enum BeachTimeSunMarkStatus {
 
 export interface BeachTimeCurrentWeather {
 	beachTimeStatus: BeachTimeStatus;
-	weatherMarkStatus: Weather.Indicator;
+	weatherMarkStatus: WeatherIndicator;
 }
 
 export interface BeachTimeWeatherMark {
 	time: DateTime;
-	weatherStatus: Weather.Indicator;
+	weatherStatus: WeatherIndicator;
 }
 
 export enum BeachTimeStatus {
@@ -162,16 +162,16 @@ export function isBeachTimeWeatherMark(value: BeachTimeReason | null): value is 
 
 export interface AstroContent {
 	sun: {
-		relativity: Astro.SunRelativity;
-		yesterday: Astro.SunDay;
-		today: Astro.SunDay;
-		tomorrow: Astro.SunDay;
+		relativity: AstroSunRelativity;
+		yesterday: AstroSunDay;
+		today: AstroSunDay;
+		tomorrow: AstroSunDay;
 	};
 	moon: {
 		/** Next event, rise or set. */
-		next: Astro.BodyEvent;
+		next: AstroBodyEvent;
 		/** Next connected rise and set (rise before set). May cross Earth days. */
-		nextLunarDay: Astro.LunarDay;
+		nextLunarDay: AstroLunarDay;
 	};
 }
 
@@ -182,28 +182,28 @@ export interface WeatherContent {
 	hourly: WeatherContentHourly[];
 }
 
-export interface WeatherContentCurrent extends Weather.Current {
+export interface WeatherContentCurrent extends WeatherPointCurrent {
 	/** Whether it's daytime or not. */
 	isDaytime: boolean;
 }
 
-export interface WeatherContentHourly extends Weather.Hourly {
+export interface WeatherContentHourly extends WeatherPointHourly {
 	/** Whether it's daytime or not. */
 	isDaytime: boolean;
 }
 
 export interface TideContent {
 	/** The true measured tide level. */
-	measured: Tide.MeasureStamp;
-	relativity: Tide.Relativity;
+	measured: TidePoint;
+	relativity: TideRelativity;
 	daily: TideContentDay[];
 	/** The minimum across all included in the daily array. */
-	dailyMin: Tide.ExtremeStamp;
+	dailyMin: TidePointExtreme;
 	/** The maximum across all included in the daily array. */
-	dailyMax: Tide.ExtremeStamp;
+	dailyMax: TidePointExtreme;
 }
 
 export interface TideContentDay {
-	extremes: Tide.ExtremeStamp[];
-	moonPhase: Astro.MoonPhase;
+	extremes: TidePointExtreme[];
+	moonPhase: AstroLunarPhase;
 }

@@ -3,14 +3,14 @@ import { useBatchResponse } from '@/index/core/data/data';
 import { Block } from '@/index/core/layout/layout-shared';
 import { MediumBodyText } from '@/index/core/text/text-shared';
 import { getDurationDescription } from '@/index/core/time/time';
-import * as iso from '@wbtdevlocal/iso';
+import { mapNumberEnumValue, WeatherStatusType } from '@wbtdevlocal/iso';
 import { weatherStatusDescription } from './weather-utility';
 
 export const ConditionsHeader: React.FC = () => {
 	const { meta, weather, astro } = useBatchResponse().success!;
 	const { next } = astro.sun.relativity;
 
-	const statusDescription = iso.mapNumberEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
+	const statusDescription = mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, weather.current.status);
 
 	return (
 		<>

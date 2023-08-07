@@ -1,4 +1,4 @@
-import * as iso from '@wbtdevlocal/iso';
+import { WeatherStatusType } from '@wbtdevlocal/iso';
 
 export interface WeatherStatusDescription {
 	/** Fill in the blank: "It's _____ and 70 degrees." No capitalization. */
@@ -6,7 +6,7 @@ export interface WeatherStatusDescription {
 	/** Capitalized description of the status. */
 	conditions: string;
 }
-export const weatherStatusDescription: Record<keyof typeof iso.Weather.StatusType, WeatherStatusDescription> = {
+export const weatherStatusDescription: Record<keyof typeof WeatherStatusType, WeatherStatusDescription> = {
 	unknown: {
 		itIsShort: 'unknown',
 		conditions: 'Weather conditions are unknown.'

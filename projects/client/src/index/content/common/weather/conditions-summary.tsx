@@ -7,7 +7,7 @@ import { Block } from '@/index/core/layout/layout-shared';
 import { Panel } from '@/index/core/layout/panel';
 import { MediumBodyText } from '@/index/core/text/text-shared';
 import { getDurationDescription } from '@/index/core/time/time';
-import * as iso from '@wbtdevlocal/iso';
+import { mapNumberEnumValue, WeatherStatusType } from '@wbtdevlocal/iso';
 import { ConditionsHourly } from './conditions-hourly';
 import { weatherStatusDescription } from './weather-utility';
 
@@ -15,7 +15,7 @@ const ConditionsSummarySuccess: React.FC = () => {
 	const { meta, weather, astro } = useBatchResponse().success!;
 
 
-	const statusDescription = iso.mapNumberEnumValue(iso.Weather.StatusType, weatherStatusDescription, weather.current.status);
+	const statusDescription = mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, weather.current.status);
 	const nextSunEvent = astro.sun.relativity.next;
 
 	return (

@@ -6,7 +6,7 @@ import { IconInputType } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
 import { useEventCallback } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
-import * as iso from '@wbtdevlocal/iso';
+import { enumKeys } from '@wbtdevlocal/iso';
 
 export interface TestButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
@@ -103,7 +103,7 @@ export function useControlSelectKey<T extends object>(title: string, dictionary:
  * Turns an enum into an object for {@link useControlSelect}.
  */
 export function createControlSelectForEnum<T extends object>(enumObject: T): Record<keyof T, T[keyof T]> {
-	const keys = iso.enumKeys(enumObject);
+	const keys = enumKeys(enumObject);
 	const options: { [key: string]: T[keyof T]; } = {};
 	keys.forEach((key) => {
 		const keyValue = enumObject[key];

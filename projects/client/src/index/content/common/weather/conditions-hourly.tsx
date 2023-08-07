@@ -5,7 +5,7 @@ import { FontWeight, Spacing } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getTimeTwelveHour } from '@/index/core/time/time';
-import * as iso from '@wbtdevlocal/iso';
+import { WeatherContentHourly } from '@wbtdevlocal/iso';
 import { WeatherStatusIcon } from './weather-icon';
 
 export const ConditionsHourly: React.FC = () => {
@@ -35,7 +35,7 @@ const Container = styled.div`
 `;
 
 interface HourlyWeatherProps {
-	weather: iso.Batch.WeatherContentHourly;
+	weather: WeatherContentHourly;
 }
 
 const HourlyWeather: React.FC<HourlyWeatherProps> = (props) => {

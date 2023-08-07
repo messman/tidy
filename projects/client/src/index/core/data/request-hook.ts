@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEventCallback } from '@messman/react-common';
-import * as iso from '@wbtdevlocal/iso';
+import { ApiRoute, ApiRouteRequest, RequestOf, ResponseInnerOf } from '@wbtdevlocal/iso';
 import { ClientErrorForm, makeApiRequest, RequestOptions, RequestResult } from './request';
 import { useRequestFetch } from './request-fetch-provider';
 
@@ -9,7 +9,7 @@ export interface ApiRequestOptions extends Omit<RequestOptions, 'abortController
 
 }
 
-export interface ApiRequestOutput<TRequest extends iso.ApiRouteRequest> {
+export interface ApiRequestOutput<TRequest extends ApiRouteRequest> {
 	/**
 	 * Starts a request to the given API route. 
 	 */
@@ -24,7 +24,7 @@ export interface ApiRequestOutput<TRequest extends iso.ApiRouteRequest> {
  * Returns functions that make or abort requests to the API (only).
  * @param route - The route that will be accessed. This route should not change for the life of the component.
  */
-export function useApiRequest<TApiRoute extends iso.ApiRoute>(route: TApiRoute, callback: (result: RequestResult<iso.ResponseInnerOf<TApiRoute>>) => void): ApiRequestOutput<iso.RequestOf<TApiRoute>> {
+export function useApiRequest<TApiRoute extends ApiRoute>(route: TApiRoute, callback: (result: RequestResult<ResponseInnerOf<TApiRoute>>) => void): ApiRequestOutput<RequestOf<TApiRoute>> {
 
 	const { createFetchFunc } = useRequestFetch();
 
@@ -49,7 +49,7 @@ export function useApiRequest<TApiRoute extends iso.ApiRoute>(route: TApiRoute, 
 		};
 	}, []);
 
-	return React.useMemo<ApiRequestOutput<iso.RequestOf<TApiRoute>>>(() => {
+	return React.useMemo<ApiRequestOutput<RequestOf<TApiRoute>>>(() => {
 		return {
 			start: (input, options) => {
 				// End any existing request.

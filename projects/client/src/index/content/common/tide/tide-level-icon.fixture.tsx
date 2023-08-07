@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Block } from '@/index/core/layout/layout-shared';
 import { CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
-import * as iso from '@wbtdevlocal/iso';
+import { TideLevelDirection, TideLevelDivision, TidePoint } from '@wbtdevlocal/iso';
 import { TideExtremeIcon, TideLevelIcon } from './tide-level-icon';
 
 export default CosmosFixture.create(() => {
@@ -13,16 +13,16 @@ export default CosmosFixture.create(() => {
 	const computed = 0;
 	const isComputed = false;
 	const isAlternate = false;
-	const entries: iso.Tide.MeasureStamp[] = [
-		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.turning, height, time, computed, isComputed, isAlternate },
-		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.falling, height, time, computed, isComputed, isAlternate },
-		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.falling, height, time, computed, isComputed, isAlternate },
-		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.falling, height, time, computed, isComputed, isAlternate },
-		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.turning, height, time, computed, isComputed, isAlternate },
-		{ division: iso.Tide.Division.low, direction: iso.Tide.Direction.rising, height, time, computed, isComputed, isAlternate },
-		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.rising, height, time, computed, isComputed, isAlternate },
-		{ division: iso.Tide.Division.high, direction: iso.Tide.Direction.rising, height, time, computed, isComputed, isAlternate },
-		{ division: iso.Tide.Division.mid, direction: iso.Tide.Direction.turning, height, time, computed, isComputed, isAlternate },
+	const entries: TidePoint[] = [
+		{ division: TideLevelDivision.high, direction: TideLevelDirection.turning, height, time, computed, isComputed, isAlternate },
+		{ division: TideLevelDivision.high, direction: TideLevelDirection.falling, height, time, computed, isComputed, isAlternate },
+		{ division: TideLevelDivision.mid, direction: TideLevelDirection.falling, height, time, computed, isComputed, isAlternate },
+		{ division: TideLevelDivision.low, direction: TideLevelDirection.falling, height, time, computed, isComputed, isAlternate },
+		{ division: TideLevelDivision.low, direction: TideLevelDirection.turning, height, time, computed, isComputed, isAlternate },
+		{ division: TideLevelDivision.low, direction: TideLevelDirection.rising, height, time, computed, isComputed, isAlternate },
+		{ division: TideLevelDivision.mid, direction: TideLevelDirection.rising, height, time, computed, isComputed, isAlternate },
+		{ division: TideLevelDivision.high, direction: TideLevelDirection.rising, height, time, computed, isComputed, isAlternate },
+		{ division: TideLevelDivision.mid, direction: TideLevelDirection.turning, height, time, computed, isComputed, isAlternate },
 	];
 
 	const entriesRender = entries.map((entry) => {

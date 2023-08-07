@@ -3,11 +3,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { borderRadiusStyle, borderRadiusValue, Spacing } from '@/index/core/primitive/primitive-design';
 import { themeTokens } from '@/index/core/theme/theme-root';
-import * as iso from '@wbtdevlocal/iso';
+import { BeachTimeDay } from '@wbtdevlocal/iso';
 
 export interface BeachTimeRangeVisualProps {
 	referenceTime: DateTime;
-	day: iso.Batch.BeachTimeDay;
+	day: BeachTimeDay;
 }
 
 // const showOtherLines = false;

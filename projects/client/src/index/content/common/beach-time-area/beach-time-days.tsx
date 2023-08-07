@@ -8,7 +8,7 @@ import { MediumLabelText } from '@/index/core/text/text-label';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getRelativeDayText, getTimeTwelveHourString } from '@/index/core/time/time';
-import * as iso from '@wbtdevlocal/iso';
+import { BeachTimeDay } from '@wbtdevlocal/iso';
 import { MoonPhaseIcon } from '../astro/moon-phase-icon';
 import { WeatherStatusIcon } from '../weather/weather-icon';
 import { BeachTimeRangeView } from './beach-time-range';
@@ -43,7 +43,7 @@ const PaddedListContainer = styled.div`
 
 interface BeachTimeDayProps {
 	referenceTime: DateTime;
-	day: iso.Batch.BeachTimeDay;
+	day: BeachTimeDay;
 }
 
 const BeachTimeDay: React.FC<BeachTimeDayProps> = (props) => {

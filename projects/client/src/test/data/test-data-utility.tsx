@@ -1,14 +1,14 @@
 import { RequestResultServerError } from '@/index/core/data/request';
 import { getUnique } from '@messman/react-common';
-import * as iso from '@wbtdevlocal/iso';
+import { HttpMethod, ServerError, ServerErrorForm, serverErrorForms } from '@wbtdevlocal/iso';
 
-export function createRequestResultServerError(form: iso.ServerErrorForm, overrideDescription?: string): RequestResultServerError {
+export function createRequestResultServerError(form: ServerErrorForm, overrideDescription?: string): RequestResultServerError {
 	return {
 		isSuccess: false,
 		clientError: null,
 		pathInfo: {
 			finalUrl: 'fake_url',
-			method: iso.HttpMethod.GET
+			method: HttpMethod.GET
 		},
 		data: null,
 		serverError: {
@@ -23,11 +23,11 @@ export function createRequestResultServerError(form: iso.ServerErrorForm, overri
 	};
 }
 
-export function createTestServerError<T extends object | null>(detail?: T): iso.ServerError {
+export function createTestServerError<T extends object | null>(detail?: T): ServerError {
 	return {
 		_isServerError: true,
 		id: 'id',
-		form: iso.serverErrorForms.dev.test,
+		form: serverErrorForms.dev.test,
 		detail: detail || null
 	};
 }
