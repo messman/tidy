@@ -5,8 +5,8 @@ import { BeachTime } from '@/index/content/common/beach-time-area/beach-time';
 import { Conditions } from '@/index/content/common/weather/conditions';
 import { Education } from '@/index/content/learn/learn';
 import { AnimationDuration, TransitionSelector } from '@/index/core/animation/animation';
+import { PanelPadded } from '@/index/core/layout/layout-panel';
 import { overflowHiddenScrollStyle } from '@/index/core/layout/layout-shared';
-import { Panel } from '@/index/core/layout/panel';
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { Transition } from '@messman/react-common-transition';
 import * as iso from '@wbtdevlocal/iso';
@@ -46,9 +46,9 @@ export const CompactApplicationLayout: React.FC<React.PropsWithChildren> = () =>
 		</HomeScroller>
 	) : (
 		<PanelScroller>
-			<Panel>
+			<PanelPadded>
 				{screenRender}
-			</Panel>
+			</PanelPadded>
 		</PanelScroller>
 	);
 

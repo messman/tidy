@@ -38,7 +38,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	}),
 	'URL Load': CosmosFixture.create(() => {
 
@@ -68,7 +68,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	})
 };
 

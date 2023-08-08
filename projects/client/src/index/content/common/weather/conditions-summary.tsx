@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
 import { useBatchResponse } from '@/index/core/data/data';
 import { ErrorGeneric } from '@/index/core/error/error-generic';
+import { PanelPadded } from '@/index/core/layout/layout-panel';
 import { Block } from '@/index/core/layout/layout-shared';
-import { Panel } from '@/index/core/layout/panel';
 import { MediumBodyText } from '@/index/core/text/text-shared';
 import { getDurationDescription } from '@/index/core/time/time';
 import { mapNumberEnumValue, WeatherStatusType } from '@wbtdevlocal/iso';
@@ -79,9 +79,9 @@ const Wrapped = wrapForBatchLoad(ConditionsSummaryErrorLoad, ConditionsSummarySu
 
 export const ConditionsSummary: React.FC = () => {
 	return (
-		<Panel>
+		<PanelPadded>
 			<Wrapped />
-		</Panel>
+		</PanelPadded>
 	);
 };
 

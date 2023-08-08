@@ -7,8 +7,8 @@ import { Education } from '@/index/content/learn/learn';
 import { useBatchResponse } from '@/index/core/data/data';
 import { SizedIcon } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
+import { PanelPadded } from '@/index/core/layout/layout-panel';
 import { Block, overflowHiddenScrollStyle } from '@/index/core/layout/layout-shared';
-import { Panel } from '@/index/core/layout/panel';
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { AppInfo } from './app-info';
 import { appHeaderHeight } from './app-layout-shared';
@@ -36,28 +36,28 @@ export const WideApplicationLayout: React.FC<React.PropsWithChildren> = () => {
 			</AppHeaderContainer>
 			<WideContainer>
 				<PanelScroller>
-					<Panel>
+					<PanelPadded>
 						<BeachTime />
-					</Panel>
+					</PanelPadded>
 				</PanelScroller>
 				<PanelScroller>
-					<Panel>
-					</Panel>
+					<PanelPadded>
+					</PanelPadded>
 				</PanelScroller>
 				<PanelScroller>
-					<Panel>
+					<PanelPadded>
 						<Conditions />
-					</Panel>
+					</PanelPadded>
 				</PanelScroller>
 				<PanelScroller>
-					<Panel>
+					<PanelPadded>
 						<Education />
-					</Panel>
+					</PanelPadded>
 				</PanelScroller>
 				<PanelScroller>
-					<Panel>
+					<PanelPadded>
 						<About />
-					</Panel>
+					</PanelPadded>
 				</PanelScroller>
 			</WideContainer>
 		</AppContainer>

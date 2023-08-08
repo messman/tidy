@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useBatchResponse } from '@/index/core/data/data';
-import { PanelTitle } from '@/index/core/layout/panel';
+import { PanelTitled } from '@/index/core/layout/layout-panel';
 import { mapNumberEnumValue } from '@wbtdevlocal/iso';
 import { BeachTimeContextualStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from './beach-time-utility';
 
@@ -12,7 +12,7 @@ export const BeachTimeTitle: React.FC = () => {
 	const { title } = textInfoFunc(beach, meta.referenceTime);
 
 	return (
-		<PanelTitle>{title}</PanelTitle>
+		<PanelTitled title="Beach time?">{title}</PanelTitled>
 	);
 };
 

@@ -55,7 +55,7 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: FixtureSetup.root
+	setup: FixtureSetup.glass
 });
 
 const LeadLargeText = styled.strong`

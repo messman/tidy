@@ -75,19 +75,6 @@ export function createSpaceHelper(spacing: string) {
 	};
 }
 
-/** Allows descendants to still be full-width or full-height! */
-export const EdgeContainer = styled.div`
-	display: grid;
-	grid-template-columns: ${Space.Edge.value} 1fr ${Space.Edge.value};
-	
-	& > * {
-		grid-column: 2;
-	}
-`;
-
-export const edgeContainerFullBleedStyle = css`
-	grid-column: 1 / 4;
-`;
 
 /*
 	For the "focus ring":

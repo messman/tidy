@@ -52,7 +52,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	}),
 	'Stretched Button': CosmosFixture.create(() => {
 
@@ -82,7 +82,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	}),
 	'Click Wrapper Button': CosmosFixture.create(() => {
 
@@ -115,7 +115,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	})
 };
 

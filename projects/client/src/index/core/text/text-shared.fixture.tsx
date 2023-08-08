@@ -57,7 +57,7 @@ export default {
 			</>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	}),
 	'Text Ellipses': CosmosFixture.create(() => {
 
@@ -74,7 +74,7 @@ export default {
 			</EllipsesContainer>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	}),
 	'Text Hierarchy': CosmosFixture.create(() => {
 
@@ -138,7 +138,7 @@ export default {
 			</div>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	})
 
 };

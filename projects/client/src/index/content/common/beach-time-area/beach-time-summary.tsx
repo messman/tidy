@@ -4,7 +4,7 @@ import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
 import { useBatchResponse } from '@/index/core/data/data';
 import { ErrorGeneric } from '@/index/core/error/error-generic';
 import { Icon } from '@/index/core/icon/icon';
-import { Panel } from '@/index/core/layout/panel';
+import { PanelPadded } from '@/index/core/layout/layout-panel';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { mapNumberEnumValue } from '@wbtdevlocal/iso';
 import { BeachTimeContextualStatus, beachTimeStatusTextInfoFunc, getBeachTimeStatus } from './beach-time-utility';
@@ -59,9 +59,9 @@ const Wrapped = wrapForBatchLoad(BeachTimeSummaryErrorLoad, BeachTimeSummarySucc
 export const BeachTimeSummary: React.FC = () => {
 
 	return (
-		<Panel>
+		<PanelPadded>
 			<Wrapped />
-		</Panel>
+		</PanelPadded>
 	);
 };
 

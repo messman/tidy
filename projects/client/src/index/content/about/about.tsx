@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { Block } from '@/index/core/layout/layout-shared';
-import { PanelPadding } from '@/index/core/layout/panel';
 import { OutLink } from '@/index/core/text/text-link';
 import { FontDoc } from '@/index/core/text/text-shared';
 import { DEFINE } from '@/index/define';
@@ -14,7 +13,7 @@ export const About: React.FC = () => {
 	const Paragraph = FontDoc.E_Paragraph.Component;
 
 	return (
-		<PanelPadding>
+		<>
 			<AboutIconLargeNamed />
 			<Block.Elf24 />
 			<AboutShare />
@@ -60,7 +59,7 @@ export const About: React.FC = () => {
 					To report a bug, send thanks, request a feature, or see how this application works, <OutLink title='Wells Beach Time on GitHub' href="https://github.com/messman/tidy">visit the project on GitHub</OutLink>.
 				</Paragraph>
 			</div>
-		</PanelPadding>
+		</>
 	);
 };
 

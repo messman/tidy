@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Icon } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
 import { Block } from '../layout/layout-shared';
-import { PanelPadding } from '../layout/panel';
 import { MediumBodyText } from '../text/text-shared';
 import { themeTokens } from '../theme/theme-root';
 import { useBatchResponse } from './data';
@@ -16,13 +15,13 @@ export const DefaultErrorLoad: React.FC = () => {
 	}
 
 	return (
-		<PanelPadding>
+		<>
 			<Block.Dog16 />
 			<CenterContainer>
 				<LargeSpinnerIcon type={SpinnerIcon} />
 			</CenterContainer>
 			<Block.Dog16 />
-		</PanelPadding>
+		</>
 	);
 };
 

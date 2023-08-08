@@ -1,12 +1,15 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { AppNavigationProvider } from '@/index/app/index-area/app-navigation';
 import { BatchResponseProvider } from '@/index/core/data/data';
 import { DataSeedProvider, useDataSeed } from '@/index/core/data/data-seed';
 import { RequestFetchProvider } from '@/index/core/data/request-fetch-provider';
 import { ErrorBoundary } from '@/index/core/error/error-boundary';
 import { SVGIconUrlLoadProvider } from '@/index/core/icon/icon-url';
+import { PanelPadded } from '@/index/core/layout/layout-panel';
 import { ApplicationLayoutContainer } from '@/index/core/layout/layout-shared';
-import { lowerBreakpoints } from '@/index/core/layout/window-layout';
+import { LayoutBreakpointRem, lowerBreakpoints } from '@/index/core/layout/window-layout';
+import { Spacing } from '@/index/core/primitive/primitive-design';
 import { ThemeContextProvider } from '@/index/core/theme/theme-root';
 import { provider, ProviderComposer, ProviderWithProps } from '@/index/utility/provider-utility';
 import { DocumentVisibilityProvider, WindowMediaLayoutProvider } from '@messman/react-common';
@@ -91,8 +94,25 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 	else {
 		return (
 			<ApplicationLayoutContainer>
-				{children}
+				<LayoutWidthContainer>
+					<LayoutPanelContainerPadding>
+						<PanelPadded>
+							{children}
+						</PanelPadded>
+					</LayoutPanelContainerPadding>
+				</LayoutWidthContainer>
 			</ApplicationLayoutContainer>
 		);
 	}
 };
+
+const LayoutWidthContainer = styled.div`
+	flex: 1;
+	overflow: auto;
+`;
+
+const LayoutPanelContainerPadding = styled.div`
+	max-width: ${LayoutBreakpointRem.f60}rem;
+	margin: 0 auto;
+	padding: ${Spacing.dog16};
+`;

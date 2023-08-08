@@ -49,8 +49,8 @@ export const lightTokens = {
 		dark: '#206981',
 		gradient: 'radial-gradient(1055.01% 100.76% at 39.01% -0.00%, #83DAF5 13.54%, #287AC6 100%)',
 		glass: {
-			gradient: 'linear-gradient(0deg, rgba(1, 8, 14, 0.21) 0%, rgba(1, 8, 14, 0.21) 100%), linear-gradient(0deg, rgba(4, 135, 255, 0.22) 0%, rgba(4, 135, 255, 0.22) 100%), rgba(18, 19, 19, 0.26)',
-			blendMode: 'background-blend-mode: luminosity, soft-light, soft-light'
+			gradient: 'rgba(9, 81, 121, 0.41)',
+			blendMode: 'luminosity'
 		},
 		tint: {
 			lightest: 'rgba(219, 235, 248, 0.15)',

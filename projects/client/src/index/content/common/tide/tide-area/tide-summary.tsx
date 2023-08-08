@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
 import { useBatchResponse } from '@/index/core/data/data';
 import { ErrorGeneric } from '@/index/core/error/error-generic';
+import { PanelPadded } from '@/index/core/layout/layout-panel';
 import { Block } from '@/index/core/layout/layout-shared';
-import { Panel } from '@/index/core/layout/panel';
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { MediumLabelText } from '@/index/core/text/text-label';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
@@ -96,9 +96,9 @@ const Wrapped = wrapForBatchLoad(TideSummaryErrorLoad, TideSummarySuccess);
 
 export const TideSummary: React.FC = () => {
 	return (
-		<Panel>
+		<PanelPadded>
 			<Wrapped />
-		</Panel>
+		</PanelPadded>
 	);
 };
 

@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
 import { Spacing } from '../primitive/primitive-design';
-import { fontStyles, MediumBodyText } from '../text/text-shared';
+import { fontStyles } from '../text/text-shared';
 import { themeTokens } from '../theme/theme-root';
-import { EdgeContainer } from './layout-shared';
 
 export default {
 	'Block': CosmosFixture.create(() => {
@@ -24,34 +23,8 @@ export default {
 			</>
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.glass
 	}),
-	'Bleed': CosmosFixture.create(() => {
-
-		return (
-			<EdgeContainer>
-				<MediumBodyText>Text here.</MediumBodyText>
-				<div>
-					<MediumBodyText>Text here.</MediumBodyText>
-				</div>
-				<MediumBodyText>Text here.</MediumBodyText>
-			</EdgeContainer>
-		);
-	}, {
-		setup: FixtureSetup.root
-	}),
-	'Stretch': CosmosFixture.create(() => {
-
-		return (
-			<Stretch_Container>
-				<Stretch_Item remSize='1' />
-				<Stretch_Item remSize='2' />
-				<Stretch_Item remSize='3' />
-			</Stretch_Container>
-		);
-	}, {
-		setup: FixtureSetup.root
-	})
 };
 
 
@@ -82,18 +55,4 @@ const ColorBox = styled.div<SpacingEntryProps>`
 	background-color: ${p => p.withColor};
 	margin: ${p => p.size};
 	margin: ${Spacing.dog16};
-`;
-
-
-const Stretch_Container = styled.div`
-	display: flex;
-	align-items: stretch;
-	gap: 1rem;
-`;
-
-const Stretch_Item = styled.div<{ remSize: string; }>`
-	flex: 1;
-	width: ${p => p.remSize}rem;
-	height: ${p => p.remSize}rem;
-	background-color: red;
 `;

@@ -69,7 +69,7 @@ export default CosmosFixture.create(() => {
 	);
 
 }, {
-	setup: FixtureSetup.root
+	setup: FixtureSetup.glass
 });
 
 const StyledTable = styled.table`

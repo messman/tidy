@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Block } from '@/index/core/layout/layout-shared';
-import { PanelPadding } from '@/index/core/layout/panel';
 import { OutLink } from '@/index/core/text/text-link';
 import { FontDoc } from '@/index/core/text/text-shared';
 
@@ -10,7 +9,7 @@ export const Education: React.FC = () => {
 	const Paragraph = FontDoc.E_Paragraph.Component;
 
 	return (
-		<PanelPadding>
+		<>
 			<div>
 				<Heading>What causes the tides?</Heading>
 				<Paragraph>
@@ -93,6 +92,6 @@ export const Education: React.FC = () => {
 					You can also refer to the <OutLink title='Portland Data Recording Station' href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8418150">Portland NOAA station homepage</OutLink>.
 				</Paragraph>
 			</div>
-		</PanelPadding>
+		</>
 	);
 };
