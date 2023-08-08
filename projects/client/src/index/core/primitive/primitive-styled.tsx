@@ -19,8 +19,10 @@ export type AttrsComponent<E extends keyof JSX.IntrinsicElements, P extends obje
  * Indicates that the component handles the `className` prop if supplied (to make the elements within able to be styled)
  * 
  * Pattern:
+ * ```jsx
  * const MyComponent_Unstyled: StyledFC<Props> = (props) => { ... };
  * export const MyComponent = styled(MyComponent_Unstyled)` ... `
+ * ```
  * 
  * Reference: https://styled-components.com/docs/advanced#caveat 
  * 
