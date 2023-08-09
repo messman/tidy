@@ -68,7 +68,7 @@ export const lightTokens = {
 		subtle: alphaHex('E9F7FF', 65),
 		/** On the background directly, where the text needs to be darker. */
 		onBackground: alphaHex('010C15', 60),
-		link: 'red',
+		link: '#CDE7FF',
 	},
 
 	outline: {

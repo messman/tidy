@@ -25,7 +25,7 @@ const spinning = keyframes`
 		transform: rotate(0deg);
 	}
 	${'100%'} {
-		transform: rotate(360deg);
+		transform: rotate(1080deg);
 	}
 `;
 
@@ -36,24 +36,27 @@ const spinnerChildStyle = css`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	animation: ${spinning} 1.6s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-`;
+	animation-name: ${spinning};
+	animation-duration: 3s;
+	animation-iteration-count: infinite;
+	`;
 
 const SpinnerChild1 = styled(Icon)`
 	${spinnerChildStyle}
-	animation-delay: -0.6s;
+	animation-timing-function: cubic-bezier(.15,.075,.7,.85);
 `;
 
 const SpinnerChild2 = styled(Icon)`
 	${spinnerChildStyle}
-	animation-delay: -0.4s;
-`;
+	animation-timing-function: cubic-bezier(.3,.15,.7,.85);
+	`;
 
 const SpinnerChild3 = styled(Icon)`
 	${spinnerChildStyle}
-	animation-delay: -0.2s;
-`;
+	animation-timing-function: cubic-bezier(.45,.225,.7,.85);
+	`;
 
 const SpinnerChild4 = styled(Icon)`
 	${spinnerChildStyle}
+	animation-timing-function: cubic-bezier(.6,.3,.7,.85);
 `;

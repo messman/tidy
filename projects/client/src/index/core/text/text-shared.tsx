@@ -359,7 +359,7 @@ export const paragraphMarginStyle = css`
 export const MediumBodyText = styled.p`
 	margin: 0;
 	${fontStyles.text.medium};
-	color: ${themeTokens.text.subtle};
+	color: ${themeTokens.text.distinct};
 	${paragraphMarginStyle}
 `;
 

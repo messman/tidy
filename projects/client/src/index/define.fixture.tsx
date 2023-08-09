@@ -10,7 +10,6 @@ export default CosmosFixture.create(() => {
 	const { success } = useBatchResponse();
 	console.log(DEFINE);
 
-
 	let referenceTime: string = '...';
 	if (success) {
 		referenceTime = success.meta.referenceTime.toISO()!;
@@ -25,5 +24,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: FixtureSetup.root
+	setup: FixtureSetup.glass
 });

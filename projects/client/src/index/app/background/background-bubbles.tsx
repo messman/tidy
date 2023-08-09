@@ -3,6 +3,13 @@ import { Canvas, CanvasRender, RenderInput } from './canvas';
 
 //const DEBUG = false;
 
+/*
+	Inspiration:
+	- https://codepen.io/n_c_/pen/eYmyWON
+	- https://codepen.io/tdoughty/pen/ZZqgQq
+	- https://codepen.io/tamago_tofu/pen/eYpMGNK
+*/
+
 interface BubblesProps {
 	isActive: boolean;
 }
