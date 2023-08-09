@@ -1,9 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { PanelPadded } from '@/index/core/layout/layout-panel';
-import { Space } from '@/index/core/layout/layout-shared';
+import { PanelPadded, PanelTitled, SpacePanelEdge, SpacePanelGridGap, SpacePanelGridPadding } from '@/index/core/layout/layout-panel';
+import { Spacing } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
+
+const NowBeachAccess_Body = styled.div`
+	padding: ${SpacePanelEdge.value};
+	padding-top: ${Spacing.dog16};
+`;
 
 export type NowBeachAccessProps = {
 
@@ -14,7 +19,11 @@ export const NowBeachAccess: React.FC<NowBeachAccessProps> = (props) => {
 	const { } = props;
 
 	return (
-		null
+		<PanelTitled title='"Can We Go Out On The Beach?"'>
+			<NowBeachAccess_Body>
+
+			</NowBeachAccess_Body>
+		</PanelTitled>
 	);
 };
 
@@ -68,8 +77,8 @@ export const NowBeachHow: React.FC<NowBeachHowProps> = (props) => {
 const NowBeach_Container = styled.div`
 	display: flex;
 	flex-direction: column;
-	gap: ${Space.Grid.value};
-	padding: ${Space.Grid.value};
+	gap: ${SpacePanelGridGap.value};
+	padding: ${SpacePanelGridPadding.value};
 `;
 
 export type NowBeachProps = {
@@ -82,6 +91,7 @@ export const NowBeach: React.FC<NowBeachProps> = (props) => {
 
 	return (
 		<NowBeach_Container>
+			<NowBeachAccess />
 			<NowBeachHow />
 		</NowBeach_Container>
 	);

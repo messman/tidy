@@ -8,7 +8,7 @@ import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getDateDayOfWeek, getRelativeDayText, getTimeTwelveHourString } from '@/index/core/time/time';
 import { TideContentDay, TidePoint, TidePointExtreme } from '@wbtdevlocal/iso';
-import { MoonPhaseIcon } from '../../astro/moon-phase-icon';
+import { LunarPhaseIcon } from '../../astro/lunar-phase-icon';
 import { TideHeightTextUnit } from '../tide-common';
 import { TideExtremeIcon, TideLevelIcon } from '../tide-level-icon';
 
@@ -126,7 +126,7 @@ const TideChartDay: React.FC<TideChartDayProps> = (props) => {
 		<DayContainer>
 			<DayHeader>
 				<DayTitle>{titleText}</DayTitle>
-				<MoonPhaseIcon phase={day.moonPhase} />
+				<LunarPhaseIcon phase={day.moonPhase} />
 			</DayHeader>
 			<Block.Bat08 />
 			{rowRender}

@@ -48,16 +48,20 @@ const PanelBase_Unstyled: StyledFC<PanelBaseProps> = (props) => {
 	);
 };
 
-export const panelSpace = createSpaceHelper(Spacing.cat12);
+export const SpacePanelEdge = createSpaceHelper(Spacing.cat12);
+
+export const SpacePanelGridGap = createSpaceHelper(Spacing.cat12);
+export const SpacePanelGridPadding = createSpaceHelper(Spacing.cat12);
+export const SpacePanelGridListPadding = createSpaceHelper(Spacing.dog16);
 
 export const PanelPadded = styled(PanelBase_Unstyled)`
-	padding: ${panelSpace.value};
+	padding: ${SpacePanelEdge.value};
 `;
 
 const PanelTitled_Title = styled.div`
 	${fontStyles.stylized.capitalized};
 	color: ${themeTokens.text.subtle};
-	padding: ${panelSpace.value};
+	padding: 0 ${SpacePanelEdge.value};
 	padding-top: .5rem;
 `;
 

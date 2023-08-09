@@ -9,7 +9,7 @@ import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getRelativeDayText, getTimeTwelveHourString } from '@/index/core/time/time';
 import { BeachTimeDay } from '@wbtdevlocal/iso';
-import { MoonPhaseIcon } from '../astro/moon-phase-icon';
+import { LunarPhaseIcon } from '../astro/lunar-phase-icon';
 import { WeatherIconDayNight } from '../weather/weather-icon';
 import { BeachTimeRangeView } from './beach-time-range';
 
@@ -75,9 +75,9 @@ const BeachTimeDay: React.FC<BeachTimeDayProps> = (props) => {
 				</SubtleText>
 				<Block.Ant04 />
 				<IconsContainer>
-					<WeatherIconDayNight status={weather.status} isDay={true} />
+					<WeatherIconDayNight status={weather.status} isDay={true} rain={0} />
 					<Block.Bat08 />
-					<MoonPhaseIcon phase={astro.moon} />
+					<LunarPhaseIcon phase={astro.moon} />
 				</IconsContainer>
 			</BeachTimeDaySide>
 			<BeachTimeDayRightSide>

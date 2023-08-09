@@ -45,28 +45,28 @@ export const Block = {
 export const Space = {
 
 	/** Grid layout */
-	Grid: createSpaceHelper(Spacing.cat12),
+	//Grid: createSpaceHelper(Spacing.cat12),
 
-	/** Edges of screens or containers. */
-	Edge: createSpaceHelper(Spacing.cat12),
-	/** Edges of screens or containers when text is against those edges. */
-	EdgeClose: createSpaceHelper(Spacing.bat08),
-	/** Vertically stacked content where some amount of space already exists inside the components - button space, text line height, etc. */
-	ColMin: createSpaceHelper(Spacing.ant04),
-	/** Vertically stacked, closely-related content. */
-	ColClose: createSpaceHelper(Spacing.bat08),
-	/** Normal vertical content Column. */
-	Col: createSpaceHelper(Spacing.dog16),
-	/** Horizontal alignment where some amount of space already exists inside the components - button space, text line height, etc. */
-	RowMin: createSpaceHelper(Spacing.bat08),
-	/** Horizontal alignment, closely related. */
-	RowClose: createSpaceHelper(Spacing.cat12),
-	/** Horizontal alignment. */
-	Row: createSpaceHelper(Spacing.dog16),
-	/** Before/after sections. */
-	Section: createSpaceHelper(Spacing.fan32),
-	/** Before/after topics. */
-	Topic: createSpaceHelper(Spacing.guy40),
+	// /** Edges of screens or containers. */
+	// Edge: createSpaceHelper(Spacing.cat12),
+	// /** Edges of screens or containers when text is against those edges. */
+	// EdgeClose: createSpaceHelper(Spacing.bat08),
+	// /** Vertically stacked content where some amount of space already exists inside the components - button space, text line height, etc. */
+	// ColMin: createSpaceHelper(Spacing.ant04),
+	// /** Vertically stacked, closely-related content. */
+	// ColClose: createSpaceHelper(Spacing.bat08),
+	// /** Normal vertical content Column. */
+	// Col: createSpaceHelper(Spacing.dog16),
+	// /** Horizontal alignment where some amount of space already exists inside the components - button space, text line height, etc. */
+	// RowMin: createSpaceHelper(Spacing.bat08),
+	// /** Horizontal alignment, closely related. */
+	// RowClose: createSpaceHelper(Spacing.cat12),
+	// /** Horizontal alignment. */
+	// Row: createSpaceHelper(Spacing.dog16),
+	// /** Before/after sections. */
+	// Section: createSpaceHelper(Spacing.fan32),
+	// /** Before/after topics. */
+	// Topic: createSpaceHelper(Spacing.guy40),
 };
 
 export function createSpaceHelper(spacing: string) {

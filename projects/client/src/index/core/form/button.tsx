@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { SizedIcon } from '../icon/icon';
 import { SpinnerIcon } from '../icon/icon-spinner';
-import { outlineAccessibilityStyle, Space } from '../layout/layout-shared';
+import { outlineAccessibilityStyle } from '../layout/layout-shared';
 import { borderRadiusStyle, ComponentSize, Spacing } from '../primitive/primitive-design';
 import { AttrsComponent, Styled } from '../primitive/primitive-styled';
 import { IconLabel, IconLabelProps } from '../text/text-label';
@@ -134,7 +134,7 @@ export const ButtonRightRowContainer = styled.div`
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	gap: ${Space.RowClose.value};
+	gap: ${Spacing.cat12};
 `;
 
 /** Styles for 'regular' buttons - buttons with labels within them, and padding, and backgrounds, and borders. */

@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
 import { MediumBodyText } from '../text/text-shared';
-import { PanelPadded, PanelTitled } from './layout-panel';
-import { Space } from './layout-shared';
+import { PanelPadded, PanelTitled, SpacePanelEdge, SpacePanelGridPadding } from './layout-panel';
 
 const PanelContainer = styled.div`
-	padding: ${Space.Edge.value};
+	padding: ${SpacePanelGridPadding.value};
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
@@ -50,10 +49,10 @@ export default {
 			return (
 				<>
 					<PanelTitled title={title}>
-						<Space.Edge.PadA>
+						<SpacePanelEdge.PadA>
 							<MediumBodyText>Hello!</MediumBodyText>
 							<MediumBodyText>Hello!</MediumBodyText>
-						</Space.Edge.PadA>
+						</SpacePanelEdge.PadA>
 					</PanelTitled>
 				</>
 			);

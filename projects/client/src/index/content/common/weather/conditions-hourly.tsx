@@ -44,7 +44,7 @@ const HourlyWeather: React.FC<HourlyWeatherProps> = (props) => {
 
 	const roundedPop = Math.round(pop * 10) * 10;
 
-	let weatherIcon: JSX.Element = <WeatherIconDayNight status={status} isDay={isDaytime} />;
+	let weatherIcon: JSX.Element = <WeatherIconDayNight status={status} isDay={isDaytime} rain={0} />;
 
 	// If greater than 10% chance, show it
 	if (roundedPop > 10) {

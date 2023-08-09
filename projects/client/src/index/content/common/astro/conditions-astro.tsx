@@ -65,7 +65,7 @@ export const ConditionsAstro: React.FC = () => {
 			}
 			tense = meta.referenceTime > today.rise ? 'had' : 'will have';
 		}
-		icon = <WeatherIcon type={icon} />;
+		icon = <WeatherIcon type={icon} rain={null} />;
 	}
 
 	return (

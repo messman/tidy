@@ -1,6 +1,5 @@
 import styled, { css, StyledComponent } from 'styled-components';
-import { Space } from '../layout/layout-shared';
-import { fontDefaultSize, fontFamily, FontWeight } from '../primitive/primitive-design';
+import { fontDefaultSize, fontFamily, FontWeight, Spacing } from '../primitive/primitive-design';
 import { CssOutput } from '../primitive/primitive-styled';
 import { themeTokens } from '../theme/theme-root';
 
@@ -190,9 +189,9 @@ export const fontStyleDefinitions = {
 		} as const,
 		capitalized: {
 			family: fontFamily,
-			size: '.875rem',
+			size: '.8125rem',
 			lineHeight: '1.25rem',
-			weight: FontWeight.regular,
+			weight: FontWeight.medium,
 			margin: '1rem',
 			letterSpacing: '0.5px',
 			styles: css`
@@ -344,7 +343,7 @@ export const ellipsisTwoLinesStyle = css`
 `;
 
 /** Space between paragraphs of text. */
-export const paragraphMargin = Space.ColMin.value;
+export const paragraphMargin = Spacing.ant04;
 /** When applied to a paragraph component, ensures successive paragraphs are spaced with the set margin. */
 export const paragraphMarginStyle = css`
 	& + & {

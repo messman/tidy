@@ -10,7 +10,7 @@ export const BeachTimeBadges: React.FC = () => {
 
 	return (
 		<BadgeCollection>
-			<WeatherBadge status={weather.current.status} isDay={!isNextSunEventRise}>{Math.round(weather.current.temp)}&deg;</WeatherBadge>
+			<WeatherBadge status={weather.current.status} isDay={!isNextSunEventRise} rain={0}>{Math.round(weather.current.temp)}&deg;</WeatherBadge>
 			<TideLevelBadge tide={tide.measured}>{getTideDescription(tide.measured)}</TideLevelBadge>
 			<DaylightBadge isDaytime={!isNextSunEventRise}>
 				<TimeDurationTextUnit startTime={meta.referenceTime} stopTime={nextSunEventTime} />

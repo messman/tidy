@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { defaultIconSvgStyle, Icon, IconInputType, IconProps } from '@/index/core/icon/icon';
-import { borderRadiusSmallerValue, borderRadiusStyle } from '@/index/core/primitive/primitive-design';
+import { Icon, IconInputType } from '@/index/core/icon/icon';
+import { borderRadiusSmallerValue } from '@/index/core/primitive/primitive-design';
 import { StyledFC } from '@/index/core/primitive/primitive-styled';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';

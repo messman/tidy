@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { DaylightIcon } from '@/index/content/common/astro/daylight-icon';
 import { TideLevelIcon } from '@/index/content/common/tide/tide-level-icon';
-import { WeatherIconDayNight, WeatherIconDayNightProps } from '@/index/content/common/weather/weather-icon';
+import { WeatherIconDayNightProps } from '@/index/content/common/weather/weather-icon';
 import { TidePoint } from '@wbtdevlocal/iso';
 import { FontWeight, Spacing } from '../primitive/primitive-design';
 import { fontStyles } from '../text/text-shared';
@@ -12,10 +12,10 @@ export interface WeatherBadgeProps extends WeatherIconDayNightProps {
 }
 
 export const WeatherBadge: React.FC<WeatherBadgeProps> = (props) => {
-	const { children, status, isDay } = props;
+	const { children } = props;
 	return (
 		<BadgeContainer>
-			<WeatherIconDayNight status={status} isDay={isDay} />
+			{/* <WeatherIconDayNight status={status} isDay={isDay} /> */}
 			<BadgeText>{children}</BadgeText>
 		</BadgeContainer>
 	);

@@ -2,9 +2,9 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
-import { keyForNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePoint, WeatherStatusType } from '@wbtdevlocal/iso';
+import { keyForNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePoint } from '@wbtdevlocal/iso';
 import { Block } from '../layout/layout-shared';
-import { BadgeCollection, DaylightBadge, TideLevelBadge, WeatherBadge } from './badge';
+import { BadgeCollection, DaylightBadge, TideLevelBadge } from './badge';
 
 export default CosmosFixture.create(() => {
 
@@ -32,10 +32,12 @@ export default CosmosFixture.create(() => {
 			</TideLevelBadge>
 		);
 	});
+
+
 	return (
 		<>
 			<BadgeCollection>
-				<WeatherBadge isDay={true} status={WeatherStatusType.unknown}>unknown</WeatherBadge>
+				{/* <WeatherBadge isDay={true} status={WeatherStatusType.unknown}>unknown</WeatherBadge>
 				<WeatherBadge isDay={true} status={WeatherStatusType.clear}>clear</WeatherBadge>
 				<WeatherBadge isDay={true} status={WeatherStatusType.clear_hot}>clear_hot</WeatherBadge>
 				<WeatherBadge isDay={true} status={WeatherStatusType.clear_cold}>clear_cold</WeatherBadge>
@@ -61,7 +63,7 @@ export default CosmosFixture.create(() => {
 				<WeatherBadge isDay={true} status={WeatherStatusType.dust}>dust</WeatherBadge>
 				<WeatherBadge isDay={true} status={WeatherStatusType.smoke}>smoke</WeatherBadge>
 				<WeatherBadge isDay={true} status={WeatherStatusType.haze}>haze</WeatherBadge>
-				<WeatherBadge isDay={true} status={WeatherStatusType.fog}>fog</WeatherBadge>
+				<WeatherBadge isDay={true} status={WeatherStatusType.fog}>fog</WeatherBadge> */}
 			</BadgeCollection>
 			<Block.Elf24 />
 			<BadgeCollection>
