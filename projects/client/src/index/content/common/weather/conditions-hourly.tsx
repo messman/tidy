@@ -6,7 +6,7 @@ import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getTimeTwelveHour } from '@/index/core/time/time';
 import { WeatherContentHourly } from '@wbtdevlocal/iso';
-import { WeatherStatusIcon } from './weather-icon';
+import { WeatherIconDayNight } from './weather-icon';
 
 export const ConditionsHourly: React.FC = () => {
 	const { meta, weather } = useBatchResponse().success!;
@@ -44,7 +44,7 @@ const HourlyWeather: React.FC<HourlyWeatherProps> = (props) => {
 
 	const roundedPop = Math.round(pop * 10) * 10;
 
-	let weatherIcon: JSX.Element = <WeatherStatusIcon status={status} isDay={isDaytime} />;
+	let weatherIcon: JSX.Element = <WeatherIconDayNight status={status} isDay={isDaytime} />;
 
 	// If greater than 10% chance, show it
 	if (roundedPop > 10) {

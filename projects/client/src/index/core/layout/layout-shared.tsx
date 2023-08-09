@@ -43,6 +43,10 @@ export const Block = {
 };
 
 export const Space = {
+
+	/** Grid layout */
+	Grid: createSpaceHelper(Spacing.cat12),
+
 	/** Edges of screens or containers. */
 	Edge: createSpaceHelper(Spacing.cat12),
 	/** Edges of screens or containers when text is against those edges. */

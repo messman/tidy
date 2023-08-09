@@ -1,49 +1,89 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { defaultIconSvgStyle, Icon, IconInputType, IconProps } from '@/index/core/icon/icon';
+import { borderRadiusSmallerValue, borderRadiusStyle } from '@/index/core/primitive/primitive-design';
 import { StyledFC } from '@/index/core/primitive/primitive-styled';
+import { fontStyles } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 import { mapNumberEnumValue, WeatherStatusType } from '@wbtdevlocal/iso';
 
-export interface WeatherStatusIconProps {
+export interface WeatherIconDayNightProps {
 	status: WeatherStatusType;
 	isDay: boolean;
+	/** Rain as a percent, [0,100]. 0 does not show. */
+	rain: number | null;
 }
 
-export const WeatherStatusIcon: React.FC<WeatherStatusIconProps> = (props) => {
-	const { isDay, status } = props;
-	const statusTypeIcon = mapNumberEnumValue(WeatherStatusType, statusTypeIconMap, status);
+export const WeatherIconDayNight: React.FC<WeatherIconDayNightProps> = (props) => {
+	const { isDay, status, rain } = props;
+	const { day, night } = mapNumberEnumValue(WeatherStatusType, statusTypeDayNight, status);
 	return (
-		<BaseWeatherIcon type={isDay ? statusTypeIcon.day : statusTypeIcon.night} />
+		<WeatherIcon type={isDay ? day : night} rain={rain} />
 	);
 };
 
-export const BaseWeatherIcon: StyledFC<IconProps> = (props) => {
-	return (
-		<WeatherIconContainer>
-			<Icon {...props} />
-		</WeatherIconContainer>
-	);
-};
-
-const WeatherIconContainer = styled.span`
-	${defaultIconSvgStyle};
-	display: inline-block;
-	border-radius: 50%;
-	width: 2rem;
-	height: 2rem;
-	flex-shrink: 0;
+const WeatherIcon_Container = styled.div`
+	position: relative;
+	width: 2.25rem;
+	height: 2.25rem;
+	display: inline-flex;
+	justify-content: center;
+	background-color: ${themeTokens.background.tint.darker};
+	border-radius: ${borderRadiusSmallerValue};
 `;
 
-// export function isDay(eventTime: DateTime, day: iso.Astro.SunDay): boolean {
-// 	return eventTime >= day.rise && eventTime <= day.set;
-// }
+const WeatherIcon_RainIcon = styled(Icon)`
+	margin-top: .125rem;
+	width: 1.25rem;
+	height: 1.25rem;
+`;
 
-export interface StatusTypeIcon {
+const WeatherIcon_Icon = styled(Icon)`
+	margin-top: .25rem;
+	width: 1.75rem;
+	height: 1.75rem;
+`;
+
+const WeatherIcon_RainText = styled.div`
+	position: absolute;
+	bottom: 1px;
+	left: 0;
+	right: 0;
+	text-align: center;
+	${fontStyles.text.tinyHeavy};
+	color: ${themeTokens.text.subtle};
+`;
+
+export interface WeatherIconProps {
+	type: IconInputType;
+	/** Rain as a percent, [0,100]. 0 does not show. */
+	rain: number | null;
+}
+
+export const WeatherIcon: StyledFC<WeatherIconProps> = (props) => {
+	const { type, rain } = props;
+
+	const IconComponent = rain ? WeatherIcon_RainIcon : WeatherIcon_Icon;
+	const rainRender = rain ? (
+		<WeatherIcon_RainText>{rain.toString()}%</WeatherIcon_RainText>
+	) : null;
+
+	return (
+		<WeatherIcon_Container>
+			<IconComponent type={type} />
+			{rainRender}
+		</WeatherIcon_Container>
+	);
+};
+
+
+
+export interface WeatherStatusTypeDayNight {
 	day: IconInputType;
 	night: IconInputType;
 }
-export const statusTypeIconMap: Record<keyof typeof WeatherStatusType, StatusTypeIcon> = {
+export const statusTypeDayNight: Record<keyof typeof WeatherStatusType, WeatherStatusTypeDayNight> = {
 	unknown: {
 		day: icons.weatherQuestion,
 		night: icons.weatherQuestion

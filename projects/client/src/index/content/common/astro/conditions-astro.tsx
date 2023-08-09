@@ -5,7 +5,7 @@ import { Block } from '@/index/core/layout/layout-shared';
 import { MediumBodyText } from '@/index/core/text/text-shared';
 import { getDurationDescription, getTimeTwelveHourString } from '@/index/core/time/time';
 import { icons } from '@wbtdevlocal/assets';
-import { BaseWeatherIcon } from '../weather/weather-icon';
+import { WeatherIcon } from '../weather/weather-icon';
 import { DaylightIcon } from './daylight-icon';
 
 export const ConditionsAstro: React.FC = () => {
@@ -65,7 +65,7 @@ export const ConditionsAstro: React.FC = () => {
 			}
 			tense = meta.referenceTime > today.rise ? 'had' : 'will have';
 		}
-		icon = <BaseWeatherIcon type={icon} />;
+		icon = <WeatherIcon type={icon} />;
 	}
 
 	return (

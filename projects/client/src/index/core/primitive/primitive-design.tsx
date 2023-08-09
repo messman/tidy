@@ -51,6 +51,8 @@ export enum ZIndex {
 	i_maximum = 80
 }
 
+/** Smaller border radius, for smaller components. */
+export const borderRadiusSmallerValue = '.25rem';
 /** Regular border radius, for buttons/components. */
 export const borderRadiusValue = '.5rem';
 /** Double the border radius, for special maths. */
@@ -77,5 +79,6 @@ export const fontDefaultSize = '1rem';
 export const FontWeight = {
 	regular: 400,
 	medium: 500,
+	semibold: 600,
 	bold: 700
 } as const;

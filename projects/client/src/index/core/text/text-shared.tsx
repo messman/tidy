@@ -168,14 +168,15 @@ export const fontStyleDefinitions = {
 			family: fontFamily,
 			size: '.75rem',
 			lineHeight: '1rem',
-			weight: FontWeight.regular,
+			weight: FontWeight.medium,
 			margin: '1rem',
 		} as const,
 		tinyHeavy: {
 			family: fontFamily,
 			size: '.75rem',
 			lineHeight: '1rem',
-			weight: FontWeight.medium,
+			letterSpacing: '-.5px',
+			weight: FontWeight.semibold,
 			margin: '1rem',
 		} as const,
 	},
@@ -193,7 +194,7 @@ export const fontStyleDefinitions = {
 			lineHeight: '1.25rem',
 			weight: FontWeight.regular,
 			margin: '1rem',
-			letterSpacing: '2px',
+			letterSpacing: '0.5px',
 			styles: css`
 				text-transform: uppercase;
 			`
