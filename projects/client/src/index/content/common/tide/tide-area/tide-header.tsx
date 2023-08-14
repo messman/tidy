@@ -60,7 +60,7 @@ export const TideHeader: React.FC = () => {
 			<Block.Bat08 />
 			<MediumBodyText>
 				The water level is currently <TideHeightTextUnit height={measured.height} precision={1} /> above the average low.
-				The beach is most available at a water level below <TideHeightTextUnit height={constant.beachAccessFullyFall} precision={0} />.
+				The beach is most available at a water level below <TideHeightTextUnit height={constant.beachAccess.fallingFullBeach} precision={0} />.
 			</MediumBodyText>
 			{noteRender}
 			<Block.Bat08 />

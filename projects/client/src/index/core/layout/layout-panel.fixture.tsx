@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Cosmos, CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
+import { constant } from '@wbtdevlocal/iso';
 import { MediumBodyText } from '../text/text-shared';
 import { PanelPadded, PanelTitled, SpacePanelEdge, SpacePanelGridPadding } from './layout-panel';
 
@@ -19,7 +20,7 @@ export default {
 		function panel() {
 			return (
 				<PanelPadded>
-					<MediumBodyText>Hello!</MediumBodyText>
+					<MediumBodyText>Hello! {constant.beachAccess.beachTopHeight}</MediumBodyText>
 					<MediumBodyText>Hello!</MediumBodyText>
 					<MediumBodyText>Hello!</MediumBodyText>
 					<MediumBodyText>Hello!</MediumBodyText>

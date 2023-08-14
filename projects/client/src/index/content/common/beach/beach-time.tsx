@@ -25,8 +25,8 @@ export const BeachTimeSuccess: React.FC = () => {
 			<>
 				"Beach time" is an approximation of the time range when the beach is suitable to visit.
 				Beach time is based on available data for tides, sunlight, and weather (excluding wind and temperature).
-				Beach space starts disappearing quickly when the rising tide passes <TideHeightTextUnit height={constant.beachAccessEarlyRise} precision={0} />,
-				and the beach opens back up when the falling tide passes <TideHeightTextUnit height={constant.beachAccessFullyFall} precision={0} />.
+				Beach space starts disappearing quickly when the rising tide passes <TideHeightTextUnit height={constant.beachAccess.risingQuickly} precision={0} />,
+				and the beach opens back up when the falling tide passes <TideHeightTextUnit height={constant.beachAccess.fallingTrueAccess} precision={0} />.
 				Data is not guaranteed accurate, and is less accurate the further it is based from the current time.
 			</>
 		</>

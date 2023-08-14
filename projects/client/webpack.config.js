@@ -29,7 +29,7 @@ function envToBool(variableName) {
  * - React Cosmos (development)
  * - Deploy (production, possibly with bundle analysis)
  */
-module.exports = async () => {
+module.exports = () => {
 
 	console.log([
 		isDevelopment ? 'Development' : 'Production',
@@ -144,6 +144,19 @@ module.exports = async () => {
 		]
 	};
 
+	/** @type {Configuration["snapshot"]} */
+	const snapshot = {
+		// managedPaths: [
+		// 	/*
+		// 		https://webpack.js.org/configuration/other-options/#managedpaths
+		// 		Controls what directories webpack ignores when watching for changes.
+		// 		The default is `node_modules`. For our build process, we can change this to 
+		// 		exclude @wbtdevlocal.
+		// 	*/
+		// 	/^(.+?[\\/]node_modules)[\\/](?!(@wbtdevlocal))(.*[\\/].*)/,
+		// ]
+	};
+
 	/** @type {any} */
 	const forkCheckerPlugin = new ForkTsCheckerWebpackPlugin({
 		// https://github.com/TypeStrong/fork-ts-checker-webpack-plugin#options
@@ -160,7 +173,7 @@ module.exports = async () => {
 		]
 	});
 
-	const DEFINE = await getDefine(isDevelopment);
+	const DEFINE = getDefine(isDevelopment);
 	/** @type {any} */
 	const definePlugin = new webpack.DefinePlugin({ __DEFINE__: DEFINE });
 
@@ -178,6 +191,20 @@ module.exports = async () => {
 		analyzerMode: 'disabled', // Don't open the server automatically
 		generateStatsFile: isBundleAnalysis // Create a stats file
 	});
+
+	/**
+	 * Used for us the developer to check the resolved/effective webpack config,
+	 * including after anything Cosmos adds.
+	*/
+	const configCheckerPlugin = {
+		/** @type {webpack.WebpackPluginFunction} */
+		apply(compiler) {
+			compiler.hooks.done.tap('ConfigCheckerPlugin', () => {
+				const _config = compiler.options;
+				//debugger; // Uncomment to stop here (In VSCode, set Auto Attach: always and Relaunch Active Terminal)
+			});
+		}
+	};
 
 	/////////////////////////////////////////////////
 	// Set configuration
@@ -214,6 +241,7 @@ module.exports = async () => {
 			entry,
 			output,
 			stats,
+			snapshot,
 			optimization,
 			resolve,
 			module,
@@ -222,7 +250,8 @@ module.exports = async () => {
 				copyPlugin,
 				definePlugin,
 				htmlPlugin,
-				forkCheckerPlugin
+				forkCheckerPlugin,
+				configCheckerPlugin
 			]
 		};
 	}
@@ -234,13 +263,15 @@ module.exports = async () => {
 			// No entry
 			// No output
 			stats,
+			snapshot,
 			resolve,
 			module,
 			plugins: [
 				copyPlugin,
 				definePlugin,
 				htmlPlugin,
-				forkCheckerPlugin
+				forkCheckerPlugin,
+				configCheckerPlugin
 			]
 		};
 	}

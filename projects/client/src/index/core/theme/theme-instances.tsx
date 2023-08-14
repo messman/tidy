@@ -87,8 +87,10 @@ export const lightTokens = {
 	},
 
 	beachDiagram: {
-		ocean: alphaHex('0E6FC9', 90),
 		sand: '#E7DEC0',
+		sandDarker: '#C9BD9E',
+		ocean: alphaHex('45ADE8', 90),
+		oceanSide: alphaHex('2C9AD8', 90)
 	},
 
 	tideBar: {

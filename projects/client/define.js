@@ -1,5 +1,5 @@
 // @ts-check
-module.exports = async function getDefine(isDevelopment) {
+module.exports = function getDefine(isDevelopment) {
 
 	const buildTime = (new Date()).getTime();
 	const packageJson = require('./package.json');
