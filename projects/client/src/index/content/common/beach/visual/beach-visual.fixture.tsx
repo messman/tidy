@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Cosmos, CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
-import { BeachDiagram } from './beach-diagram';
+import { BeachDiagram } from './beach-visual';
 
 export default CosmosFixture.create(() => {
 
