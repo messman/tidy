@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon';
-import { constant, isServerError, Tide } from '@wbtdevlocal/iso';
+import { constant, isServerError, TidePointCurrent, TidePointExtreme } from '@wbtdevlocal/iso';
 import { serverErrors, ServerPromise } from '../../api/error';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
 import { makeRequest } from '../network/request';
-import { computeHeightAtTimeBetweenPredictions, FetchedTide, getStartOfDayBefore } from './tide-shared';
+import { getStartOfDayBefore } from '../time';
+import { computeHeightAtTimeBetweenPredictions, createTidePointExtremeId, TideFetched } from './tide-shared';
 
 /*
 	From https://tidesandcurrents.noaa.gov/api/
@@ -14,22 +15,29 @@ import { computeHeightAtTimeBetweenPredictions, FetchedTide, getStartOfDayBefore
 	https://tidesandcurrents.noaa.gov/api/datagetter?application=wells_beach_time&station=8419317&format=json&time_zone=lst_ldt&units=english&product=water_level&datum=mllw&date=latest
 */
 
-export async function readTides(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedTide> {
-	return await fetchTides(ctx, config);
-}
-
-async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedTide> {
-
+export async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<TideFetched> {
 	const extrema = await getPredictions(ctx, config);
 	if (isServerError(extrema)) {
 		return extrema;
 	}
-
-	const computed = getComputed(config, extrema);
-
-	const current = await getMeasured(ctx, config, computed);
+	let current = await getMeasured(ctx);
 	if (isServerError(current)) {
 		return current;
+	}
+
+	// Now also compute, and always return it.
+	const computed = getComputed(config, extrema);
+	if (current) {
+		current.computed = computed;
+	}
+	else {
+		current = {
+			computed,
+			height: computed,
+			isAlternate: false,
+			isComputed: true,
+			time: config.referenceTime
+		} satisfies TidePointCurrent;
 	}
 
 	return {
@@ -38,9 +46,31 @@ async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<Fe
 	};
 }
 
-async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromise<Tide.ExtremeStamp[]> {
+/**
+ * Based on the reference time, get what we think the height is.
+ * This logic is based off the same logic used for beach access height time.
+ */
+function getComputed(config: BaseConfig, extrema: TidePointExtreme[]): number {
+	const { referenceTime } = config;
+
+	// get previous and next
+	let previous: TidePointExtreme = null!;
+	let next: TidePointExtreme = null!;
+
+	for (let i = 0; i < extrema.length; i++) {
+		if (extrema[i].time >= referenceTime) {
+			previous = extrema[i - 1];
+			next = extrema[i];
+			break;
+		}
+	}
+
+	return computeHeightAtTimeBetweenPredictions(previous, next, referenceTime);
+}
+
+async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromise<TidePointExtreme[]> {
 	const { referenceTime, futureCutoff } = config;
-	const { tideStation } = constant;
+	const { wells } = constant.tideStations;
 
 	const pastCutoff = getStartOfDayBefore(referenceTime);
 
@@ -48,7 +78,7 @@ async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromis
 	const hoursBetween = Math.ceil(futureCutoff.diff(pastCutoff, 'hours').hours);
 
 	const predictionInput: NOAAPredictionInput = Object.assign({}, defaultNOAAInput, ({
-		station: tideStation,
+		station: wells,
 		product: 'predictions',
 		datum: 'mllw', // From https://tidesandcurrents.noaa.gov/datum_options.html
 		interval: 'hilo', // hi/lo, not just 6 minute intervals
@@ -68,45 +98,24 @@ async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromis
 		});
 	}
 
-	const extrema: Tide.ExtremeStamp[] = [];
+	const extrema: TidePointExtreme[] = [];
 	predictionResponse.predictions.forEach((p) => {
 		const time = toDateTimeFromNOAAString(p.t);
 		if (time < futureCutoff) {
 			extrema.push({
-				time: toDateTimeFromNOAAString(p.t),
+				id: createTidePointExtremeId(time),
+				time,
 				height: parseHeight(p.v),
 				isLow: p.type.toUpperCase() !== "H"
 			});
 		}
 	});
-
 	return extrema;
 }
 
-/**
- * Based on the reference time, get what we think the height is.
- * This logic is based off the same logic used for beach access height time.
- */
-function getComputed(config: BaseConfig, extrema: Tide.ExtremeStamp[]): number {
-	const { referenceTime } = config;
 
-	// get previous and next
-	let previous: Tide.ExtremeStamp = null!;
-	let next: Tide.ExtremeStamp = null!;
-
-	for (let i = 0; i < extrema.length; i++) {
-		if (extrema[i].time >= referenceTime) {
-			previous = extrema[i - 1];
-			next = extrema[i];
-			break;
-		}
-	}
-
-	return computeHeightAtTimeBetweenPredictions(previous, next, referenceTime);
-}
-
-async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number): ServerPromise<Tide.MeasureStampBase> {
-	const { tideStation, portlandTideStation } = constant;
+async function getMeasured(ctx: LogContext): ServerPromise<TidePointCurrent | null> {
+	const { wells, portland } = constant.tideStations;
 
 	/*
 		The reason for this complexity:
@@ -118,13 +127,12 @@ async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number
 	*/
 
 	let isHeightAlternate = false;
-	let isHeightComputed = false;
 	let heightTime: DateTime = null!;
 	let height: number = null!;
 
 	// Try to get the measurements from Wells.
 	const wellsLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
-		station: tideStation,
+		station: wells,
 		product: "water_level",
 		datum: "mllw",
 		date: "latest"
@@ -142,7 +150,7 @@ async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number
 
 		// Try Portland
 		const portlandLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
-			station: portlandTideStation,
+			station: portland,
 			product: "water_level",
 			datum: "mllw",
 			date: "latest"
@@ -159,9 +167,8 @@ async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number
 			});
 
 			// Portland failed too? Aw man.
-			isHeightComputed = true;
-			height = computed;
-			heightTime = config.referenceTime;
+			return null;
+
 		}
 		else {
 			isHeightAlternate = true;
@@ -176,10 +183,10 @@ async function getMeasured(ctx: LogContext, config: BaseConfig, computed: number
 		heightTime = toDateTimeFromNOAAString(data.t); // May be significantly in the past
 	}
 
-	const current: Tide.MeasureStampBase = {
-		computed,
+	const current: TidePointCurrent = {
+		computed: null!, // Will handle in a moment
 		isAlternate: isHeightAlternate,
-		isComputed: isHeightComputed,
+		isComputed: false,
 		height,
 		time: heightTime
 	};
@@ -194,7 +201,6 @@ function toDateTimeFromNOAAString(time: string): DateTime {
 function parseHeight(value: any): number {
 	return parseFloat(parseFloat(value).toFixed(1));
 }
-
 
 // From https://tidesandcurrents.noaa.gov/api/
 interface BaseNOAAInput {

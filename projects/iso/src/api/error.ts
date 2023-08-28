@@ -31,7 +31,9 @@ export const serverErrorForms = {
 		 */
 		design: createFormInternal('design', 'Error due to server logical design'),
 		/** A third-party service (Google, etc) threw an error or reported a problem. */
-		service: createFormInternal('service', 'Error communicating with a service')
+		service: createFormInternal('service', 'Error communicating with a service'),
+		/** The client and server are misaligned. Should force a client update. */
+		mismatch: createFormInternal('mismatch', 'Error due to client/server mismatch')
 	},
 	logic: {
 		/** Parameters from URLs or request body is missing. Useful as a separate error for debugging. */
@@ -108,4 +110,11 @@ export function isInternalServerError<T>(object: T | ServerError): object is Ser
 
 export function isDevServerError<T>(object: T | ServerError): object is ServerError {
 	return isServerError(object) && object.form.parent === ServerErrorFormParent.dev;
+}
+
+export namespace ServerErrorDetail {
+	export interface InternalMismatch {
+		current: string;
+		needed: string;
+	}
 }

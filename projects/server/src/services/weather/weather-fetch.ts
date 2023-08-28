@@ -1,13 +1,13 @@
 import { DateTime, DateTimeOptions } from 'luxon';
-import { Astro, constant, isServerError, Weather } from '@wbtdevlocal/iso';
+import {
+	AstroLunarPhase, AstroLunarPhaseDay, constant, isServerError, WeatherPointBase, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WeatherStatusType, WeatherWindDirection
+} from '@wbtdevlocal/iso';
 import { serverErrors, ServerPromise } from '../../api/error';
 import { settings } from '../../env';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
 import { makeRequest } from '../network/request';
-import { FetchedWeather, fixFetchedWeather, getIndicator, WithoutIndicator } from './weather-shared';
-
-import StatusType = Weather.StatusType;
+import { createWeatherPointHourlyId, fixFetchedWeather, getIndicator, WeatherFetched, WithoutIndicator } from './weather-shared';
 
 /*
 	Uses OpenWeather's free 'One Call API', which replaced multiple calls to the NWS API.
@@ -33,7 +33,7 @@ import StatusType = Weather.StatusType;
 */
 const openWeatherDataUrl = 'https://api.openweathermap.org/data/3.0/onecall?units=imperial&exclude=minutely';
 
-export async function readWeather(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedWeather> {
+export async function readWeather(ctx: LogContext, config: BaseConfig): ServerPromise<WeatherFetched> {
 	const fetchedWeather = await fetchWeather(ctx, config);
 	if (isServerError(fetchedWeather)) {
 		return fetchedWeather;
@@ -41,7 +41,7 @@ export async function readWeather(ctx: LogContext, config: BaseConfig): ServerPr
 	return fixFetchedWeather(config, fetchedWeather);
 }
 
-async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<FetchedWeather> {
+async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<WeatherFetched> {
 
 	// Make our initial request to get our API URL from the latitude and longitude
 	const { latitude, longitude } = constant;
@@ -78,28 +78,31 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 	// Per documentation - all times are Unix seconds UTC.
 	const zoneOptions: DateTimeOptions = { zone: constant.timeZoneLabel };
 
-	// Get moonrise and moonset as an array of events in order
-	const lunar: Astro.BodyEvent[] = [];
-	response.daily.forEach((daily) => {
-		const rise: Astro.BodyEvent = {
-			time: DateTime.fromSeconds(daily.moonrise, zoneOptions),
-			isRise: true
-		};
-		const set: Astro.BodyEvent = {
-			time: DateTime.fromSeconds(daily.moonset, zoneOptions),
-			isRise: false
-		};
-		const both = [rise, set];
-		both.sort((a, b) => {
-			return a.time.toMillis() - b.time.toMillis();
-		});
-		lunar.push(...both);
-	});
+	// // Get moonrise and moonset as an array of events in order
+	// const lunar: Astro.BodyEvent[] = [];
+	// response.daily.forEach((daily) => {
+	// 	const rise: Astro.BodyEvent = {
+	// 		time: DateTime.fromSeconds(daily.moonrise, zoneOptions),
+	// 		isRise: true
+	// 	};
+	// 	const set: Astro.BodyEvent = {
+	// 		time: DateTime.fromSeconds(daily.moonset, zoneOptions),
+	// 		isRise: false
+	// 	};
+	// 	const both = [rise, set];
+	// 	both.sort((a, b) => {
+	// 		return a.time.toMillis() - b.time.toMillis();
+	// 	});
+	// 	lunar.push(...both);
+	// });
 
-	const hourly = response.hourly.map<Weather.Hourly>((hourly) => {
-		const withoutIndicator: WithoutIndicator<Weather.Hourly> = {
+	const hourly = response.hourly.map<WeatherPointHourly>((hourly) => {
+
+		const time = DateTime.fromSeconds(hourly.dt, zoneOptions).startOf('hour');
+		const withoutIndicator: WithoutIndicator<WeatherPointHourly> = {
 			...applyCommonPrecision({
-				time: DateTime.fromSeconds(hourly.dt, zoneOptions).startOf('hour'),
+				id: createWeatherPointHourlyId(time),
+				time,
 				temp: hourly.temp,
 				tempFeelsLike: hourly.feels_like,
 				wind: hourly.wind_speed,
@@ -122,7 +125,7 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 	});
 
 	// Get the hourly entry that most closely corresponds to what our current entry will be.
-	let hourForCurrent: Weather.Hourly = null!;
+	let hourForCurrent: WeatherPointHourly = null!;
 	for (let i = 0; i < hourly.length; i++) {
 		const hour = hourly[i];
 		if (referenceTime.diff(hour.time, 'minutes').minutes <= 61) {
@@ -146,7 +149,7 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 		humidity: toPercent(response.current.humidity),
 		uvi: response.current.uvi,
 		pop: hourForCurrent.pop
-	});
+	} satisfies WithoutIndicator<WeatherPointCurrent>);
 
 	return {
 		current: {
@@ -154,8 +157,8 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 			indicator: getIndicator(currentWithoutIndicator)
 		},
 		hourly,
-		daily: response.daily.map<Weather.Day>((daily) => {
-			const withoutIndicator: WithoutIndicator<Weather.Day> = {
+		daily: response.daily.map<WeatherPointDaily>((daily) => {
+			const withoutIndicator: WithoutIndicator<WeatherPointDaily> = {
 				time: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
 				minTemp: daily.temp.min,
 				maxTemp: daily.temp.max,
@@ -167,13 +170,13 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 				indicator: getIndicator(withoutIndicator)
 			};
 		}),
-		moonPhaseDaily: response.daily.map<Astro.MoonPhaseDay>((daily) => {
+		moonPhaseDaily: response.daily.map<AstroLunarPhaseDay>((daily) => {
 			return {
 				time: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
 				moon: getMoonPhase(daily.moon_phase)
 			};
 		}),
-		lunar
+		//lunar
 	};
 }
 
@@ -312,7 +315,7 @@ function toPercent(value: number) {
 };
 
 /** Converts angle degrees to cardinal directions. */
-function degreesToDirection(value: number): Weather.WindDirection {
+function degreesToDirection(value: number): WeatherWindDirection {
 	// We are presuming that 0 degrees is N.
 	// 90 degrees is N to E, 45 is N to NE, 22.5 is N to NNE, 11.5 is to halfway between N and NNE.
 	// Use that logic to convert from number [0, 360] to direction.
@@ -321,7 +324,7 @@ function degreesToDirection(value: number): Weather.WindDirection {
 	if (directionValue === 16) {
 		directionValue = 0;
 	}
-	return directionValue as Weather.WindDirection;
+	return directionValue as WeatherWindDirection;
 };
 
 /** Max value for visibility from OpenWeather is 10km. */
@@ -339,9 +342,9 @@ function pressureToMillibars(value: number) {
 	return toPrecision(value, 1);
 };
 
-function applyCommonPrecision(entry: WithoutIndicator<Weather.CommonCurrentHourly>): WithoutIndicator<Weather.CommonCurrentHourly> {
+function applyCommonPrecision<T extends WithoutIndicator<WeatherPointBase>>(entry: T): T {
 	return {
-		time: entry.time,
+		...entry,
 		temp: toPrecision(entry.temp, 1),
 		tempFeelsLike: toPrecision(entry.tempFeelsLike, 1),
 		wind: toPrecision(entry.wind, 1),
@@ -350,7 +353,6 @@ function applyCommonPrecision(entry: WithoutIndicator<Weather.CommonCurrentHourl
 		cloudCover: toPrecision(entry.cloudCover, 3), // .xxx becomes xx.x%, so use 3 digits
 		visibility: entry.visibility ? toPrecision(entry.visibility, 1) : null,
 		dewPoint: toPrecision(entry.dewPoint, 1),
-		status: entry.status,
 		uvi: toPrecision(entry.uvi, 1),
 		humidity: toPrecision(entry.humidity, 3), // .xxx becomes xx.x%, so use 3 digits
 		pop: toPrecision(entry.pop, 3), // .xxx becomes xx.x%, so use 3 digits
@@ -361,7 +363,7 @@ function toPrecision(value: number, precision: number): number {
 	return parseFloat(value.toFixed(precision));
 }
 
-function getStatusType(ctx: LogContext, statuses: OpenWeatherWeatherStatus[]): StatusType {
+function getStatusType(ctx: LogContext, statuses: OpenWeatherWeatherStatus[]): WeatherStatusType {
 	const logger = ctx.logger;
 
 	if (!statuses.length) {
@@ -375,14 +377,14 @@ function getStatusType(ctx: LogContext, statuses: OpenWeatherWeatherStatus[]): S
 	}
 	let statusNumber = statusNumbers[0];
 
-	const status = openWeatherStatusMap[statusNumber as keyof typeof openWeatherStatusMap] || StatusType.unknown;
-	if (status === StatusType.unknown) {
+	const status = openWeatherStatusMap[statusNumber as keyof typeof openWeatherStatusMap] || WeatherStatusType.unknown;
+	if (status === WeatherStatusType.unknown) {
 		logger.warn('Weather status is unknown due to mismatch of ID', { id: statusNumber });
 	}
 	return status;
 }
 
-function getMoonPhase(value: number): Astro.MoonPhase {
+function getMoonPhase(value: number): AstroLunarPhase {
 	/*
 		As described in documentation: 0 and 1 are new; everything else is separated by 12.5.
 		Values may be any value, so we will need to round.
@@ -391,77 +393,77 @@ function getMoonPhase(value: number): Astro.MoonPhase {
 	if (asPhase === 8) {
 		asPhase = 0;
 	}
-	return asPhase as Astro.MoonPhase;
+	return asPhase as AstroLunarPhase;
 }
 
 // Retrieved from https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
 const openWeatherStatusMap = {
 	// Thunderstorm
-	200: StatusType.thun_light,
-	201: StatusType.thun_medium,
-	202: StatusType.thun_heavy,
-	210: StatusType.thun_light,
-	211: StatusType.thun_medium,
-	212: StatusType.thun_heavy,
-	221: StatusType.thun_medium,
-	230: StatusType.thun_light,
-	231: StatusType.thun_medium,
-	232: StatusType.thun_heavy,
+	200: WeatherStatusType.thun_light,
+	201: WeatherStatusType.thun_medium,
+	202: WeatherStatusType.thun_heavy,
+	210: WeatherStatusType.thun_light,
+	211: WeatherStatusType.thun_medium,
+	212: WeatherStatusType.thun_heavy,
+	221: WeatherStatusType.thun_medium,
+	230: WeatherStatusType.thun_light,
+	231: WeatherStatusType.thun_medium,
+	232: WeatherStatusType.thun_heavy,
 
 	// Drizzle
-	300: StatusType.rain_drizzle,
-	301: StatusType.rain_drizzle,
-	302: StatusType.rain_drizzle,
-	310: StatusType.rain_drizzle,
-	311: StatusType.rain_drizzle,
-	312: StatusType.rain_drizzle,
-	313: StatusType.rain_drizzle,
-	314: StatusType.rain_drizzle,
-	321: StatusType.rain_drizzle,
+	300: WeatherStatusType.rain_drizzle,
+	301: WeatherStatusType.rain_drizzle,
+	302: WeatherStatusType.rain_drizzle,
+	310: WeatherStatusType.rain_drizzle,
+	311: WeatherStatusType.rain_drizzle,
+	312: WeatherStatusType.rain_drizzle,
+	313: WeatherStatusType.rain_drizzle,
+	314: WeatherStatusType.rain_drizzle,
+	321: WeatherStatusType.rain_drizzle,
 
 	// Rain
-	500: StatusType.rain_light,
-	501: StatusType.rain_medium,
-	502: StatusType.rain_heavy,
-	503: StatusType.rain_heavy,
-	504: StatusType.rain_heavy,
-	511: StatusType.rain_freeze,
-	520: StatusType.rain_light,
-	521: StatusType.rain_medium,
-	522: StatusType.rain_heavy,
-	531: StatusType.rain_medium,
+	500: WeatherStatusType.rain_light,
+	501: WeatherStatusType.rain_medium,
+	502: WeatherStatusType.rain_heavy,
+	503: WeatherStatusType.rain_heavy,
+	504: WeatherStatusType.rain_heavy,
+	511: WeatherStatusType.rain_freeze,
+	520: WeatherStatusType.rain_light,
+	521: WeatherStatusType.rain_medium,
+	522: WeatherStatusType.rain_heavy,
+	531: WeatherStatusType.rain_medium,
 
 	// Snow
-	600: StatusType.snow_light,
-	601: StatusType.snow_medium,
-	602: StatusType.snow_heavy,
-	611: StatusType.snow_sleet,
-	612: StatusType.snow_sleet,
-	613: StatusType.snow_sleet,
-	615: StatusType.snow_rain,
-	616: StatusType.snow_rain,
-	620: StatusType.snow_rain,
-	621: StatusType.snow_rain,
-	622: StatusType.snow_rain,
+	600: WeatherStatusType.snow_light,
+	601: WeatherStatusType.snow_medium,
+	602: WeatherStatusType.snow_heavy,
+	611: WeatherStatusType.snow_sleet,
+	612: WeatherStatusType.snow_sleet,
+	613: WeatherStatusType.snow_sleet,
+	615: WeatherStatusType.snow_rain,
+	616: WeatherStatusType.snow_rain,
+	620: WeatherStatusType.snow_rain,
+	621: WeatherStatusType.snow_rain,
+	622: WeatherStatusType.snow_rain,
 
 	// Atmosphere
-	701: StatusType.fog,
-	711: StatusType.smoke,
-	721: StatusType.haze,
-	731: StatusType.dust,
-	741: StatusType.fog,
-	751: StatusType.dust,
-	761: StatusType.dust,
-	762: StatusType.dust,
-	771: StatusType.intense_other,
-	781: StatusType.intense_storm,
+	701: WeatherStatusType.fog,
+	711: WeatherStatusType.smoke,
+	721: WeatherStatusType.haze,
+	731: WeatherStatusType.dust,
+	741: WeatherStatusType.fog,
+	751: WeatherStatusType.dust,
+	761: WeatherStatusType.dust,
+	762: WeatherStatusType.dust,
+	771: WeatherStatusType.intense_other,
+	781: WeatherStatusType.intense_storm,
 
 	// Clear
-	800: StatusType.clear,
+	800: WeatherStatusType.clear,
 
 	// Clouds
-	801: StatusType.clouds_few,
-	802: StatusType.clouds_some,
-	803: StatusType.clouds_most,
-	804: StatusType.clouds_over
+	801: WeatherStatusType.clouds_few,
+	802: WeatherStatusType.clouds_some,
+	803: WeatherStatusType.clouds_most,
+	804: WeatherStatusType.clouds_over
 };

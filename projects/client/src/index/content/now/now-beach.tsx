@@ -5,28 +5,6 @@ import { Spacing } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 
-const NowBeachAccess_Body = styled.div`
-	padding: ${SpacePanelEdge.value};
-	padding-top: ${Spacing.dog16};
-`;
-
-export type NowBeachAccessProps = {
-
-};
-
-/** */
-export const NowBeachAccess: React.FC<NowBeachAccessProps> = (props) => {
-	const { } = props;
-
-	return (
-		<PanelTitled title='"Can We Go Out On The Beach?"'>
-			<NowBeachAccess_Body>
-
-			</NowBeachAccess_Body>
-		</PanelTitled>
-	);
-};
-
 export type NowBeachAccessHighlightsProps = {
 
 };

@@ -29,18 +29,18 @@ export const constant = {
 	},
 
 	beachAccess: {
-		/** For saying "the beach is almost available" */
-		fallingAlmostAccess: 8.5,
-		/** The point at which water is exactly at the top of the beach. */
-		beachTopHeight: 8,
-		/** For saying "now there's enough beach to go out" */
-		fallingTrueAccess: 7,
-		/** Pristine "tons of beach" */
-		fallingFullBeach: 3,
-		/** Troubling "rising pretty fast" */
-		risingQuickly: 3,
-		/** For saying "beach is almost gone" */
-		risingAlmostGone: 6,
+		/** For saying "the beach is almost available". A touch above the actual beach height. */
+		uncovering: 8.25,
+		/** For saying "now there's enough beach to go out". A bit below the actual value because you really can't immediately get out there. */
+		uncovered: 7,
+		/** The point at which water is exactly at the top of the beach. This is the most exact number. */
+		coveredActual: 7.75,
+		/** For saying "beach is almost gone". Well below the actual height because it's only going to get worse, and quickly. */
+		covering: 6,
+		// /** Pristine "tons of beach" */
+		// fallingFullBeach: 3,
+		// /** Troubling "rising pretty fast" */
+		// risingQuickly: 3,
 	},
 
 	/** Number of minutes before sunrise and after sunset where we can still have beach time. */

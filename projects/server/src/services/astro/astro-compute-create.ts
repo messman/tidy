@@ -1,14 +1,15 @@
-import { Astro } from '@wbtdevlocal/iso';
+import { AstroSolarEvent, AstroSolarEventType, AstroSunDay } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { linearFromPoints } from '../test/equation';
 import { combineSeed, randomizer, TestSeed } from '../test/randomize';
-import { ComputedAstro, getStartOfDayBefore } from './astro-shared';
+import { getStartOfDayBefore } from '../time';
+import { AstroFetched, createSolarEvent } from './astro-shared';
 
 /**
  * Creates random astro/sun data. Uses a seeded randomizer.
  * 
 */
-export function createAstro(config: BaseConfig, seed: TestSeed): ComputedAstro {
+export function createAstro(config: BaseConfig, seed: TestSeed): AstroFetched {
 	const sunRandomizer = randomizer(combineSeed('_sun_', seed));
 
 	const { referenceTime, futureCutoff } = config;
@@ -41,16 +42,39 @@ export function createAstro(config: BaseConfig, seed: TestSeed): ComputedAstro {
 	}
 
 	// Combine our events
-	const days: Astro.SunDay[] = [];
+	const events: AstroSolarEvent[] = [];
+	const days: AstroSunDay[] = [];
 	for (let i = 0; i < daysBetween; i++) {
 		const day = startDay.plus({ days: i });
+
+		const rise = day.plus({ minutes: sunriseMinutes[i] });
+		const set = day.plus({ minutes: sunsetMinutes[i] });
+
+		// Pretty consistently 30 minutes for civil twilight (at least for southern Maine!)
+		const civilDawn = rise.minus({ minutes: 30 });
+		const civilDusk = set.plus({ minutes: 30 });
+
+		// Set midday to be halfway between rise and set (which is close enough).
+		const midday = rise.plus({ minutes: Math.round(set.diff(rise, 'minutes').minutes / 2) });
+
+		const civilDawnEvent = createSolarEvent(civilDawn, AstroSolarEventType.civilDawn);
+		const riseEvent = createSolarEvent(rise, AstroSolarEventType.rise);
+		const middayEvent = createSolarEvent(midday, AstroSolarEventType.midday);
+		const setEvent = createSolarEvent(set, AstroSolarEventType.set);
+		const civilDuskEvent = createSolarEvent(civilDusk, AstroSolarEventType.civilDusk);
+
 		days.push({
-			rise: day.plus({ minutes: sunriseMinutes[i] }),
-			set: day.plus({ minutes: sunsetMinutes[i] }),
+			civilDawnId: civilDawnEvent.id,
+			riseId: riseEvent.id,
+			middayId: middayEvent.id,
+			setId: setEvent.id,
+			civilDuskId: civilDuskEvent.id
 		});
+		events.push(civilDawnEvent, riseEvent, middayEvent, setEvent, civilDuskEvent);
 	}
 
 	return {
-		daily: days
+		solarEvents: events,
+		sunDays: days
 	};
 }

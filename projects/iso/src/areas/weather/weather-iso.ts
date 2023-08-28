@@ -45,6 +45,7 @@ export interface WeatherPointCurrent extends WeatherPointBase {
 
 /** Contains information for current and hourly weather. */
 export interface WeatherPointHourly extends WeatherPointBase {
+	id: string;
 }
 
 export interface WeatherPointDaily {

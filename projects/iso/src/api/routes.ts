@@ -1,5 +1,4 @@
-import { ApiRouteBatchLatest } from '../areas/batch/latest-api';
-import { ApiRouteBatchSeed } from '../areas/batch/seed-api';
+import { ApiRouteBatchLatest, ApiRouteBatchSeed } from '../areas/batch/batch-api';
 import { ApiRoute, HttpMethod } from './request-response';
 
 /**

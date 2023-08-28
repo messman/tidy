@@ -19,42 +19,47 @@ export enum TideLevelDirection {
 
 /**
  * A measurement/estimation of the tides at a given time.
- * Note - this information is not always guaranteed accurate or from the right location.
- */
-export interface TidePointBase {
+ * Does not contain information that has to be gleaned from surrounding context (his and lows).
+*/
+export interface TidePointCurrent {
 	/** Whether we had to grab water level from the backup location. */
 	isAlternate: boolean;
-	/** Whether the water level is the computed value. */
-	isComputed: boolean;
 	/**
 	 * We can always compute a height, so make it available always.
 	 * While the measured height may be significantly in the past, this computed value
 	 * is for the reference time.
 	*/
 	computed: number;
+	/** Whether the water level is the computed value. */
+	isComputed: boolean;
 	/** Could be up to 30 minutes behind, based on when measurement was taken! */
 	time: DateTime;
 	/** Always a value, but may be the computed value. May not be precise to this time. */
 	height: number;
 }
 
-/**
- * A measurement/estimation of the tides at a given time.
- */
-export interface TidePoint extends TidePointBase {
+/** Additional information for the current level that depends on surrounding context. */
+export interface TidePointCurrentContextual extends TidePointCurrent {
+	/** high, medium, or low (thirds). Not whether it's currently a high or low. */
 	division: TideLevelDivision;
+	/** Direction depending on surrounding extremes. */
 	direction: TideLevelDirection;
+	/** An indication of whether the beach is covered, including the "fuzzy" time in-between. */
+	beachStatus: TideLevelBeachStatus;
+	/** When the beach is going to be covered / uncovered next compared to right now. */
+	beachChange: DateTime;
+}
+
+export enum TideLevelBeachStatus {
+	covered = 1,
+	uncovering,
+	uncovered,
+	covering
 }
 
 export interface TidePointExtreme {
+	id: string;
 	time: DateTime;
 	height: number,
 	isLow: boolean;
-}
-
-export interface TideRelativity {
-	previous: TidePointExtreme;
-	/** May be set if we are "close enough" to a tide extreme. */
-	current: TidePointExtreme | null;
-	next: TidePointExtreme;
 }

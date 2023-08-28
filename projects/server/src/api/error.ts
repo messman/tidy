@@ -1,5 +1,5 @@
 import * as uid from 'uid-safe';
-import { isInternalServerError, ServerError, ServerErrorForm, serverErrorForms } from '@wbtdevlocal/iso';
+import { isInternalServerError, ServerError, ServerErrorDetail, ServerErrorForm, serverErrorForms } from '@wbtdevlocal/iso';
 import { LogContext } from '../services/logging/pino';
 
 export type ServerPromise<T> = Promise<ServerError | T>;
@@ -31,7 +31,7 @@ export interface ServerErrorPublicDesc {
 	 * Any text here may be shown directly to the user, so it should be user-safe, 
 	 * proper grammar, etc.
 	 * 
-	 * Example: 'Session is using outdated temporary credentials 
+	 * Example: 'Session is using outdated temporary credentials '
 	*/
 	publicDesc: string;
 };
@@ -128,7 +128,15 @@ export const serverErrors = {
 					service: serviceName
 				}
 			});
-		}
+		},
+		mismatch: (ctx: LogContext, clientProvidedKey: string, serverClientKey: string, input: ServerErrorInputHidden): ServerError => {
+			return createServerError(ctx, serverErrorForms.internal.mismatch, input, {
+				publicDetail: {
+					current: clientProvidedKey,
+					needed: serverClientKey
+				} satisfies ServerErrorDetail.InternalMismatch
+			});
+		},
 	},
 	logic: {
 		missingParams: wrap(serverErrorForms.logic.missingParams),

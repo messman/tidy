@@ -1,53 +1,93 @@
 import { DateTime } from 'luxon';
-import { Astro } from '@wbtdevlocal/iso';
+import { AstroDay, AstroLunarPhase, AstroLunarPhaseDay, AstroSolarEvent, AstroSolarEventType, AstroSunDay } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
-import { FetchedWeather } from '../weather/weather-shared';
+import { getStartOfDayBefore } from '../time';
 
-export interface ComputedAstro {
-	daily: Astro.SunDay[];
+export function createSolarEvent(time: DateTime, type: AstroSolarEventType): AstroSolarEvent {
+	return {
+		id: `sol-${time.toMillis()}`,
+		time,
+		type
+	};
 }
 
-export function getStartOfDayBefore(day: DateTime): DateTime {
-	return day.minus({ days: 1 }).startOf('day');
+export interface AstroFetched {
+	solarEvents: AstroSolarEvent[];
+	sunDays: AstroSunDay[];
+}
+
+export interface SunRelativity {
+	/** May include mid-day. */
+	previousId: string;
+	/** May include mid-day. May be set if we are close enough to a sun event. */
+	currentId: string | null;
+	nextRiseSetTwilightId: string;
+	nextRiseSetId: string;
+}
+
+export interface SunCloseDays {
+	yesterday: AstroSunDay;
+	today: AstroSunDay;
+	tomorrow: AstroSunDay;
+}
+
+export interface AstroAdditionalContext {
+	days: AstroDay[];
+	solarEventMap: Map<string, AstroSolarEvent>;
+	sunRelativity: SunRelativity;
+	sunCloseDays: SunCloseDays;
+	todayAstroDay: AstroDay;
 }
 
 /** If we are within this time (on either side), consider the event current. */
-const currentEventBoundMinutes = 15;
+const currentEventBoundMinutes = 10;
 
-export function getSunRelativity(config: BaseConfig, computed: ComputedAstro): Astro.SunRelativity {
+/** Gets [previous, current, next].  */
+function getSunRelativity(config: BaseConfig, fetched: AstroFetched): SunRelativity {
 
 	const { referenceTime } = config;
+	const { solarEvents } = fetched;
 	const referenceTimeCurrentLowerBound = referenceTime.minus({ minutes: currentEventBoundMinutes });
 	const referenceTimeCurrentUpperBound = referenceTime.plus({ minutes: currentEventBoundMinutes });
 
-	let previous: Astro.BodyEvent = null!;
-	let current: Astro.BodyEvent | null = null;
-	let next: Astro.BodyEvent = null!;
+	let previous: AstroSolarEvent = null!;
+	let current: AstroSolarEvent | null = null;
+	let nextRiseSetTwilight: AstroSolarEvent = null!;
+	let nextRiseSet: AstroSolarEvent = null!;
 
-	function setRelativity(event: Astro.BodyEvent) {
-		const { time } = event;
+	for (let i = 0; i < solarEvents.length; i++) {
+		const solarEvent = solarEvents[i];
 
-		if (time < referenceTimeCurrentLowerBound) {
-			previous = event;
+		if (!previous) {
+			// Be fuzzy on the time - accept that we're at an extreme within a certain time range of the current time.
+			if (solarEvent.time >= referenceTimeCurrentLowerBound && solarEvent.time <= referenceTimeCurrentUpperBound) {
+				current = solarEvent;
+				previous = solarEvents[i - 1];
+			}
+			// Else check for next
+			else if (solarEvent.time > referenceTime) {
+				previous = solarEvents[i - 1];
+			}
 		}
-		else if (time >= referenceTimeCurrentLowerBound && time <= referenceTimeCurrentUpperBound) {
-			current = event;
-		}
-		else if (!next && time > referenceTimeCurrentUpperBound) {
-			next = event;
+		else {
+			// Now, check for the next solar events
+			if (!nextRiseSetTwilight && solarEvent.type !== AstroSolarEventType.midday) {
+				nextRiseSetTwilight = solarEvent;
+			}
+			if (!nextRiseSet && (solarEvent.type === AstroSolarEventType.rise || solarEvent.type === AstroSolarEventType.set)) {
+				nextRiseSetTwilight = solarEvent;
+			}
+			if (!!nextRiseSetTwilight && !!nextRiseSet) {
+				break;
+			}
 		}
 	}
 
-	computed.daily.forEach((day) => {
-		const { rise, set } = day;
-		setRelativity({ isRise: true, time: rise });
-		setRelativity({ isRise: false, time: set });
-	});
-
 	return {
-		previous,
-		current,
-		next,
+		previousId: previous.id,
+		currentId: current?.id || null,
+		nextRiseSetId: nextRiseSet.id,
+		nextRiseSetTwilightId: nextRiseSetTwilight.id
 	};
 }
 
@@ -55,42 +95,85 @@ export function getSunRelativity(config: BaseConfig, computed: ComputedAstro): A
  * Returns [yesterday, today, tomorrow].
  * Sun data we have for the previous day; moon data we only have for the current day.
  */
-export function getCloseSunDays(config: BaseConfig, computed: ComputedAstro): [Astro.SunDay, Astro.SunDay, Astro.SunDay] {
+function getSunCloseDays(config: BaseConfig, fetched: AstroFetched, solarEventMap: Map<string, AstroSolarEvent>): SunCloseDays {
 	const { referenceTime } = config;
-	const { daily: dailySun } = computed;
+	const { sunDays } = fetched;
 
 	const yesterday = getStartOfDayBefore(referenceTime);
 
-	for (let i = 0; i < dailySun.length; i++) {
-		const sunDay = dailySun[i];
-		if (sunDay.rise.hasSame(yesterday, 'day')) {
-			return dailySun.slice(i, i + 2) as [Astro.SunDay, Astro.SunDay, Astro.SunDay];
-		}
-	}
-	return null!;
-}
-
-/**
- * Returns [next, nextLunarDay].
- * Sun data we have for the previous day; moon data we only have for the current day.
- */
-export function getNextLunarDay(weather: FetchedWeather): Astro.LunarDay {
-	const { lunar } = weather;
-
-	let rise: Astro.BodyEvent = null!;
-
-	for (let i = 0; i < lunar.length; i++) {
-		const event = lunar[i];
-		if (event.isRise) {
-			rise = event;
-		}
-		else if (rise) {
+	for (let i = 0; i < sunDays.length; i++) {
+		const sunDay = sunDays[i];
+		if (solarEventMap.get(sunDay.civilDawnId)!.time.hasSame(yesterday, 'day')) {
 			return {
-				rise: rise.time,
-				set: event.time
+				yesterday: sunDay,
+				today: sunDays[i + 1],
+				tomorrow: sunDays[i + 2]
 			};
 		}
 	}
 	return null!;
 }
 
+// /**
+//  * Returns [next, nextLunarDay].
+//  * Sun data we have for the previous day; moon data we only have for the current day.
+//  */
+// export function getNextLunarDay(weather: WeatherFetched): Astro.LunarDay {
+// 	const { lunar } = weather;
+
+// 	let rise: Astro.BodyEvent = null!;
+
+// 	for (let i = 0; i < lunar.length; i++) {
+// 		const event = lunar[i];
+// 		if (event.isRise) {
+// 			rise = event;
+// 		}
+// 		else if (rise) {
+// 			return {
+// 				rise: rise.time,
+// 				set: event.time
+// 			};
+// 		}
+// 	}
+// 	return null!;
+// }
+
+
+export function getAstroAdditionalContext(config: BaseConfig, fetched: AstroFetched, lunarDays: AstroLunarPhaseDay[]): AstroAdditionalContext {
+
+	// Create a map of solar events for easy access.
+	const solarEventMap = new Map<string, AstroSolarEvent>();
+	fetched.solarEvents.forEach((solarEvent) => {
+		solarEventMap.set(solarEvent.id, solarEvent);
+	});
+
+	// Merge phase days with sun time days.
+	const lunarDayMap = new Map<number, AstroLunarPhase>;
+	lunarDays.forEach((lunarDay) => {
+		lunarDayMap.set(lunarDay.time.startOf('day').toMillis(), lunarDay.moon);
+	});
+	const days: AstroDay[] = [];
+	let todayAstroDay: AstroDay = null!;
+	fetched.sunDays.forEach((sunDay) => {
+		const day = solarEventMap.get(sunDay.civilDawnId)!.time.startOf('day');
+		const phase = lunarDayMap.get(day.toMillis());
+		if (phase !== undefined) {
+			const astroDay: AstroDay = {
+				time: day,
+				moon: phase,
+				sun: sunDay
+			};
+			days.push(astroDay);
+			if (day.hasSame(config.referenceTime, 'day')) {
+				todayAstroDay = astroDay;
+			}
+		}
+	});
+	return {
+		sunRelativity: getSunRelativity(config, fetched),
+		sunCloseDays: getSunCloseDays(config, fetched, solarEventMap),
+		days,
+		solarEventMap,
+		todayAstroDay
+	};
+}

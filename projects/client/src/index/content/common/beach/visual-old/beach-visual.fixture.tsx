@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { Cosmos, CosmosFixture } from '@/test';
-import { FixtureSetup } from '@/test/cosmos-fixture';
-import { BeachDiagram } from './beach-visual';
+// import * as React from 'react';
+// import { Cosmos, CosmosFixture } from '@/test';
+// import { FixtureSetup } from '@/test/cosmos-fixture';
+// import { BeachDiagram } from './beach-visual';
 
-export default CosmosFixture.create(() => {
+// export default CosmosFixture.create(() => {
 
-	const height = Cosmos.useControlValue("Height", 5);
-	const isGood = Cosmos.useControlValue("Is Good", false);
+// 	const height = Cosmos.useControlValue("Height", 5);
+// 	const isGood = Cosmos.useControlValue("Is Good", false);
 
-	return (
-		<>
-			<BeachDiagram height={height} isGood={isGood} />
-		</>
-	);
-}, {
-	setup: FixtureSetup.glass
-});
+// 	return (
+// 		<>
+// 			<BeachDiagram height={height} isGood={isGood} />
+// 		</>
+// 	);
+// }, {
+// 	setup: FixtureSetup.glass
+// });

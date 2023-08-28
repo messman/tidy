@@ -1,43 +1,54 @@
 import { DateTime } from 'luxon';
 
-export interface AstroBodyEvent {
+export enum AstroSolarEventType {
+	civilDawn,
+	rise,
+	midday,
+	set,
+	civilDusk
+}
+
+export interface AstroSolarEvent {
+	id: string;
 	/** The time of the astro event. */
 	time: DateTime,
-	/** Whether or not the event is a rise (otherwise, it's a set). */
-	isRise: boolean;
+	type: AstroSolarEventType;
 }
 
 export interface AstroSunDay {
-	rise: DateTime;
-	set: DateTime;
+	civilDawnId: string;
+	riseId: string;
+	middayId: string;
+	setId: string;
+	civilDuskId: string;
 }
 
-/** As in, viewed from the Earth in one place. */
-export interface AstroLunarDay {
-	/** May be on a different day than set. */
-	rise: DateTime;
-	/** May be on a different day than rise. */
-	set: DateTime;
-}
+// /** As in, viewed from the Earth in one place. */
+// export interface AstroLunarDay {
+// 	/** May be on a different day than set. */
+// 	rise: DateTime;
+// 	/** May be on a different day than rise. */
+// 	set: DateTime;
+// }
 
 export interface AstroDay {
+	time: DateTime;
 	sun: AstroSunDay;
 	/** Moon phase is assumed to be at noon because we have no specifics. */
 	moon: AstroLunarPhase;
 }
+
+// export interface AstroLunarTidalSpan {
+// 	phase: AstroLunarPhase;
+// 	start: DateTime;
+// 	stop: DateTime;
+// }
 
 export interface AstroLunarPhaseDay {
 	/** Start of the day. */
 	time: DateTime;
 	/** Moon phase is assumed to be at noon because we have no specifics. */
 	moon: AstroLunarPhase;
-}
-
-export interface AstroSunRelativity {
-	previous: AstroBodyEvent;
-	/** May be set if we are close enough to a sun event. */
-	current: AstroBodyEvent | null;
-	next: AstroBodyEvent;
 }
 
 export enum AstroLunarPhase {

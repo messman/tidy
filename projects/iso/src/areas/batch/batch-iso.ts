@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { enumKeys } from '../../utility/enum';
-import { AstroBodyEvent, AstroDay, AstroLunarDay, AstroLunarPhase, AstroSunDay, AstroSunRelativity } from '../astro/astro-iso';
-import { TidePoint, TidePointExtreme, TideRelativity } from '../tide/tide-iso';
+import { AstroDay, AstroLunarPhase, AstroSolarEvent, AstroSunDay } from '../astro/astro-iso';
+import { TidePointCurrent, TidePointExtreme } from '../tide/tide-iso';
 import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly } from '../weather/weather-iso';
 
 export enum Seed {
@@ -23,37 +23,95 @@ export enum Seed {
 }
 export const seedKeys = enumKeys(Seed);
 
-export interface BatchContent {
+export interface Batch {
 	/** Info about the request. */
-	meta: Meta;
-	/** Content used mainly for the beach time representation. */
-	beach: BeachContent;
-	/** Content related to sun and moon. */
-	astro: AstroContent;
-	/** Content for weather, including both hourly and daily. */
-	weather: WeatherContent;
-	/** Content for tides, including current and predictions. */
-	tide: TideContent;
+	meta: BatchMeta;
+
+
+	/** Tide extrema data, which is referenced in multiple areas. */
+	tideExtrema: {
+		extrema: TidePointExtreme[];
+		minId: string;
+		maxId: string;
+	};
+	solarEvents: AstroSolarEvent[];
+
+
+	/** Content for the current situation. */
+	now: BatchNow;
+	/** Content for the upcoming week. */
+	week: BatchWeek;
+
 }
 
-export interface Meta {
+export interface BatchMeta {
 	/** Time the request was processed on the server. */
 	processingTime: DateTime;
 	/** Matches to the configuration reference time. */
 	referenceTime: DateTime;
 }
 
-export interface BeachContent {
-	/** Whether or not it is beach time, and whether or not it is best. */
-	status: BeachTimeStatus;
-	/** First reason for fully stopping current beach time. */
-	firstStopReason: BeachTimeReason | null;
-	tide: BeachTimeCurrentTide;
-	sun: BeachTimeCurrentSun;
-	weather: BeachTimeCurrentWeather;
+//#region Now
 
-	/** The next beach time that users can expect. */
-	next: BeachTimeRange;
+export interface BatchNow {
+	tide: BatchNowTide;
+	weather: BatchNowWeather;
+	astro: BatchNowAstro;
+}
+
+export interface BatchNowTide {
+	current: TidePointCurrent;
+	previousId: string;
+	/** May be set if we are "close enough" to a tide extreme. */
+	currentId: string | null;
+	nextId: string;
+}
+
+export interface BatchNowWeather {
+	/** Current weather. */
+	current: BatchNowWeatherCurrent;
+	/** Hourly weather for some time. */
+	hourly: BatchNowWeatherHourly[];
+	/** Id of the first hourly weather with a different indicator, if any. */
+	indicatorChangeHourlyId: string | null;
+}
+
+export interface BatchNowWeatherCurrent extends WeatherPointCurrent {
+	/** Whether it's daytime or not. */
+	isDaytime: boolean;
+}
+
+export interface BatchNowWeatherHourly extends WeatherPointHourly {
+	/** Whether it's daytime or not. */
+	isDaytime: boolean;
+}
+
+export interface BatchNowAstro {
+	sun: {
+		/** May include mid-day. */
+		previousId: string;
+		/** May include mid-day. May be set if we are close enough to a sun event. */
+		currentId: string | null;
+		nextRiseSetTwilightId: string;
+		nextRiseSetId: string;
+		yesterday: AstroSunDay;
+		today: AstroSunDay;
+		tomorrow: AstroSunDay;
+	};
+	moon: {
+		phase: AstroLunarPhase;
+		// tidalSpan: AstroLunarTidalSpan | null;
+		// nextTidalSpan: AstroLunarTidalSpan;
+	};
+}
+
+//#endregion
+
+//#region Week
+
+export interface BatchWeek {
+	/** Overall min and max of temperature for this range. */
+	tempRange: Range<number>;
 	/** Beach times by day for the next few days. */
 	days: BeachTimeDay[];
 }
@@ -65,145 +123,27 @@ export interface BeachTimeDay {
 	weather: WeatherPointDaily;
 	/** Astro events for the day. */
 	astro: AstroDay;
-	/** Low tides for the day. */
-	tideLows: TidePointExtreme[];
 	/** Ranges, if any. */
 	ranges: BeachTimeRange[];
 }
+
 
 export interface BeachTimeRange {
 	/** When the beach time begins. */
 	start: DateTime;
 	/** When the beach time ends. */
 	stop: DateTime;
-	/** Blocks of time broken up by whether they are best. */
-	blocks: BeachTimeBlock[];
+	/** The low tide around which this beach time revolves, even if on a different day. */
+	tideLowId: string;
+	/** Solar events that occur during this beach time, including that may be the cause. */
+	solarEventIds: string[];
+	/** Indication of the weather in this range (preferring worse indicator for safety). */
+	weather: WeatherIndicator;
 }
 
-export interface BeachTimeBlock {
-	/** Whether this is a time when all parts are in their best state. */
-	isBest: boolean;
-	/** When this block starts. */
-	start: DateTime,
-	/** When this block stops. */
-	stop: DateTime,
-}
+//#endregion
 
-export interface BeachTimeCurrentTide {
-	beachTimeStatus: BeachTimeStatus;
-	tideMarkStatus: BeachTimeTideMarkStatus;
-}
-
-export interface BeachTimeTideMark {
-	time: DateTime;
-	heightStatus: BeachTimeTideMarkStatus;
-}
-
-export enum BeachTimeTideMarkStatus {
-	/** The bare minimum beach is becoming available. */
-	earlyFall,
-	/** The beach is as available as it needs to be for beach time. */
-	fullyFall,
-	/** The beach is at the first point of concern for rising. */
-	earlyRise,
-	/** The beach has risen past the point where beach is available. */
-	fullyRise
-}
-
-export interface BeachTimeCurrentSun {
-	beachTimeStatus: BeachTimeStatus;
-	sunMarkStatus: BeachTimeSunMarkStatus;
-}
-
-export interface BeachTimeSunMark {
-	time: DateTime;
-	lightStatus: BeachTimeSunMarkStatus;
-}
-
-export enum BeachTimeSunMarkStatus {
-	/** The sun has set, but there is still light. */
-	sunset,
-	/** It is too dark for the beach. */
-	night,
-	/** The sun has not yet risen, but there is light. */
-	predawn,
-	/** The sun has risen. */
-	sunrise
-}
-
-export interface BeachTimeCurrentWeather {
-	beachTimeStatus: BeachTimeStatus;
-	weatherMarkStatus: WeatherIndicator;
-}
-
-export interface BeachTimeWeatherMark {
-	time: DateTime;
-	weatherStatus: WeatherIndicator;
-}
-
-export enum BeachTimeStatus {
-	not,
-	okay,
-	best
-}
-
-/** A reason can be due to tides, sun, or weather. */
-export type BeachTimeReason = BeachTimeTideMark | BeachTimeWeatherMark | BeachTimeSunMark;
-
-export function isBeachTimeTideMark(value: BeachTimeReason | null): value is BeachTimeTideMark {
-	return !!value && (value as BeachTimeTideMark).heightStatus !== undefined;
-}
-export function isBeachTimeSunMark(value: BeachTimeReason | null): value is BeachTimeSunMark {
-	return !!value && (value as BeachTimeSunMark).lightStatus !== undefined;
-}
-export function isBeachTimeWeatherMark(value: BeachTimeReason | null): value is BeachTimeWeatherMark {
-	return !!value && (value as BeachTimeWeatherMark).weatherStatus !== undefined;
-}
-
-export interface AstroContent {
-	sun: {
-		relativity: AstroSunRelativity;
-		yesterday: AstroSunDay;
-		today: AstroSunDay;
-		tomorrow: AstroSunDay;
-	};
-	moon: {
-		/** Next event, rise or set. */
-		next: AstroBodyEvent;
-		/** Next connected rise and set (rise before set). May cross Earth days. */
-		nextLunarDay: AstroLunarDay;
-	};
-}
-
-export interface WeatherContent {
-	/** Current weather. */
-	current: WeatherContentCurrent;
-	/** Hourly weather for some time. */
-	hourly: WeatherContentHourly[];
-}
-
-export interface WeatherContentCurrent extends WeatherPointCurrent {
-	/** Whether it's daytime or not. */
-	isDaytime: boolean;
-}
-
-export interface WeatherContentHourly extends WeatherPointHourly {
-	/** Whether it's daytime or not. */
-	isDaytime: boolean;
-}
-
-export interface TideContent {
-	/** The true measured tide level. */
-	measured: TidePoint;
-	relativity: TideRelativity;
-	daily: TideContentDay[];
-	/** The minimum across all included in the daily array. */
-	dailyMin: TidePointExtreme;
-	/** The maximum across all included in the daily array. */
-	dailyMax: TidePointExtreme;
-}
-
-export interface TideContentDay {
-	extremes: TidePointExtreme[];
-	moonPhase: AstroLunarPhase;
+export interface Range<T> {
+	min: T;
+	max: T;
 }

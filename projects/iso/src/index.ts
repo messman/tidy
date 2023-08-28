@@ -5,8 +5,7 @@ export * from './api/serialization';
 
 export * from './areas/astro/astro-iso';
 export * from './areas/batch/batch-iso';
-export * from './areas/batch/latest-api';
-export * from './areas/batch/seed-api';
+export * from './areas/batch/batch-api';
 export * from './areas/tide/tide-iso';
 export * from './areas/weather/weather-iso';
 export * from './areas/weather/weather-status-type';
