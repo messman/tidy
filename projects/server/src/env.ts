@@ -24,7 +24,7 @@ const isDev = processEnv.NODE_ENV === 'dev';
 if (isDev && !processEnv.KEY_OPEN_WEATHER) {
 	// Load other settings from JSON
 	try {
-		processEnv = Object.assign({}, processEnv, require('../env-dev-public.js'), require('../env-dev-secret.j'));
+		processEnv = Object.assign({}, processEnv, require('../env-dev-public.js'), require('../env-dev-secret.js'));
 	}
 	catch (e) {
 		baseLogger.error('env - catch on loading env-dev', { error: e });

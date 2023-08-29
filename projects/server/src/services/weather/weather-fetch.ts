@@ -103,8 +103,8 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 			...applyCommonPrecision({
 				id: createWeatherPointHourlyId(time),
 				time,
-				temp: hourly.temp,
-				tempFeelsLike: hourly.feels_like,
+				temp: Math.round(hourly.temp),
+				tempFeelsLike: Math.round(hourly.feels_like),
 				wind: hourly.wind_speed,
 				windDirection: degreesToDirection(hourly.wind_deg),
 				pressure: pressureToMillibars(hourly.pressure),
@@ -137,8 +137,8 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 
 	const currentWithoutIndicator = applyCommonPrecision({
 		time: DateTime.fromSeconds(response.current.dt, zoneOptions),
-		temp: response.current.temp,
-		tempFeelsLike: response.current.feels_like,
+		temp: Math.round(response.current.temp),
+		tempFeelsLike: Math.round(response.current.feels_like),
 		wind: response.current.wind_speed,
 		windDirection: degreesToDirection(response.current.wind_deg),
 		pressure: pressureToMillibars(response.current.pressure),
@@ -160,8 +160,8 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 		daily: response.daily.map<WeatherPointDaily>((daily) => {
 			const withoutIndicator: WithoutIndicator<WeatherPointDaily> = {
 				time: DateTime.fromSeconds(daily.dt, zoneOptions).startOf('day'),
-				minTemp: daily.temp.min,
-				maxTemp: daily.temp.max,
+				minTemp: Math.round(daily.temp.min),
+				maxTemp: Math.round(daily.temp.max),
 				status: getStatusType(ctx, daily.weather),
 				pop: daily.pop
 			};

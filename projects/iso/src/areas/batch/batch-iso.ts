@@ -135,7 +135,7 @@ export interface BeachTimeRange {
 	stop: DateTime;
 	/** The low tide around which this beach time revolves, even if on a different day. */
 	tideLowId: string;
-	/** Solar events that occur during this beach time, including that may be the cause. */
+	/** Solar events that occur during this beach time, including that may be the cause of its start or end. */
 	solarEventIds: string[];
 	/** Indication of the weather in this range (preferring worse indicator for safety). */
 	weather: WeatherIndicator;

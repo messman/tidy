@@ -1,8 +1,7 @@
 const express = require('express');
 import { Application, Request, RequestHandler, Response, Router } from 'express';
 import { ApiRoute, ApiRouteRequest, ApiRouteResponse, createSerializationReviver, isEmptyObject, isServerError, scrubServerError, ServerError } from '@wbtdevlocal/iso';
-import { routes as batchLatestRoutes } from '../areas/batch/latest-handle';
-import { routes as batchSeedRoutes } from '../areas/batch/seed-handle';
+import { routes as batchRoutes } from '../areas/batch/batch-handle';
 import { baseLogger } from '../services/logging/pino';
 import { createRequestContext, RequestContext } from './context';
 import { serverErrors } from './error';
@@ -29,8 +28,7 @@ export function configureApi(app: Application): void {
 		// Match directory order
 
 		// Batch
-		...batchLatestRoutes,
-		...batchSeedRoutes,
+		...batchRoutes,
 	]);
 
 	// 404 handler

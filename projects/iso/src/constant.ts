@@ -29,18 +29,29 @@ export const constant = {
 	},
 
 	beachAccess: {
-		/** For saying "the beach is almost available". A touch above the actual beach height. */
-		uncovering: 8.25,
-		/** For saying "now there's enough beach to go out". A bit below the actual value because you really can't immediately get out there. */
-		uncovered: 7,
-		/** The point at which water is exactly at the top of the beach. This is the most exact number. */
-		coveredActual: 7.75,
-		/** For saying "beach is almost gone". Well below the actual height because it's only going to get worse, and quickly. */
-		covering: 6,
-		// /** Pristine "tons of beach" */
-		// fallingFullBeach: 3,
-		// /** Troubling "rising pretty fast" */
-		// risingQuickly: 3,
+		/**
+		 * Our best guess of when the tide is at the top of the beach. We'll probably never get this right, because:
+		 * 1. It's relative!
+		 * 2. The height of the beach changes
+		 * 3. Waves move the water up and down like a foot anyway
+		 * 
+		 * But, we'll use this for any diagrams / animations that need a hard number.
+		*/
+		bestGuessBeachHeight: 7.5,
+		/** Marks the start of the "uncovering" status. For our logic, this is outside the beach time. */
+		uncoveringStart: 8.5,
+		/** Marks the end of the "uncovering" status. For our logic, this is when we are most confident that beach time is on. */
+		uncoveringStop: 7,
+		/**
+		 * Marks the start of the "covering" status. For our logic, this is when we are confident we should no longer consider it beach time
+		 * It's a bit lower than other numbers because the tide rises pretty quick + we don't want people to think they have more time to head out
+		 * to the beach when they really don't.
+		 */
+		coveringStart: 6,
+		/**
+		 * Marks the end of the "covering" status. For our logic this is when we are confident there is no way to step foot on that beach.
+		 */
+		coveringStop: 8,
 	},
 
 	/** Number of minutes before sunrise and after sunset where we can still have beach time. */

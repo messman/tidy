@@ -79,21 +79,21 @@ function getTidePointBeachSwapsBetween(a: TidePointExtreme, b: TidePointExtreme)
 		[low, high] = [high, low];
 	}
 
-	const { coveredActual, covering, uncovered, uncovering } = constant.beachAccess;
+	const { coveringStart, coveringStop, uncoveringStart, uncoveringStop } = constant.beachAccess;
 	const heightRange = (high - low);
 
 	// Use percents to get to [0, 1].
-	let firstHeightPercent = (uncovering - low) / heightRange;
+	let firstHeightPercent = (uncoveringStart - low) / heightRange;
 	let firstStatus = TideLevelBeachStatus.uncovering;
-	let secondHeightPercent = (uncovered - low) / heightRange;
+	let secondHeightPercent = (uncoveringStop - low) / heightRange;
 	let secondStatus = TideLevelBeachStatus.uncovered;
 
 	if (isStartLow) {
 		// If we started low, we need to flip at some point. Do it here while we understand our domain.
-		firstHeightPercent = (covering - low) / heightRange;
+		firstHeightPercent = (coveringStart - low) / heightRange;
 		firstHeightPercent = 1 - firstHeightPercent;
 		firstStatus = TideLevelBeachStatus.covering;
-		secondHeightPercent = (coveredActual - low) / heightRange;
+		secondHeightPercent = (coveringStop - low) / heightRange;
 		secondHeightPercent = 1 - secondHeightPercent;
 		secondStatus = TideLevelBeachStatus.covered;
 	}

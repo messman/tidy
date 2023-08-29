@@ -63,19 +63,20 @@ function getSunRelativity(config: BaseConfig, fetched: AstroFetched): SunRelativ
 			if (solarEvent.time >= referenceTimeCurrentLowerBound && solarEvent.time <= referenceTimeCurrentUpperBound) {
 				current = solarEvent;
 				previous = solarEvents[i - 1];
+				continue;
 			}
 			// Else check for next
 			else if (solarEvent.time > referenceTime) {
 				previous = solarEvents[i - 1];
 			}
 		}
-		else {
+		if (previous) {
 			// Now, check for the next solar events
 			if (!nextRiseSetTwilight && solarEvent.type !== AstroSolarEventType.midday) {
 				nextRiseSetTwilight = solarEvent;
 			}
 			if (!nextRiseSet && (solarEvent.type === AstroSolarEventType.rise || solarEvent.type === AstroSolarEventType.set)) {
-				nextRiseSetTwilight = solarEvent;
+				nextRiseSet = solarEvent;
 			}
 			if (!!nextRiseSetTwilight && !!nextRiseSet) {
 				break;

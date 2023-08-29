@@ -46,23 +46,29 @@ export function computeAstro(_ctx: LogContext, config: BaseConfig): AstroFetched
 	};
 }
 
+// https://math.stackexchange.com/questions/947718/how-to-calculate-civil-twilight-timings
+const angle = {
+	riseSet: 90.833,
+	twilight: 96
+};
+
 function getSunEventsForDay(day: DateTime, latitude: number, longitude: number): [AstroSolarEvent, AstroSolarEvent, AstroSolarEvent, AstroSolarEvent, AstroSolarEvent] {
 	const julianDay = getJulianDay(day);
 	const timezoneOffset = day.offset / 60; // To get hours
 
-	const civilDawn = getSunriseSunset(true, true, julianDay, latitude, longitude, timezoneOffset);
-	const rise = getSunriseSunset(true, false, julianDay, latitude, longitude, timezoneOffset);
-	const set = getSunriseSunset(false, false, julianDay, latitude, longitude, timezoneOffset);
-	const civilDusk = getSunriseSunset(false, true, julianDay, latitude, longitude, timezoneOffset);
+	const civilDawn = getDateTimeFromOutput(day, julianDay, getSunriseSunset(true, angle.twilight, julianDay, latitude, longitude, timezoneOffset));
+	const rise = getDateTimeFromOutput(day, julianDay, getSunriseSunset(true, angle.riseSet, julianDay, latitude, longitude, timezoneOffset));
+	const set = getDateTimeFromOutput(day, julianDay, getSunriseSunset(false, angle.riseSet, julianDay, latitude, longitude, timezoneOffset));
+	const civilDusk = getDateTimeFromOutput(day, julianDay, getSunriseSunset(false, angle.twilight, julianDay, latitude, longitude, timezoneOffset));
 
-	debugger;
+	const midday = DateTime.fromMillis(Math.round((rise.toMillis() + set.toMillis()) / 2), { zone: rise.zone });
 
 	return [
-		createSolarEvent(getDateTimeFromOutput(day, julianDay, civilDawn), AstroSolarEventType.civilDawn),
-		createSolarEvent(getDateTimeFromOutput(day, julianDay, rise), AstroSolarEventType.rise),
-		createSolarEvent(getDateTimeFromOutput(day, julianDay, civilDawn).plus({ minutes: 45 }), AstroSolarEventType.civilDawn), // TODO
-		createSolarEvent(getDateTimeFromOutput(day, julianDay, set), AstroSolarEventType.set),
-		createSolarEvent(getDateTimeFromOutput(day, julianDay, civilDusk), AstroSolarEventType.civilDusk),
+		createSolarEvent(civilDawn, AstroSolarEventType.civilDawn),
+		createSolarEvent(rise, AstroSolarEventType.rise),
+		createSolarEvent(midday, AstroSolarEventType.midday),
+		createSolarEvent(set, AstroSolarEventType.set),
+		createSolarEvent(civilDusk, AstroSolarEventType.civilDusk)
 	];
 }
 
@@ -93,10 +99,10 @@ interface SunriseSunsetOutput {
 }
 
 // Original: calcSunriseSet
-function getSunriseSunset(isSunrise: boolean, isTwilight: boolean, julianDay: number, latitude: number, longitude: number, timezoneOffset: number): SunriseSunsetOutput {
+function getSunriseSunset(isSunrise: boolean, angle: number, julianDay: number, latitude: number, longitude: number, timezoneOffset: number): SunriseSunsetOutput {
 
-	const timeUTC = getSunriseSunsetUTC(isSunrise, isTwilight, julianDay, latitude, longitude);
-	const newTimeUTC = getSunriseSunsetUTC(isSunrise, isTwilight, julianDay + (timeUTC / 1440.0), latitude, longitude);
+	const timeUTC = getSunriseSunsetUTC(isSunrise, angle, julianDay, latitude, longitude);
+	const newTimeUTC = getSunriseSunsetUTC(isSunrise, angle, julianDay + (timeUTC / 1440.0), latitude, longitude);
 	let finalJulianDay: number = null!;
 	let timeLocal: number = null!;
 	let azimuth: number = null!;
@@ -125,9 +131,9 @@ function getSunriseSunset(isSunrise: boolean, isTwilight: boolean, julianDay: nu
 		if (((latitude > 66.4) && (doy > 79) && (doy < 267)) ||
 			((latitude < -66.4) && ((doy < 83) || (doy > 263)))) {
 			//previous sunrise/next sunset
-			finalJulianDay = calcJDofNextPrevRiseSet(!isSunrise, isSunrise, isTwilight, julianDay, latitude, longitude, timezoneOffset);
+			finalJulianDay = calcJDofNextPrevRiseSet(!isSunrise, isSunrise, angle, julianDay, latitude, longitude, timezoneOffset);
 		} else {   //previous sunset/next sunrise
-			finalJulianDay = calcJDofNextPrevRiseSet(isSunrise, isSunrise, isTwilight, julianDay, latitude, longitude, timezoneOffset);
+			finalJulianDay = calcJDofNextPrevRiseSet(isSunrise, isSunrise, angle, julianDay, latitude, longitude, timezoneOffset);
 		}
 	}
 
@@ -140,11 +146,11 @@ function getSunriseSunset(isSunrise: boolean, isTwilight: boolean, julianDay: nu
 }
 
 // Original: calcSunriseSetUTC
-function getSunriseSunsetUTC(isSunrise: boolean, isTwilight: boolean, julianDay: number, latitude: number, longitude: number) {
+function getSunriseSunsetUTC(isSunrise: boolean, angle: number, julianDay: number, latitude: number, longitude: number) {
 	const t = calcTimeJulianCent(julianDay);
 	const eqTime = calcEquationOfTime(t);
 	const solarDec = calcSunDeclination(t);
-	let hourAngle = calcHourAngleSunrise(latitude, solarDec, isTwilight);
+	let hourAngle = calcHourAngleSunrise(latitude, solarDec, angle);
 	if (!isSunrise) {
 		hourAngle = -hourAngle;
 	}
@@ -293,14 +299,10 @@ function calcEquationOfTime(t: number) {
 	return radToDeg(Etime) * 4.0;	// in minutes of time
 }
 
-// https://math.stackexchange.com/questions/947718/how-to-calculate-civil-twilight-timings
-const riseSetAngle = 90.833;
-const twilightAngle = 96;
-
-function calcHourAngleSunrise(lat: number, solarDec: number, isTwilight: boolean) {
+function calcHourAngleSunrise(lat: number, solarDec: number, angle: number) {
 	var latRad = degToRad(lat);
 	var sdRad = degToRad(solarDec);
-	var HAarg = (Math.cos(degToRad(isTwilight ? twilightAngle : riseSetAngle)) / (Math.cos(latRad) * Math.cos(sdRad)) - Math.tan(latRad) * Math.tan(sdRad));
+	var HAarg = (Math.cos(degToRad(angle)) / (Math.cos(latRad) * Math.cos(sdRad)) - Math.tan(latRad) * Math.tan(sdRad));
 	var HA = Math.acos(HAarg);
 	return HA;		// in radians (for sunset, use -HA)
 }
@@ -401,15 +403,15 @@ function calcAzEl(T: number, localtime: number, latitude: number, longitude: num
 }
 
 
-function calcJDofNextPrevRiseSet(isNext: boolean, isSunrise: boolean, isTwilight: boolean, JD: number, latitude: number, longitude: number, tz: number) {
+function calcJDofNextPrevRiseSet(isNext: boolean, isSunrise: boolean, angle: number, JD: number, latitude: number, longitude: number, tz: number) {
 
 	var julianday = JD;
 	var increment = ((isNext) ? 1.0 : -1.0);
-	var time = getSunriseSunsetUTC(isSunrise, isTwilight, julianday, latitude, longitude);
+	var time = getSunriseSunsetUTC(isSunrise, angle, julianday, latitude, longitude);
 
 	while (!isNumber(time)) {
 		julianday += increment;
-		time = getSunriseSunsetUTC(isSunrise, isTwilight, julianday, latitude, longitude);
+		time = getSunriseSunsetUTC(isSunrise, angle, julianday, latitude, longitude);
 	}
 	var timeLocal = time + tz * 60.0;
 	while ((timeLocal < 0.0) || (timeLocal >= 1440.0)) {

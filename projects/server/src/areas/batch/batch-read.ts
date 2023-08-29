@@ -3,7 +3,7 @@ import { Batch, BatchMeta, BatchNowWeatherHourly, isServerError } from '@wbtdevl
 import { ServerPromise } from '../../api/error';
 import { computeAstro } from '../../services/astro/astro-compute';
 import { createAstro } from '../../services/astro/astro-compute-create';
-import { AstroFetched, getAstroAdditionalContext, getCloseSunDays, getNextLunarDay, getSunRelativity } from '../../services/astro/astro-shared';
+import { AstroFetched, getAstroAdditionalContext } from '../../services/astro/astro-shared';
 import { BaseConfig, BaseInput, createBaseLiveConfig } from '../../services/config';
 import { LogContext } from '../../services/logging/pino';
 import { combineSeed, randomizer, TestSeed } from '../../services/test/randomize';
@@ -13,8 +13,8 @@ import { getTideAdditionalContext, TideFetched } from '../../services/tide/tide-
 import { dateForZone } from '../../services/time';
 import { readWeather } from '../../services/weather/weather-fetch';
 import { createWeather } from '../../services/weather/weather-fetch-create';
-import { filterHourlyWeather, getWeatherAdditionalContext, WeatherFetched } from '../../services/weather/weather-shared';
-import { getBeachContent, getTideDays } from './beach';
+import { getWeatherAdditionalContext, WeatherFetched } from '../../services/weather/weather-shared';
+import { getBeachTimeDays } from './beach';
 
 /** The main function. Calls APIs. */
 export async function readBatch(ctx: LogContext): ServerPromise<Batch> {
@@ -63,24 +63,26 @@ function createConfig(referenceTime: DateTime): BaseConfig {
 	};
 }
 
-function createBatchContent(_ctx: LogContext, config: BaseConfig, fetchedTide: TideFetched, fetchedAstro: AstroFetched, fetchedWeather: WeatherFetched): Batch {
+function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: TideFetched, astroFetched: AstroFetched, weatherFetched: WeatherFetched): Batch {
 	const meta: BatchMeta = {
 		referenceTime: config.referenceTime,
 		processingTime: dateForZone(new Date()),
 	};
 
-	const { range, currentPoint, currentId, nextId, previousId } = getTideAdditionalContext(config, fetchedTide);
-	const { sunRelativity, sunCloseDays, todayAstroDay, solarEventMap, days: astroDays } = getAstroAdditionalContext(config, fetchedAstro, fetchedWeather.moonPhaseDaily);
-	const { filteredHourly, isCurrentDaytime, indicatorChangeHourlyId, tempRange } = getWeatherAdditionalContext(config, fetchedWeather, solarEventMap, astroDays);
+	const tideAdditional = getTideAdditionalContext(config, tideFetched);
+	const { range, currentPoint, currentId, nextId, previousId } = tideAdditional;
+	const astroAdditional = getAstroAdditionalContext(config, astroFetched, weatherFetched.moonPhaseDaily);
+	const { sunRelativity, sunCloseDays, todayAstroDay, solarEventMap, days: astroDays } = astroAdditional;
+	const { filteredHourly, isCurrentDaytime, indicatorChangeHourlyId, tempRange } = getWeatherAdditionalContext(config, weatherFetched, solarEventMap, astroDays);
 
 	return {
 		meta,
 		tideExtrema: {
-			extrema: fetchedTide.extrema,
+			extrema: tideFetched.extrema,
 			minId: range.min.id,
 			maxId: range.max.id
 		},
-		solarEvents: fetchedAstro.solarEvents,
+		solarEvents: astroFetched.solarEvents,
 		now: {
 			astro: {
 				sun: {
@@ -104,7 +106,7 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, fetchedTide: T
 			},
 			weather: {
 				current: {
-					...fetchedWeather.current,
+					...weatherFetched.current,
 					isDaytime: isCurrentDaytime
 				},
 				hourly: filteredHourly.map<BatchNowWeatherHourly>((hourly) => {
@@ -114,7 +116,7 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, fetchedTide: T
 			}
 		},
 		week: {
-			days: [],
+			days: getBeachTimeDays(config, tideFetched, tideAdditional, astroFetched, astroAdditional, weatherFetched),
 			tempRange,
 		},
 		// beach: getBeachContent(config, tide, currentPoint, dailyTides, astro, weather),
