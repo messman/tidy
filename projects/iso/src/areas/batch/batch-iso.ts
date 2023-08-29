@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { enumKeys } from '../../utility/enum';
 import { AstroDay, AstroLunarPhase, AstroSolarEvent, AstroSunDay } from '../astro/astro-iso';
-import { TidePointCurrent, TidePointExtreme } from '../tide/tide-iso';
+import { TidePointCurrent, TidePointExtreme, TidePointExtremeDay } from '../tide/tide-iso';
 import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly } from '../weather/weather-iso';
 
 export enum Seed {
@@ -125,6 +125,8 @@ export interface BeachTimeDay {
 	astro: AstroDay;
 	/** Ranges, if any. */
 	ranges: BeachTimeRange[];
+	/** Extremes for the day. */
+	tides: TidePointExtremeDay;
 }
 
 

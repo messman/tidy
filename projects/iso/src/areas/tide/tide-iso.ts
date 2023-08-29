@@ -68,3 +68,10 @@ export interface TidePointExtreme {
 	height: number,
 	isLow: boolean;
 }
+
+export interface TidePointExtremeDay {
+	time: DateTime;
+	previousId: string;
+	extremaIds: string[];
+	nextId: string;
+}

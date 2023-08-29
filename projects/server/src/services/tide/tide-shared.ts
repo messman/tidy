@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { constant, Range, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, TidePointCurrentContextual, TidePointExtreme } from '@wbtdevlocal/iso';
+import { constant, Range, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, TidePointCurrentContextual, TidePointExtreme, TidePointExtremeDay } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 
 export function createTidePointExtremeId(time: DateTime): string {
@@ -232,6 +232,48 @@ function getTidePreviousNext(extrema: TidePointExtreme[], measuredOrComputedHeig
 	return [previous, current, next];
 }
 
+function getTideExtremeDays(extrema: TidePointExtreme[], referenceTime: DateTime): TidePointExtremeDay[] {
+
+	// First just split them up by day.
+	let tideDay: TidePointExtreme[] = [];
+	const tideDays: TidePointExtreme[][] = [tideDay];
+	extrema.forEach((extreme, i) => {
+		if (i === 0) {
+			tideDay.push(extreme);
+			return;
+		}
+
+		const previous = extrema[i - 1]!;
+		const isNewDay = !previous.time.hasSame(extreme.time, 'day');
+		if (isNewDay) {
+			tideDay = [];
+			tideDays.push(tideDay);
+		}
+		tideDay.push(extreme);
+	});
+
+	// Now add the last of the previous day and the first of the next day.
+	let extremeDays = tideDays.map<TidePointExtremeDay>((tideDay, i) => {
+		const lastOfPrevious = i === 0 ? null : tideDays[i - 1].at(-1);
+		const firstOfNext = (i === tideDays.length - 1) ? null : tideDays[i + 1].at(0);
+
+		return {
+			time: tideDay[0].time.startOf('day'),
+			previousId: lastOfPrevious?.id || null!,
+			extremaIds: tideDay.map((extreme) => extreme.id),
+			nextId: firstOfNext?.id || null!
+		};
+	});
+
+	// Filter to ensure we have all the information we need, and that we start with the reference day.
+	const startOfReferenceDay = referenceTime.startOf('day');
+	extremeDays = extremeDays.filter((extremeDays) => {
+		return !!extremeDays.previousId && !!extremeDays.nextId && !!extremeDays.extremaIds.length && extremeDays.time >= startOfReferenceDay;
+	});
+
+	return extremeDays;
+}
+
 export interface TideAdditionalContext {
 	currentPoint: TidePointCurrentContextual;
 	previousId: string;
@@ -239,6 +281,7 @@ export interface TideAdditionalContext {
 	nextId: string;
 	range: Range<TidePointExtreme>;
 	beachChanges: TidePointBeachChange[];
+	extremeDays: TidePointExtremeDay[];
 }
 
 export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFetched): TideAdditionalContext {
@@ -323,6 +366,8 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 		currentDivision = divisionAsPercent >= .75 ? TideLevelDivision.high : (divisionAsPercent > .25 ? TideLevelDivision.mid : TideLevelDivision.low);
 	}
 
+	const extremeDays = getTideExtremeDays(extrema, referenceTime);
+
 	return {
 		currentPoint: {
 			...currentPoint,
@@ -338,7 +383,8 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 		},
 		previousId: previous.id,
 		currentId: current?.id || null,
-		nextId: next.id
+		nextId: next.id,
+		extremeDays
 	};
 }
 

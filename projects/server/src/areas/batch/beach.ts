@@ -482,7 +482,8 @@ export function getBeachTimeDays(
 				day: startOfDay,
 				astro: null!,
 				weather: null!,
-				ranges: []
+				ranges: [],
+				tides: null!
 			});
 		}
 		return daysMap.get(key)!;
@@ -500,6 +501,10 @@ export function getBeachTimeDays(
 	beachTimeRanges.forEach((range) => {
 		const beachTimeDay = getDayForTime(range.start);
 		beachTimeDay.ranges.push(range);
+	});
+	tideAdditional.extremeDays.forEach((day) => {
+		const beachTimeDay = getDayForTime(day.time);
+		beachTimeDay.tides = day;
 	});
 
 	// Strip out anything incomplete.
