@@ -6,19 +6,7 @@ import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { NowBeachAccess } from './now-beach-access';
 import { NowBeachAccessHighlights } from './now-beach-highlights';
-
-export type NowBeachUpcomingProps = {
-
-};
-
-/** */
-export const NowBeachUpcoming: React.FC<NowBeachUpcomingProps> = (props) => {
-	const { } = props;
-
-	return (
-		null
-	);
-};
+import { NowBeachUpcoming } from './now-beach-upcoming';
 
 const NowBeachHow_Title = styled.div`
 	${fontStyles.stylized.capitalized};
@@ -59,6 +47,7 @@ export const NowBeach: React.FC<NowBeachProps> = (props) => {
 		<NowBeach_Container>
 			<NowBeachAccess />
 			<NowBeachAccessHighlights />
+			<NowBeachUpcoming />
 			<NowBeachHow />
 		</NowBeach_Container>
 	);

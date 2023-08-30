@@ -3,11 +3,28 @@ import styled from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { borderRadiusSmallerValue } from '@/index/core/primitive/primitive-design';
 import { themeTokens } from '@/index/core/theme/theme-root';
+import { asPercentString, percentFromStartOfDay } from '@/index/core/time/time';
 import { BeachTimeDay } from '@wbtdevlocal/iso';
-import { ChartHourlyFill } from './chart-hourly-fill';
+import { ChartHourlyFill, ChartHourlyFillProps } from './chart-hourly-fill';
 import { ChartHourlySolar } from './chart-hourly-solar';
 import { ChartHourlySVG } from './chart-hourly-svg';
 import { ChartHourlyTicks } from './chart-hourly-ticks';
+
+const CurrentTimeContainer = styled.div`
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 0;
+	display: flex;
+	justify-content: center;
+`;
+
+const CurrentTimeIndicator = styled.div`
+	width: 2px;
+	border-radius: 1px;
+	background-color: ${themeTokens.rawColor.orange.distinct};
+	flex-shrink: 0;
+`;
 
 const SVGContainer = styled.div`
 	position: relative;
@@ -27,10 +44,47 @@ export interface ChartHourlyProps {
 
 export const ChartHourly: React.FC<ChartHourlyProps> = (props) => {
 	const { day } = props;
-	const { tideExtrema, getTideExtremeById } = useBatchResponseSuccess();
+	const { meta, tideExtrema, getTideExtremeById } = useBatchResponseSuccess();
+	const { referenceTime } = meta;
 
-	const rangeFills = day.ranges.map((range) => {
-		return <ChartHourlyFill key={range.start.valueOf()} range={range} />;
+	const rangesWithSplitDay: ChartHourlyFillProps[] = [];
+	day.ranges.forEach((range) => {
+		const isBetween = referenceTime > range.start && referenceTime < range.stop;
+		if (isBetween) {
+			rangesWithSplitDay.push(
+				{
+					referenceTime,
+					start: range.start,
+					stop: referenceTime,
+					weather: range.weather,
+					isCroppedRight: true,
+				},
+				{
+					referenceTime,
+					start: referenceTime,
+					stop: range.stop,
+					weather: range.weather,
+					isCroppedLeft: true
+				}
+			);
+		}
+		else {
+			rangesWithSplitDay.push({
+				referenceTime,
+				start: range.start,
+				stop: range.stop,
+				weather: range.weather
+			});
+		}
+	});
+
+	const rangeFills = rangesWithSplitDay.map((props) => {
+		return (
+			<ChartHourlyFill
+				key={props.start.valueOf()}
+				{...props}
+			/>
+		);
 	});
 
 	const extrema = React.useMemo(() => {
@@ -46,6 +100,22 @@ export const ChartHourly: React.FC<ChartHourlyProps> = (props) => {
 	const min = getTideExtremeById(tideExtrema.minId).height;
 	const max = getTideExtremeById(tideExtrema.maxId).height;
 
+	let currentTimeRender: React.ReactNode = null;
+	const isToday = referenceTime >= day.day.startOf('day') && referenceTime <= day.day.endOf('day');
+	if (isToday) {
+		const startOfDay = day.day.startOf('day');
+		const leftPercent = Math.max(0, Math.min(100, percentFromStartOfDay(referenceTime, startOfDay)));
+		currentTimeRender = (
+			<CurrentTimeContainer
+				style={{
+					left: asPercentString(leftPercent)
+				}}
+			>
+				<CurrentTimeIndicator />
+			</CurrentTimeContainer>
+		);
+	}
+
 	return (
 		<div>
 			<ChartHourlySolar day={day} />
@@ -58,6 +128,7 @@ export const ChartHourly: React.FC<ChartHourlyProps> = (props) => {
 					allExtremaMax={max}
 					verticalPaddingFactor={verticalPaddingFactor}
 				/>
+				{currentTimeRender}
 			</SVGContainer>
 			<ChartHourlyTicks />
 		</div>

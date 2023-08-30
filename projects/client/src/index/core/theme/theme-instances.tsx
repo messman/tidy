@@ -78,6 +78,7 @@ export const lightTokens = {
 	inform: {
 		positive: '#3ACE15',
 		unsure: '#EDDB37',
+		base: alphaHex('a3a29b', 90),
 	},
 
 	lunar: {

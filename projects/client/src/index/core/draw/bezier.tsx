@@ -28,14 +28,14 @@ export interface ChartLineOutput {
 export function createChartLine(points: Point[], sourceRect: Rect, verticalPaddingFactor: number): ChartLineOutput {
 	// Coordinate system is from top left, but provided inputs are from bottom left
 	const totalScaleFactor = 1 - (verticalPaddingFactor * 2);
-	const destBottomAddition = sourceRect.top * verticalPaddingFactor;
+	const bottomAddition = sourceRect.top * verticalPaddingFactor;
 	points = points.map(function (p) {
 		const tPoint = { ...p };
 
 		// If we have padding to apply, apply it.
 		// Remember we are not yet upside-down
 		tPoint.y *= totalScaleFactor;
-		tPoint.y += destBottomAddition;
+		tPoint.y += bottomAddition;
 
 		// Flip the y values because we want high values to actually be closer to 0 (the top).
 		tPoint.y = roundVal(sourceRect.top - (tPoint.y - sourceRect.bottom));
@@ -58,8 +58,8 @@ export function createChartLine(points: Point[], sourceRect: Rect, verticalPaddi
 
 	const strokePath = bezier;
 
-	// Move horizontally not by the destRect bounds, but rather by the total width since we end outside of the rect.
-	// Move up (down visually) to the destRect.top, which should be your max value. Then across, then back up to the start. 
+	// Move horizontally not by the bounds, but rather by the total width since we end outside of the rect.
+	// Move up (down visually) to the top, which should be your max value. Then across, then back up to the start. 
 	const fillPath = `${bezier} v${sourceRect.top - pLast.y} h${-totalWidth} v${-sourceRect.top - p1.y} z`;
 
 	return {
