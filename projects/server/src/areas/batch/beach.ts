@@ -35,7 +35,6 @@ function isBeachMarkSun(value: unknown): value is BeachMarkSun {
 
 interface BeachMarkWeather extends BeachMark {
 	toIndicator: WeatherIndicator;
-	isHourly: boolean;
 	isForWeather: true;
 }
 function isBeachMarkWeather(value: unknown): value is BeachMarkWeather {
@@ -95,7 +94,6 @@ function getOrderedBeachMarks(
 	const hourlyWeatherMarks = hourly.map<BeachMarkWeather>((hourly) => {
 		return {
 			time: hourly.time,
-			isHourly: true,
 			toIndicator: hourly.indicator,
 			isForWeather: true,
 		};
@@ -103,7 +101,6 @@ function getOrderedBeachMarks(
 	const dailyWeatherMarks = daily.map<BeachMarkWeather>((daily) => {
 		return {
 			time: daily.time,
-			isHourly: true,
 			toIndicator: daily.indicator,
 			isForWeather: true,
 		};
@@ -125,6 +122,7 @@ function getOrderedBeachMarks(
 		time: lastHourly.time,
 	};
 	all.push(bridgeDaySpan, ...otherFilteredDays);
+	beachMarks.push(...all);
 
 	// This sorting could be made more efficient with a merge implementation, but it's not a major issue.
 	beachMarks.sort((a, b) => {
@@ -317,8 +315,7 @@ function getBeachTimeRanges(
 				mostRecentWeather = {
 					time: weatherForCurrentDay.time,
 					toIndicator: weatherForCurrentDay.indicator,
-					isForWeather: true,
-					isHourly: false
+					isForWeather: true
 				};
 			}
 		}
@@ -357,6 +354,7 @@ function getBeachTimeRanges(
 			}
 			else if (beachMarkTideLow) {
 				trackedBeachTime.tideLowId = beachMarkTideLow.id;
+				mostRecentLowTide = null; // Ensure we can't be re-used.
 			}
 			else if (beachMarkTideBeachChange) {
 				// Check for the end condition (beach starting to cover)
@@ -422,8 +420,12 @@ function getBeachTimeRanges(
 			// Our start check
 			if (
 				mostRecentMajorTideBeachChange?.toStatus === TideLevelBeachStatus.uncovered
-				&& mostRecentMajorSolarEvent?.type !== AstroSolarEventType.civilDusk
+				&& (mostRecentMajorSolarEvent !== null && mostRecentMajorSolarEvent.type !== AstroSolarEventType.civilDusk)
 			) {
+
+				// Be optimistic? This is for the time before we really know what the weather is (early on current day).
+				const weather = mostRecentWeather === null ? WeatherIndicator.best : mostRecentWeather.toIndicator;
+
 				// Start
 				trackedBeachTime = {
 					start: time,
@@ -436,8 +438,7 @@ function getBeachTimeRanges(
 					tideLowId: mostRecentLowTide?.id || null!,
 					// If it was this sun event that caused the beach time to start, record it! (Likely civil dawn)
 					solarEventIds: beachMarkSun ? [beachMarkSun.id] : [],
-					// We could potentially have no recent weather if this is pre-
-					weather: mostRecentWeather?.toIndicator || WeatherIndicator.best // If we don't know, be optimistic?
+					weather
 				};
 				beachTimeRanges.push(trackedBeachTime);
 			}

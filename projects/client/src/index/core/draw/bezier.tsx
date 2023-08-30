@@ -25,22 +25,20 @@ export interface ChartLineOutput {
 	strokePath: string;
 }
 
-
-export function createChartLine(points: Point[], sourceRect: Rect, destRect: Rect, destBottomPaddingFactor: number, destTopPaddingFactor: number): ChartLineOutput {
+export function createChartLine(points: Point[], sourceRect: Rect, verticalPaddingFactor: number): ChartLineOutput {
 	// Coordinate system is from top left, but provided inputs are from bottom left
-	const transform = getTransform(sourceRect, destRect);
-	const destTotalScaleFactor = 1 - (destBottomPaddingFactor + destTopPaddingFactor);
-	const destBottomAddition = destRect.top * destBottomPaddingFactor;
+	const totalScaleFactor = 1 - (verticalPaddingFactor * 2);
+	const destBottomAddition = sourceRect.top * verticalPaddingFactor;
 	points = points.map(function (p) {
-		const tPoint = transform(p);
+		const tPoint = { ...p };
 
 		// If we have padding to apply, apply it.
 		// Remember we are not yet upside-down
-		tPoint.y *= destTotalScaleFactor;
+		tPoint.y *= totalScaleFactor;
 		tPoint.y += destBottomAddition;
 
 		// Flip the y values because we want high values to actually be closer to 0 (the top).
-		tPoint.y = roundVal(destRect.top - (tPoint.y - destRect.bottom));
+		tPoint.y = roundVal(sourceRect.top - (tPoint.y - sourceRect.bottom));
 		return tPoint;
 	});
 
@@ -62,7 +60,7 @@ export function createChartLine(points: Point[], sourceRect: Rect, destRect: Rec
 
 	// Move horizontally not by the destRect bounds, but rather by the total width since we end outside of the rect.
 	// Move up (down visually) to the destRect.top, which should be your max value. Then across, then back up to the start. 
-	const fillPath = `${bezier} v${destRect.top - pLast.y} h${-totalWidth} v${-destRect.top - p1.y} z`;
+	const fillPath = `${bezier} v${sourceRect.top - pLast.y} h${-totalWidth} v${-sourceRect.top - p1.y} z`;
 
 	return {
 		strokePath: strokePath,
@@ -74,29 +72,24 @@ function addToBezier(cp: Point, ep: Point): string {
 	return ` S ${cp.x} ${cp.y} ${ep.x} ${ep.y}`;
 }
 
-function getTransform(source: Rect, dest: Rect): (p: Point) => Point {
-	const xScale = (dest.right - dest.left) / (source.right - source.left);
-	const yScale = (dest.top - dest.bottom) / (source.top - source.bottom);
-	return function (point: Point): Point {
-		return {
-			x: roundVal(((point.x - source.left) * xScale) + dest.left),
-			y: roundVal(((point.y - source.bottom) * yScale) + dest.bottom),
-		};
-	};
-}
-
 export interface SVGPathProps {
-	destRect: Rect,
+	viewBox: Rect,
 	path: string;
 }
 
 export const SVGPath: StyledFC<SVGPathProps> = (props) => {
-	const { destRect, path } = props;
-	const { left, bottom, right, top } = destRect;
+	const { viewBox, path } = props;
+	const { left, bottom, right, top } = viewBox;
 	const width = right - left;
 	const height = top - bottom;
 	return (
-		<svg className={props.className} version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox={`${left} ${bottom} ${width} ${height}`}>
+		<svg
+			className={props.className}
+			version='1.1'
+			xmlns='http://www.w3.org/2000/svg'
+			viewBox={`${left} ${bottom} ${width} ${height}`}
+			preserveAspectRatio="none" // Scale to fit
+		>
 			<path d={path}></path>
 		</svg>
 	);

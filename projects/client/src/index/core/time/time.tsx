@@ -1,6 +1,20 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
+const millisecondsPerDay = 1000 * 60 * 60 * 24;
+
+export function percentFromStartOfDay(event: DateTime, startOfDay: DateTime): number {
+	return event.diff(startOfDay, 'milliseconds').milliseconds / millisecondsPerDay;
+}
+
+export function asPercentString(percent: number): string {
+	return (Math.round(percent * 100 * 100) / 100) + '%';
+}
+
+export function roundFiveMinutes(date: DateTime): DateTime {
+	return date.set({ minute: Math.round(date.minute / 5) * 5 });
+}
+
 /** Gets text like 'Today' or 'Tomorrow' from the date provided, relative to the reference date. */
 export function getRelativeDayText(date: DateTime, reference: DateTime): string | null {
 	if (date.hasSame(reference, 'day')) {
