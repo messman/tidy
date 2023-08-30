@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { AppNavigationProvider } from '@/index/app/index-area/app-navigation';
-import { BatchResponseProvider } from '@/index/core/data/data';
+import { BatchResponseProvider, useBatchResponse } from '@/index/core/data/data';
 import { DataSeedProvider, useDataSeed } from '@/index/core/data/data-seed';
+import { DefaultErrorLoad } from '@/index/core/data/loader';
 import { RequestFetchProvider } from '@/index/core/data/request-fetch-provider';
 import { ErrorBoundary } from '@/index/core/error/error-boundary';
 import { SVGIconUrlLoadProvider } from '@/index/core/icon/icon-url';
@@ -27,11 +28,13 @@ export interface FixtureProps {
 	/** Container and background for the fixture. */
 	setup?: FixtureSetup;
 	providers?: ProviderWithProps[];
+	/** If true, wraps the test in a loader so as to not show loading or error states for the main request. */
+	isSuccessOnly?: boolean;
 }
 
 export function create(Component: React.FC, props: FixtureProps): React.FC {
 	return () => {
-		const { setup, providers: additionalProviders } = props;
+		const { setup, providers: additionalProviders, isSuccessOnly } = props;
 
 		// #REF_PROVIDERS - update in all areas, if appropriate
 		const providers: ProviderWithProps[] = [
@@ -53,13 +56,34 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 			<ProviderComposer providers={providers}>
 				<TestWrapper setup={setup} >
 					<ErrorBoundary>
-						<Component />
+						<LoaderBlocker isSuccessOnly={!!isSuccessOnly}>
+							<Component />
+						</LoaderBlocker>
 					</ErrorBoundary>
 				</TestWrapper>
 			</ProviderComposer>
 		);
 	};
 }
+
+interface LoaderBlockerProps {
+	isSuccessOnly: boolean;
+	children: React.ReactNode;
+}
+
+const LoaderBlocker: React.FC<LoaderBlockerProps> = (props) => {
+	const { isSuccessOnly, children } = props;
+
+	const { success } = useBatchResponse();
+
+	if (!isSuccessOnly) {
+		return <>{children}</>;
+	}
+	if (!success) {
+		return <DefaultErrorLoad />;
+	}
+	return <>{children}</>;
+};
 
 
 const seedOb = createControlSelectForEnum(Seed) as unknown as Record<(keyof typeof Seed) | '_real_', Seed | null>;

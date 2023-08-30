@@ -319,6 +319,7 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 			const isThisCovering = beachSwap.toStatus === TideLevelBeachStatus.covered || beachSwap.toStatus === TideLevelBeachStatus.covering;
 			if (isCurrentCovering !== isThisCovering) {
 				nextMajorBeachChange = beachSwap;
+				break;
 			}
 		}
 	}

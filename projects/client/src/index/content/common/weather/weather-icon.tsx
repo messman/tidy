@@ -15,18 +15,18 @@ export interface WeatherIconDayNightProps {
 	rain: number | null;
 }
 
-export const WeatherIconDayNight: React.FC<WeatherIconDayNightProps> = (props) => {
-	const { isDay, status, rain } = props;
+export const WeatherIconDayNight: StyledFC<WeatherIconDayNightProps> = (props) => {
+	const { isDay, status, rain, className } = props;
 	const { day, night } = mapNumberEnumValue(WeatherStatusType, statusTypeDayNight, status);
 	return (
-		<WeatherIcon type={isDay ? day : night} rain={rain} />
+		<WeatherIcon type={isDay ? day : night} rain={rain} className={className} />
 	);
 };
 
 const WeatherIcon_Container = styled.div`
 	position: relative;
-	width: 2.25rem;
-	height: 2.25rem;
+	width: 2rem;
+	height: 2rem;
 	display: inline-flex;
 	justify-content: center;
 	background-color: ${themeTokens.background.tint.darker};
@@ -62,7 +62,7 @@ export interface WeatherIconProps {
 }
 
 export const WeatherIcon: StyledFC<WeatherIconProps> = (props) => {
-	const { type, rain } = props;
+	const { type, rain, className } = props;
 
 	const IconComponent = rain ? WeatherIcon_RainIcon : WeatherIcon_Icon;
 	const rainRender = rain ? (
@@ -70,7 +70,7 @@ export const WeatherIcon: StyledFC<WeatherIconProps> = (props) => {
 	) : null;
 
 	return (
-		<WeatherIcon_Container>
+		<WeatherIcon_Container className={className}>
 			<IconComponent type={type} />
 			{rainRender}
 		</WeatherIcon_Container>

@@ -9,6 +9,7 @@ export default {
 			<NowBeach />
 		);
 	}, {
-		setup: FixtureSetup.root
+		setup: FixtureSetup.root,
+		isSuccessOnly: true
 	}),
 };

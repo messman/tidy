@@ -1,25 +1,36 @@
 import * as React from 'react';
 import { CONSTANT } from '@/index/constant';
+import { DEFINE } from '@/index/define';
 import { createContextConsumer } from '@messman/react-common';
-import { ApiRouteBatchLatest, ApiRouteBatchSeed, apiRoutes, BatchContent } from '@wbtdevlocal/iso';
+import { ApiRouteBatchLatest, ApiRouteBatchSeed, apiRoutes, AstroSolarEvent, Batch, TidePointExtreme } from '@wbtdevlocal/iso';
 import { useSafeTimer } from '../lifecycle/timer';
 import { useDataSeed } from './data-seed';
 import { RequestResult, RequestResultError } from './request';
 import { ApiRequestOptions, useApiRequest } from './request-hook';
 
-const [BatchResponseContextProvider, useBatchResponseContext] = createContextConsumer<BatchResponseOutput>(null!);
-
-export const useBatchResponse = useBatchResponseContext;
+export interface BatchWithHelpers extends Batch {
+	/** Typed optimistically, but returns `null` if there is no data. */
+	getTideExtremeById: (id: string) => TidePointExtreme;
+	/** Typed optimistically, but returns `null` if there is no data. */
+	getSolarEventById: (id: string) => AstroSolarEvent;
+}
 
 export interface BatchResponseState {
 	isLoading: boolean;
 	error: RequestResultError | null;
-	success: BatchContent | null;
+	success: Batch | null;
 }
 
-export interface BatchResponseOutput extends BatchResponseState {
+export interface BatchResponseOutput extends Omit<BatchResponseState, 'success'> {
 	restart: () => void;
+	success: BatchWithHelpers | null;
 }
+
+const [BatchResponseContextProvider, useBatchResponseContext] = createContextConsumer<BatchResponseOutput>(null!);
+
+export const useBatchResponse = useBatchResponseContext;
+
+export const useBatchResponseSuccess = () => useBatchResponseContext().success!;
 
 export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) => {
 
@@ -71,10 +82,10 @@ export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) 
 		};
 
 		if (seed) {
-			startSeed({ body: null, path: { seed: seed }, query: null }, requestOptions);
+			startSeed({ body: null, path: { seed: seed }, query: { key: DEFINE.clientKey } }, requestOptions);
 		}
 		else {
-			startLatest({ body: null, path: null, query: null }, requestOptions);
+			startLatest({ body: null, path: null, query: { key: DEFINE.clientKey } }, requestOptions);
 		}
 
 		setState((p) => {
@@ -91,60 +102,34 @@ export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) 
 	}, [seed]);
 
 	const value = React.useMemo<BatchResponseOutput>(() => {
+
+		// Yay maps!
+		const tideExtremeMap = new Map<string, TidePointExtreme>(
+			(state.success?.tideExtrema.extrema || []).map((extreme) => {
+				return [extreme.id, extreme];
+			})
+		);
+		const solarEventMap = new Map<string, AstroSolarEvent>(
+			(state.success?.solarEvents || []).map((event) => {
+				return [event.id, event];
+			})
+		);
+
 		return {
 			...state,
-			restart: makeRequest
+			restart: makeRequest,
+			success: state.success ?
+				{
+					...state.success,
+					getTideExtremeById: (id: string) => {
+						return tideExtremeMap.get(id)!;
+					},
+					getSolarEventById: (id: string) => {
+						return solarEventMap.get(id)!;
+					}
+				} : null
 		};
 	}, [state, makeRequest]);
-
-
-
-	// const [currentPromiseLocalDataPhrase, setCurrentPromiseLocalDataPhrase] = React.useState(localDataPhrase);
-
-	// const promiseFunc = React.useMemo(() => {
-	// 	return createPromiseFunc(localDataPhrase);
-	// }, [localDataPhrase]);
-
-	// const promiseTimer: StalePromiseTimerOutput<iso.Batch.LatestAPI.Batch.Latest.Response> = useStalePromiseTimer({
-	// 	initialAction: StalePromiseTimerComponent.promise,
-	// 	timerTimeout: CONSTANT.appRefreshTimeout,
-	// 	isTimerTruthy: documentVisibility,
-	// 	promiseFunc: promiseFunc,
-	// });
-
-	// const { timer, promise, lastCompleted } = promiseTimer;
-
-	// React.useEffect(() => {
-	// 	if (localDataPhrase !== currentPromiseLocalDataPhrase) {
-	// 		setCurrentPromiseLocalDataPhrase(localDataPhrase);
-
-	// 		// Reset
-	// 		const keepDataAndError = CONSTANT.clearDataOnNewFetch ? null : undefined;
-
-	// 		// Stop the timer, start the promise.
-	// 		if (timer.isStarted) {
-	// 			timer.reset({
-	// 				isStarted: false
-	// 			});
-	// 		}
-	// 		promise.reset({
-	// 			isStarted: true,
-	// 			promiseFunc: createPromiseFunc(localDataPhrase),
-	// 			data: keepDataAndError,
-	// 			error: keepDataAndError
-	// 		});
-	// 	}
-	// 	else if (!timer.isStarted && !promise.isStarted) {
-	// 		if (lastCompleted === StalePromiseTimerComponent.timer) {
-	// 			window.location.reload();
-	// 		}
-	// 		else if (!localDataPhrase) {
-	// 			timer.reset({
-	// 				isStarted: true
-	// 			});
-	// 		}
-	// 	}
-	// }, [promise, timer, lastCompleted, localDataPhrase, promiseFunc]);
 
 	return (
 		<BatchResponseContextProvider value={value}>
@@ -152,38 +137,3 @@ export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) 
 		</BatchResponseContextProvider>
 	);
 };
-
-// function createPromiseFunc(localDataPhrase: string | null): () => Promise<BatchLatestResponseSuccess> {
-// 	let promiseFunc: () => Promise<BatchLatestResponse> = fetchBatchLatestResponse;
-// 	let minTimeout: number = CONSTANT.fetchMinTimeout;
-
-// 	if (localDataPhrase) {
-// 		const localData = DEFINE.localTestData![localDataPhrase];
-// 		promiseFunc = async () => { return localData; };
-// 		minTimeout = CONSTANT.localTestDataMinTimeout;
-// 	}
-
-// 	const errorWrappedPromiseFunc = async (): Promise<BatchLatestResponseSuccess> => {
-// 		try {
-// 			const result = await promiseFunc();
-// 			if (result.error) {
-// 				// Log errors coming in from the API.
-// 				console.error('Errors received from successful fetch', result.error.errors);
-// 				throw new Error('Errors received from result of fetch');
-// 			}
-// 			return {
-// 				info: result.info,
-// 				BatchLatest: result.BatchLatest!,
-// 				error: null
-// 			};
-// 		}
-// 		catch (e) {
-// 			console.error(e);
-// 			throw e;
-// 		}
-// 	};
-
-// 	return () => {
-// 		return clampPromise(errorWrappedPromiseFunc(), minTimeout, CONSTANT.fetchMaxTimeout);
-// 	};
-// }

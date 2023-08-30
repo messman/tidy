@@ -3,6 +3,8 @@ import { WeatherStatusType } from '@wbtdevlocal/iso';
 export interface WeatherStatusDescription {
 	/** Fill in the blank: "It's _____ and 70 degrees." No capitalization. */
 	itIsShort: string;
+	/** Fill in the blank: "____ soon". Capitalization. */
+	//soon: string;
 	/** Capitalized description of the status. */
 	conditions: string;
 }

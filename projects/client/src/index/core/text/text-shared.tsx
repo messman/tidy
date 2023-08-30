@@ -47,6 +47,7 @@ export interface FontStyles<T> {
 	stylized: {
 		blockquote: T;
 		capitalized: T;
+		statistic: T;
 	};
 }
 
@@ -198,6 +199,13 @@ export const fontStyleDefinitions = {
 				text-transform: uppercase;
 			`
 		} as const,
+		statistic: {
+			family: fontFamily,
+			size: '1.75rem',
+			lineHeight: '2rem',
+			weight: FontWeight.medium,
+			margin: '1rem',
+		}
 	}
 } satisfies FontStyles<FontStyleDefinition>;
 
@@ -234,6 +242,7 @@ export const fontStyles: FontStyles<CssOutput> = {
 	stylized: {
 		blockquote: createDeclaration(fontStyleDefinitions.stylized.blockquote),
 		capitalized: createDeclaration(fontStyleDefinitions.stylized.capitalized),
+		statistic: createDeclaration(fontStyleDefinitions.stylized.statistic),
 	}
 };
 

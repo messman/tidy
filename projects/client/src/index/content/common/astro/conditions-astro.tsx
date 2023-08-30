@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useBatchResponse } from '@/index/core/data/data';
+import { useBatchResponse, useBatchResponseSuccess } from '@/index/core/data/data';
 import { IconInputType } from '@/index/core/icon/icon';
 import { Block } from '@/index/core/layout/layout-shared';
 import { MediumBodyText } from '@/index/core/text/text-shared';
@@ -9,8 +9,8 @@ import { WeatherIcon } from '../weather/weather-icon';
 import { DaylightIcon } from './daylight-icon';
 
 export const ConditionsAstro: React.FC = () => {
-	const { meta, astro } = useBatchResponse().success!;
-	const { previous, current, next } = astro.sun.relativity;
+	const { meta, now } = useBatchResponseSuccess();
+	const { previous, current, next } = now.astro.sun;
 	const { today } = astro.sun;
 
 	const isDaytime = !next.isRise;

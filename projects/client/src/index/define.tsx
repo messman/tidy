@@ -8,7 +8,8 @@ export const DEFINE = {
 	buildVersion: __DEFINE__.buildVersion as string,
 	buildTime: __DEFINE__.buildTime as number,
 	isDevelopment: __DEFINE__.isDevelopment as boolean,
-	apiRoot: __DEFINE__.apiRoot as string
+	apiRoot: __DEFINE__.apiRoot as string,
+	clientKey: __DEFINE__.clientKey as string
 };
 
 // Make these public on the window for us to easily check

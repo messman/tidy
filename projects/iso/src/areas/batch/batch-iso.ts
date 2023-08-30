@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { enumKeys } from '../../utility/enum';
 import { AstroDay, AstroLunarPhase, AstroSolarEvent, AstroSunDay } from '../astro/astro-iso';
-import { TidePointCurrent, TidePointExtreme, TidePointExtremeDay } from '../tide/tide-iso';
+import { TidePointCurrentContextual, TidePointExtreme, TidePointExtremeDay } from '../tide/tide-iso';
 import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly } from '../weather/weather-iso';
 
 export enum Seed {
@@ -27,7 +27,6 @@ export interface Batch {
 	/** Info about the request. */
 	meta: BatchMeta;
 
-
 	/** Tide extrema data, which is referenced in multiple areas. */
 	tideExtrema: {
 		extrema: TidePointExtreme[];
@@ -36,12 +35,10 @@ export interface Batch {
 	};
 	solarEvents: AstroSolarEvent[];
 
-
 	/** Content for the current situation. */
 	now: BatchNow;
 	/** Content for the upcoming week. */
 	week: BatchWeek;
-
 }
 
 export interface BatchMeta {
@@ -60,7 +57,7 @@ export interface BatchNow {
 }
 
 export interface BatchNowTide {
-	current: TidePointCurrent;
+	current: TidePointCurrentContextual;
 	previousId: string;
 	/** May be set if we are "close enough" to a tide extreme. */
 	currentId: string | null;

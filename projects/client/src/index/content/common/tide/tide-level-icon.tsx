@@ -1,17 +1,18 @@
-import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
 import { Icon } from '@/index/core/icon/icon';
 import { StyledFC } from '@/index/core/primitive/primitive-styled';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { icons } from '@wbtdevlocal/assets';
-import { mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePoint } from '@wbtdevlocal/iso';
+import { mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrentContextual } from '@wbtdevlocal/iso';
+
+export type TidePointCurrentSimplified = Pick<TidePointCurrentContextual, "division" | "direction">;
 
 /** A tide status that should never happen with real data, but may be used for loading. */
-export const unknownTide: TidePoint = { time: DateTime.now(), height: 0, direction: TideLevelDirection.turning, division: TideLevelDivision.mid, isComputed: false, isAlternate: false, computed: 0 };
+export const unknownTide: TidePointCurrentSimplified = { direction: TideLevelDirection.turning, division: TideLevelDivision.mid };
 
 export interface TideLevelIconProps {
-	tide: TidePoint;
+	tide: TidePointCurrentSimplified;
 }
 
 export const TideLevelIcon: StyledFC<TideLevelIconProps> = (props) => {

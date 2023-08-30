@@ -4,20 +4,8 @@ import { PanelPadded, PanelTitled, SpacePanelEdge, SpacePanelGridGap, SpacePanel
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
-
-export type NowBeachAccessHighlightsProps = {
-
-};
-
-/** */
-export const NowBeachAccessHighlights: React.FC<NowBeachAccessHighlightsProps> = (props) => {
-	const { } = props;
-
-	return (
-		null
-	);
-};
-
+import { NowBeachAccess } from './now-beach-access';
+import { NowBeachAccessHighlights } from './now-beach-highlights';
 
 export type NowBeachUpcomingProps = {
 
@@ -70,6 +58,7 @@ export const NowBeach: React.FC<NowBeachProps> = (props) => {
 	return (
 		<NowBeach_Container>
 			<NowBeachAccess />
+			<NowBeachAccessHighlights />
 			<NowBeachHow />
 		</NowBeach_Container>
 	);
