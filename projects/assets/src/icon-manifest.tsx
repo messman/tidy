@@ -17,40 +17,50 @@ import { create } from './icon-require';
 	Note: URLs will use a directory prefix.
 */
 
-// Action
-export const actionAdd = create('actionAdd', require('@/static/icons/action/add.svg'));
-export const actionCheckBold = create('actionCheckBold', require('@/static/icons/action/check-bold.svg'));
-export const actionCheck = create('actionCheck', require('@/static/icons/action/check.svg'));
-export const actionClose = create('actionClose', require('@/static/icons/action/close.svg'));
-export const actionFilter = create('actionFilter', require('@/static/icons/action/filter.svg'));
-export const actionMinus = create('actionMinus', require('@/static/icons/action/minus.svg'));
+// Astro
+export const astroMoondown = create('astroMoondown', require('@/static/icons/astro/moondown.svg'));
+export const astroMoonrise = create('astroMoonrise', require('@/static/icons/astro/moonrise.svg'));
+export const astroSundown = create('astroSundown', require('@/static/icons/astro/sundown.svg'));
+export const astroSunrise = create('astroSunrise', require('@/static/icons/astro/sunrise.svg'));
 
-// Arrow
-export const arrowChevronDown = create('arrowChevronDown', require('@/static/icons/arrow/chevron-down.svg'));
-export const arrowChevronLeftInline = create('arrowChevronLeftInline', require('@/static/icons/arrow/chevron-left-inline.svg'));
-export const arrowChevronLeft = create('arrowChevronLeft', require('@/static/icons/arrow/chevron-left.svg'));
-export const arrowChevronRightInline = create('arrowChevronRightInline', require('@/static/icons/arrow/chevron-right-inline.svg'));
-export const arrowChevronRight = create('arrowChevronRight', require('@/static/icons/arrow/chevron-right.svg'));
-export const arrowChevronUp = create('arrowChevronUp', require('@/static/icons/arrow/chevron-up.svg'));
-export const arrowDown = create('arrowDown', require('@/static/icons/arrow/down.svg'));
-export const arrowLeft = create('arrowLeft', require('@/static/icons/arrow/left.svg'));
-export const arrowOut = create('arrowOut', require('@/static/icons/arrow/out.svg'));
-export const arrowRight = create('arrowRight', require('@/static/icons/arrow/right.svg'));
-export const arrowUp = create('arrowUp', require('@/static/icons/arrow/up.svg'));
+// Core / Arrow
+export const coreArrowChevronDown = create('coreArrowChevronDown', require('@/static/icons/core/arrow/chevron-down.svg'));
+export const coreArrowChevronLeft = create('coreArrowChevronLeft', require('@/static/icons/core/arrow/chevron-left.svg'));
+export const coreArrowChevronRight = create('coreArrowChevronRight', require('@/static/icons/core/arrow/chevron-right.svg'));
+export const coreArrowChevronUp = create('coreArrowChevronUp', require('@/static/icons/core/arrow/chevron-up.svg'));
+export const coreArrowDown = create('coreArrowDown', require('@/static/icons/core/arrow/down.svg'));
+export const coreArrowInlineBack = create('coreArrowInlineBack', require('@/static/icons/core/arrow/inline-back.svg'));
+export const coreArrowInlineForward = create('coreArrowInlineForward', require('@/static/icons/core/arrow/inline-forward.svg'));
+export const coreArrowLeft = create('coreArrowLeft', require('@/static/icons/core/arrow/left.svg'));
+export const coreArrowRight = create('coreArrowRight', require('@/static/icons/core/arrow/right.svg'));
+export const coreArrowUp = create('coreArrowUp', require('@/static/icons/core/arrow/up.svg'));
 
-// Brand
-export const brandUmbrella = create('brandUmbrella', require('@/static/icons/brand/umbrella.svg'));
+// Core
+export const coreAdd = create('coreAdd', require('@/static/icons/core/add.svg'));
+export const coreCalendar = create('coreCalendar', require('@/static/icons/core/calendar.svg'));
+export const coreCheck = create('coreCheck', require('@/static/icons/core/check.svg'));
+export const coreClose = create('coreClose', require('@/static/icons/core/close.svg'));
+export const coreEducation = create('coreEducation', require('@/static/icons/core/education.svg'));
+export const coreHeartFilled = create('coreHeartFilled', require('@/static/icons/core/heart-filled.svg'));
+export const coreMinus = create('coreMinus', require('@/static/icons/core/minus.svg'));
+export const coreNewSparkle = create('coreNewSparkle', require('@/static/icons/core/new-sparkle.svg'));
 
-// Decoration
-export const decorationLike = create('decorationLike', require('@/static/icons/decoration/like.svg'));
-
-// Expression
-export const expressionHappy = create('expressionHappy', require('@/static/icons/expression/happy.svg'));
-export const expressionSad = create('expressionSad', require('@/static/icons/expression/sad.svg'));
-export const expressionStraight = create('expressionStraight', require('@/static/icons/expression/straight.svg'));
-
-// Loader
-export const loaderQuarterTurn = create('loaderQuarterTurn', require('@/static/icons/loader/quarter-turn.svg'));
+// Inform
+export const informBadgeOutline = create('informBadgeOutline', require('@/static/icons/inform/badge-outline.svg'));
+export const informBadgeSolid = create('informBadgeSolid', require('@/static/icons/inform/badge-solid.svg'));
+export const informCheckCircleOutline = create('informCheckCircleOutline', require('@/static/icons/inform/check-circle-outline.svg'));
+export const informCheckCircleSolid = create('informCheckCircleSolid', require('@/static/icons/inform/check-circle-solid.svg'));
+export const informCheckOpen = create('informCheckOpen', require('@/static/icons/inform/check-open.svg'));
+export const informCircleSolid = create('informCircleSolid', require('@/static/icons/inform/circle-solid.svg'));
+export const informCrossCircleOutline = create('informCrossCircleOutline', require('@/static/icons/inform/cross-circle-outline.svg'));
+export const informCrossCircleSolid = create('informCrossCircleSolid', require('@/static/icons/inform/cross-circle-solid.svg'));
+export const informExclaimCircle = create('informExclaimCircle', require('@/static/icons/inform/exclaim-circle.svg'));
+export const informExclaimOpen = create('informExclaimOpen', require('@/static/icons/inform/exclaim-open.svg'));
+export const informInfoCircle = create('informInfoCircle', require('@/static/icons/inform/info-circle.svg'));
+export const informQuestionCircle = create('informQuestionCircle', require('@/static/icons/inform/question-circle.svg'));
+export const informTriangleSolid = create('informTriangleSolid', require('@/static/icons/inform/triangle-solid.svg'));
+export const informWarningOutline = create('informWarningOutline', require('@/static/icons/inform/warning-outline.svg'));
+export const informWarningSolid = create('informWarningSolid', require('@/static/icons/inform/warning-solid.svg'));
 
 // Moon
 export const moonFirstQuarter = create('moonFirstQuarter', require('@/static/icons/moon/first-quarter.svg'));
@@ -62,34 +72,21 @@ export const moonWaningGibbous = create('moonWaningGibbous', require('@/static/i
 export const moonWaxingCrescent = create('moonWaxingCrescent', require('@/static/icons/moon/waxing-crescent.svg'));
 export const moonWaxingGibbous = create('moonWaxingGibbous', require('@/static/icons/moon/waxing-gibbous.svg'));
 
-// Navigation
-export const navigationDashboard = create('navigationDashboard', require('@/static/icons/navigation/dashboard.svg'));
-export const navigationDev = create('navigationDev', require('@/static/icons/navigation/dev.svg'));
-export const navigationHome = create('navigationHome', require('@/static/icons/navigation/home.svg'));
-export const navigationLocation = create('navigationLocation', require('@/static/icons/navigation/location.svg'));
-export const navigationMenu = create('navigationMenu', require('@/static/icons/navigation/menu.svg'));
-export const navigationSettings = create('navigationSettings', require('@/static/icons/navigation/settings.svg'));
-export const navigationShare = create('navigationShare', require('@/static/icons/navigation/share.svg'));
-export const navigationUrl = create('navigationUrl', require('@/static/icons/navigation/url.svg'));
-
-// Status
-export const statusAlertOutline = create('statusAlertOutline', require('@/static/icons/status/alert/outline.svg'));
-export const statusAlertSolid = create('statusAlertSolid', require('@/static/icons/status/alert/solid.svg'));
-export const statusErrorOutline = create('statusErrorOutline', require('@/static/icons/status/error/outline.svg'));
-export const statusErrorSolid = create('statusErrorSolid', require('@/static/icons/status/error/solid.svg'));
-export const statusInfoOutline = create('statusInfoOutline', require('@/static/icons/status/info/outline.svg'));
-export const statusInfoSolid = create('statusInfoSolid', require('@/static/icons/status/info/solid.svg'));
-export const statusSuccessOutline = create('statusSuccessOutline', require('@/static/icons/status/success/outline.svg'));
-export const statusSuccessSolid = create('statusSuccessSolid', require('@/static/icons/status/success/solid.svg'));
-export const statusCircle = create('statusCircle', require('@/static/icons/status/circle.svg'));
-export const statusTriangle = create('statusTriangle', require('@/static/icons/status/triangle.svg'));
-
 // Tide
 export const tideDownLong = create('tideDownLong', require('@/static/icons/tide/down-long.svg'));
 export const tideDown = create('tideDown', require('@/static/icons/tide/down.svg'));
 export const tideUpLong = create('tideUpLong', require('@/static/icons/tide/up-long.svg'));
 export const tideUp = create('tideUp', require('@/static/icons/tide/up.svg'));
 export const tideWave = create('tideWave', require('@/static/icons/tide/wave.svg'));
+
+// Tool
+export const toolDotsHorizontal = create('toolDotsHorizontal', require('@/static/icons/tool/dots-horizontal.svg'));
+export const toolFilter = create('toolFilter', require('@/static/icons/tool/filter.svg'));
+export const toolLinkOut = create('toolLinkOut', require('@/static/icons/tool/link-out.svg'));
+export const toolLink = create('toolLink', require('@/static/icons/tool/link.svg'));
+export const toolQuarterTurn = create('toolQuarterTurn', require('@/static/icons/tool/quarter-turn.svg'));
+export const toolSupport = create('toolSupport', require('@/static/icons/tool/support.svg'));
+export const toolUpload = create('toolUpload', require('@/static/icons/tool/upload.svg'));
 
 // Weather
 export const weatherCloud = create('weatherCloud', require('@/static/icons/weather/cloud.svg'));
@@ -110,9 +107,6 @@ export const weatherRainSun = create('weatherRainSun', require('@/static/icons/w
 export const weatherRain = create('weatherRain', require('@/static/icons/weather/rain.svg'));
 export const weatherSnowflake = create('weatherSnowflake', require('@/static/icons/weather/snowflake.svg'));
 export const weatherSun = create('weatherSun', require('@/static/icons/weather/sun.svg'));
-export const weatherSundown = create('weatherSundown', require('@/static/icons/weather/sundown.svg'));
-export const weatherSunrise = create('weatherSunrise', require('@/static/icons/weather/sunrise.svg'));
-export const weatherTemperatureCold = create('weatherTemperatureCold', require('@/static/icons/weather/temperature-cold.svg'));
 export const weatherTemperatureHot = create('weatherTemperatureHot', require('@/static/icons/weather/temperature-hot.svg'));
 export const weatherTemperature = create('weatherTemperature', require('@/static/icons/weather/temperature.svg'));
 export const weatherWater = create('weatherWater', require('@/static/icons/weather/water.svg'));

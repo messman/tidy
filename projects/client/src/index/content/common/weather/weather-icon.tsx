@@ -34,24 +34,25 @@ const WeatherIcon_Container = styled.div`
 `;
 
 const WeatherIcon_RainIcon = styled(Icon)`
-	margin-top: .125rem;
-	width: 1.25rem;
-	height: 1.25rem;
+	margin-top: 3.125%;
+	width: 62.5%;
+	height: 62.5%;
 `;
 
 const WeatherIcon_Icon = styled(Icon)`
-	margin-top: .25rem;
-	width: 1.75rem;
-	height: 1.75rem;
+	margin-top: 9.375%; // 3 / 32
+	width: 81.25%; // 26 / 32
+	height: 81.25%;
 `;
 
 const WeatherIcon_RainText = styled.div`
 	position: absolute;
-	bottom: 1px;
+	bottom: 0;
 	left: 0;
 	right: 0;
 	text-align: center;
 	${fontStyles.text.tinyHeavy};
+	line-height: .75rem;
 	color: ${themeTokens.text.subtle};
 `;
 
@@ -97,8 +98,8 @@ export const statusTypeDayNight: Record<keyof typeof WeatherStatusType, WeatherS
 		night: icons.weatherTemperatureHot
 	},
 	clear_cold: {
-		day: icons.weatherTemperatureCold,
-		night: icons.weatherTemperatureCold
+		day: icons.weatherSun,
+		night: icons.weatherMoon
 	},
 	clouds_few: {
 		day: icons.weatherCloudySun,
@@ -169,20 +170,20 @@ export const statusTypeDayNight: Record<keyof typeof WeatherStatusType, WeatherS
 		night: icons.weatherLightning
 	},
 	intense_storm: {
-		day: icons.statusAlertSolid,
-		night: icons.statusAlertSolid
+		day: icons.informWarningSolid,
+		night: icons.informWarningSolid
 	},
 	intense_other: {
-		day: icons.statusAlertSolid,
-		night: icons.statusAlertSolid
+		day: icons.informWarningSolid,
+		night: icons.informWarningSolid
 	},
 	dust: {
-		day: icons.statusAlertSolid,
-		night: icons.statusAlertSolid
+		day: icons.informWarningSolid,
+		night: icons.informWarningSolid
 	},
 	smoke: {
-		day: icons.statusAlertSolid,
-		night: icons.statusAlertSolid
+		day: icons.informWarningSolid,
+		night: icons.informWarningSolid
 	},
 	haze: {
 		day: icons.weatherFog,

@@ -24,50 +24,50 @@ interface InnerSVGDef {
 /** Dictionary of (keys of name enum) -> (URL). */
 export const SVGIconUrl = {
 
-	// Action
-	actionAdd: '',
-	actionCheckBold: '',
-	actionCheck: '',
-	actionClose: '',
-	actionFilter: '',
-	actionMinus: '',
+	// Astro
+	astroMoondown: '',
+	astroMoonrise: '',
+	astroSundown: '',
+	astroSunrise: '',
 
-	// Arrow
-	arrowChevronDown: '',
-	arrowChevronLeftInline: '',
-	arrowChevronLeft: '',
-	arrowChevronRightInline: '',
-	arrowChevronRight: '',
-	arrowChevronUp: '',
-	arrowDown: '',
-	arrowLeft: '',
-	arrowOut: '',
-	arrowRight: '',
-	arrowUp: '',
+	// Core / Arrow
+	coreArrowChevronDown: '',
+	coreArrowChevronLeft: '',
+	coreArrowChevronRight: '',
+	coreArrowChevronUp: '',
+	coreArrowDown: '',
+	coreArrowInlineBack: '',
+	coreArrowInlineForward: '',
+	coreArrowLeft: '',
+	coreArrowRight: '',
+	coreArrowUp: '',
 
-	// Brand
-	brandUmbrella: '',
+	// Core
+	coreAdd: '',
+	coreCalendar: '',
+	coreCheck: '',
+	coreClose: '',
+	coreEducation: '',
+	coreHeartFilled: '',
+	coreMinus: '',
+	coreNewSparkle: '',
 
-	// Decoration
-	decorationLike: '',
-
-	// Expression
-	expressionHappy: '',
-	expressionSad: '',
-	expressionStraight: '',
-
-	// Loader
-	loaderQuarterTurn: '',
-
-	// Moon
-	moonFirstQuarter: '',
-	moonFull: '',
-	moonNew: '',
-	moonThirdQuarter: '',
-	moonWaningCrescent: '',
-	moonWaningGibbous: '',
-	moonWaxingCrescent: '',
-	moonWaxingGibbous: '',
+	// Inform
+	informBadgeOutline: '',
+	informBadgeSolid: '',
+	informCheckCircleOutline: '',
+	informCheckCircleSolid: '',
+	informCheckOpen: '',
+	informCircleSolid: '',
+	informCrossCircleOutline: '',
+	informCrossCircleSolid: '',
+	informExclaimCircle: '',
+	informExclaimOpen: '',
+	informInfoCircle: '',
+	informQuestionCircle: '',
+	informTriangleSolid: '',
+	informWarningOutline: '',
+	informWarningSolid: '',
 
 	// Navigation
 	navigationDashboard: '',
@@ -91,12 +91,31 @@ export const SVGIconUrl = {
 	statusCircle: '',
 	statusTriangle: '',
 
+	// Moon
+	moonFirstQuarter: '',
+	moonFull: '',
+	moonNew: '',
+	moonThirdQuarter: '',
+	moonWaningCrescent: '',
+	moonWaningGibbous: '',
+	moonWaxingCrescent: '',
+	moonWaxingGibbous: '',
+
 	// Tide
 	tideDownLong: '',
 	tideDown: '',
 	tideUpLong: '',
 	tideUp: '',
 	tideWave: '',
+
+	// Tool
+	toolDotsHorizontal: '',
+	toolFilter: '',
+	toolLinkOut: '',
+	toolLink: '',
+	toolQuarterTurn: '',
+	toolSupport: '',
+	toolUpload: '',
 
 	// Weather
 	weatherCloud: '',
@@ -117,13 +136,10 @@ export const SVGIconUrl = {
 	weatherRain: '',
 	weatherSnowflake: '',
 	weatherSun: '',
-	weatherSundown: '',
-	weatherSunrise: '',
-	weatherTemperatureCold: '',
 	weatherTemperatureHot: '',
 	weatherTemperature: '',
 	weatherWater: '',
-	weatherWind: ''
+	weatherWind: '',
 } satisfies Record<string, string>;
 
 /**

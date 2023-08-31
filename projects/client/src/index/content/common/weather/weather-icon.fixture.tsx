@@ -7,15 +7,15 @@ import { WeatherIcon } from './weather-icon';
 
 const IconContainer = styled.div`
 	display: flex;
-	gap: 1rem;
+	gap: .5rem;
 	flex-wrap: wrap;
-	margin: 1rem;
+	margin: .5rem;
 `;
 
 
 export default CosmosFixture.create(() => {
 
-	const rain = Cosmos.useControlValue("Rain", 0);
+	const rain = Cosmos.useControlValue("Rain", 50);
 
 	const weatherIcons = [
 		icons.weatherCloud,
@@ -36,7 +36,6 @@ export default CosmosFixture.create(() => {
 		icons.weatherRain,
 		icons.weatherSnowflake,
 		icons.weatherSun,
-		icons.weatherTemperatureCold,
 		icons.weatherTemperatureHot,
 		icons.weatherTemperature,
 		icons.weatherWind,
@@ -61,5 +60,5 @@ export default CosmosFixture.create(() => {
 		</>
 	);
 }, {
-	setup: FixtureSetup.root
+	setup: FixtureSetup.glass
 });

@@ -44,9 +44,9 @@ const Dot = styled.div`
 
 const solarEventTypeIcon: Record<keyof typeof AstroSolarEventType, React.FC> = {
 	civilDawn: () => <Dot />,
-	rise: () => <SunIcon type={icons.weatherSunrise} />,
+	rise: () => <SunIcon type={icons.astroSunrise} />,
 	midday: () => <Dot />,
-	set: () => <SunIcon type={icons.weatherSundown} />,
+	set: () => <SunIcon type={icons.astroSundown} />,
 	civilDusk: () => <Dot />
 };
 
@@ -62,11 +62,11 @@ export const ChartHourlySolar: React.FC<ChartHourlySolarProps> = (props) => {
 	const startOfDay = day.day.startOf('day');
 
 	const ids = [
-		sunDay.civilDawnId,
+		//sunDay.civilDawnId,
 		sunDay.riseId,
 		sunDay.middayId,
 		sunDay.setId,
-		sunDay.civilDuskId
+		//sunDay.civilDuskId
 	];
 
 	const iconsRender = ids.map((id) => {

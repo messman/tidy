@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Icon } from '@/index/core/icon/icon';
 import { StyledFC } from '@/index/core/primitive/primitive-styled';
 import { fontStyles } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 import { mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrentContextual } from '@wbtdevlocal/iso';
 
@@ -80,20 +81,21 @@ export const TideExtremeIcon: StyledFC<TideExtremeIconProps> = (props) => {
 
 const TideLevelIconContainer = styled.span`
 	display: inline-block;
-	border-radius: 50%;
+	border-radius: .25rem;
 
 	position: relative;
 	width: 2rem;
 	height: 2rem;
 	flex-shrink: 0;
 
+	background-color: ${themeTokens.background.tint.medium};
 	overflow: hidden;
 `;
 
 const waterOffsetPercent: Record<keyof typeof TideLevelDivision, string> = {
-	high: '6.25%',
-	mid: '34.375%',
-	low: '65.625%'
+	high: '0%',
+	mid: '33%',
+	low: '65%'
 };
 
 const WaterIcon = styled(Icon) <{ division: TideLevelDivision; }>`
@@ -101,6 +103,7 @@ const WaterIcon = styled(Icon) <{ division: TideLevelDivision; }>`
 	top: ${p => mapNumberEnumValue(TideLevelDivision, waterOffsetPercent, p.division)};
 	width: 2rem;
 	height: 2rem;
+	color: ${themeTokens.background.tint.darkest};
 `;
 
 const CenteringContainer = styled.div`

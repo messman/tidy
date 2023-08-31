@@ -7,6 +7,7 @@ export function percentFromStartOfDay(event: DateTime, startOfDay: DateTime): nu
 	return event.diff(startOfDay, 'milliseconds').milliseconds / millisecondsPerDay;
 }
 
+/** Expects [0, 1] */
 export function asPercentString(percent: number): string {
 	return (Math.round(percent * 100 * 100) / 100) + '%';
 }
