@@ -19,7 +19,7 @@ export const FillSVG = styled(SVGPath)`
 	height: 100%;
 	width: 100%;
 	fill: ${themeTokens.background.tint.medium};
-	opacity: 1;
+	opacity: .75;
 `;
 
 // export const StrokeSVG = styled(SVGPath)`

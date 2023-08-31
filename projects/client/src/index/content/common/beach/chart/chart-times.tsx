@@ -32,6 +32,10 @@ const weatherIndicatorStyles = css`
 	border-radius: 50%;
 `;
 
+const WeatherIndicatorPast = styled.div`
+	${weatherIndicatorStyles}
+	background-color: ${themeTokens.inform.base};
+`;
 const WeatherIndicatorBest = styled.div`
 	${weatherIndicatorStyles}
 	background-color: ${themeTokens.inform.positive};
@@ -52,12 +56,14 @@ export type BeachChartTimesProps = {
 
 export const BeachChartTimes: React.FC<BeachChartTimesProps> = (props) => {
 	const { day } = props;
-	const { getTideExtremeById } = useBatchResponseSuccess();
+	const { meta, getTideExtremeById } = useBatchResponseSuccess();
+	const { referenceTime } = meta;
 
 	const timesRender = day.ranges.map((range) => {
 
+		const isInPast = referenceTime > range.stop;
 		const tideLow = getTideExtremeById(range.tideLowId);
-		const Indicator = range.weather === WeatherIndicator.best ? WeatherIndicatorBest : WeatherIndicatorOkay;
+		const Indicator = isInPast ? WeatherIndicatorPast : (range.weather === WeatherIndicator.best ? WeatherIndicatorBest : WeatherIndicatorOkay);
 
 		return (
 			<TimeContainer key={range.start.toMillis()}>
