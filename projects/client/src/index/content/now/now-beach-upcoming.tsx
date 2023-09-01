@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
-import { PanelTitled, SpacePanelEdge } from '@/index/core/layout/layout-panel';
+import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { getRelativeDayText } from '@/index/core/time/time';
 import { BeachTimeDay } from '@wbtdevlocal/iso';
@@ -47,7 +47,6 @@ export type NowBeachUpcomingProps = {
 
 };
 
-/** */
 export const NowBeachUpcoming: React.FC<NowBeachUpcomingProps> = (props) => {
 	const { } = props;
 	const { week } = useBatchResponseSuccess();
@@ -55,11 +54,11 @@ export const NowBeachUpcoming: React.FC<NowBeachUpcomingProps> = (props) => {
 	const [today, tomorrow] = week.days;
 
 	return (
-		<PanelTitled title="Upcoming Beach Times">
+		<Panel title="Upcoming Beach Times">
 			<Container>
 				<BeachTimeDay day={today} />
 				<BeachTimeDay day={tomorrow} />
 			</Container>
-		</PanelTitled>
+		</Panel>
 	);
 };

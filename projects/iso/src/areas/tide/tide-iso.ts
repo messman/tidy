@@ -52,14 +52,12 @@ export interface TidePointCurrentContextual extends TidePointCurrent {
 
 /** This is a span of time, not a specific point in time. */
 export enum TideLevelBeachStatus {
-	/** Solidly covered. */
-	covered = 1,
-	/** In that fuzzy uncovering time. */
-	uncovering,
 	/** Solidly uncovered. */
-	uncovered,
-	/** In that fuzzy covering time. */
-	covering
+	uncovered = 1,
+	/** In that fuzzy covering/uncovering time. */
+	between,
+	/** Solidly covered. */
+	covered,
 }
 
 export interface TidePointExtreme {

@@ -62,7 +62,11 @@ export const BeachChartTimes: React.FC<BeachChartTimesProps> = (props) => {
 	const timesRender = day.ranges.map((range) => {
 
 		const isInPast = referenceTime > range.stop;
-		const tideLow = getTideExtremeById(range.tideLowId);
+		const tideLowRender = range.tideLowIds.length > 1 ? (
+			<LowText>Multiple Lows</LowText>
+		) : (
+			<LowText>Low <TimeTextUnit dateTime={getTideExtremeById(range.tideLowIds[0]).time} /></LowText>
+		);
 		const Indicator = isInPast ? WeatherIndicatorPast : (range.weather === WeatherIndicator.best ? WeatherIndicatorBest : WeatherIndicatorOkay);
 
 		return (
@@ -71,7 +75,7 @@ export const BeachChartTimes: React.FC<BeachChartTimesProps> = (props) => {
 					<Indicator />
 					<MediumBodyText>{getTimeTwelveHourRange(roundFiveMinutes(range.start), roundFiveMinutes(range.stop))}</MediumBodyText>
 				</TimeLeftContainer>
-				<LowText>Low <TimeTextUnit dateTime={tideLow.time} /></LowText>
+				{tideLowRender}
 			</TimeContainer>
 		);
 	});

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
-import { PanelPadded } from '@/index/core/layout/layout-panel';
+import { Panel, PanelPadding } from '@/index/core/layout/layout-panel';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { TimeDurationTextUnit } from '@/index/core/text/text-unit';
 import { TideLevelBeachStatus } from '@wbtdevlocal/iso';
@@ -58,8 +58,10 @@ export const NowBeachAccess: React.FC = () => {
 	}
 
 	return (
-		<PanelPadded>
-			{render}
-		</PanelPadded>
+		<Panel>
+			<PanelPadding>
+				{render}
+			</PanelPadding>
+		</Panel>
 	);
 };

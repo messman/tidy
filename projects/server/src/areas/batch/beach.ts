@@ -275,9 +275,10 @@ function getBeachTimeRanges(
 
 	// Start with no beach time because we're starting at the start of the current day.
 	let trackedBeachTime: BeachTimeRange | null = null;
-	let mostRecentLowTide: BeachMarkTideLow | null = null;
+	// Track the *multiple* low tides that might need to be associated with a single range. #REF_BEACH_LOW_TIDE_ASSOCIATION
+	let mostRecentLowTides: BeachMarkTideLow[] = [];
 	let mostRecentMajorSolarEvent: AstroSolarEvent | null = null;
-	let mostRecentMajorTideBeachChange: BeachMarkTideBeachChange | null = null;
+	let isBeachUncovered: boolean = false;
 	let mostRecentWeather: BeachMarkWeather | null = null;
 
 	let hasTriedToFindWeatherForCurrentDay = false;
@@ -292,7 +293,14 @@ function getBeachTimeRanges(
 			But see other code where we associate the low tide. #REF_BEACH_LOW_TIDE_ASSOCIATION
 		*/
 		if (beachMarkTideLow) {
-			mostRecentLowTide = beachMarkTideLow;
+			mostRecentLowTides.push(beachMarkTideLow);
+		}
+		/*
+			Check for covering. If that happens, our low tide can't possibly be used for
+			the next beach time. #REF_BEACH_LOW_TIDE_ASSOCIATION
+		*/
+		if (beachMarkTideBeachChange && beachMarkTideBeachChange.toStatus !== TideLevelBeachStatus.uncovered) {
+			mostRecentLowTides = [];
 		}
 
 		/** At this point, skip to the next if it's the day before the current day (since we don't have all the data necessary for that). */
@@ -327,9 +335,7 @@ function getBeachTimeRanges(
 			}
 		}
 		if (beachMarkTideBeachChange) {
-			if (beachMarkTideBeachChange.toStatus === TideLevelBeachStatus.covering || beachMarkTideBeachChange.toStatus === TideLevelBeachStatus.uncovered) {
-				mostRecentMajorTideBeachChange = beachMarkTideBeachChange;
-			}
+			isBeachUncovered = beachMarkTideBeachChange.toStatus === TideLevelBeachStatus.uncovered;
 		}
 		if (beachMarkWeather) {
 			mostRecentWeather = beachMarkWeather;
@@ -353,12 +359,12 @@ function getBeachTimeRanges(
 				}
 			}
 			else if (beachMarkTideLow) {
-				trackedBeachTime.tideLowId = beachMarkTideLow.id;
-				mostRecentLowTide = null; // Ensure we can't be re-used.
+				trackedBeachTime.tideLowIds.push(beachMarkTideLow.id);
+				mostRecentLowTides = []; // Prevent any tracking.
 			}
 			else if (beachMarkTideBeachChange) {
 				// Check for the end condition (beach starting to cover)
-				if (beachMarkTideBeachChange.toStatus === TideLevelBeachStatus.covering) {
+				if (beachMarkTideBeachChange.toStatus !== TideLevelBeachStatus.uncovered) {
 					shouldStop = true;
 				}
 			}
@@ -395,23 +401,18 @@ function getBeachTimeRanges(
 					Check if this low should be associated with a previous beach time, like one that ended
 					due to lost light. #REF_BEACH_LOW_TIDE_ASSOCIATION
 				*/
-				if (beachTimeRanges.length && mostRecentLowTide) {
+				if (beachTimeRanges.length && mostRecentLowTides.length) {
 					const previousBeachTime = beachTimeRanges.at(-1)!;
-					// If it doesn't have one, and we're the next low tide, we're for that beach time.
-					if (!previousBeachTime.tideLowId) {
-						previousBeachTime.tideLowId = mostRecentLowTide.id;
-						mostRecentLowTide = null; // Ensure we can't be re-used.
+					// If it doesn't have any, and we're the next low tide, we're for that beach time.
+					// If there happens to be multiple lows that would work out further into the future, oh well.
+					if (!previousBeachTime.tideLowIds.length) {
+						previousBeachTime.tideLowIds = mostRecentLowTides.map(x => x.id);
+						mostRecentLowTides = []; // Ensure we can't be re-used.
 					}
 				}
 			}
 			else if (beachMarkTideBeachChange) {
-				/*
-					Check for covering. If that happens, our low tide can't possibly be used for
-					the next beach time. #REF_BEACH_LOW_TIDE_ASSOCIATION
-				*/
-				if (beachMarkTideBeachChange.toStatus === TideLevelBeachStatus.covering) {
-					mostRecentLowTide = null;
-				}
+				// Effects already handled above
 			}
 			else if (beachMarkWeather) {
 				// No effects
@@ -419,7 +420,7 @@ function getBeachTimeRanges(
 
 			// Our start check
 			if (
-				mostRecentMajorTideBeachChange?.toStatus === TideLevelBeachStatus.uncovered
+				isBeachUncovered
 				&& (mostRecentMajorSolarEvent !== null && mostRecentMajorSolarEvent.type !== AstroSolarEventType.civilDusk)
 			) {
 
@@ -435,7 +436,7 @@ function getBeachTimeRanges(
 						we should be able to say that when a beach time does begin, and we have a recent low tide,
 						this beach time is for that low tide. #REF_BEACH_LOW_TIDE_ASSOCIATION
 					*/
-					tideLowId: mostRecentLowTide?.id || null!,
+					tideLowIds: mostRecentLowTides.map(x => x.id),
 					// If it was this sun event that caused the beach time to start, record it! (Likely civil dawn)
 					solarEventIds: beachMarkSun ? [beachMarkSun.id] : [],
 					weather
@@ -454,7 +455,7 @@ function getBeachTimeRanges(
 	// Remove any beach times that are less than 30 minutes long, including our current beach time (which could have started well before our start time)
 	// Also remove any that are incomplete.
 	beachTimeRanges = beachTimeRanges.filter((beachTime) => {
-		const isIncomplete = !beachTime.stop || !beachTime.start || !beachTime.tideLowId || !isInNumberEnum(WeatherIndicator, beachTime.weather);
+		const isIncomplete = !beachTime.stop || !beachTime.start || !beachTime.tideLowIds.length || !isInNumberEnum(WeatherIndicator, beachTime.weather);
 		const isTooShort = !!beachTime.stop && !!beachTime.start && beachTime.stop.diff(beachTime.start, 'minutes').minutes < 30;
 		return !isIncomplete && !isTooShort;
 	});
@@ -511,7 +512,7 @@ export function getBeachTimeDays(
 	// Strip out anything incomplete.
 	const beachTimeDays = Array.from(daysMap.values()).filter((day) => {
 		// We expect every day to have a beach time... it just might be bad weather.
-		return day && day.astro && day.weather && day.ranges.length;
+		return day && day.astro && day.weather && day.tides && day.ranges.length;
 	});
 
 	return beachTimeDays;

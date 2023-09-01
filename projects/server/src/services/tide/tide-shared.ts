@@ -79,21 +79,21 @@ function getTidePointBeachSwapsBetween(a: TidePointExtreme, b: TidePointExtreme)
 		[low, high] = [high, low];
 	}
 
-	const { coveringStart, coveringStop, uncoveringStart, uncoveringStop } = constant.beachAccess;
+	const { covered, uncovered } = constant.beachAccess;
 	const heightRange = (high - low);
 
 	// Use percents to get to [0, 1].
-	let firstHeightPercent = (uncoveringStart - low) / heightRange;
-	let firstStatus = TideLevelBeachStatus.uncovering;
-	let secondHeightPercent = (uncoveringStop - low) / heightRange;
+	let firstHeightPercent = (covered - low) / heightRange;
+	let firstStatus = TideLevelBeachStatus.between;
+	let secondHeightPercent = (uncovered - low) / heightRange;
 	let secondStatus = TideLevelBeachStatus.uncovered;
 
 	if (isStartLow) {
 		// If we started low, we need to flip at some point. Do it here while we understand our domain.
-		firstHeightPercent = (coveringStart - low) / heightRange;
+		firstHeightPercent = (uncovered - low) / heightRange;
 		firstHeightPercent = 1 - firstHeightPercent;
-		firstStatus = TideLevelBeachStatus.covering;
-		secondHeightPercent = (coveringStop - low) / heightRange;
+		firstStatus = TideLevelBeachStatus.between;
+		secondHeightPercent = (covered - low) / heightRange;
 		secondHeightPercent = 1 - secondHeightPercent;
 		secondStatus = TideLevelBeachStatus.covered;
 	}
@@ -102,14 +102,14 @@ function getTidePointBeachSwapsBetween(a: TidePointExtreme, b: TidePointExtreme)
 
 	// Check to ensure our constants aren't bringing us outside of the extremes (could happen with test data)
 	// Will be less than zero if too low, and above one if too high.
-	if (firstHeightPercent > 0 && firstHeightPercent < 1) {
+	if (firstHeightPercent >= 0 && firstHeightPercent <= 1) {
 		changes.push({
 			time: computeTimeForTideHeight(firstHeightPercent, a.time, b.time),
 			toStatus: firstStatus
 		});
 	}
 
-	if (secondHeightPercent > 0 && secondHeightPercent < 1) {
+	if (secondHeightPercent >= 0 && secondHeightPercent <= 1) {
 		changes.push({
 			time: computeTimeForTideHeight(secondHeightPercent, a.time, b.time),
 			toStatus: secondStatus
@@ -125,7 +125,7 @@ function getTidePointBeachChanges(extrema: TidePointExtreme[]): TidePointBeachCh
 		We know we will hit this point in time at most one time between each extrema, because we will be assuming
 		that we'll never go outside the predicted tide extremes.
 	*/
-	const changes: TidePointBeachChange[] = [];
+	let changes: TidePointBeachChange[] = [];
 	for (let i = 0; i < extrema.length; i++) {
 		if (i === extrema.length - 1) {
 			break;
@@ -133,6 +133,11 @@ function getTidePointBeachChanges(extrema: TidePointExtreme[]): TidePointBeachCh
 		const changesBetween = getTidePointBeachSwapsBetween(extrema[i], extrema[i + 1]);
 		changes.push(...changesBetween);
 	}
+
+	// Filter out any repeated items
+	changes.filter((change, i) => {
+		return i === 0 || (change.toStatus !== changes[i - 1].toStatus);
+	});
 	return changes;
 }
 
@@ -315,9 +320,11 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 		}
 		// Then look for the next major change. Could come in the same run of this loop, or in a later run of the the loop.
 		if (currentBeachStatus !== null) {
-			const isCurrentCovering = currentBeachStatus === TideLevelBeachStatus.covered || currentBeachStatus === TideLevelBeachStatus.covering;
-			const isThisCovering = beachSwap.toStatus === TideLevelBeachStatus.covered || beachSwap.toStatus === TideLevelBeachStatus.covering;
-			if (isCurrentCovering !== isThisCovering) {
+			const previousStatus = changes[i - 1].toStatus;
+			if (
+				(previousStatus === TideLevelBeachStatus.uncovered && beachSwap.toStatus !== TideLevelBeachStatus.uncovered)
+				|| (previousStatus !== TideLevelBeachStatus.uncovered && beachSwap.toStatus === TideLevelBeachStatus.uncovered)
+			) {
 				nextMajorBeachChange = beachSwap;
 				break;
 			}

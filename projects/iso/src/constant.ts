@@ -29,6 +29,15 @@ export const constant = {
 	},
 
 	beachAccess: {
+		/*
+			Note:
+
+			We used to have different values for covered/uncovered for rising tide vs falling tide.
+			This was meant to account for the velocity differences.
+			This ended up causing issues in the logic for where we estimate changes in status
+			of beach availability. Best to keep it the same heights regardless of direction.
+		*/
+
 		/**
 		 * Our best guess of when the tide is at the top of the beach. We'll probably never get this right, because:
 		 * 1. It's relative!
@@ -38,20 +47,21 @@ export const constant = {
 		 * But, we'll use this for any diagrams / animations that need a hard number.
 		*/
 		bestGuessBeachHeight: 7.5,
-		/** Marks the start of the "uncovering" status. For our logic, this is outside the beach time. */
-		uncoveringStart: 8.5,
-		/** Marks the end of the "uncovering" status. For our logic, this is when we are most confident that beach time is on. */
-		uncoveringStop: 7,
+
+
 		/**
-		 * Marks the start of the "covering" status. For our logic, this is when we are confident we should no longer consider it beach time
-		 * It's a bit lower than other numbers because the tide rises pretty quick + we don't want people to think they have more time to head out
-		 * to the beach when they really don't.
-		 */
-		coveringStart: 6,
+		 * Our high-end guess for where water covers the beach.
+		 * We are confident the beach is not accessible at this height.
+		 * Above this is "covered", below this is "uncovering/covering".
+		*/
+		covered: 8.5,
+
 		/**
-		 * Marks the end of the "covering" status. For our logic this is when we are confident there is no way to step foot on that beach.
-		 */
-		coveringStop: 8,
+		 * Our low-end guess for where water covers the beach.
+		 * We are confident the beach is accessible up to this height.
+		 * Above this is "covering/uncovering", below this is "uncovered".
+		*/
+		uncovered: 6.5,
 	},
 
 	/** Number of minutes before sunrise and after sunset where we can still have beach time. */

@@ -4,7 +4,7 @@ import { Cosmos, CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
 import { constant } from '@wbtdevlocal/iso';
 import { MediumBodyText } from '../text/text-shared';
-import { PanelPadded, PanelTitled, SpacePanelEdge, SpacePanelGridPadding } from './layout-panel';
+import { Panel, PanelPadding, SpacePanelEdge, SpacePanelGridPadding } from './layout-panel';
 
 const PanelContainer = styled.div`
 	padding: ${SpacePanelGridPadding.value};
@@ -15,16 +15,18 @@ const PanelContainer = styled.div`
 `;
 
 export default {
-	'Panel Padded': CosmosFixture.create(() => {
+	'Panel Padding': CosmosFixture.create(() => {
 
 		function panel() {
 			return (
-				<PanelPadded>
-					<MediumBodyText>Hello! {constant.beachAccess.beachTopHeight}</MediumBodyText>
-					<MediumBodyText>Hello!</MediumBodyText>
-					<MediumBodyText>Hello!</MediumBodyText>
-					<MediumBodyText>Hello!</MediumBodyText>
-				</PanelPadded>
+				<Panel>
+					<PanelPadding>
+						<MediumBodyText>Hello! {constant.beachAccess.bestGuessBeachHeight}</MediumBodyText>
+						<MediumBodyText>Hello!</MediumBodyText>
+						<MediumBodyText>Hello!</MediumBodyText>
+						<MediumBodyText>Hello!</MediumBodyText>
+					</PanelPadding>
+				</Panel>
 			);
 		}
 
@@ -49,12 +51,12 @@ export default {
 		function panel() {
 			return (
 				<>
-					<PanelTitled title={title}>
+					<Panel title={title}>
 						<SpacePanelEdge.PadA>
 							<MediumBodyText>Hello!</MediumBodyText>
 							<MediumBodyText>Hello!</MediumBodyText>
 						</SpacePanelEdge.PadA>
-					</PanelTitled>
+					</Panel>
 				</>
 			);
 		}

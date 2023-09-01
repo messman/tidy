@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { StyledFC } from '@/index/core/primitive/primitive-styled';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { asPercentString } from '@/index/core/time/time';
 
@@ -98,8 +99,8 @@ export interface WeatherTempBarProps {
 	max?: number;
 };
 
-export const WeatherTempBar: React.FC<WeatherTempBarProps> = (props) => {
-	const { low, high, value, min = Infinity, max = -Infinity } = props;
+export const WeatherTempBar: StyledFC<WeatherTempBarProps> = (props) => {
+	const { className, low, high, value, min = Infinity, max = -Infinity } = props;
 
 	const safeLow = Math.max(gradientMin, value !== undefined ? Math.min(low, value) : low);
 	const safeHigh = Math.min(gradientMax, value !== undefined ? Math.max(high, value) : high);
@@ -109,10 +110,8 @@ export const WeatherTempBar: React.FC<WeatherTempBarProps> = (props) => {
 	const left = (safeLow - safeMin) / (safeMax - safeMin);
 	const right = (safeHigh - safeMin) / (safeMax - safeMin);
 
-	console.log({ safeMin, safeLow, value, safeHigh, safeMax });
-
 	return (
-		<Container>
+		<Container className={className}>
 			<OffsetContainer style={{ left: asPercentString(left), width: asPercentString(right - left) }}>
 				<WeatherTempBarColor high={safeHigh} low={safeLow} value={value} />
 			</OffsetContainer>

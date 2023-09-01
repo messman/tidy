@@ -2,7 +2,7 @@
 	"Insert import for React": {
 		"prefix": "react",
 		"body": [
-			"import * as React from 'react';$2"
+			"import * as React from 'react';$0"
 		],
 		"description": "Insert import for react"
 	}

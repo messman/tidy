@@ -64,6 +64,11 @@ export function getDateDayOfWeek(date: DateTime): string {
 	return `${date.weekdayLong} ${getDate(date)}`;
 }
 
+/** Today, July 10 or Wednesday, September 30 */
+export function getDateLong(date: DateTime, referenceTime: DateTime): string {
+	return [date.hasSame(referenceTime, 'day') ? 'Today' : date.weekdayLong, `${date.monthLong} ${date.day}`].join(', ');
+}
+
 /** Returns a value [0-100] */
 export function percentTimeBetween(referenceTime: DateTime, startTime: DateTime, endTime: DateTime): number {
 	const startTimeValue = startTime.valueOf();

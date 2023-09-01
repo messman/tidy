@@ -132,8 +132,11 @@ export interface BeachTimeRange {
 	start: DateTime;
 	/** When the beach time ends. */
 	stop: DateTime;
-	/** The low tide around which this beach time revolves, even if on a different day. */
-	tideLowId: string;
+	/**
+	 * The low tide(s) around which this beach time revolves, even if on a different day.
+	 * We could feasibly have multiple if a high is below the cutoff height.
+	*/
+	tideLowIds: string[];
 	/** Solar events that occur during this beach time, including that may be the cause of its start or end. */
 	solarEventIds: string[];
 	/** Indication of the weather in this range (preferring worse indicator for safety). */
