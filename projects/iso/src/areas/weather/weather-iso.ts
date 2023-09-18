@@ -12,8 +12,10 @@ export interface WeatherPointBase {
 	tempFeelsLike: number;
 	/** The wind speed, in miles per hour. */
 	wind: number;
-	/** The wind direction. */
+	/** The wind direction (from). */
 	windDirection: WeatherWindDirection;
+	/** The wind angle (from), where 0 is north; [0, 360). */
+	windAngle: number;
 	/** The dew point, in degrees fahrenheit. */
 	dewPoint: number;
 	/** UV Index. */
@@ -47,6 +49,11 @@ export interface WeatherPointCurrent extends WeatherPointBase {
 export interface WeatherPointHourly extends WeatherPointBase {
 	id: string;
 }
+
+export type WithDaytime<T> = T & {
+	/** Whether it's daytime or not. */
+	isDaytime: boolean;
+};
 
 export interface WeatherPointDaily {
 	/** Time of the weather status. Start of the day. */

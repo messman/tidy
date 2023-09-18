@@ -12,7 +12,7 @@ const PanelBase_Container = styled.div<{ $croppedTop: boolean; $croppedBottom: b
 	/* Use CSS Grid in order to directly layer the content element over the container element. */
 	display: grid;
 	grid-template-areas: 'item';
-	place-content: end stretch;
+	place-content: normal;
 
 	/* Have to put blended background into a pseudo-element to ensure the blending does not apply to children. */
 	&::before {
@@ -31,6 +31,7 @@ const PanelBase_Container = styled.div<{ $croppedTop: boolean; $croppedBottom: b
 const PanelBase_Content = styled.div`
 	grid-area: item;
 	isolation: isolate;
+	min-width: 0; // https://stackoverflow.com/a/43312314
 `;
 
 export const SpacePanelEdge = createSpaceHelper(Spacing.cat12);

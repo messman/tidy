@@ -101,6 +101,15 @@ export const lightTokens = {
 		lineTipNow: '#FFFFFF',
 	},
 
+	uvBar: {
+		white: '#FFF',
+		green: '#54c41c',
+		yellow: '#F4E44C',
+		orange: '#E6642A',
+		red: '#C9423C',
+		purple: '#7820E8'
+	},
+
 	content: {
 		sun: '#FFDA17',
 		moon: '#FFF5D0',

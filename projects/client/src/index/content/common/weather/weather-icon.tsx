@@ -13,17 +13,18 @@ export interface WeatherIconDayNightProps {
 	isDay: boolean;
 	/** Rain as a percent, [0,100]. 0 does not show. */
 	rain: number | null;
+	isTransparent?: boolean;
 }
 
 export const WeatherIconDayNight: StyledFC<WeatherIconDayNightProps> = (props) => {
-	const { isDay, status, rain, className } = props;
+	const { isDay, status, rain, isTransparent, className } = props;
 	const { day, night } = mapNumberEnumValue(WeatherStatusType, statusTypeDayNight, status);
 	return (
-		<WeatherIcon type={isDay ? day : night} rain={rain} className={className} />
+		<WeatherIcon type={isDay ? day : night} rain={rain} className={className} isTransparent={isTransparent} />
 	);
 };
 
-const WeatherIcon_Container = styled.div`
+const Container = styled.div`
 	position: relative;
 	width: 2rem;
 	height: 2rem;
@@ -31,6 +32,10 @@ const WeatherIcon_Container = styled.div`
 	justify-content: center;
 	background-color: ${themeTokens.background.tint.darker};
 	border-radius: ${borderRadiusSmallerValue};
+`;
+
+const ContainerTransparent = styled(Container)`
+	background-color: transparent;
 `;
 
 const WeatherIcon_RainIcon = styled(Icon)`
@@ -60,21 +65,24 @@ export interface WeatherIconProps {
 	type: IconInputType;
 	/** Rain as a percent, [0,100]. 0 does not show. */
 	rain: number | null;
+	isTransparent?: boolean;
 }
 
 export const WeatherIcon: StyledFC<WeatherIconProps> = (props) => {
-	const { type, rain, className } = props;
+	const { type, rain, isTransparent = false, className } = props;
 
 	const IconComponent = rain ? WeatherIcon_RainIcon : WeatherIcon_Icon;
 	const rainRender = rain ? (
 		<WeatherIcon_RainText>{rain.toString()}%</WeatherIcon_RainText>
 	) : null;
 
+	const Component = isTransparent ? ContainerTransparent : Container;
+
 	return (
-		<WeatherIcon_Container className={className}>
+		<Component className={className}>
 			<IconComponent type={type} />
 			{rainRender}
-		</WeatherIcon_Container>
+		</Component>
 	);
 };
 

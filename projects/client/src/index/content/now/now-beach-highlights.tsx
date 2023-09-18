@@ -1,14 +1,13 @@
-import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
-import { PanelPadded } from '@/index/core/layout/layout-panel';
+import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { FontWeight } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { TimeDurationTextUnit } from '@/index/core/text/text-unit';
-import { AstroSolarEventType, mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrentContextual, TidePointExtreme, WeatherStatusType } from '@wbtdevlocal/iso';
+import { AstroSolarEventType, mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrentContextual, WeatherPointHourly, WeatherStatusType, WithDaytime } from '@wbtdevlocal/iso';
 import { TideLevelIcon } from '../common/tide/tide-level-icon';
-import { WeatherIcon, WeatherIconDayNight } from '../common/weather/weather-icon';
+import { WeatherIconDayNight } from '../common/weather/weather-icon';
 import { weatherStatusDescription } from '../common/weather/weather-utility';
 
 function getTideDescription(current: TidePointCurrentContextual): string {
@@ -34,6 +33,7 @@ const HighlightsContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: .5rem;
+	padding: ${SpacePanelEdge.value};
 `;
 
 const IconWithTextContainer = styled.div`
@@ -74,11 +74,12 @@ export const NowBeachAccessHighlights: React.FC = () => {
 
 	let weatherInfoRender: React.ReactNode = null;
 
-	const firstHourlyChangedIndicator = React.useMemo(() => {
+	const firstHourlyChangedIndicator = React.useMemo<WithDaytime<WeatherPointHourly> | null>(() => {
 		if (!weather.indicatorChangeHourlyId) {
 			return null;
 		}
-		return weather.hourly.find((hourly) => hourly.id === weather.indicatorChangeHourlyId);
+		const index = weather.hourly.findIndex((hourly) => hourly.id === weather.indicatorChangeHourlyId);
+		return weather.hourly[index] as WithDaytime<WeatherPointHourly>;
 	}, [weather.hourly, weather.indicatorChangeHourlyId]);
 
 	if (firstHourlyChangedIndicator) {
@@ -140,11 +141,11 @@ export const NowBeachAccessHighlights: React.FC = () => {
 	}
 
 	return (
-		<PanelPadded>
+		<Panel>
 			<HighlightsContainer>
 				{tideRender}
 				{weatherAstroRender}
 			</HighlightsContainer>
-		</PanelPadded>
+		</Panel>
 	);
 };

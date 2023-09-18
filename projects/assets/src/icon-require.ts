@@ -140,6 +140,10 @@ export const SVGIconUrl = {
 	weatherTemperature: '',
 	weatherWater: '',
 	weatherWind: '',
+
+	// Wind
+	windRose: '',
+	windArrow: ''
 } satisfies Record<string, string>;
 
 /**

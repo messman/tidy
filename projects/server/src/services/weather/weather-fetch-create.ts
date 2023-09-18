@@ -1,13 +1,11 @@
 import { DateTime } from 'luxon';
-import {
-	AstroLunarPhase, AstroLunarPhaseDay, enumKeys, mapNumberEnumValue, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WeatherStatusType, WeatherWindDirection
-} from '@wbtdevlocal/iso';
+import { AstroLunarPhase, AstroLunarPhaseDay, enumKeys, mapNumberEnumValue, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WeatherStatusType } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { baseLogger } from '../logging/pino';
 import { quadraticFromPoints } from '../test/equation';
 import { combineSeed, Randomizer, randomizer, TestSeed } from '../test/randomize';
 import { IterableTimeData } from './iterator';
-import { createWeatherPointHourlyId, fixFetchedWeather, getIndicator, WeatherFetched, WithoutIndicator } from './weather-shared';
+import { createWeatherPointHourlyId, degreesToDirection, fixFetchedWeather, getIndicator, WeatherFetched, WithoutIndicator } from './weather-shared';
 
 /** Creates random weather data. Uses a seeded randomizer. */
 export function createWeather(config: BaseConfig, seed: TestSeed): WeatherFetched {
@@ -29,15 +27,19 @@ export function createWeather(config: BaseConfig, seed: TestSeed): WeatherFetche
 		return quadraticShakeData(weatherRandomizer, hourlyStartDateTime, hourlyEndDateTime, 1, minY, maxY, precision, inclusive, shake);
 	}
 
-	const nWindDirection = enumKeys(WeatherWindDirection).length - 1;
-
 	const hourlyTemp = hourlyWeatherData(40, 60, 1, true, .2);
 	const hourlyTempFeelsLike = hourlyWeatherData(40, 60, 1, true, .2);
 	const hourlyWind = hourlyWeatherData(0, 15, 1, true, .2);
-	const hourlyWindDirection = hourlyWeatherData(0, nWindDirection, 0, false, .2).map((data) => {
+	const hourlyWindAngle = hourlyWeatherData(0, 360, 0, false, .2).map((data) => {
 		return {
 			span: data.span,
-			value: data.value as WeatherWindDirection
+			value: data.value
+		};
+	});
+	const hourlyWindDirection = hourlyWindAngle.map((hourly) => {
+		return {
+			span: hourly.span,
+			value: degreesToDirection(hourly.value)
 		};
 	});
 	const hourlyPressure = hourlyWeatherData(1000, 1200, 0, true, .2);
@@ -79,6 +81,7 @@ export function createWeather(config: BaseConfig, seed: TestSeed): WeatherFetche
 			tempFeelsLike: hourlyTempFeelsLike[i].value,
 			wind: hourlyWind[i].value,
 			windDirection: hourlyWindDirection[i].value,
+			windAngle: hourlyWindAngle[i].value,
 			dewPoint: hourlyDewPoint[i].value,
 			cloudCover: hourlyCloudCover[i].value,
 			status: hourlyStatus[i].value,

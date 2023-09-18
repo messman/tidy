@@ -61,11 +61,6 @@ const SunRiseSetIcon = styled(Icon)`
 	color: ${themeTokens.content.sun};
 `;
 
-// /** Expects [0, 100] */
-// function roundRain(value: number): number {
-// 	return Math.round(value / 5) * 5;
-// }
-
 export interface WeekDayWeatherProps {
 	day: BeachTimeDay;
 	isTop: boolean;

@@ -154,7 +154,7 @@ export const fontStyleDefinitions = {
 		small: {
 			family: fontFamily,
 			size: '.875rem',
-			lineHeight: '1.5rem',
+			lineHeight: '1.25rem',
 			weight: FontWeight.regular,
 			margin: '1rem',
 		} as const,

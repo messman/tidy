@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import {
-	AstroDay, AstroLunarPhaseDay, AstroSolarEvent, AstroSunDay, mapNumberEnumValue, Range, WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WeatherStatusType
+	AstroDay, AstroLunarPhaseDay, AstroSolarEvent, AstroSunDay, AstroSunRiseSet, mapNumberEnumValue, Range, WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly,
+	WeatherStatusType, WeatherWindDirection, WithDaytime
 } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { createTimeIterator } from './iterator';
@@ -8,6 +9,19 @@ import { createTimeIterator } from './iterator';
 export function createWeatherPointHourlyId(time: DateTime): string {
 	return `wh-${time.toMillis()}`;
 }
+
+/** Converts angle degrees to cardinal directions. */
+export function degreesToDirection(value: number): WeatherWindDirection {
+	// We are presuming that 0 degrees is N.
+	// 90 degrees is N to E, 45 is N to NE, 22.5 is N to NNE, 11.5 is to halfway between N and NNE.
+	// Use that logic to convert from number [0, 360] to direction.
+
+	let directionValue = Math.floor((value + 11.25) / 22.5);
+	if (directionValue === 16) {
+		directionValue = 0;
+	}
+	return directionValue as WeatherWindDirection;
+};
 
 /** The best possible ideal that can be assigned to a weather status. */
 const statusIndicator: Record<keyof typeof WeatherStatusType, WeatherIndicator> = {
@@ -143,20 +157,55 @@ function getIsCurrentDaytime(solarEventMap: Map<string, AstroSolarEvent>, sunDay
 }
 
 /**
- * Figures out if it's daytime at each hour
+ * Figures out if it's daytime at each hour, and adds in ids for sun events.
 */
-function getHourlyWeatherWithDaytime(solarEventMap: Map<string, AstroSolarEvent>, sunDayMap: Map<number, AstroSunDay>, hourly: WeatherPointHourly[]): HourlyWithDaytime[] {
-	return hourly.map<HourlyWithDaytime>((hourly) => {
-		const sunDay = sunDayMap.get(hourly.time.startOf('day').toMillis())!;
-		const rise = solarEventMap.get(sunDay.riseId)!.time;
-		const set = solarEventMap.get(sunDay.setId)!.time;
+function getHourlyWeatherWithDaytimeAndSun(referenceTime: DateTime, solarEventMap: Map<string, AstroSolarEvent>, sunDayMap: Map<number, AstroSunDay>, hourly: WeatherPointHourly[]): (WithDaytime<WeatherPointHourly> | AstroSunRiseSet)[] {
+	// Track the days we use.
+	const solarDays = new Set<AstroSunDay>();
 
-		const isDaytime = hourly.time > rise && hourly.time < set;
+	// Get the daytime/nighttime for each hour.
+	const hourlyWithDaytime = hourly.map<WithDaytime<WeatherPointHourly>>((hourly) => {
+		const sunDay = sunDayMap.get(hourly.time.startOf('day').toMillis())!;
+		const rise = solarEventMap.get(sunDay.riseId)!;
+		const set = solarEventMap.get(sunDay.setId)!;
+		const isDaytime = hourly.time > rise.time && hourly.time < set.time;
+
+		// Track this day to use later...
+		solarDays.add(sunDay);
 
 		return {
-			point: hourly,
+			...hourly,
 			isDaytime
 		};
+	});
+
+	const all: (WithDaytime<WeatherPointHourly> | AstroSunRiseSet)[] = [...hourlyWithDaytime];
+
+	// Now, add these rise and set times.
+	Array.from(solarDays.values()).forEach((sunDay) => {
+		all.push(
+			{
+				id: sunDay.riseId,
+				isSunrise: true,
+				time: solarEventMap.get(sunDay.riseId)!.time
+			} satisfies AstroSunRiseSet,
+			{
+				id: sunDay.setId,
+				isSunrise: false,
+				time: solarEventMap.get(sunDay.setId)!.time
+			} satisfies AstroSunRiseSet
+		);
+	});
+
+	const lastWeather = hourlyWithDaytime.at(-1)!;
+	// Sort (non optimized).
+	all.sort((a, b) => {
+		return a.time.valueOf() - b.time.valueOf();
+	});
+
+	// Ensure that our sun events are after the reference time and before the last hourly weather.
+	return all.filter((value) => {
+		return value.time > referenceTime && value.time <= lastWeather.time;
 	});
 }
 
@@ -177,13 +226,8 @@ function getIndicatorChangeHourlyId(currentWeatherIndicator: WeatherIndicator, h
 	})?.id || null;
 }
 
-export interface HourlyWithDaytime {
-	point: WeatherPointHourly;
-	isDaytime: boolean;
-}
-
 export interface WeatherAdditionalContext {
-	filteredHourly: HourlyWithDaytime[];
+	filteredHourlyWithSun: (WithDaytime<WeatherPointHourly> | AstroSunRiseSet)[];
 	isCurrentDaytime: boolean;
 	indicatorChangeHourlyId: string | null;
 	tempRange: Range<number>;
@@ -201,7 +245,7 @@ export function getWeatherAdditionalContext(config: BaseConfig, fetched: Weather
 	});
 
 	return {
-		filteredHourly: getHourlyWeatherWithDaytime(solarEventMap, sunDayMap, hourly),
+		filteredHourlyWithSun: getHourlyWeatherWithDaytimeAndSun(config.referenceTime, solarEventMap, sunDayMap, hourly),
 		isCurrentDaytime: getIsCurrentDaytime(solarEventMap, sunDayMap, fetched.current.time),
 		tempRange: getDailyTempRange(fetched.daily),
 		indicatorChangeHourlyId: getIndicatorChangeHourlyId(fetched.current.indicator, hourly)

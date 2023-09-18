@@ -1,13 +1,11 @@
 import { DateTime, DateTimeOptions } from 'luxon';
-import {
-	AstroLunarPhase, AstroLunarPhaseDay, constant, isServerError, WeatherPointBase, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WeatherStatusType, WeatherWindDirection
-} from '@wbtdevlocal/iso';
+import { AstroLunarPhase, AstroLunarPhaseDay, constant, isServerError, WeatherPointBase, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WeatherStatusType } from '@wbtdevlocal/iso';
 import { serverErrors, ServerPromise } from '../../api/error';
 import { settings } from '../../env';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
 import { makeRequest } from '../network/request';
-import { createWeatherPointHourlyId, fixFetchedWeather, getIndicator, WeatherFetched, WithoutIndicator } from './weather-shared';
+import { createWeatherPointHourlyId, degreesToDirection, fixFetchedWeather, getIndicator, WeatherFetched, WithoutIndicator } from './weather-shared';
 
 /*
 	Uses OpenWeather's free 'One Call API', which replaced multiple calls to the NWS API.
@@ -107,6 +105,7 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 				tempFeelsLike: Math.round(hourly.feels_like),
 				wind: hourly.wind_speed,
 				windDirection: degreesToDirection(hourly.wind_deg),
+				windAngle: hourly.wind_deg,
 				pressure: pressureToMillibars(hourly.pressure),
 				cloudCover: toPercent(hourly.clouds),
 				visibility: visibilityToMiles(hourly.visibility),
@@ -141,6 +140,7 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 		tempFeelsLike: Math.round(response.current.feels_like),
 		wind: response.current.wind_speed,
 		windDirection: degreesToDirection(response.current.wind_deg),
+		windAngle: response.current.wind_deg,
 		pressure: pressureToMillibars(response.current.pressure),
 		cloudCover: toPercent(response.current.clouds),
 		visibility: visibilityToMiles(response.current.visibility),
@@ -314,22 +314,12 @@ function toPercent(value: number) {
 	return toPrecision(value / 100, 3);
 };
 
-/** Converts angle degrees to cardinal directions. */
-function degreesToDirection(value: number): WeatherWindDirection {
-	// We are presuming that 0 degrees is N.
-	// 90 degrees is N to E, 45 is N to NE, 22.5 is N to NNE, 11.5 is to halfway between N and NNE.
-	// Use that logic to convert from number [0, 360] to direction.
-
-	let directionValue = Math.floor((value + 11.25) / 22.5);
-	if (directionValue === 16) {
-		directionValue = 0;
-	}
-	return directionValue as WeatherWindDirection;
-};
-
 /** Max value for visibility from OpenWeather is 10km. */
 const maxVisibility = 10000;
-/** Converts meters to miles, or sets visibility to null if it is at the max. */
+/**
+ * Converts meters to miles, or sets visibility to null if it is at the max.
+ * #REF_VISIBILITY_MAX
+*/
 function visibilityToMiles(value: number): number | null {
 	if (value >= maxVisibility) {
 		return null;

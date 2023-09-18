@@ -7,7 +7,7 @@ import { DefaultErrorLoad } from '@/index/core/data/loader';
 import { RequestFetchProvider } from '@/index/core/data/request-fetch-provider';
 import { ErrorBoundary } from '@/index/core/error/error-boundary';
 import { SVGIconUrlLoadProvider } from '@/index/core/icon/icon-url';
-import { PanelPadded } from '@/index/core/layout/layout-panel';
+import { Panel, PanelPadding } from '@/index/core/layout/layout-panel';
 import { ApplicationLayoutContainer } from '@/index/core/layout/layout-shared';
 import { LayoutBreakpointRem, lowerBreakpoints } from '@/index/core/layout/window-layout';
 import { Spacing } from '@/index/core/primitive/primitive-design';
@@ -120,9 +120,11 @@ const TestWrapper: React.FC<TestWrapperProps> = (props) => {
 			<ApplicationLayoutContainer>
 				<LayoutWidthContainer>
 					<LayoutPanelContainerPadding>
-						<PanelPadded>
-							{children}
-						</PanelPadded>
+						<Panel>
+							<PanelPadding>
+								{children}
+							</PanelPadding>
+						</Panel>
 					</LayoutPanelContainerPadding>
 				</LayoutWidthContainer>
 			</ApplicationLayoutContainer>

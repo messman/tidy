@@ -8,6 +8,14 @@ export enum AstroSolarEventType {
 	civilDusk
 }
 
+/** A simplified version of {@link AstroSolarEvent} */
+export interface AstroSunRiseSet {
+	/** Points to the real solar event. */
+	id: string;
+	time: DateTime;
+	isSunrise: boolean;
+}
+
 export interface AstroSolarEvent {
 	id: string;
 	/** The time of the astro event. */

@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import { enumKeys } from '../../utility/enum';
-import { AstroDay, AstroLunarPhase, AstroSolarEvent, AstroSunDay } from '../astro/astro-iso';
+import { AstroDay, AstroLunarPhase, AstroSolarEvent, AstroSunDay, AstroSunRiseSet } from '../astro/astro-iso';
 import { TidePointCurrentContextual, TidePointExtreme, TidePointExtremeDay } from '../tide/tide-iso';
-import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly } from '../weather/weather-iso';
+import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WithDaytime } from '../weather/weather-iso';
 
 export enum Seed {
 	avocado = 'avocado',
@@ -66,21 +66,11 @@ export interface BatchNowTide {
 
 export interface BatchNowWeather {
 	/** Current weather. */
-	current: BatchNowWeatherCurrent;
-	/** Hourly weather for some time. */
-	hourly: BatchNowWeatherHourly[];
+	current: WithDaytime<WeatherPointCurrent>;
+	/** Hourly weather for some time, with solar event Ids intermixed. */
+	hourly: (WithDaytime<WeatherPointHourly> | AstroSunRiseSet)[];
 	/** Id of the first hourly weather with a different indicator, if any. */
 	indicatorChangeHourlyId: string | null;
-}
-
-export interface BatchNowWeatherCurrent extends WeatherPointCurrent {
-	/** Whether it's daytime or not. */
-	isDaytime: boolean;
-}
-
-export interface BatchNowWeatherHourly extends WeatherPointHourly {
-	/** Whether it's daytime or not. */
-	isDaytime: boolean;
 }
 
 export interface BatchNowAstro {

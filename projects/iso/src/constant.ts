@@ -46,21 +46,21 @@ export const constant = {
 		 * 
 		 * But, we'll use this for any diagrams / animations that need a hard number.
 		*/
-		bestGuessBeachHeight: 7,
+		bestGuessBeachHeight: 8.5,
 
 		/**
 		 * Our high-end guess for where water covers the beach.
 		 * We are confident the beach is not accessible at this height.
 		 * Above this is "covered", below this is "uncovering/covering".
 		*/
-		covered: 8,
+		covered: 9.5,
 
 		/**
 		 * Our low-end guess for where water covers the beach.
 		 * We are confident the beach is accessible up to this height.
 		 * Above this is "covering/uncovering", below this is "uncovered".
 		*/
-		uncovered: 6,
+		uncovered: 7,
 	},
 
 	/** Number of minutes before sunrise and after sunset where we can still have beach time. */

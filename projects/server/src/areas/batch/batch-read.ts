@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Batch, BatchMeta, BatchNowWeatherHourly, isServerError } from '@wbtdevlocal/iso';
+import { Batch, BatchMeta, isServerError } from '@wbtdevlocal/iso';
 import { ServerPromise } from '../../api/error';
 import { computeAstro } from '../../services/astro/astro-compute';
 import { createAstro } from '../../services/astro/astro-compute-create';
@@ -73,7 +73,7 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 	const { range, currentPoint, currentId, nextId, previousId } = tideAdditional;
 	const astroAdditional = getAstroAdditionalContext(config, astroFetched, weatherFetched.moonPhaseDaily);
 	const { sunRelativity, sunCloseDays, todayAstroDay, solarEventMap, days: astroDays } = astroAdditional;
-	const { filteredHourly, isCurrentDaytime, indicatorChangeHourlyId, tempRange } = getWeatherAdditionalContext(config, weatherFetched, solarEventMap, astroDays);
+	const { filteredHourlyWithSun, isCurrentDaytime, indicatorChangeHourlyId, tempRange } = getWeatherAdditionalContext(config, weatherFetched, solarEventMap, astroDays);
 
 	return {
 		meta,
@@ -109,9 +109,7 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 					...weatherFetched.current,
 					isDaytime: isCurrentDaytime
 				},
-				hourly: filteredHourly.map<BatchNowWeatherHourly>((hourly) => {
-					return { ...hourly.point, isDaytime: hourly.isDaytime };
-				}),
+				hourly: filteredHourlyWithSun,
 				indicatorChangeHourlyId
 			}
 		},
