@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { enumKeys } from '../../utility/enum';
 import { AstroDay, AstroLunarPhase, AstroSolarEvent, AstroSunDay, AstroSunRiseSet } from '../astro/astro-iso';
-import { TidePointCurrentContextual, TidePointExtreme, TidePointExtremeDay } from '../tide/tide-iso';
+import { TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeDay } from '../tide/tide-iso';
 import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WithDaytime } from '../weather/weather-iso';
 
 export enum Seed {
@@ -57,7 +57,9 @@ export interface BatchNow {
 }
 
 export interface BatchNowTide {
-	current: TidePointCurrentContextual;
+	temp: number;
+	current: TidePointCurrent;
+	source: TidePointCurrentSource;
 	previousId: string;
 	/** May be set if we are "close enough" to a tide extreme. */
 	currentId: string | null;

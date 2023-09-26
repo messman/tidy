@@ -1,20 +1,217 @@
 import { DateTime } from 'luxon';
-import { constant, Range, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, TidePointCurrentContextual, TidePointExtreme, TidePointExtremeDay } from '@wbtdevlocal/iso';
+import {
+	constant, isServerError, Range, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeComp, TidePointExtremeDay,
+	TidePointFromExtremes
+} from '@wbtdevlocal/iso';
+import { ServerPromise } from '../../api/error';
 import { BaseConfig } from '../config';
+import { LogContext } from '../logging/pino';
+import { fetchTidesNOAA } from './tide-fetch';
+import { fetchTidesGoMOFS } from './tide-fetch-gomofs';
 
-export function createTidePointExtremeId(time: DateTime): string {
-	return `tide-${time.toMillis()}`;
+export function createTidePointExtremeId(time: DateTime, source: string): string {
+	return `tide-${source}-${time.toMillis()}`;
 }
 
 export interface TideFetched {
-	current: TidePointCurrent;
-	extrema: TidePointExtreme[];
+	waterTemp: number;
+	current: number;
+	source: TidePointCurrentSource;
+	extrema: TidePointExtremeComp[];
+}
+
+export async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<TideFetched> {
+	const fetchedTideGoMOFS = await fetchTidesGoMOFS(ctx, config);
+	if (isServerError(fetchedTideGoMOFS)) {
+		return fetchedTideGoMOFS;
+	}
+
+	const fetchedTideNOAA = await fetchTidesNOAA(ctx, config);
+	if (isServerError(fetchedTideNOAA)) {
+		return fetchedTideNOAA;
+	}
+
+	/*
+		The data we have:
+		- (Likely) current water level from Portland, plus time
+			- typically half a foot off
+			- May be time-delayed more than our other data
+		- Astronomical tide extremes from NOAA for Wells
+			- Doesn't take weather into account
+		- GoMOFS water level, plus time
+			- Taken from forecasts, <=6 minutes behind
+		- GoMOFS extremes
+			- Taken from forecasts, slightly inaccurate
+		
+		None of this data is exactly correct.
+		From research, it seems like:
+		- Portland water level is a little higher compared to Wells, about half a foot
+		- Astro tide extremes are typically too low on their highs, but accurate on lows
+		- GoMOFS forecasts make up for the above, but can be a little *too* high;
+			actually slightly more inaccurate than the Astro tide extremes at highs.
+
+		So the plan is to return this data structure:
+		- "extrema"
+			a combination of astro tide extremes and their GoMOFS equivalents
+		- "current"
+			a combination of 
+			1. The Portland value, compensated for Wells
+			2. The GoMOFS current water level
+			3. The computed value from the extrema above
+		- "source"
+			All the extra data for us to use to review the effectiveness of this
+	*/
+
+	const { approxStationOffset, extrema: ofsExtrema, forecastEntryTimeUtc, retries, station, waterLevel: ofsWaterLevel, waterLevelTime: ofsWaterLevelTime, waterTemp } = fetchedTideGoMOFS;
+	const { currentPortland, extrema: astroExtrema } = fetchedTideNOAA;
+
+	/*
+		We've got to somehow match up the OFS and astronomical extreme data. They likely have slightly different times.
+		Also, we don't have an OFS extreme for every astronomical extreme.
+	*/
+	const extremaComp: TidePointExtremeComp[] = [];
+
+	// Offset each extreme so we always know the order is ofs->astro.
+	const offsetOfsExtrema = ofsExtrema.map((point) => {
+		return {
+			...point,
+			offsetTime: point.time.minus({ hour: 1 })
+		};
+	});
+	let ofsExtremaIndex = 0;
+	astroExtrema.forEach((astro) => {
+		const ofs = offsetOfsExtrema[ofsExtremaIndex];
+		if (!ofs || ofs.offsetTime > astro.time) {
+			// No OFS extreme to use
+			extremaComp.push({
+				...astro,
+				astro: {
+					height: astro.height,
+					time: astro.time
+				},
+				ofs: null
+			});
+			return;
+		}
+
+		// We have two extremes to merge
+		// Set up for next
+		ofsExtremaIndex++;
+
+		// Let's just do an average of these values.
+		const compTime = DateTime.fromMillis((astro.time.toMillis() + ofs.time.toMillis()) / 2, { zone: astro.time.zone });
+		const compHeight = (astro.height + ofs.height) / 2;
+
+		extremaComp.push({
+			id: createTidePointExtremeId(compTime, 'comp'),
+			time: compTime,
+			height: compHeight,
+			isLow: astro.isLow,
+			astro: {
+				height: astro.height,
+				time: astro.time
+			},
+			ofs: {
+				height: ofs.height,
+				time: ofs.time
+			}
+		});
+	});
+
+	const computedCurrent = getComputedBetweenPredictions(config, extremaComp);
+	const valuesForCurrent: number[] = [computedCurrent.height, ofsWaterLevel];
+	if (currentPortland) {
+		/*
+			Portland value is (1) a different height system and (2) a little later than the computed values.
+			That we know for sure. But we don't really know about *to what extent* those are factors.
+
+			For the height:
+			According to the bottom of https://tidesandcurrents.noaa.gov/datum_options.html, it's nearly impossible to
+			accurately compare one station's values to another. There are so many potential variation points.
+			
+			Then there's the difference of it being slightly more "in the bay", though this seems somewhat negligible:
+			https://tidesandcurrents.noaa.gov/ofs/ofs_mapplots.html?ofsregion=gom&subdomain=0&model_type=wl_nowcast
+
+			But how about we just scale the Portland values down to match the typical range of the Wells values, and 
+			leave it at that for height?
+			- Wells: https://tidesandcurrents.noaa.gov/datums.html?id=8419317
+				- NAVD88 of 5.14, MSL 4.77, GT 9.56
+			- Portland: https://tidesandcurrents.noaa.gov/datums.html?id=8418150
+				- NAVD88 of 5.26, MSL 4.96, GT 9.90
+			So basically Wells has (9.56 / 9.90) = 96.6% of the range. So let's scale Portland by that.
+
+		*/
+		const scaledPortland = currentPortland.value * .966;
+
+		/*
+			For the time: let's just do something simple and rough. Get the difference in time as a percentage of the
+			time duration between the previous and next high and low, and do linear scaling by that much. Should be pretty small.
+		*/
+		const secondsBehind = config.referenceTime.diff(currentPortland.time, 'seconds').seconds;
+		const { nextExtreme, previousExtreme } = computedCurrent;
+		const secondsBetweenExtremes = nextExtreme.time.diff(previousExtreme.time, 'seconds').seconds;
+		const percentDiff = secondsBehind / secondsBetweenExtremes;
+		const range = Math.abs(nextExtreme.height - previousExtreme.height);
+		const offsetAmount = (nextExtreme.isLow ? -1 : 1) * range * percentDiff;
+
+		const adjustedPortland = scaledPortland + offsetAmount;
+		valuesForCurrent.push(adjustedPortland);
+	}
+	const current = valuesForCurrent.reduce((sum, next) => sum + next) / valuesForCurrent.length;
+
+	return {
+		waterTemp,
+		current,
+		extrema: extremaComp,
+		source: {
+			computed: computedCurrent,
+			ofsComputed: getComputedBetweenPredictions(config, ofsExtrema),
+			astroComputed: getComputedBetweenPredictions(config, astroExtrema),
+			portland: currentPortland ? { height: currentPortland.value, time: currentPortland.time } : null,
+			ofsInterval: {
+				height: ofsWaterLevel,
+				time: ofsWaterLevelTime
+			},
+			ofsEntryTimeUtc: forecastEntryTimeUtc,
+			ofsRetries: retries,
+			ofsStation: station,
+			ofsOffset: approxStationOffset,
+		}
+	} satisfies TideFetched;
+}
+
+
+/**
+ * Based on the reference time, get what we think the height is.
+ * This logic is based off the same logic used for beach access height time.
+ */
+export function getComputedBetweenPredictions(config: BaseConfig, extrema: TidePointExtreme[]): TidePointFromExtremes {
+	const { referenceTime } = config;
+
+	// get previous and next
+	let previous: TidePointExtreme = null!;
+	let next: TidePointExtreme = null!;
+
+	for (let i = 0; i < extrema.length; i++) {
+		if (extrema[i].time >= referenceTime) {
+			previous = extrema[i - 1];
+			next = extrema[i];
+			break;
+		}
+	}
+
+	return {
+		previousExtreme: previous,
+		nextExtreme: next,
+		time: referenceTime,
+		height: computeHeightAtTimeBetweenPredictions(previous, next, referenceTime)
+	};
 }
 
 /**
  * Uses the cosine function to compute/guess the height at a time between two tide extremes. Used for testing and for computation.
 */
-export function computeHeightAtTimeBetweenPredictions(previousExtreme: TidePointExtreme, nextExtreme: TidePointExtreme, referenceTime: DateTime): number {
+function computeHeightAtTimeBetweenPredictions(previousExtreme: TidePointExtreme, nextExtreme: TidePointExtreme, referenceTime: DateTime): number {
 	/*
 		Use cosine function, where our domain is [0, pi] for high -> low or [pi, 2pi] for low -> high
 		and our range is [-1, 1].
@@ -280,7 +477,7 @@ function getTideExtremeDays(extrema: TidePointExtreme[], referenceTime: DateTime
 }
 
 export interface TideAdditionalContext {
-	currentPoint: TidePointCurrentContextual;
+	current: TidePointCurrent;
 	previousId: string;
 	currentId: string | null;
 	nextId: string;
@@ -290,7 +487,7 @@ export interface TideAdditionalContext {
 }
 
 export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFetched): TideAdditionalContext {
-	const { current: currentPoint, extrema } = fetchedTide;
+	const { current: currentHeight, extrema } = fetchedTide;
 	const { referenceTime } = config;
 
 	/*
@@ -300,9 +497,8 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 		- Whether the beach is covered, uncovered, or in-between
 		- The next time the tide will be covering/uncovering the beach
 	*/
-	const currentPointHeight = currentPoint.height;
 
-	const [previous, current, next] = getTidePreviousNext(extrema, currentPointHeight, referenceTime);
+	const [previous, current, next] = getTidePreviousNext(extrema, currentHeight, referenceTime);
 	const changes = getTidePointBeachChanges(extrema);
 
 	// Figure out our current beach status and the next one. 
@@ -370,15 +566,15 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 		// Get the height as a percent in the range of low to high. 
 		const low = previous.isLow ? previous.height : next.height;
 		const high = previous.isLow ? next.height : previous.height;
-		const divisionAsPercent = (currentPointHeight - low) / (high - low);
+		const divisionAsPercent = (currentHeight - low) / (high - low);
 		currentDivision = divisionAsPercent >= .75 ? TideLevelDivision.high : (divisionAsPercent > .25 ? TideLevelDivision.mid : TideLevelDivision.low);
 	}
 
 	const extremeDays = getTideExtremeDays(extrema, referenceTime);
 
 	return {
-		currentPoint: {
-			...currentPoint,
+		current: {
+			height: currentHeight,
 			direction: currentDirection,
 			division: currentDivision,
 			beachStatus: currentBeachStatus,

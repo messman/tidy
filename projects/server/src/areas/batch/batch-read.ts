@@ -7,9 +7,8 @@ import { AstroFetched, getAstroAdditionalContext } from '../../services/astro/as
 import { BaseConfig, BaseInput, createBaseLiveConfig } from '../../services/config';
 import { LogContext } from '../../services/logging/pino';
 import { combineSeed, randomizer, TestSeed } from '../../services/test/randomize';
-import { fetchTides } from '../../services/tide/tide-fetch';
 import { createTides } from '../../services/tide/tide-fetch-create';
-import { getTideAdditionalContext, TideFetched } from '../../services/tide/tide-shared';
+import { fetchTides, getTideAdditionalContext, TideFetched } from '../../services/tide/tide-shared';
 import { dateForZone } from '../../services/time';
 import { readWeather } from '../../services/weather/weather-fetch';
 import { createWeather } from '../../services/weather/weather-fetch-create';
@@ -70,7 +69,7 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 	};
 
 	const tideAdditional = getTideAdditionalContext(config, tideFetched);
-	const { range, currentPoint, currentId, nextId, previousId } = tideAdditional;
+	const { range, current, currentId, nextId, previousId } = tideAdditional;
 	const astroAdditional = getAstroAdditionalContext(config, astroFetched, weatherFetched.moonPhaseDaily);
 	const { sunRelativity, sunCloseDays, todayAstroDay, solarEventMap, days: astroDays } = astroAdditional;
 	const { filteredHourlyWithSun, isCurrentDaytime, indicatorChangeHourlyId, tempRange } = getWeatherAdditionalContext(config, weatherFetched, solarEventMap, astroDays);
@@ -99,7 +98,9 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 				},
 			},
 			tide: {
-				current: currentPoint,
+				temp: tideFetched.waterTemp,
+				source: tideFetched.source,
+				current,
 				currentId,
 				nextId,
 				previousId
@@ -117,26 +118,5 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 			days: getBeachTimeDays(config, tideFetched, tideAdditional, astroFetched, astroAdditional, weatherFetched),
 			tempRange,
 		},
-		// beach: getBeachContent(config, tide, currentPoint, dailyTides, astro, weather),
-		// tide: {
-		// 	measured,
-		// 	relativity,
-		// 	daily: dailyTides,
-		// 	dailyMin,
-		// 	dailyMax
-		// },
-		// astro: {
-		// 	sun: {
-		// 		relativity: getSunRelativity(config, astro),
-		// 		yesterday: sunYesterday,
-		// 		today: sunToday,
-		// 		tomorrow: sunTomorrow
-		// 	},
-		// 	moon: {
-		// 		next: weather.lunar[0],
-		// 		nextLunarDay: getNextLunarDay(weather),
-		// 	}
-		// },
-
 	};
 }

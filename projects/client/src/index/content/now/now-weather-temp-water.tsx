@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
 
@@ -16,15 +17,15 @@ const TempText = styled.div`
 
 export const NowWeatherTempWater: React.FC = () => {
 
-	// const { , now, week } = useBatchResponseSuccess();
-	// const { wate } = now.weather.current;
+	const { now } = useBatchResponseSuccess();
+	const { temp } = now.tide;
 
-	// const roundedTemp = Math.round(temp);
+	const roundedTemp = Math.round(temp);
 
 	return (
 		<Panel title="Water Temp">
 			<Container>
-				<TempText>99&deg;</TempText>
+				<TempText>{roundedTemp}&deg;</TempText>
 			</Container>
 		</Panel>
 	);
