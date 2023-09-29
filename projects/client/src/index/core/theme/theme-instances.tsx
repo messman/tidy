@@ -87,6 +87,11 @@ export const lightTokens = {
 		light: '#D9D9D9',
 	},
 
+	solar: {
+		riseGradient: 'linear-gradient(180deg, rgba(70, 141, 248, 0.26) 66.15%, rgba(228, 183, 24, 0.81) 100%)',
+		setGradient: 'linear-gradient(180deg, rgba(121, 191, 255, 0.36) 59.9%, rgba(255, 88, 188, 0.58) 82.81%, rgba(238, 138, 20, 0.98) 89.06%, #CAB600 100%)'
+	},
+
 	beachDiagram: {
 		sand: '#E7DEC0',
 		sandDarker: '#C9BD9E',

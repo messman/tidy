@@ -71,7 +71,7 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 	const tideAdditional = getTideAdditionalContext(config, tideFetched);
 	const { range, current, currentId, nextId, previousId } = tideAdditional;
 	const astroAdditional = getAstroAdditionalContext(config, astroFetched, weatherFetched.moonPhaseDaily);
-	const { sunRelativity, sunCloseDays, todayAstroDay, solarEventMap, days: astroDays } = astroAdditional;
+	const { sunRelativity, sunCloseDays, todayAstroDay, solarEventMap, days: astroDays, isIncreasedEffect, future } = astroAdditional;
 	const { filteredHourlyWithSun, isCurrentDaytime, indicatorChangeHourlyId, tempRange } = getWeatherAdditionalContext(config, weatherFetched, solarEventMap, astroDays);
 
 	return {
@@ -87,14 +87,16 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 				sun: {
 					previousId: sunRelativity.previousId,
 					currentId: sunRelativity.currentId,
-					nextRiseSetId: sunRelativity.nextRiseSetId,
+					nextRiseSetIdsForDay: sunRelativity.nextRiseSetIdsForDay,
 					nextRiseSetTwilightId: sunRelativity.nextRiseSetTwilightId,
 					yesterday: sunCloseDays.yesterday,
 					today: sunCloseDays.today,
 					tomorrow: sunCloseDays.tomorrow,
 				},
 				moon: {
-					phase: todayAstroDay.moon
+					phase: todayAstroDay.moon,
+					isIncreasedEffect,
+					future
 				},
 			},
 			tide: {

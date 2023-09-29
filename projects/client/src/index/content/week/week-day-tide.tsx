@@ -5,7 +5,7 @@ import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { getDateLong } from '@/index/core/time/time';
 import { AstroLunarPhase, BeachTimeDay, mapNumberEnumValue } from '@wbtdevlocal/iso';
-import { LunarPhaseIcon } from '../common/astro/lunar-phase-icon';
+import { LunarPhaseIcon, lunarPhaseText } from '../common/astro/lunar-phase-icon';
 import { TideChart } from '../common/tide/tide-chart';
 
 const PhaseContainer = styled.div`
@@ -27,17 +27,6 @@ const Container = styled.div`
 	padding: ${SpacePanelEdge.value} 0;
 `;
 
-const phaseText: Record<keyof typeof AstroLunarPhase, string> = {
-	a_new: 'New Moon',
-	b_waxingCrescent: 'Waxing Crescent',
-	c_firstQuarter: 'First Quarter',
-	d_waxingGibbous: 'Waxing Gibbous',
-	e_full: 'Full Moon',
-	f_waningGibbous: 'Waning Gibbous',
-	g_thirdQuarter: 'Third Quarter',
-	h_waningCrescent: 'Waning Crescent'
-};
-
 export interface WeekDayTideProps {
 	day: BeachTimeDay;
 	isTop: boolean;
@@ -49,7 +38,6 @@ export const WeekDayTide: React.FC<WeekDayTideProps> = (props) => {
 	const { meta, now, getTideExtremeById, tideExtrema } = useBatchResponseSuccess();
 
 	const current = day.day.hasSame(meta.referenceTime, 'day') ? now.tide.current : undefined;
-	now.tide.current;
 
 	const extrema = day.tides.extremaIds.map((id) => {
 		return getTideExtremeById(id);
@@ -64,11 +52,12 @@ export const WeekDayTide: React.FC<WeekDayTideProps> = (props) => {
 			<Container>
 
 				<PhaseContainer>
-					<PhaseText>{mapNumberEnumValue(AstroLunarPhase, phaseText, day.astro.moon)}</PhaseText>
+					<PhaseText>{mapNumberEnumValue(AstroLunarPhase, lunarPhaseText, day.astro.moon)}</PhaseText>
 					<LunarPhaseIcon phase={day.astro.moon} />
 				</PhaseContainer>
 				<TideChart
 					current={current}
+					currentTime={meta.referenceTime}
 					extrema={extrema}
 					min={getTideExtremeById(tideExtrema.minId).height}
 					max={getTideExtremeById(tideExtrema.maxId).height}

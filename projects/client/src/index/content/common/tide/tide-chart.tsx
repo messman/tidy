@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getTimeTwelveHourString } from '@/index/core/time/time';
-import { TideLevelDirection, TideLevelDivision, TidePointCurrentContextual, TidePointExtreme } from '@wbtdevlocal/iso';
+import { TideLevelDirection, TideLevelDivision, TidePointCurrent, TidePointExtreme } from '@wbtdevlocal/iso';
 import { TideChartIndicator } from './tide-chart-indicator';
 import { TideHeightTextUnit } from './tide-common';
 import { TideLevelIcon } from './tide-level-icon';
@@ -51,13 +51,14 @@ interface TideRowEntry {
 
 export interface TideChartProps {
 	extrema: TidePointExtreme[];
-	current?: TidePointCurrentContextual;
+	current?: TidePointCurrent;
+	currentTime?: DateTime;
 	min?: number;
 	max?: number;
 };
 
 export const TideChart: React.FC<TideChartProps> = (props) => {
-	const { extrema, current, min = Infinity, max = -Infinity } = props;
+	const { extrema, current, currentTime, min = Infinity, max = -Infinity } = props;
 
 	/*
 		Note - the measured time may be significantly behind the reference time.
@@ -76,16 +77,16 @@ export const TideChart: React.FC<TideChartProps> = (props) => {
 		};
 	});
 	let currentIndex = -1;
-	if (current) {
+	if (current && currentTime) {
 		const currentRowEntry: TideRowEntry = {
-			time: current.time,
+			time: currentTime,
 			direction: current.direction,
 			division: current.division,
 			height: current.height,
 			isCurrent: true
 		};
 		const index = rowEntries.findIndex((extreme) => {
-			return extreme.time > current.time;
+			return extreme.time > currentTime;
 		});
 		if (index === -1) {
 			rowEntries.push(currentRowEntry);

@@ -7,6 +7,17 @@ import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 import { AstroLunarPhase, mapNumberEnumValue } from '@wbtdevlocal/iso';
 
+export const lunarPhaseText = {
+	a_new: 'New Moon',
+	b_waxingCrescent: 'Waxing Crescent',
+	c_firstQuarter: 'First Quarter',
+	d_waxingGibbous: 'Waxing Gibbous',
+	e_full: 'Full Moon',
+	f_waningGibbous: 'Waning Gibbous',
+	g_thirdQuarter: 'Third Quarter',
+	h_waningCrescent: 'Waning Crescent'
+} as const satisfies Record<keyof typeof AstroLunarPhase, string>;
+
 const LunarPhaseIcon_Container = styled.span`
 	display: inline-flex;
 	justify-content: center;
@@ -14,12 +25,12 @@ const LunarPhaseIcon_Container = styled.span`
 	background-color: ${themeTokens.lunar.background};
 	border-radius: ${borderRadiusSmallerValue};
 	width: 2.25rem;
-	height: 2.25rem;	
+	height: 2.25rem;
 `;
 
 const LunarPhaseIcon_Icon = styled(Icon)`
-	width: 2rem;
-	height: 2rem;
+	width: 75%;
+	height: 75%;
 `;
 
 const moonPhaseIcon: Record<keyof typeof AstroLunarPhase, IconInputType> = {
@@ -38,12 +49,12 @@ export interface LunarPhaseIconProps {
 }
 
 export const LunarPhaseIcon: StyledFC<LunarPhaseIconProps> = (props) => {
-	const { phase } = props;
+	const { phase, className } = props;
 
 	const icon = mapNumberEnumValue(AstroLunarPhase, moonPhaseIcon, phase);
 
 	return (
-		<LunarPhaseIcon_Container>
+		<LunarPhaseIcon_Container className={className}>
 			<LunarPhaseIcon_Icon type={icon} />
 		</LunarPhaseIcon_Container>
 	);

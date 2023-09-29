@@ -11,7 +11,7 @@ const Statistic = styled.div`
 `;
 
 export const NowTideLevels: React.FC = () => {
-	const { tideExtrema, getTideExtremeById, now } = useBatchResponseSuccess();
+	const { tideExtrema, getTideExtremeById, now, meta } = useBatchResponseSuccess();
 	const { previousId, current, nextId } = now.tide;
 
 	const extrema = [
@@ -28,6 +28,7 @@ export const NowTideLevels: React.FC = () => {
 			<TideChart
 				extrema={extrema}
 				current={current}
+				currentTime={meta.referenceTime}
 				min={getTideExtremeById(tideExtrema.minId).height}
 				max={getTideExtremeById(tideExtrema.maxId).height}
 			/>

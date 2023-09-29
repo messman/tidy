@@ -46,11 +46,14 @@ export interface AstroDay {
 	moon: AstroLunarPhase;
 }
 
-// export interface AstroLunarTidalSpan {
-// 	phase: AstroLunarPhase;
-// 	start: DateTime;
-// 	stop: DateTime;
-// }
+export interface AstroLunarFuture {
+	/** The date (day) of this phase of note. */
+	time: DateTime;
+	/** The phase of note - either new or full. */
+	phase: AstroLunarPhase;
+	/** Indicates whether the phase above is starting or ending. */
+	isStart: boolean;
+}
 
 export interface AstroLunarPhaseDay {
 	/** Start of the day. */

@@ -99,13 +99,20 @@ export const NowWeatherWind: React.FC = () => {
 
 	const windRounded = Math.round(wind);
 
-	const windDirectionText = keyForNumberEnumValue(WeatherWindDirection, windDirection);
-	const oppositeWindDirectionText = oppositeWindDirection[windDirectionText];
+	const windText = (() => {
+		if (windRounded === 0) {
+			return 'No significant wind.';
+		}
 
-	const knots = Math.round((wind * 0.868976) * 10) / 10;
+		const windDirectionText = keyForNumberEnumValue(WeatherWindDirection, windDirection);
+		const oppositeWindDirectionText = oppositeWindDirection[windDirectionText];
+		const knots = Math.round((wind * 0.868976) * 10) / 10;
+
+		return `${knots} knots from ${windDirectionText} to ${oppositeWindDirectionText}`;
+	})();
 
 	return (
-		<FlexPanel title="UV Index">
+		<FlexPanel title="Wind">
 			<Container>
 				<TopContainer>
 					<TextContainer>
@@ -119,7 +126,7 @@ export const NowWeatherWind: React.FC = () => {
 						</CompassArrowContainer>
 					</CompassContainer>
 				</TopContainer>
-				<DescriptionText>{knots} knots from {windDirectionText} to {oppositeWindDirectionText}.</DescriptionText>
+				<DescriptionText>{windText}</DescriptionText>
 			</Container>
 		</FlexPanel>
 	);

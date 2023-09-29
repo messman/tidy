@@ -170,7 +170,7 @@ async function getForecastUrl(ctx: LogContext, config: BaseConfig): ServerPromis
 	*/
 
 	const referenceInUtc = config.referenceTime.setZone('utc');
-	const firstTryTimeUtc = getClosestQuarterTime(referenceInUtc.minus({ hour: 1 })); // Subtract an hour first time to ensure we get forecast data to cover reference time
+	const firstTryTimeUtc = getClosestQuarterTime(referenceInUtc.minus({ hour: 7 })); // Subtract some time first time to ensure we get forecast data to cover reference time
 	const secondTryTimeUtc = getClosestQuarterTime(firstTryTimeUtc.minus({ hour: 1 })); // Subtract an hour to ensure different time
 	const thirdTryTimeUtc = getClosestQuarterTime(secondTryTimeUtc.minus({ hour: 1 })); // Subtract an hour to ensure different time
 
@@ -379,7 +379,7 @@ function getCurrentAndExtrema(referenceTime: DateTime, oceanTimes: DateTime[], w
 		}
 
 		const isNowIncreasing = value > previousValue;
-		if (!isOrWasInStretchOfSameValue && isNowIncreasing !== isIncreasing) {
+		if (!isOrWasInStretchOfSameValue && isIncreasing !== undefined && isNowIncreasing !== isIncreasing) {
 			/*
 				We're outside of any same-value stuffs, and switched from increasing to decreasing.
 				Could be the real peak was between i-2 and i-1, or between i-1 and i.
@@ -414,7 +414,7 @@ async function getWaterTemp(ctx: LogContext, baseUrl: string, stationIndex: numb
 	*/
 
 	const waterTempUrl = `${baseUrl}.ascii?temp%5B0:1:720%5D%5B${stationIndex}:1:${stationIndex}%5D%5B29:1:29%5D`;
-	const waterTempText = await makeRequestAscii(ctx, 'GoMOFS - water level', waterTempUrl);
+	const waterTempText = await makeRequestAscii(ctx, 'GoMOFS - water temp', waterTempUrl);
 	if (isServerError(waterTempText)) {
 		return waterTempText;
 	}

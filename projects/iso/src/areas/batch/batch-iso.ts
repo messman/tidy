@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { enumKeys } from '../../utility/enum';
-import { AstroDay, AstroLunarPhase, AstroSolarEvent, AstroSunDay, AstroSunRiseSet } from '../astro/astro-iso';
+import { AstroDay, AstroLunarFuture, AstroLunarPhase, AstroSolarEvent, AstroSunDay, AstroSunRiseSet } from '../astro/astro-iso';
 import { TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeDay } from '../tide/tide-iso';
 import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WithDaytime } from '../weather/weather-iso';
 
@@ -81,14 +81,18 @@ export interface BatchNowAstro {
 		previousId: string;
 		/** May include mid-day. May be set if we are close enough to a sun event. */
 		currentId: string | null;
+		/** Does not include mid-day. */
 		nextRiseSetTwilightId: string;
-		nextRiseSetId: string;
+		/** Either [rise, set] or [set] or empty. If empty, can get next from the tomorrow property. */
+		nextRiseSetIdsForDay: string[];
 		yesterday: AstroSunDay;
 		today: AstroSunDay;
 		tomorrow: AstroSunDay;
 	};
 	moon: {
 		phase: AstroLunarPhase;
+		isIncreasedEffect: boolean;
+		future: AstroLunarFuture;
 		// tidalSpan: AstroLunarTidalSpan | null;
 		// nextTidalSpan: AstroLunarTidalSpan;
 	};

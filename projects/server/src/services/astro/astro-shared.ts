@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { AstroDay, AstroLunarPhase, AstroLunarPhaseDay, AstroSolarEvent, AstroSolarEventType, AstroSunDay } from '@wbtdevlocal/iso';
+import { AstroDay, AstroLunarFuture, AstroLunarPhase, AstroLunarPhaseDay, AstroSolarEvent, AstroSolarEventType, AstroSunDay } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { getStartOfDayBefore } from '../time';
 
@@ -22,7 +22,7 @@ export interface SunRelativity {
 	/** May include mid-day. May be set if we are close enough to a sun event. */
 	currentId: string | null;
 	nextRiseSetTwilightId: string;
-	nextRiseSetId: string;
+	nextRiseSetIdsForDay: string[];
 }
 
 export interface SunCloseDays {
@@ -37,6 +37,8 @@ export interface AstroAdditionalContext {
 	sunRelativity: SunRelativity;
 	sunCloseDays: SunCloseDays;
 	todayAstroDay: AstroDay;
+	isIncreasedEffect: boolean;
+	future: AstroLunarFuture;
 }
 
 /** If we are within this time (on either side), consider the event current. */
@@ -49,11 +51,12 @@ function getSunRelativity(config: BaseConfig, fetched: AstroFetched): SunRelativ
 	const { solarEvents } = fetched;
 	const referenceTimeCurrentLowerBound = referenceTime.minus({ minutes: currentEventBoundMinutes });
 	const referenceTimeCurrentUpperBound = referenceTime.plus({ minutes: currentEventBoundMinutes });
+	const endOfReferenceDay = referenceTime.endOf('day');
 
 	let previous: AstroSolarEvent = null!;
 	let current: AstroSolarEvent | null = null;
 	let nextRiseSetTwilight: AstroSolarEvent = null!;
-	let nextRiseSet: AstroSolarEvent = null!;
+	let nextRiseSets: AstroSolarEvent[] = [];
 
 	for (let i = 0; i < solarEvents.length; i++) {
 		const solarEvent = solarEvents[i];
@@ -75,10 +78,10 @@ function getSunRelativity(config: BaseConfig, fetched: AstroFetched): SunRelativ
 			if (!nextRiseSetTwilight && solarEvent.type !== AstroSolarEventType.midday) {
 				nextRiseSetTwilight = solarEvent;
 			}
-			if (!nextRiseSet && (solarEvent.type === AstroSolarEventType.rise || solarEvent.type === AstroSolarEventType.set)) {
-				nextRiseSet = solarEvent;
+			if ((solarEvent.time <= endOfReferenceDay) && (solarEvent.type === AstroSolarEventType.rise || solarEvent.type === AstroSolarEventType.set)) {
+				nextRiseSets.push(solarEvent);
 			}
-			if (!!nextRiseSetTwilight && !!nextRiseSet) {
+			if (!!nextRiseSetTwilight && solarEvent.time > endOfReferenceDay) {
 				break;
 			}
 		}
@@ -87,7 +90,7 @@ function getSunRelativity(config: BaseConfig, fetched: AstroFetched): SunRelativ
 	return {
 		previousId: previous.id,
 		currentId: current?.id || null,
-		nextRiseSetId: nextRiseSet.id,
+		nextRiseSetIdsForDay: nextRiseSets.map(x => x.id),
 		nextRiseSetTwilightId: nextRiseSetTwilight.id
 	};
 }
@@ -175,6 +178,79 @@ export function getAstroAdditionalContext(config: BaseConfig, fetched: AstroFetc
 		sunCloseDays: getSunCloseDays(config, fetched, solarEventMap),
 		days,
 		solarEventMap,
-		todayAstroDay
+		todayAstroDay,
+		isIncreasedEffect: isNewOrFull(todayAstroDay.moon),
+		future: getAstroFuture(todayAstroDay, lunarDays)
+	};
+}
+
+function isNewOrFull(phase: AstroLunarPhase): boolean {
+	return phase === AstroLunarPhase.a_new || phase === AstroLunarPhase.e_full;
+}
+
+function getAstroFuture(todayAstroDay: AstroDay, lunarDays: AstroLunarPhaseDay[]): AstroLunarFuture {
+
+	const currentPhase = todayAstroDay.moon;
+
+	/*
+		Order:
+		- If the next full/new is in view, return when that is
+			(even if currently at full or new)
+		- If currently full/new, note when it stops being full/new
+		- Fallback: find next first or third quarter
+		- Fallback: next phase change (guaranteed)
+	*/
+	// Find next
+	const dayOfNextFullOrNew = lunarDays.find((lunarDay) => {
+		const phase = lunarDay.moon;
+		const isMoonNewOrFull = isNewOrFull(phase);
+		return isMoonNewOrFull && phase !== currentPhase;
+	});
+	if (dayOfNextFullOrNew) {
+		return {
+			time: dayOfNextFullOrNew.time,
+			phase: dayOfNextFullOrNew.moon,
+			isStart: true
+		};
+	}
+
+	// Find when full/new stops
+	if (isNewOrFull(currentPhase)) {
+		const dayOfChange = lunarDays.find((lunarDay) => {
+			const phase = lunarDay.moon;
+			const isMoonNewOrFull = isNewOrFull(phase);
+			return !isMoonNewOrFull;
+		});
+		if (dayOfChange) {
+			return {
+				time: dayOfChange.time,
+				phase: currentPhase, // This phase is ending!
+				isStart: false
+			};
+		}
+	}
+
+	// First or third quarter
+	const dayOfFirstOrThird = lunarDays.find((lunarDay) => {
+		const phase = lunarDay.moon;
+		return (phase === AstroLunarPhase.c_firstQuarter || phase === AstroLunarPhase.g_thirdQuarter) && phase !== currentPhase;
+	});
+	if (dayOfFirstOrThird) {
+		return {
+			time: dayOfFirstOrThird.time,
+			phase: dayOfFirstOrThird.moon,
+			isStart: true
+		};
+	}
+
+	// Next phase
+	const dayOfNext = lunarDays.find((lunarDay) => {
+		const phase = lunarDay.moon;
+		return phase !== currentPhase;
+	})!;
+	return {
+		time: dayOfNext.time,
+		phase: dayOfNext.moon,
+		isStart: true
 	};
 }
