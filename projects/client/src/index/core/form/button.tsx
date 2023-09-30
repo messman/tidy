@@ -4,8 +4,10 @@ import { SizedIcon } from '../icon/icon';
 import { SpinnerIcon } from '../icon/icon-spinner';
 import { outlineAccessibilityStyle } from '../layout/layout-shared';
 import { borderRadiusStyle, ComponentSize, Spacing } from '../primitive/primitive-design';
-import { AttrsComponent, Styled } from '../primitive/primitive-styled';
+import { Styled } from '../primitive/primitive-styled';
 import { IconLabel, IconLabelProps } from '../text/text-label';
+import { fontStyles } from '../text/text-shared';
+import { themeTokens } from '../theme/theme-root';
 
 const buttonPaddings: Record<ComponentSize, string> = {
 	medium: `${Spacing.cat12} ${Spacing.dog16}`,
@@ -23,8 +25,6 @@ export interface ButtonProps extends Omit<IconLabelProps, 'size'>, BaseButtonPro
 	title?: string;
 	/** size defaults to medium for buttons. */
 	size?: ComponentSize;
-	/** Default is center. Controls where the loading spinner renders relative to the space given by the underlying hidden content. */
-	loadingAlignment?: 'left' | 'right' | 'center';
 };
 
 /**
@@ -60,13 +60,13 @@ export const buttonResetStyles = css`
  * regular content in a button element for clicking, see {@link ClickWrapperButton}
  * */
 export const BaseButton = styled((props: Styled<ButtonProps>) => {
-	const { children, size, leftIcon, rightIcon, justifyContent, isLoading, loadingAlignment, isDisabled, ...otherProps } = props;
+	const { children, size, leftIcon, rightIcon, justifyContent, isLoading, isDisabled, ...otherProps } = props;
 
 	const componentSize: ComponentSize = size || 'medium';
 
 	// This will appear over top of the button when loading.
 	const spinnerRender = isLoading ? (
-		<BaseButton_SpinnerCoverContainer justifyContent={loadingAlignment === 'left' ? 'flex-start' : (loadingAlignment === 'right' ? 'flex-end' : 'center')}>
+		<BaseButton_SpinnerCoverContainer>
 			<SizedIcon size={componentSize} type={SpinnerIcon} />
 		</BaseButton_SpinnerCoverContainer>
 	) : null;
@@ -74,42 +74,26 @@ export const BaseButton = styled((props: Styled<ButtonProps>) => {
 	// className is passed down to the BaseButton.
 	return (
 		<button {...otherProps} disabled={isDisabled}>
-			<ZeroVisibilityWrapper isHidden={!!isLoading}>
+			<div style={{ visibility: isLoading ? 'hidden' : undefined }}>
 				<IconLabel leftIcon={leftIcon} rightIcon={rightIcon} size={componentSize} justifyContent={justifyContent} >
 					{children}
 				</IconLabel>
-			</ZeroVisibilityWrapper>
+			</div>
 			{spinnerRender}
 		</button>
 	);
 })``;
 
-const ZeroVisibilityWrapper = styled.div.attrs((props: { isHidden: boolean; }) => {
-	const style: Partial<CSSStyleDeclaration> = {};
-	if (props.isHidden) {
-		style.visibility = 'hidden';
-	}
-	return {
-		style: style
-	};
-})`` as AttrsComponent<'div', { isHidden: boolean; }>;
-
-const BaseButton_SpinnerCoverContainer = styled.div.attrs((props: { justifyContent: string; }) => {
-	return {
-		style: {
-			justifyContent: props.justifyContent
-		} as CSSStyleDeclaration
-	};
-})`
+const BaseButton_SpinnerCoverContainer = styled.div`
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	display: flex;
-	justify-content: ${p => p.justifyContent};
+	justify-content: center;
 	align-items: center;
-` as AttrsComponent<'div', { justifyContent: string; }>;
+`;
 
 
 /** Include this style in a parent to make buttons 100% width. */
@@ -150,17 +134,22 @@ export const regularButtonStyles = css<ButtonProps>`
 	}
 `;
 
-/** Usually the primary button in a list. */
-export const ButtonFillBrandRed = styled(BaseButton)`
+export const Button = styled(BaseButton)`
 	${regularButtonStyles};
 	
-	background-color: ${'red'};
-`;
-
-/** Usually the primary button in a list. */
-export const ButtonFillBrandBlue = styled(BaseButton)`
-	${regularButtonStyles};
-	
+	${fontStyles.text.mediumHeavy};
+	color: ${themeTokens.text.dark};
+	background-color: ${themeTokens.button.background};
+	&:hover:not(:disabled) {
+		background-color: ${themeTokens.button.hover};
+	}
+	&:active:not(:disabled) {
+		background-color: ${themeTokens.button.active};
+	}
+	&:disabled {
+		color: ${themeTokens.button.disabledText};
+		background-color: ${themeTokens.button.disabled};
+	}
 `;
 
 
@@ -181,7 +170,7 @@ export const ButtonSimpleLink = styled(BaseButton)`
 	:disabled {
 		background-color: transparent;
 	}
-	color: ${'red'};
+	color: ${themeTokens.text.distinct};
 `;
 
 /**

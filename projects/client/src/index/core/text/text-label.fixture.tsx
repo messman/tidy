@@ -6,8 +6,8 @@ import { IconLabel, MediumLabelText, SmallLabelText } from './text-label';
 
 export default CosmosFixture.create(() => {
 
-	const leftIcon = Cosmos.useControlSelectIcon('Left Icon', 'decorationLike');
-	const rightIcon = Cosmos.useControlSelectIcon('Right Icon', 'arrowRight');
+	const leftIcon = Cosmos.useControlSelectIcon('Left Icon', 'coreHeartFilled');
+	const rightIcon = Cosmos.useControlSelectIcon('Right Icon', 'coreArrowRight');
 	const justifyContent = Cosmos.useControlValue('Stretch', false) ? 'space-between' : 'flex-start';
 
 	return (

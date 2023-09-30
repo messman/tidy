@@ -1,12 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { BaseButton, ButtonFillBrandBlue } from '@/index/core/form/button';
-import { Block } from '@/index/core/layout/layout-shared';
+import { BaseButton, Button } from '@/index/core/form/button';
+import { Panel, PanelPadding } from '@/index/core/layout/layout-panel';
 import { useSafeTimer } from '@/index/core/lifecycle/timer';
 import { borderRadiusStyle, Spacing } from '@/index/core/primitive/primitive-design';
-import { FontDoc } from '@/index/core/text/text-shared';
+import { MediumBodyText } from '@/index/core/text/text-shared';
+import { DEFINE } from '@/index/define';
 import { setClipboard } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
+import { PanelParagraph, SectionContainer, SectionHeading } from './about-shared';
 
 enum ShareStatus {
 	default,
@@ -14,19 +16,82 @@ enum ShareStatus {
 	failure
 }
 
-const canShare = !!navigator.share;
+const canUseDeviceShare = !!navigator.share || DEFINE.isDevelopment;
 const site = 'https://wellsbeachtime.com';
 
 export const AboutShare: React.FC = () => {
 
+	return (
+		<SectionContainer>
+			<SectionHeading>Share & Save</SectionHeading>
+			<DeviceSave />
+			{canUseDeviceShare && <DeviceShare />}
+			<Copy />
+			<Panel title='QR Code'>
+				<PanelPadding>
+					<MediumBodyText>
+						Another device can scan this QR code to find this app.
+						This QR code can be saved as an image and printed.
+					</MediumBodyText>
+					<QRImage alt='QR code' title='QR code for wellsbeachtime.com' src='/qr-code.svg' />
+				</PanelPadding>
+			</Panel>
+		</SectionContainer>
+	);
+};
+
+// const isIOS = (() => {
+// 	return [
+// 		'iPad Simulator',
+// 		'iPhone Simulator',
+// 		'iPod Simulator',
+// 		'iPad',
+// 		'iPhone',
+// 		'iPod'
+// 	].includes(navigator.platform)
+// 		// iPad on iOS 13 detection
+// 		|| (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+// })();
+
+// const isAndroid = (() => {
+// 	const ua = navigator.userAgent.toLowerCase();
+// 	return ua.indexOf("android") > -1;
+// })();
+
+// Not using this right now because why not just keep showing the instruction? NBD.
+// const isKnownSavedToHomeScreen = window.matchMedia('(display-mode: standalone)').matches;
+
+const DeviceSave: React.FC = () => {
+	/*
+		Note: while we can somewhat reliably see if the user is on iOS or Android, and
+		we can maybe see if they've already added the app to the home screen, there would still
+		be more work to be done to make sure they're on a browser that can save to the home screen.
+		Better to just include all instruction.
+	*/
+	return (
+		<Panel title='Save'>
+			<PanelPadding>
+
+				<MediumBodyText>
+					You can save this web app to a device's home screen or bookmarks bar.
+				</MediumBodyText>
+				<MediumBodyText>
+					On iOS Safari, tap the browser's share icon and choose "Add to Home Screen".
+				</MediumBodyText>
+				<MediumBodyText>
+					on Android, open the browser's menu and choose "Add to Home screen".
+				</MediumBodyText>
+			</PanelPadding>
+		</Panel>
+	);
+};
+
+const Copy: React.FC = () => {
+
 	const [copyStatus, setCopyStatus] = React.useState(ShareStatus.default);
-	const [shareStatus, setShareStatus] = React.useState(ShareStatus.default);
 
 	const { change: copyTimerChange } = useSafeTimer(() => {
 		setCopyStatus(ShareStatus.default);
-	});
-	const { change: shareTimerChange } = useSafeTimer(() => {
-		setShareStatus(ShareStatus.default);
 	});
 
 	async function onClickCopyLink() {
@@ -34,6 +99,43 @@ export const AboutShare: React.FC = () => {
 		setCopyStatus(result ? ShareStatus.success : ShareStatus.failure);
 		copyTimerChange(2000);
 	}
+
+	const copyLinkText = copyStatus === ShareStatus.default ? 'Copy Link' : (copyStatus === ShareStatus.success ? 'Link Copied!' : 'Copy Failed');
+
+	return (
+		<Panel title='Copy Link'>
+			<PanelPadding>
+				<MediumBodyText>
+					You can copy the URL to this app and paste it to share.
+				</MediumBodyText>
+				<ButtonContainer>
+					<Button
+						onClick={onClickCopyLink}
+						leftIcon={icons.toolLink}
+						justifyContent='center'
+					>
+						{copyLinkText}
+					</Button>
+				</ButtonContainer>
+			</PanelPadding>
+		</Panel>
+	);
+};
+
+const DeviceShare: React.FC = () => {
+
+	const [shareStatus, setShareStatus] = React.useState(ShareStatus.default);
+
+	const { change: shareTimerChange } = useSafeTimer(() => {
+		setShareStatus(ShareStatus.default);
+	});
+
+	const shareLinkText = (() => {
+		if (shareStatus === ShareStatus.failure) {
+			return 'Device Share Failed';
+		}
+		return 'Share From Device';
+	})();
 
 	async function onClickShare() {
 		try {
@@ -50,67 +152,39 @@ export const AboutShare: React.FC = () => {
 		shareTimerChange(2000);
 	}
 
-	const copyLinkText = copyStatus === ShareStatus.default ? 'Copy Link' : (copyStatus === ShareStatus.success ? 'Link Copied!' : 'Copy Failed');
-
-	let shareLinkText = 'No Device Sharing';
-	if (canShare) {
-		shareLinkText = shareStatus === ShareStatus.default ? 'Share From Device' : (shareStatus === ShareStatus.success ? 'Shared From Device!' : 'Device Share Failed');
-	}
-
 	return (
-		<>
-			<FontDoc.C_Topic.Component>Share</FontDoc.C_Topic.Component>
-			<FontDoc.E_Paragraph.Component>
-				You can bookmark this webpage or save it to your mobile device's home screen to view it at any time.
-			</FontDoc.E_Paragraph.Component>
-			<FontDoc.E_Paragraph.Component>
-				Others can access this webpage by scanning the QR code below. You can also share the webpage with the sharing buttons.
-			</FontDoc.E_Paragraph.Component>
-			<Block.Bat08 />
-			<ShareContainer>
-				<QRImage alt='QR code' title='QR code for wellsbeachtime.com' src='/qr-code.svg' />
+		<Panel title='Device Share'>
+			<PanelPadding>
+				<MediumBodyText>
+					Use your device's share controls to share this app with others.
+				</MediumBodyText>
 				<ButtonContainer>
-					<ButtonFillBrandBlue
-						isDisabled={false}
-						onClick={onClickCopyLink}
-						leftIcon={icons.navigationUrl}
-						justifyContent='center'
-					>
-						{copyLinkText}
-					</ButtonFillBrandBlue>
-					<Block.Bat08 />
-					<ButtonFillBrandBlue
-						isDisabled={!canShare}
+					<Button
 						onClick={onClickShare}
-						leftIcon={icons.navigationShare}
+						leftIcon={icons.toolUpload}
 						justifyContent='center'
 					>
 						{shareLinkText}
-					</ButtonFillBrandBlue>
+					</Button>
 				</ButtonContainer>
-			</ShareContainer>
-		</>
+			</PanelPadding>
+		</Panel>
 	);
 };
 
-const ShareContainer = styled.div`
-	display: flex;
-	justify-content: space-evenly;
-	align-items: stretch;
-	flex-wrap: wrap;
-	gap: ${Spacing.bat08};
-`;
-
 const QRImage = styled.img`
-	width: 6rem;
-	height: 6rem;
+	display: block;
+	margin: 1rem auto 0 auto;
+	width: 100%;
+	aspect-ratio: 1;
+	max-width: 13rem;
 	${borderRadiusStyle}
 `;
 
 const ButtonContainer = styled.div`
 	flex: 1;
 	display: flex;
-	flex-direction: column;
+	margin-top: 1rem;
 
 	${BaseButton} {
 		flex: 1;

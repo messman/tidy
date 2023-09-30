@@ -69,10 +69,19 @@ export const lightTokens = {
 		/** On the background directly, where the text needs to be darker. */
 		onBackground: alphaHex('010C15', 60),
 		link: '#CDE7FF',
+		dark: alphaHex('102C46', 75)
 	},
 
 	outline: {
 		accessibility: "red",
+	},
+
+	button: {
+		background: '#FFF',
+		hover: '#EEE',
+		active: '#DDD',
+		disabled: '#D4D4D4',
+		disabledText: '#A6A6A6'
 	},
 
 	inform: {

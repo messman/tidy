@@ -148,7 +148,7 @@ export const fontStyleDefinitions = {
 			family: fontFamily,
 			size: fontDefaultSize,
 			lineHeight: '1.5rem',
-			weight: FontWeight.medium,
+			weight: FontWeight.semibold,
 			margin: '1rem',
 		} as const,
 		small: {

@@ -6,16 +6,12 @@ import { IconInputType } from '../icon/icon';
 import { Block } from '../layout/layout-shared';
 import { minTouchSize, Spacing } from '../primitive/primitive-design';
 import { MediumBodyText } from '../text/text-shared';
-import { BaseButton, ButtonFillBrandBlue, ButtonFillBrandRed, ButtonProps, ButtonSimpleLink, ClickWrapperButton } from './button';
+import { BaseButton, Button, ButtonProps, ButtonSimpleLink, ClickWrapperButton } from './button';
 
 const buttons: [React.FC<ButtonProps>, string][] = [
 	[
-		ButtonFillBrandRed,
-		'Primary - Red',
-	],
-	[
-		ButtonFillBrandBlue,
-		'Primary - Blue',
+		Button,
+		'Primary',
 	],
 	[
 		ButtonSimpleLink,

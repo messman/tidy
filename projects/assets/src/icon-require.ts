@@ -30,6 +30,9 @@ export const SVGIconUrl = {
 	astroSundown: '',
 	astroSunrise: '',
 
+	// Brand
+	brandUmbrellaUnclipped: '',
+
 	// Core / Arrow
 	coreArrowChevronDown: '',
 	coreArrowChevronLeft: '',

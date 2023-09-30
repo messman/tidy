@@ -9,11 +9,11 @@ import { Icon } from './icon';
 export default CosmosFixture.create(() => {
 
 	const iconsToRender = [
-		icons.statusCircle,
-		icons.navigationDashboard,
-		icons.actionClose,
+		icons.informCircleSolid,
+		icons.coreNewSparkle,
+		icons.coreClose,
 		icons.weatherLightning,
-		icons.statusErrorOutline
+		icons.informWarningSolid
 	];
 
 	return (

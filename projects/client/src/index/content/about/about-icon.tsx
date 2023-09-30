@@ -1,46 +1,46 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Icon } from '@/index/core/icon/icon';
-import { Block } from '@/index/core/layout/layout-shared';
 import { FontWeight } from '@/index/core/primitive/primitive-design';
 import { defaultLetterSpacing } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 
-export const AboutIconLargeNamed: React.FC = () => {
+export const AboutIcon: React.FC = () => {
 	return (
-		<LargeNamedContainer>
-
-			<AboutIconContainer>
-				<Icon type={icons.brandUmbrella} />
-			</AboutIconContainer>
-			<Block.Cat12 />
-			<div>
-				<AboutIconTitle>Wells</AboutIconTitle>
-				<AboutIconTitle>Beach</AboutIconTitle>
-				<AboutIconTitle>Time</AboutIconTitle>
-			</div>
-		</LargeNamedContainer>
+		<Container>
+			<BrandIcon type={icons.brandUmbrellaUnclipped} />
+			<TitleContainer>
+				<TitleText>Wells</TitleText>
+				<TitleText>Beach</TitleText>
+				<TitleText>Time</TitleText>
+			</TitleContainer>
+		</Container>
 	);
 };
 
-const LargeNamedContainer = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
+const Container = styled.div`
+	position: relative;
+	display: inline-block;
 `;
 
-const AboutIconTitle = styled.div`
+const BrandIcon = styled(Icon)`
+	top: 0;
+	left: 0;
+	position: absolute;
+	height: 12.5rem;
+`;
+
+const TitleContainer = styled.div`
+	top: 0;
+	margin-left: 8.5rem;
+`;
+
+const TitleText = styled.div`
 	// Custom because it's almost like an SVG
-	font-size: 30px;
-	line-height: 32px;
+	font-size: 34px;
+	line-height: 34px;
 	letter-spacing: ${defaultLetterSpacing};
 	font-weight: ${FontWeight.bold};
-`;
-
-
-const AboutIconContainer = styled.span`
-	display: inline-block;
-	border-radius: 50%;
-	width: 6.25rem;
-	height: 6.25rem;
+	color: ${themeTokens.text.dark};
 `;

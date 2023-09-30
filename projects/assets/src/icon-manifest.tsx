@@ -23,6 +23,9 @@ export const astroMoonrise = create('astroMoonrise', require('@/static/icons/ast
 export const astroSundown = create('astroSundown', require('@/static/icons/astro/sundown.svg'));
 export const astroSunrise = create('astroSunrise', require('@/static/icons/astro/sunrise.svg'));
 
+// Brand
+export const brandUmbrellaUnclipped = create('brandUmbrellaUnclipped', require('@/static/icons/brand/umbrella-unclipped.svg'));
+
 // Core / Arrow
 export const coreArrowChevronDown = create('coreArrowChevronDown', require('@/static/icons/core/arrow/chevron-down.svg'));
 export const coreArrowChevronLeft = create('coreArrowChevronLeft', require('@/static/icons/core/arrow/chevron-left.svg'));

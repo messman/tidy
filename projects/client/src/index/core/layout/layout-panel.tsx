@@ -1,18 +1,24 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { borderRadiusValue, Spacing } from '@/index/core/primitive/primitive-design';
 import { StyledFC } from '../primitive/primitive-styled';
 import { fontStyles } from '../text/text-shared';
 import { themeTokens } from '../theme/theme-root';
 import { createSpaceHelper } from './layout-shared';
 
+const buttonStyles = css`
+	cursor: pointer;
+`;
+
 // Solution for blend mode not affecting children: https://stackoverflow.com/questions/31629541/remove-mix-blend-mode-from-child-element
-const PanelBase_Container = styled.div<{ $croppedTop: boolean; $croppedBottom: boolean; }>`
+const PanelBase_Container = styled.div<{ $isButton: boolean; $croppedTop: boolean; $croppedBottom: boolean; }>`
 	width: 100%;
 	/* Use CSS Grid in order to directly layer the content element over the container element. */
 	display: grid;
 	grid-template-areas: 'item';
 	place-content: normal;
+
+	${p => p.$isButton && buttonStyles};
 
 	/* Have to put blended background into a pseudo-element to ensure the blending does not apply to children. */
 	&::before {
@@ -56,13 +62,14 @@ export interface PanelProps {
 	croppedTop?: boolean;
 	croppedBottom?: boolean;
 	children: React.ReactNode;
+	onClick?: () => void;
 };
 
 export const Panel: StyledFC<PanelProps> = (props) => {
-	const { className, title, croppedBottom = false, croppedTop = false, children } = props;
+	const { className, title, croppedBottom = false, croppedTop = false, onClick, children } = props;
 
 	return (
-		<PanelBase_Container $croppedBottom={croppedBottom} $croppedTop={croppedTop}>
+		<PanelBase_Container onClick={onClick} $isButton={!!onClick} $croppedBottom={croppedBottom} $croppedTop={croppedTop}>
 			<PanelBase_Content className={className}>
 				{title && <PanelTitle>{title}</PanelTitle>}
 				{children}

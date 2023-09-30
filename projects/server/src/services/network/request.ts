@@ -4,7 +4,7 @@ import { LogContext } from '../logging/pino';
 
 export async function makeRequest<T>(ctx: LogContext, serviceName: string, url: string): ServerPromise<T> {
 	try {
-		const res = await nodeFetch(url);
+		const res = await nodeFetch(url, { timeout: 10000 });
 		if (res.ok) {
 			const result = await res.json() as T;
 			return result;
@@ -25,7 +25,7 @@ export async function makeRequest<T>(ctx: LogContext, serviceName: string, url: 
 
 export async function makeRequestAscii(ctx: LogContext, serviceName: string, url: string): ServerPromise<string> {
 	try {
-		const res = await nodeFetch(url);
+		const res = await nodeFetch(url, { timeout: 10000 });
 		if (res.ok) {
 			const result = await res.text();
 			return result;

@@ -4,23 +4,16 @@ import { AnimationDuration } from '../animation/animation';
 import { themeTokens } from '../theme/theme-root';
 
 export interface ToggleProps {
-	isDisabled: boolean;
 	value: boolean;
-	onToggle: (value: boolean) => void;
+	onToggle: () => void;
 }
 
 export const Toggle: React.FC<ToggleProps> = (props) => {
-	const { isDisabled, value, onToggle } = props;
-
-	function onClick() {
-		if (!isDisabled) {
-			onToggle(!value);
-		}
-	}
+	const { value, onToggle } = props;
 
 	return (
-		<ToggleContainer value={value} onClick={onClick}>
-			<ToggleIndicator value={value} />
+		<ToggleContainer $value={value} onClick={onToggle}>
+			<ToggleIndicator $value={value} />
 		</ToggleContainer>
 	);
 };
@@ -32,27 +25,27 @@ const circleMargin = onePxRem;
 const circleSize = containerHeight - (onePxRem * 4);
 const circleOnLeft = containerWidth - (2 * onePxRem) - circleSize - onePxRem;
 
-const ToggleContainer = styled.div<{ value: boolean; }>`
+const ToggleContainer = styled.button<{ $value: boolean; }>`
 	width: ${containerWidth}rem;
 	height: ${containerHeight}rem;
 	border-radius: 4rem;
 	box-sizing: border-box;
 	border: ${onePxRem}rem solid transparent;
-	border-color: ${p => p.value ? themeTokens.inform.positive : null};
-	background-color: ${p => p.value ? themeTokens.inform.positive : null};
-	cursor: "pointer";
+	border-color: ${p => p.$value ? themeTokens.background.tint.darkest : themeTokens.background.tint.lightest};
+	background-color: ${p => p.$value ? themeTokens.background.tint.darkest : themeTokens.background.tint.lightest};
+	cursor: pointer;
 	position: relative;
-	transition: border-color, background-color ${AnimationDuration.b_zip} ease;
+	transition: border-color, background-color ${AnimationDuration.c_quick} ease-in-out;
 `;
 
-const ToggleIndicator = styled.div<{ value: boolean; }>`
+const ToggleIndicator = styled.div<{ $value: boolean; }>`
+	background-color: #FFF;
 	width: ${circleSize}rem;
 	height: ${circleSize}rem;
 	border-radius: 4rem;
 	position: absolute;
 	top: ${circleMargin}rem;
-	left: ${p => p.value ? `${circleOnLeft}rem` : `${circleMargin}rem`};
-	background-color: '#FFF';
-	transition: all ${AnimationDuration.b_zip} ease;
+	left: ${p => p.$value ? `${circleOnLeft}rem` : `${circleMargin}rem`};
+	transition: all ${AnimationDuration.c_quick} ease-in-out;
 	transition-property: box-shadow, left, background-color;
 `;

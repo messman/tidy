@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Cosmos from 'react-cosmos/fixture';
 import styled from 'styled-components';
-import { BaseButton, ButtonFillBrandBlue } from '@/index/core/form/button';
+import { BaseButton, Button } from '@/index/core/form/button';
 import { IconInputType } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
 import { useEventCallback } from '@messman/react-common';
@@ -13,7 +13,7 @@ export interface TestButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 }
 
 export function useTestButton(title: string, onClick: () => void): JSX.Element {
-	return <ButtonFillBrandBlue onClick={onClick}>{title}</ButtonFillBrandBlue>;
+	return <Button onClick={onClick}>{title}</Button>;
 }
 
 export type ButtonSetDefinition = { [key: string]: () => void; };
@@ -23,7 +23,7 @@ export function useTestButtons(buttonSetDefinition: ButtonSetDefinition): JSX.El
 	const keys = Object.keys(buttonSetDefinition);
 	const buttons = keys.map<JSX.Element>((key) => {
 		const value = buttonSetDefinition[key];
-		return <ButtonFillBrandBlue key={key} onClick={value}>{key}</ButtonFillBrandBlue>;
+		return <Button key={key} onClick={value}>{key}</Button>;
 	});
 
 	return (
@@ -197,32 +197,26 @@ export function useTestTimeout(callback: () => void): TestTimeoutOutput {
 enum TestIcon {
 	none,
 	empty,
-	decorationLike,
-	arrowLeft,
-	arrowRight,
-	arrowChevronLeft,
-	arrowChevronRight,
+	coreHeartFilled,
+	coreArrowLeft,
+	coreArrowRight,
 	spinner
 }
 const testIconSelect = createControlSelectForEnum(TestIcon);
 
-export function useControlSelectIcon(label: string, initial?: keyof typeof testIconSelect): IconInputType {
-	const iconEnumValue = useControlSelect(label, testIconSelect, initial || 'none');
+export function useControlSelectIcon(label: string, initial: keyof typeof testIconSelect = 'none'): IconInputType {
+	const iconEnumValue = useControlSelect(label, testIconSelect, initial);
 	switch (iconEnumValue) {
 		case TestIcon.none:
 			return null;
 		case TestIcon.empty:
 			return 'empty';
-		case TestIcon.decorationLike:
-			return icons.decorationLike;
-		case TestIcon.arrowLeft:
-			return icons.arrowLeft;
-		case TestIcon.arrowRight:
-			return icons.arrowRight;
-		case TestIcon.arrowChevronLeft:
-			return icons.arrowChevronLeft;
-		case TestIcon.arrowChevronRight:
-			return icons.arrowChevronRight;
+		case TestIcon.coreHeartFilled:
+			return icons.coreHeartFilled;
+		case TestIcon.coreArrowLeft:
+			return icons.coreArrowLeft;
+		case TestIcon.coreArrowRight:
+			return icons.coreArrowRight;
 		case TestIcon.spinner:
 			return SpinnerIcon;
 		default:

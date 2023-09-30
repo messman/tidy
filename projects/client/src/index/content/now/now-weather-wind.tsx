@@ -7,7 +7,6 @@ import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 import { keyForNumberEnumValue, WeatherWindDirection } from '@wbtdevlocal/iso';
-import { WeatherUVBar } from '../common/weather/weather-uv-bar';
 
 const Container = styled.div`
 	flex: 1;

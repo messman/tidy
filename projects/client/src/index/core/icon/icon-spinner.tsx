@@ -7,10 +7,10 @@ import { Icon } from './icon';
 export const SpinnerIcon: StyledFC = (props) => {
 	return (
 		<SpinnerContainer {...props}>
-			<SpinnerChild1 type={icons.loaderQuarterTurn} />
-			<SpinnerChild2 type={icons.loaderQuarterTurn} />
-			<SpinnerChild3 type={icons.loaderQuarterTurn} />
-			<SpinnerChild4 type={icons.loaderQuarterTurn} />
+			<SpinnerChild1 type={icons.toolQuarterTurn} />
+			<SpinnerChild2 type={icons.toolQuarterTurn} />
+			<SpinnerChild3 type={icons.toolQuarterTurn} />
+			<SpinnerChild4 type={icons.toolQuarterTurn} />
 		</SpinnerContainer>
 	);
 };
