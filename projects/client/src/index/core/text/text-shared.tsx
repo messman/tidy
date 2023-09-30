@@ -38,6 +38,7 @@ export interface FontStyles<T> {
 	};
 	text: {
 		medium: T;
+		mediumRegular: T;
 		mediumHeavy: T;
 		small: T;
 		smallHeavy: T;
@@ -144,6 +145,13 @@ export const fontStyleDefinitions = {
 			weight: FontWeight.medium,
 			margin: '1rem',
 		} as const,
+		mediumRegular: {
+			family: fontFamily,
+			size: fontDefaultSize,
+			lineHeight: '1.5rem',
+			weight: FontWeight.regular,
+			margin: '1rem',
+		} as const,
 		mediumHeavy: {
 			family: fontFamily,
 			size: fontDefaultSize,
@@ -241,6 +249,7 @@ export const fontStyles: FontStyles<CssOutput> = {
 	},
 	text: {
 		medium: createDeclaration(fontStyleDefinitions.text.medium),
+		mediumRegular: createDeclaration(fontStyleDefinitions.text.mediumRegular),
 		mediumHeavy: createDeclaration(fontStyleDefinitions.text.mediumHeavy),
 		small: createDeclaration(fontStyleDefinitions.text.small),
 		smallHeavy: createDeclaration(fontStyleDefinitions.text.smallHeavy),

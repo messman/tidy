@@ -120,6 +120,7 @@ export async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPro
 
 	const computedCurrent = getComputedBetweenPredictions(config, extremaComp);
 	const valuesForCurrent: number[] = [computedCurrent.height, ofsWaterLevel];
+	let adjustedPortland: number | null = null;
 	if (currentPortland) {
 		/*
 			Portland value is (1) a different height system and (2) a little later than the computed values.
@@ -154,7 +155,7 @@ export async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPro
 		const range = Math.abs(nextExtreme.height - previousExtreme.height);
 		const offsetAmount = (nextExtreme.isLow ? -1 : 1) * range * percentDiff;
 
-		const adjustedPortland = scaledPortland + offsetAmount;
+		adjustedPortland = Math.round((scaledPortland + offsetAmount) * 100) / 100;
 		valuesForCurrent.push(adjustedPortland);
 	}
 	const current = valuesForCurrent.reduce((sum, next) => sum + next) / valuesForCurrent.length;
@@ -168,6 +169,7 @@ export async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPro
 			ofsComputed: getComputedBetweenPredictions(config, ofsExtrema),
 			astroComputed: getComputedBetweenPredictions(config, astroExtrema),
 			portland: currentPortland ? { height: currentPortland.value, time: currentPortland.time } : null,
+			portlandAdjustment: currentPortland ? adjustedPortland : null,
 			ofsInterval: {
 				height: ofsWaterLevel,
 				time: ofsWaterLevelTime

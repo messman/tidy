@@ -425,6 +425,7 @@ function getBeachTimeRanges(
 			) {
 
 				// Be optimistic? This is for the time before we really know what the weather is (early on current day).
+				// So if it's before our reference time, assume we have good weather
 				const weather = mostRecentWeather === null ? WeatherIndicator.best : mostRecentWeather.toIndicator;
 
 				// Start

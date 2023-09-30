@@ -210,6 +210,8 @@ function getClosestQuarterTime(time: DateTime): DateTime {
 	return quarterFloorTime;
 }
 
+const latLonPrecision = 10000;
+
 async function getStationInfo(ctx: LogContext, baseUrl: string): ServerPromise<{ station: Coordinate; diff: number; stationIndex: number; }> {
 	// Get just the ascii for latitude and longitude
 	const latLonUrl = `${baseUrl}.ascii?lon_rho%5B0:1:125%5D,lat_rho%5B0:1:125%5D`;
@@ -233,8 +235,8 @@ async function getStationInfo(ctx: LogContext, baseUrl: string): ServerPromise<{
 		}
 		else {
 			stations.push({
-				lat: latNum,
-				lon: lonNum
+				lat: Math.round(latNum * latLonPrecision) / latLonPrecision,
+				lon: Math.round(lonNum * latLonPrecision) / latLonPrecision
 			});
 		}
 	}
@@ -245,13 +247,13 @@ async function getStationInfo(ctx: LogContext, baseUrl: string): ServerPromise<{
 			return;
 		}
 		const { lat, lon } = station;
-		// Using crude approximation of meters: https://stackoverflow.com/a/39540339
+		// Using crude approximation of km: https://stackoverflow.com/a/39540339
 		const latDiff = Math.abs(lat - constant.latitude) * 111.32;
 		const lonDiff = Math.abs(lon - constant.longitude) * 40075 * Math.cos(lat) / 360;
 		const diff = Math.sqrt(Math.pow(latDiff, 2) + Math.pow(lonDiff, 2));
 
 		if (diff < closestDiff) {
-			closestDiff = diff;
+			closestDiff = Math.round(diff * 100) / 100;
 			closestStationIndex = i;
 		}
 	});

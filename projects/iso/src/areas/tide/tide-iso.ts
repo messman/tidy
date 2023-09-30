@@ -38,6 +38,8 @@ export interface TidePointCurrentSource {
 	 * Portland data, if available. If we have it, it's the only observation data we can go off of!
 	*/
 	portland: TidePoint | null;
+	/** How much we decided to adjust the Portland value by to compensate for time and distance. */
+	portlandAdjustment: number | null;
 	/**
 	 * Computed by using time to check between the computed astro/ofs extremes. Likely inaccurate at the extremes.
 	*/
