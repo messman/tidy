@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { LayoutBreakpointRem } from '@/index/core/layout/window-layout';
 import { ElementIntersect, useElementIntersect, useWindowMediaLayout } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
-import { NavTabBarLower, NavTabBarUpper, NavTabLower, NavTabUpper } from '../nav';
+import { NavTabLower, NavTabUpper } from '../nav/nav-tab';
+import { NavTabBarLower, NavTabBarUpper } from '../nav/nav-tab-bar';
 
 const tabs = {
 	now: 'now',
@@ -51,10 +52,10 @@ export const AppLayout: React.FC = () => {
 
 	const tabRender = (
 		<TabBarComponent>
-			<TabComponent icon={icons.actionAdd} isActive={active === tabs.now} onClick={createOnClickFor(refViewNow)}>Now</TabComponent>
-			<TabComponent icon={icons.actionAdd} isActive={active === tabs.week} onClick={createOnClickFor(refViewWeek)}>Week</TabComponent>
-			<TabComponent icon={icons.actionAdd} isActive={active === tabs.learn} onClick={createOnClickFor(refViewLearn)}>Learn</TabComponent>
-			<TabComponent icon={icons.actionAdd} isActive={active === tabs.about} onClick={createOnClickFor(refViewAbout)}>About</TabComponent>
+			<TabComponent icon={icons.coreAdd} isActive={active === tabs.now} onClick={createOnClickFor(refViewNow)}>Now</TabComponent>
+			<TabComponent icon={icons.coreAdd} isActive={active === tabs.week} onClick={createOnClickFor(refViewWeek)}>Week</TabComponent>
+			<TabComponent icon={icons.coreAdd} isActive={active === tabs.learn} onClick={createOnClickFor(refViewLearn)}>Learn</TabComponent>
+			<TabComponent icon={icons.coreAdd} isActive={active === tabs.about} onClick={createOnClickFor(refViewAbout)}>About</TabComponent>
 		</TabBarComponent>
 	);
 

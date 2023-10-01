@@ -35,15 +35,15 @@ export const AppLayoutCompactNav: React.FC = () => {
 	return (
 		<Container>
 			<ClickWrapperButton onClick={onClickClose}>
-				<NavSizedIcon size='medium' type={icons.actionClose} isVisible={true} />
+				<NavSizedIcon size='medium' type={icons.coreClose} isVisible={true} />
 			</ClickWrapperButton>
 			<ContainerRight>
 				<ClickWrapperButton onClick={onClickLeft}>
-					<NavSizedIcon size='medium' type={icons.arrowLeft} isVisible={canMoveLeft} />
+					<NavSizedIcon size='medium' type={icons.coreArrowLeft} isVisible={canMoveLeft} />
 				</ClickWrapperButton>
 				<Block.Elf24 />
 				<ClickWrapperButton onClick={onClickRight}>
-					<NavSizedIcon size='medium' type={icons.arrowRight} isVisible={canMoveRight} />
+					<NavSizedIcon size='medium' type={icons.coreArrowRight} isVisible={canMoveRight} />
 				</ClickWrapperButton>
 			</ContainerRight>
 		</Container>

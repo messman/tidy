@@ -23,7 +23,7 @@ export const CompactAppHeader: React.FC = () => {
 		<CompactLeftContainer>
 			<ClickWrapperButton onClick={onClickBack}>
 				<CompactLeftContainerInner>
-					<AppHeaderSizedIcon size='medium' type={icons.actionClose} />
+					<AppHeaderSizedIcon size='medium' type={icons.coreClose} />
 				</CompactLeftContainerInner>
 			</ClickWrapperButton>
 		</CompactLeftContainer>

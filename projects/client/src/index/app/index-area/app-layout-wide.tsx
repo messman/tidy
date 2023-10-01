@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { About } from '@/index/content/about/about';
 import { BeachTime } from '@/index/content/common/beach/beach-time';
 import { Conditions } from '@/index/content/common/weather/conditions';
-import { Education } from '@/index/content/learn/learn';
+import { Learn } from '@/index/content/learn/learn';
 import { useBatchResponse } from '@/index/core/data/data';
 import { SizedIcon } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
-import { PanelPadded } from '@/index/core/layout/layout-panel';
+import { Panel, PanelPadding } from '@/index/core/layout/layout-panel';
 import { Block, overflowHiddenScrollStyle } from '@/index/core/layout/layout-shared';
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { AppInfo } from './app-info';
@@ -36,28 +36,39 @@ export const WideApplicationLayout: React.FC<React.PropsWithChildren> = () => {
 			</AppHeaderContainer>
 			<WideContainer>
 				<PanelScroller>
-					<PanelPadded>
-						<BeachTime />
-					</PanelPadded>
+					<Panel>
+						<PanelPadding>
+							<BeachTime />
+						</PanelPadding>
+					</Panel>
 				</PanelScroller>
 				<PanelScroller>
-					<PanelPadded>
-					</PanelPadded>
+					<Panel>
+						<PanelPadding>
+
+						</PanelPadding>
+					</Panel>
 				</PanelScroller>
 				<PanelScroller>
-					<PanelPadded>
-						<Conditions />
-					</PanelPadded>
+					<Panel>
+						<PanelPadding>
+							<Conditions />
+						</PanelPadding>
+					</Panel>
 				</PanelScroller>
 				<PanelScroller>
-					<PanelPadded>
-						<Education />
-					</PanelPadded>
+					<Panel>
+						<PanelPadding>
+							<Learn />
+						</PanelPadding>
+					</Panel>
 				</PanelScroller>
 				<PanelScroller>
-					<PanelPadded>
-						<About />
-					</PanelPadded>
+					<Panel>
+						<PanelPadding>
+							<About />
+						</PanelPadding>
+					</Panel>
 				</PanelScroller>
 			</WideContainer>
 		</AppContainer>

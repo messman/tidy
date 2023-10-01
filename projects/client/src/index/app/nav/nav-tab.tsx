@@ -28,10 +28,10 @@ const NavTabBase: React.FC<NavTabBaseProps> = (props) => {
 
 	return (
 		<ClickWrapperButton onClick={onClick}>
-			<NavTabBase_Container isLower={isLower} title={children}>
+			<NavTabBase_Container $isLower={isLower} title={children}>
 				{barRender}
-				<NavTabBase_Icon type={icon} isActive={isActive} />
-				<NavTabBase_Title isActive={isActive}>
+				<NavTabBase_Icon type={icon} $isActive={isActive} />
+				<NavTabBase_Title $isActive={isActive}>
 					{children}
 				</NavTabBase_Title>
 			</NavTabBase_Container>
@@ -39,26 +39,26 @@ const NavTabBase: React.FC<NavTabBaseProps> = (props) => {
 	);
 };
 
-const NavTabBase_Container = styled.div<{ isLower: boolean; }>`
+const NavTabBase_Container = styled.div<{ $isLower: boolean; }>`
 	position: relative;
 	width: 4rem;
 	overflow: hidden;
 
-	padding: ${p => p.isLower ? ".5rem 0 .25rem 0" : ".25rem 0 .5rem 0"};
+	padding: ${p => p.$isLower ? ".5rem 0 .25rem 0" : ".25rem 0 .5rem 0"};
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 `;
 
-const NavTabBase_Icon = styled(Icon) <{ isActive: boolean; }>`
+const NavTabBase_Icon = styled(Icon) <{ $isActive: boolean; }>`
 	width: 1.5rem;
 	height: 1.5rem;
-	color: ${p => p.isActive ? themeTokens.text.distinct : themeTokens.text.subtle};
+	color: ${p => p.$isActive ? themeTokens.text.distinct : themeTokens.text.subtle};
 `;
 
-const NavTabBase_Title = styled.div<{ isActive: boolean; }>`
+const NavTabBase_Title = styled.div<{ $isActive: boolean; }>`
 	${fontStyles.text.smallHeavy}
-	color: ${p => p.isActive ? themeTokens.text.distinct : themeTokens.text.subtle};
+	color: ${p => p.$isActive ? themeTokens.text.distinct : themeTokens.text.subtle};
 `;
 
 const barStyle = css`

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { AppNavigationProvider } from '@/index/app/index-area/app-navigation';
+import { NavProvider } from '@/index/app/nav/nav-context';
 import { BatchResponseProvider, useBatchResponse } from '@/index/core/data/data';
 import { DataSeedProvider, useDataSeed } from '@/index/core/data/data-seed';
 import { DefaultErrorLoad } from '@/index/core/data/loader';
@@ -45,7 +46,8 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 			provider(DataSeedProvider, {}),
 			provider(BatchResponseProvider, {}),
 			provider(AppNavigationProvider, {}),
-			provider(SVGIconUrlLoadProvider, {})
+			provider(SVGIconUrlLoadProvider, {}),
+			provider(NavProvider, {})
 		];
 
 		if (additionalProviders) {

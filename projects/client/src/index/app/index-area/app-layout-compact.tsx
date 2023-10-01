@@ -3,9 +3,9 @@ import styled, { css } from 'styled-components';
 import { About } from '@/index/content/about/about';
 import { BeachTime } from '@/index/content/common/beach/beach-time';
 import { Conditions } from '@/index/content/common/weather/conditions';
-import { Education } from '@/index/content/learn/learn';
+import { Learn } from '@/index/content/learn/learn';
 import { AnimationDuration, TransitionSelector } from '@/index/core/animation/animation';
-import { PanelPadded } from '@/index/core/layout/layout-panel';
+import { Panel, PanelPadding } from '@/index/core/layout/layout-panel';
 import { overflowHiddenScrollStyle } from '@/index/core/layout/layout-shared';
 import { Spacing } from '@/index/core/primitive/primitive-design';
 import { Transition } from '@messman/react-common-transition';
@@ -46,9 +46,11 @@ export const CompactApplicationLayout: React.FC<React.PropsWithChildren> = () =>
 		</HomeScroller>
 	) : (
 		<PanelScroller>
-			<PanelPadded>
-				{screenRender}
-			</PanelPadded>
+			<Panel>
+				<PanelPadding>
+					{screenRender}
+				</PanelPadding>
+			</Panel>
 		</PanelScroller>
 	);
 
@@ -83,7 +85,7 @@ export const CompactApplicationLayout: React.FC<React.PropsWithChildren> = () =>
 const appScreenComponent = {
 	b_beachTime: BeachTime,
 	d_conditions: Conditions,
-	e_education: Education,
+	e_education: Learn,
 	f_about: About
 };
 
