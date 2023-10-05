@@ -104,6 +104,7 @@ export const buttonFullWidthInContainerStyle = css`
 `;
 
 export const ButtonFullWidthContainer = styled.div`
+	width: 100%;
 	${BaseButton} {
 		width: 100%;
 	}

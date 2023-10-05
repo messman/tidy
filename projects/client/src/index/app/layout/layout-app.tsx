@@ -1,104 +1,110 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { About } from '@/index/content/about/about';
+import { Learn } from '@/index/content/learn/learn';
+import { Now } from '@/index/content/now/now';
+import { Week } from '@/index/content/week/week';
 import { LayoutBreakpointRem } from '@/index/core/layout/window-layout';
-import { ElementIntersect, useElementIntersect, useWindowMediaLayout } from '@messman/react-common';
-import { icons } from '@wbtdevlocal/assets';
-import { NavTabLower, NavTabUpper } from '../nav/nav-tab';
-import { NavTabBarLower, NavTabBarUpper } from '../nav/nav-tab-bar';
-
-const tabs = {
-	now: 'now',
-	week: 'week',
-	learn: 'learn',
-	about: 'about'
-} as const;
+import { ElementIntersect, useElementIntersect, useLatestForEffect, useWindowMediaLayout } from '@messman/react-common';
+import { Nav } from '../nav/nav';
+import { Tab, tab, useNav } from '../nav/nav-context';
 
 export const AppLayout: React.FC = () => {
 
-	const [active, setActive] = React.useState<string>(tabs.now);
+	const { selectedTab, selectTabByScroll, wasTabSelectedByScroll } = useNav();
 
 	const { widthBreakpoint } = useWindowMediaLayout();
 
 	const isUpperNav = widthBreakpoint >= LayoutBreakpointRem.d40;
 
-	const TabBarComponent = isUpperNav ? NavTabBarUpper : NavTabBarLower;
-	const TabComponent = isUpperNav ? NavTabUpper : NavTabLower;
-
 	const rootRef = React.useRef<HTMLDivElement>(null!);
 	const threshold = .75;
-	function createOnIntersect(tab: string) {
+	function createOnIntersect(tab: Tab) {
 		return (intersect: ElementIntersect) => {
 			if (intersect.intersectionRatio > threshold) {
-				setActive(tab);
+				selectTabByScroll(tab);
 			}
 		};
 	}
 
-	const refViewNow = useElementIntersect({ rootRef, threshold }, createOnIntersect(tabs.now));
-	const refViewWeek = useElementIntersect({ rootRef, threshold }, createOnIntersect(tabs.week));
-	const refViewLearn = useElementIntersect({ rootRef, threshold }, createOnIntersect(tabs.learn));
-	const refViewAbout = useElementIntersect({ rootRef, threshold }, createOnIntersect(tabs.about));
+	const refViewNow = useElementIntersect({ rootRef, threshold }, createOnIntersect(tab.now));
+	const refViewWeek = useElementIntersect({ rootRef, threshold }, createOnIntersect(tab.week));
+	const refViewLearn = useElementIntersect({ rootRef, threshold }, createOnIntersect(tab.learn));
+	const refViewAbout = useElementIntersect({ rootRef, threshold }, createOnIntersect(tab.about));
 
-	function createOnClickFor(ref: React.RefObject<HTMLDivElement>) {
-		return () => {
-			if (ref.current) {
-				ref.current.scrollIntoView({
-					behavior: 'auto', // 'smooth',
-					inline: 'start'
-				});
+	const refCallback = useLatestForEffect(() => {
+		console.log({ selectedTab, wasTabSelectedByScroll });
+		if (wasTabSelectedByScroll) {
+			return;
+		}
+
+		const ref = (() => {
+			if (selectedTab === tab.now) {
+				return refViewNow;
 			}
-		};
-	}
+			if (selectedTab === tab.week) {
+				return refViewWeek;
+			}
+			return selectedTab === tab.learn ? refViewLearn : refViewAbout;
+		})();
 
-	const tabRender = (
-		<TabBarComponent>
-			<TabComponent icon={icons.coreAdd} isActive={active === tabs.now} onClick={createOnClickFor(refViewNow)}>Now</TabComponent>
-			<TabComponent icon={icons.coreAdd} isActive={active === tabs.week} onClick={createOnClickFor(refViewWeek)}>Week</TabComponent>
-			<TabComponent icon={icons.coreAdd} isActive={active === tabs.learn} onClick={createOnClickFor(refViewLearn)}>Learn</TabComponent>
-			<TabComponent icon={icons.coreAdd} isActive={active === tabs.about} onClick={createOnClickFor(refViewAbout)}>About</TabComponent>
-		</TabBarComponent>
-	);
+		if (ref.current) {
+			ref.current.scrollIntoView({
+				behavior: 'auto', // 'smooth',
+				inline: 'start'
+			});
+		}
+	});
 
-	const [upperTabRender, lowerTabRender] = isUpperNav ? [tabRender, null] : [null, tabRender];
+	React.useEffect(() => {
+		refCallback.current();
+	}, [selectedTab]);
 
 	return (
 		<LayoutRoot>
-			{upperTabRender}
-			<ViewMargin>
-				<ViewRoot ref={rootRef}>
-					<View ref={refViewNow}>Now</View>
-					<View ref={refViewWeek}>Week</View>
-					<View ref={refViewLearn}>Learn</View>
-					<View ref={refViewAbout}>About</View>
-				</ViewRoot>
-			</ViewMargin>
-			{lowerTabRender}
+			{isUpperNav && <Nav isLower={false} />}
+			<ViewRoot ref={rootRef}>
+				<View ref={refViewNow}>
+					<ViewMargin>
+						<Now />
+					</ViewMargin>
+				</View>
+				<View ref={refViewWeek}>
+					<ViewMargin>
+						<Week />
+					</ViewMargin>
+				</View>
+				<View ref={refViewLearn}>
+					<ViewMargin>
+						<Learn />
+					</ViewMargin>
+				</View>
+				<View ref={refViewAbout}>
+					<ViewMargin>
+						<About />
+					</ViewMargin>
+				</View>
+			</ViewRoot>
+			{!isUpperNav && <Nav isLower={true} />}
 		</LayoutRoot>
 	);
 };
 
 const LayoutRoot = styled.div`
 	flex: 1;
+	width: 100%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 `;
-
-const ViewMargin = styled.div`
-	flex: 1;
-	width: 100%;
-	margin: 0 auto;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	`;
 
 const ViewRoot = styled.div`
 	flex: 1;
 	display: flex;
 	overflow-x: scroll;
+	overflow-y: hidden;
 	scroll-snap-type: x mandatory;
-	width: 100%;
-	max-width: ${LayoutBreakpointRem.d40}rem;
+	width: 100vw;
 `;
 
 const View = styled.div`
@@ -107,4 +113,12 @@ const View = styled.div`
 	scroll-snap-align: start;
 	scroll-snap-stop: always;
 	flex-shrink: 0;
+	display: flex;
+	justify-content: center;
+	overflow-y: auto;
+`;
+
+const ViewMargin = styled.div`
+	height: fit-content;
+	max-width: ${LayoutBreakpointRem.c30}rem;
 `;

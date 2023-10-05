@@ -14,6 +14,12 @@ export enum AnimationDuration {
 	g_max = '1.5s'
 }
 
+export enum TransitionStatus {
+	notStarted,
+	inProgress,
+	complete
+}
+
 /*
 	The default transition change listener in our Transition component will trigger if *any* transition or animation end is detected.
 	This is prone to causing unexpected conditions, like:

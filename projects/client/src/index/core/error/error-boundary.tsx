@@ -1,11 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import { ButtonFillBrandBlue, ButtonFullWidthContainer } from '../form/button';
-import { Block } from '../layout/layout-shared';
-import { LayoutBreakpointRem } from '../layout/window-layout';
-import { Spacing } from '../primitive/primitive-design';
-import { fontStyles } from '../text/text-shared';
-import { themeTokens } from '../theme/theme-root';
+import { ErrorPanel } from './error-panel';
 
 interface ErrorBoundaryState {
 	error: Error | null;
@@ -13,6 +7,13 @@ interface ErrorBoundaryState {
 
 /**
  * This is a class component so that it can act as our error boundary.
+ * 
+ * NOTE - error boundaries do *NOT* catch errors from *event handlers*, only from *rendering*.
+ * 
+ * Also - React Cosmos uses `react-error-overlay`, which comes from the Facebook/CRA team. This overlay
+ * cannot be removed. It always shows (eye roll). So you will see this error boundary get covered up
+ * until you dismiss that error overlay.
+ * 
  * https://reactjs.org/docs/error-boundaries.html
  */
 export class ErrorBoundary extends React.Component<React.PropsWithChildren, ErrorBoundaryState> {
@@ -21,12 +22,9 @@ export class ErrorBoundary extends React.Component<React.PropsWithChildren, Erro
 		this.state = { error: null };
 	}
 
-	static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-		return { error };
-	}
-
 	componentDidCatch(error: Error, _: any): void {
 		console.error('Error Boundary', error);
+		this.setState({ error });
 	}
 
 	render() {
@@ -50,34 +48,9 @@ export const ErrorBoundaryCover: React.FC<ErrorBoundaryCoverProps> = (props) => 
 		return <>{props.children}</>;
 	}
 
-	function onClickRefresh() {
-		window.location.reload();
-	}
-
 	return (
-		<Container>
-			<ErrorText>
-				Uh oh! Something went wrong. Please refresh and try again.
-			</ErrorText>
-			<Block.Dog16 />
-			<ButtonFullWidthContainer>
-				<ButtonFillBrandBlue onClick={onClickRefresh}>Refresh</ButtonFillBrandBlue>
-			</ButtonFullWidthContainer>
-		</Container>
+		<ErrorPanel
+			title='Uh-oh! Something went wrong.'
+		/>
 	);
 };
-
-const Container = styled.div`
-	flex: 1;
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: ${Spacing.dog16};
-`;
-
-const ErrorText = styled.div`
-	${fontStyles.text.medium};
-	color: ${themeTokens.text.distinct};
-	max-width: ${LayoutBreakpointRem.c30}rem;
-`;

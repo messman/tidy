@@ -2,35 +2,64 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Icon } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
+import { isDebug } from '@/index/utility/debug';
+import { ErrorPanel } from '../error/error-panel';
 import { Block } from '../layout/layout-shared';
 import { MediumBodyText } from '../text/text-shared';
 import { themeTokens } from '../theme/theme-root';
 import { useBatchResponse } from './data';
+import { parseRequestResultError } from './error-parse';
 
 export const DefaultErrorLoad: React.FC = () => {
 	const { error } = useBatchResponse();
 
 	if (error) {
-		return <MediumBodyText>Error!</MediumBodyText>;
+
+		if (isDebug()) {
+			const { title, detail, text } = parseRequestResultError(error, true);
+
+			return (
+				<ErrorPanel
+					title={title}
+					description={detail || 'This error occurred while trying to load app data.'}
+					additional={
+						<TextContainer>
+							{text.map((line) => {
+								return <MediumBodyText key={line}>{line}</MediumBodyText>;
+							})}
+						</TextContainer>
+					}
+				/>
+			);
+		}
+		else {
+			return (
+				<ErrorPanel
+					title='Uh-oh! The data could not be loaded.'
+				/>
+			);
+		}
 	}
 
 	return (
-		<>
-			<Block.Dog16 />
-			<CenterContainer>
-				<LargeSpinnerIcon type={SpinnerIcon} />
-			</CenterContainer>
-			<Block.Dog16 />
-		</>
+		<CenterContainer>
+			<LargeSpinnerIcon type={SpinnerIcon} />
+		</CenterContainer>
 	);
 };
 
 const CenterContainer = styled.div`
 	text-align: center;
+	padding: 1rem 0;
 `;
 
 const LargeSpinnerIcon = styled(Icon)`
-	color: ${themeTokens.inform.unsure};
-	width: 2.5rem;
-	height: 2.5rem;
+	color: ${themeTokens.text.onBackground};
+	width: 4rem;
+	height: 4rem;
+`;
+
+const TextContainer = styled.div`
+	text-align: left;
+
 `;

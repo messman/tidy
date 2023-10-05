@@ -1,13 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { SpacePanelGridGap } from '@/index/core/layout/layout-panel';
-import { DEFINE } from '@/index/define';
+import { isDebug } from '@/index/utility/debug';
 import { NowTideDebug } from './now-tide-debug';
 import { NowTideLevels } from './now-tide-levels';
 import { Section } from './section';
-
-const searchParams = new URLSearchParams(window.location.search);
-const isProductionDebug = searchParams.get('debug') !== null;
 
 export const NowTide: React.FC = () => {
 	return (
@@ -15,7 +12,7 @@ export const NowTide: React.FC = () => {
 			<Container>
 
 				<NowTideLevels />
-				{(DEFINE.isDevelopment || isProductionDebug) && (
+				{isDebug() && (
 					<NowTideDebug />
 				)}
 			</Container>

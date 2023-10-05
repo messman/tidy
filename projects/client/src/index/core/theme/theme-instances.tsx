@@ -87,6 +87,7 @@ export const lightTokens = {
 	inform: {
 		positive: '#3ACE15',
 		unsure: '#EDDB37',
+		negative: '#EB5D5D',
 		base: alphaHex('a3a29b', 90),
 	},
 

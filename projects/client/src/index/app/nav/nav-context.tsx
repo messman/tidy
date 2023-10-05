@@ -12,15 +12,18 @@ export type Tab = typeof tab[keyof typeof tab];
 
 export interface NavState {
 	selectedTab: Tab;
+	wasTabSelectedByScroll: boolean;
 	tabPath: Map<Tab, string>;
 }
 
 export interface NavOutput {
 	selectedTab: Tab;
+	wasTabSelectedByScroll: boolean;
 	pathForTab: (tab: Tab) => string;
 	selectTabWithPath: (tab: Tab, path: string) => void;
 	/** If selected, clears its path */
 	selectTab: (tab: Tab) => void;
+	selectTabByScroll: (tab: Tab) => void;
 }
 
 const [NavContextProvider, useNavContext] = createContextConsumer<NavOutput>();
@@ -33,14 +36,16 @@ export const NavProvider: React.FC<React.PropsWithChildren> = (props) => {
 	const [state, setState] = React.useState<NavState>(() => {
 		return {
 			selectedTab: tab.now,
-			tabPath: new Map<Tab, string>()
+			tabPath: new Map<Tab, string>(),
+			wasTabSelectedByScroll: false,
 		};
 	});
-	const { selectedTab, tabPath } = state;
+	const { selectedTab, tabPath, wasTabSelectedByScroll } = state;
 
 	const value = React.useMemo<NavOutput>(() => {
 		return {
 			selectedTab,
+			wasTabSelectedByScroll,
 			pathForTab: (tab) => {
 				return tabPath.get(tab) || '';
 			},
@@ -50,31 +55,43 @@ export const NavProvider: React.FC<React.PropsWithChildren> = (props) => {
 					newMap.set(tab, path);
 					return {
 						selectedTab: tab,
-						tabPath: newMap
+						tabPath: newMap,
+						wasTabSelectedByScroll: false
 					};
 				});
 			},
 			selectTab: (tab) => {
 				setState((prev) => {
-					console.log({ prev, tab });
 					// If selected already, clear path
 					if (tab === prev.selectedTab) {
 						const newMap = new Map(prev.tabPath);
 						newMap.set(tab, '');
 						return {
 							...prev,
-							tabPath: newMap
+							tabPath: newMap,
+							wasTabSelectedByScroll: false
 						};
 					}
 					// Else just select
 					return {
 						...prev,
 						selectedTab: tab,
+						wasTabSelectedByScroll: false
+					};
+				});
+			},
+			selectTabByScroll: (tab) => {
+				setState((prev) => {
+					// Else just select
+					return {
+						...prev,
+						selectedTab: tab,
+						wasTabSelectedByScroll: true
 					};
 				});
 			}
 		};
-	}, [selectedTab, tabPath]);
+	}, [selectedTab, tabPath, wasTabSelectedByScroll]);
 
 	return (
 		<NavContextProvider value={value}>

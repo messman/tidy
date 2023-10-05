@@ -7,7 +7,7 @@ export interface RequestResultErrorParseOutput {
 	text: string[];
 }
 
-export function parseRequestResultError(result: RequestResultError, isDevelopment: boolean): RequestResultErrorParseOutput {
+export function parseRequestResultError(result: RequestResultError, isDebug: boolean): RequestResultErrorParseOutput {
 	const { clientError: client, serverError: server } = result;
 
 	let title: string = null!;
@@ -18,7 +18,7 @@ export function parseRequestResultError(result: RequestResultError, isDevelopmen
 		title = clientErrorFormInfo[ClientErrorForm[client.form] as keyof typeof ClientErrorForm];
 
 		text.push('Type: Client');
-		if (isDevelopment && client.error) {
+		if (isDebug && client.error) {
 			text.push('Error: ' + client.error.message);
 		}
 	}

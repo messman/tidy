@@ -1,7 +1,9 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
+import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
-import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
+import { DefaultErrorLoad } from '@/index/core/data/loader';
+import { Panel, SpacePanelEdge, SpacePanelGridPadding } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { WeekDay } from './week-day';
@@ -10,6 +12,7 @@ const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	padding: ${SpacePanelGridPadding.value};
 `;
 
 const ButtonsContainer = styled.div`
@@ -46,7 +49,7 @@ enum Section {
 	tide
 }
 
-export const Week: React.FC = () => {
+export const Week: React.FC = wrapForBatchLoad(DefaultErrorLoad, () => {
 	const { week } = useBatchResponseSuccess();
 
 	const [state, setState] = React.useState(() => {
@@ -110,4 +113,4 @@ export const Week: React.FC = () => {
 			{daysRender}
 		</Container>
 	);
-};
+});
