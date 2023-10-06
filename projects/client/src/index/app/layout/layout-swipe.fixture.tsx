@@ -1,11 +1,12 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { ButtonFillBrandBlue } from '@/index/core/form/button';
+import { Button } from '@/index/core/form/button';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
 import { ElementIntersect, useElementIntersect } from '@messman/react-common';
 import { Swipe } from './layout-swipe';
+import { SwipeHeader } from './layout-swipe-header';
 
 type Log = {
 	value: number;
@@ -68,9 +69,9 @@ export default {
 					active: {active}
 				</div>
 				<div>
-					<ButtonFillBrandBlue onClick={createOnClickFor(intersectRefRed)}>Red</ButtonFillBrandBlue>
-					<ButtonFillBrandBlue onClick={createOnClickFor(intersectRefBlue)}>Blue</ButtonFillBrandBlue>
-					<ButtonFillBrandBlue onClick={createOnClickFor(intersectRefGreen)}>Green</ButtonFillBrandBlue>
+					<Button onClick={createOnClickFor(intersectRefRed)}>Red</Button>
+					<Button onClick={createOnClickFor(intersectRefBlue)}>Blue</Button>
+					<Button onClick={createOnClickFor(intersectRefGreen)}>Green</Button>
 				</div>
 				<Multi_Container ref={ref}>
 					<Multi_Red ref={intersectRefRed} />
@@ -140,8 +141,10 @@ export default {
 					isActive={isActive}
 					onSetInactive={() => { setIsActive(false); }}
 				>
-					Front
-					<button onClick={() => { setIsActive(false); }}>Close</button>
+					<SwipeHeader
+						backToSectionText='Content'
+						onSetInactive={() => { setIsActive(false); }}
+					/>
 				</Swipe>
 				{logRender}
 			</Swipe_RootContainer >

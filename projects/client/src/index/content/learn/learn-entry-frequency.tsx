@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Panel } from '@/index/core/layout/layout-panel';
 import { AnswerParagraph, EntryContainer, QuestionText } from './learn-entry-shared';
 
+export const learnFrequencyQuestion = 'How often do tides occur?';
+
 export const LearnEntryFrequency: React.FC = () => {
 	return (
 		<EntryContainer>
-			<QuestionText>How often do tides occur?</QuestionText>
+			<QuestionText>{learnFrequencyQuestion}</QuestionText>
 			<Panel>
 				<AnswerParagraph>
 					Since the moon's position and pull is largely responsible for the tides, the time the moon takes to move through the sky is important to know in predicting tides.

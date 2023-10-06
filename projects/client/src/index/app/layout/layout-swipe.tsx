@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { themeTokens } from '@/index/core/theme/theme-root';
 
 export interface SwipeProps {
-	contentRef: React.RefObject<HTMLElement> | null;
+	/** The "behind" content. Should be an absolutely-positioned sibling. */
+	contentRef: React.RefObject<HTMLElement | null | undefined>;
 	isActive: boolean;
 	onSetInactive: () => void;
 	children: React.ReactNode;
@@ -32,7 +32,7 @@ export const Swipe: React.FC<SwipeProps> = (props) => {
 		// 	contentRef.current.style.transition = '.3s transform ease';
 		// 	contentRef.current.style.transform = `translateX(${isActive ? -50 : 0}%)`;
 		// }
-	}, [isActive, contentRef]);
+	}, [isActive]);
 
 	React.useLayoutEffect(() => {
 		const container = refContainer.current;
@@ -81,7 +81,7 @@ export const Swipe: React.FC<SwipeProps> = (props) => {
 		function onScrollChange() {
 			const scrollLeft = container.scrollLeft;
 			const maximumScroll = container.scrollWidth / 2;
-			const value = Math.max(.3, 1 - (Math.round((scrollLeft / maximumScroll) * 100) / 100));
+			const value = Math.max(0, 1 - (Math.round((scrollLeft / maximumScroll) * 100) / 100));
 			console.log(value);
 
 			if (value !== previousBackLeft) {
@@ -147,5 +147,6 @@ const Swipe_Front = styled.div`
 	position: relative;
 	z-index: 2;
 	${swipeStyle}
-	background-color: ${themeTokens.rawColor.red.subtle};
+	display: flex;
+	flex-direction: column;
 `;

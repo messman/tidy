@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Panel } from '@/index/core/layout/layout-panel';
 import { AnswerParagraph, EntryContainer, QuestionText } from './learn-entry-shared';
 
+export const learnConsistencyQuestion = 'Why do high/low tide levels vary?';
+
 export const LearnEntryConsistency: React.FC = () => {
 	return (
 		<EntryContainer>
-			<QuestionText>What do high/low tide levels vary?</QuestionText>
+			<QuestionText>{learnConsistencyQuestion}</QuestionText>
 			<Panel>
 				<AnswerParagraph>
 					The relationship between the moon's position, the sun's position, and a location on Earth plays a huge role in how the height of a high tide or low tide changes over time.

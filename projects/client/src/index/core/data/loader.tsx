@@ -4,7 +4,6 @@ import { Icon } from '@/index/core/icon/icon';
 import { SpinnerIcon } from '@/index/core/icon/icon-spinner';
 import { isDebug } from '@/index/utility/debug';
 import { ErrorPanel } from '../error/error-panel';
-import { Block } from '../layout/layout-shared';
 import { MediumBodyText } from '../text/text-shared';
 import { themeTokens } from '../theme/theme-root';
 import { useBatchResponse } from './data';
@@ -49,7 +48,9 @@ export const DefaultErrorLoad: React.FC = () => {
 };
 
 const CenterContainer = styled.div`
-	text-align: center;
+	width: 100%;
+	display: flex;
+	justify-content: center;
 	padding: 1rem 0;
 `;
 

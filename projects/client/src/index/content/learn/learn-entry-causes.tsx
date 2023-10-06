@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Panel } from '@/index/core/layout/layout-panel';
 import { AnswerParagraph, EntryContainer, QuestionText } from './learn-entry-shared';
 
+export const learnCausesQuestion = 'What causes the tides?';
+
 export const LearnEntryCauses: React.FC = () => {
 	return (
 		<EntryContainer>
-			<QuestionText>What causes the tides?</QuestionText>
+			<QuestionText>{learnCausesQuestion}</QuestionText>
 			<Panel>
 				<AnswerParagraph>
 					The primary source of the tides is the moon's gravitational pull. The power of this gravitational pull affects areas differently as the Earth rotates.

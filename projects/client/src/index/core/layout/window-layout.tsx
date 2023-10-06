@@ -54,6 +54,13 @@ export function isInvalidLayout(windowLayout: WindowLayout): boolean {
 	return windowLayout.heightBreakpoint < LayoutBreakpointRem.c30;
 }
 
+export function getLayoutFromWidth(widthBreakpoint: number): { isCompact: boolean; isWide: boolean; } {
+	return {
+		isCompact: widthBreakpoint < LayoutBreakpointRem.d40,
+		isWide: widthBreakpoint >= LayoutBreakpointRem.f60
+	};
+}
+
 export function isCompactWidthLayout(widthBreakpoint: number): boolean {
 	return widthBreakpoint < LayoutBreakpointRem.d40;
 }

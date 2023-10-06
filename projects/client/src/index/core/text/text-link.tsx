@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { icons } from '@wbtdevlocal/assets';
 import { Icon } from '../icon/icon';
+import { FontWeight } from '../primitive/primitive-design';
 import { themeTokens } from '../theme/theme-root';
 
 /*
@@ -17,6 +18,7 @@ import { themeTokens } from '../theme/theme-root';
 const BasicLink = styled.a`
 	margin: 0;
 	cursor: pointer;
+	font-weight: ${FontWeight.semibold};
 
 	color: ${themeTokens.text.link};
 	text-decoration: underline;
@@ -50,7 +52,7 @@ export const OutLink: React.FC<LinkProps> = (props) => {
 	return (
 		<BasicLink href={href} rel="noreferrer noopener" target="_blank" title={combinedTitle} {...otherProps}>
 			{text}
-			<OutLinkIcon type={icons.arrowOut} />
+			<OutLinkIcon type={icons.toolLinkOut} />
 		</BasicLink>
 	);
 };

@@ -65,24 +65,16 @@ export const AppLayout: React.FC = () => {
 			{isUpperNav && <Nav isLower={false} />}
 			<ViewRoot ref={rootRef}>
 				<View ref={refViewNow}>
-					<ViewMargin>
-						<Now />
-					</ViewMargin>
+					<Now />
 				</View>
 				<View ref={refViewWeek}>
-					<ViewMargin>
-						<Week />
-					</ViewMargin>
+					<Week />
 				</View>
 				<View ref={refViewLearn}>
-					<ViewMargin>
-						<Learn />
-					</ViewMargin>
+					<Learn />
 				</View>
 				<View ref={refViewAbout}>
-					<ViewMargin>
-						<About />
-					</ViewMargin>
+					<About />
 				</View>
 			</ViewRoot>
 			{!isUpperNav && <Nav isLower={true} />}
@@ -114,11 +106,5 @@ const View = styled.div`
 	scroll-snap-stop: always;
 	flex-shrink: 0;
 	display: flex;
-	justify-content: center;
 	overflow-y: auto;
-`;
-
-const ViewMargin = styled.div`
-	height: fit-content;
-	max-width: ${LayoutBreakpointRem.c30}rem;
 `;
