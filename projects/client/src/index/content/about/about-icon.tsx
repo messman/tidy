@@ -34,6 +34,7 @@ const BrandIcon = styled(Icon)`
 const TitleContainer = styled.div`
 	top: 0;
 	margin-left: 8.5rem;
+	margin-right: 1.5rem;
 `;
 
 const TitleText = styled.div`

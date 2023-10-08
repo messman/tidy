@@ -1,9 +1,17 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
+import { ClickWrapperButton } from '@/index/core/form/button';
+import { SizedIcon } from '@/index/core/icon/icon';
+import { SpacePanelEdge } from '@/index/core/layout/layout-panel';
+import { fontStyles } from '@/index/core/text/text-shared';
+import { themeTokens } from '@/index/core/theme/theme-root';
+import { asPercentString } from '@/index/core/time/time';
+import { icons } from '@wbtdevlocal/assets';
+
+const headerHeight = '2.5rem';
 
 export interface SwipeProps {
-	/** The "behind" content. Should be an absolutely-positioned sibling. */
-	contentRef: React.RefObject<HTMLElement | null | undefined>;
+	title: string;
 	isActive: boolean;
 	onSetInactive: () => void;
 	children: React.ReactNode;
@@ -16,61 +24,67 @@ export interface SwipeProps {
  * Must exist inside a flex container.
  */
 export const Swipe: React.FC<SwipeProps> = (props) => {
-	const { isActive, onSetInactive, contentRef, children } = props;
+	const { title, isActive, onSetInactive, children } = props;
 
-	const refContainer = React.useRef<HTMLDivElement>(null!);
+	const refSwipeContainer = React.useRef<HTMLDivElement>(null!);
+	const refOpacityContainer = React.useRef<HTMLDivElement>(null!);
+	const refHeader = React.useRef<HTMLDivElement>(null!);
 	const refWasActive = React.useRef(isActive);
 
+	// Track whether we are becoming active, and scroll into view.
 	React.useLayoutEffect(() => {
-		const container = refContainer.current;
+		const container = refSwipeContainer.current;
 		if ((refWasActive.current === isActive) || !container) {
 			return;
 		}
 		refWasActive.current = isActive;
 		scrollToEnd(container, !isActive);
-		// if (contentRef && contentRef.current) {
-		// 	contentRef.current.style.transition = '.3s transform ease';
-		// 	contentRef.current.style.transform = `translateX(${isActive ? -50 : 0}%)`;
-		// }
 	}, [isActive]);
 
+	// Track whether we have been fully scrolled away and hide.
 	React.useLayoutEffect(() => {
-		const container = refContainer.current;
+		const swipeContainer = refSwipeContainer.current;
+		const opacityContainer = refOpacityContainer.current;
 		let isAtZero = true;
 		function onScrollChange() {
-			const scrollLeft = container.scrollLeft;
+			const scrollLeft = swipeContainer.scrollLeft;
 			if (isAtZero && scrollLeft !== 0) {
 				isAtZero = false;
-				container.style.zIndex = '1';
+				swipeContainer.style.zIndex = '1';
+				opacityContainer.style.zIndex = '1';
 			}
 			else if (!isAtZero && scrollLeft === 0) {
 				isAtZero = true;
-				container.style.zIndex = '-1';
+				swipeContainer.style.zIndex = '-1';
+				opacityContainer.style.zIndex = '-1';
 				onSetInactive();
 			}
 		}
-		container.addEventListener('scroll', onScrollChange, { passive: true });
+		swipeContainer.addEventListener('scroll', onScrollChange, { passive: true });
 		return () => {
-			container.removeEventListener('scroll', onScrollChange);
+			swipeContainer.removeEventListener('scroll', onScrollChange);
 		};
 	}, []);
 
+	// Track our scroll and use it to control opacity
 	React.useLayoutEffect(() => {
-		// if (!isActive) {
-		// 	return;
-		// }
+		const container = refSwipeContainer.current;
 
-		const container = refContainer.current;
-
-		let previousBackLeft = 0;
+		let previousScrolledFactor = 0;
 		let animationQueue: number[] = [];
 
 		function run() {
-			const value = animationQueue.shift();
-			if (value) {
-				const content = contentRef?.current || null;
-				if (content) {
-					content.style.opacity = value.toString();
+			const scrolledFactor = animationQueue.shift();
+			if (scrolledFactor) {
+				const opacityContainer = refOpacityContainer?.current || null;
+				if (opacityContainer) {
+					opacityContainer.style.opacity = scrolledFactor.toString();
+				}
+				const header = refHeader?.current || null;
+				if (header) {
+					const scrolledFactorToPercent = asPercentString(1 - scrolledFactor);
+					const style = `translateY(-${scrolledFactorToPercent})`;
+					header.style.transform = style;
 				}
 			}
 			if (animationQueue.length) {
@@ -81,18 +95,16 @@ export const Swipe: React.FC<SwipeProps> = (props) => {
 		function onScrollChange() {
 			const scrollLeft = container.scrollLeft;
 			const maximumScroll = container.scrollWidth / 2;
-			const value = Math.max(0, 1 - (Math.round((scrollLeft / maximumScroll) * 100) / 100));
-			console.log(value);
+			const scrolledFactor = Math.min(1, Math.max(0, Math.round((scrollLeft / maximumScroll) * 100) / 100));
 
-			if (value !== previousBackLeft) {
-				previousBackLeft = value;
+			if (scrolledFactor !== previousScrolledFactor) {
+				previousScrolledFactor = scrolledFactor;
 				const hasQueue = !!animationQueue.length;
-				animationQueue.push(value);
+				animationQueue.push(scrolledFactor);
 				if (!hasQueue) {
 					requestAnimationFrame(run);
 				}
 			}
-
 		}
 
 		container.addEventListener('scroll', onScrollChange, { passive: true });
@@ -102,12 +114,24 @@ export const Swipe: React.FC<SwipeProps> = (props) => {
 	}, []);
 
 	return (
-		<Swipe_Container ref={refContainer}>
-			<Swipe_Passthrough />
-			<Swipe_Front>
-				{children}
-			</Swipe_Front>
-		</Swipe_Container>
+		<>
+			<Swipe_Opacity ref={refOpacityContainer} />
+			<SwipeHeader_Container ref={refHeader}>
+				<ClickWrapperButton onClick={onSetInactive}>
+					<SwipeHeader_InsideButtonContainer>
+						<SizedIcon size='medium' type={icons.coreArrowLeft} />
+						<SwipeHeader_Text>{title}</SwipeHeader_Text>
+					</SwipeHeader_InsideButtonContainer>
+				</ClickWrapperButton>
+			</SwipeHeader_Container>
+			<Swipe_Container ref={refSwipeContainer}>
+				<Swipe_Passthrough />
+				<Swipe_Front>
+					<SwipeHeader_Space />
+					{children}
+				</Swipe_Front>
+			</Swipe_Container>
+		</>
 	);
 };
 
@@ -119,13 +143,29 @@ function scrollToEnd(element: HTMLElement, isLeft: boolean) {
 	});
 }
 
+const Swipe_Opacity = styled.div`
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background: ${themeTokens.background.gradient};
+	opacity: 0;
+	z-index: -1;
+	pointer-events: none;
+`;
 
 const Swipe_Container = styled.div`
-	flex: 1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
 	display: flex;
 	overflow-x: scroll;
 	scroll-snap-type: x mandatory;
 	z-index: -1;
+	isolation: isolate;
 `;
 
 const swipeStyle = css`
@@ -145,8 +185,36 @@ const Swipe_Passthrough = styled.div`
 
 const Swipe_Front = styled.div`
 	position: relative;
-	z-index: 2;
+	z-index: 1;
 	${swipeStyle}
 	display: flex;
 	flex-direction: column;
+`;
+
+const SwipeHeader_Space = styled.div`
+	height: ${headerHeight};
+`;
+
+const SwipeHeader_Container = styled.div`
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: ${headerHeight};
+	width: 100%;
+	display: flex;
+	align-items: center;
+	background: ${themeTokens.background.tint.medium};
+	transform: translateY(-100%);
+	z-index: 2;
+`;
+
+const SwipeHeader_InsideButtonContainer = styled.div`
+	display: inline-flex;
+	align-items: center;
+	gap: .5rem;
+	padding: .5rem ${SpacePanelEdge.value};
+`;
+
+const SwipeHeader_Text = styled.div`
+	${fontStyles.text.mediumHeavy};
 `;

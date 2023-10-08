@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Swipe } from '@/index/app/layout/layout-swipe';
-import { SwipeHeader } from '@/index/app/layout/layout-swipe-header';
 import { Panel, PanelPadding, SpacePanelGridGap, SpacePanelGridListPadding, SpacePanelGridPadding } from '@/index/core/layout/layout-panel';
 import { getLayoutFromWidth, LayoutBreakpointRem } from '@/index/core/layout/window-layout';
 import { OutLink } from '@/index/core/text/text-link';
@@ -80,7 +79,6 @@ export const Learn: React.FC = () => {
 
 	return (
 		<CompactContainer>
-
 			<CompactList ref={refCompactList}>
 				<LearnQuestion
 					onClick={() => selectQuestion(QuestionKey.cause)}
@@ -105,14 +103,10 @@ export const Learn: React.FC = () => {
 				<LearnMore />
 			</CompactList>
 			<Swipe
-				contentRef={refCompactList}
+				title='Learn'
 				isActive={isCompactSwipeActive}
 				onSetInactive={() => { setIsCompactSwipeActive(false); }}
 			>
-				<SwipeHeader
-					backToSectionText='Learn'
-					onSetInactive={() => { setIsCompactSwipeActive(false); }}
-				/>
 				<CompactContent>
 					<AnswerComponent key={questionKey} />
 				</CompactContent>
@@ -139,14 +133,16 @@ const CenteringContainer = styled.div`
 	height: fit-content;
 	display: flex;
 	justify-content: center;
+	overflow-y: auto;;
 `;
 
 const WideContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	height: fit-content;
 	max-width: ${LayoutBreakpointRem.e50}rem;
-	padding: 2rem;
+	padding: ${SpacePanelGridPadding.value};
 	gap: 3rem;
 `;
 
@@ -169,23 +165,19 @@ const RegularContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	max-width: ${LayoutBreakpointRem.c30}rem;
-	padding: 2rem;
+	padding: ${SpacePanelGridPadding.value};
 	gap: 3rem;
 `;
 
 const CompactContainer = styled.div`
 	width: 100%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	position: relative;
 `;
 
 const CompactList = styled.div`
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
 	overflow-y: auto;
 	padding: ${SpacePanelGridPadding.value} ${SpacePanelGridListPadding.value};
 	display: flex;

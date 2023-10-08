@@ -6,13 +6,6 @@ import { CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
 import { ElementIntersect, useElementIntersect } from '@messman/react-common';
 import { Swipe } from './layout-swipe';
-import { SwipeHeader } from './layout-swipe-header';
-
-type Log = {
-	value: number;
-	queue: number;
-	time: number;
-};
 
 export default {
 	'Multi': CosmosFixture.create(() => {
@@ -87,67 +80,25 @@ export default {
 
 		const [isActive, setIsActive] = React.useState(false);
 
-		const refMain = React.useRef<HTMLDivElement>(null!);
-
-		const refLog = React.useRef<Log[]>([]);
-		const [capturedLog, setCapturedLog] = React.useState<null | (Log[])>(null);
-
-		function clickToggleLog() {
-			setCapturedLog((p) => {
-				if (!p) {
-					const log = refLog.current;
-					refLog.current = [];
-					return log;
-				}
-				return null;
-			});
-		}
-		/*
-			Back
-				
-			Front
-				Equal Space
-				Front Content
-		*/
-
-		const logText = React.useMemo(() => {
-			return capturedLog ? capturedLog.map(({ value, queue, time }) => `value|${value} queue=${queue} time=${time}`).join('\n') : '';
-		}, [capturedLog]);
-
-		const logRender = logText ? (
-			<Swipe_Log>
-				<div>
-					<button onClick={clickToggleLog}>Log</button>
-				</div>
-				<pre>
-					{logText}
-				</pre>
-			</Swipe_Log>
-		) : null;
-
 		return (
-			<Swipe_RootContainer>
-				<Swipe_Main ref={refMain}>
+			<RootContainer>
+				<MainContent>
 					Back content here... this is the stuff that will disappear
+					Is Active: {isActive ? 'Yes' : 'No'}
 					<div>
 						<button onClick={() => { setIsActive(true); }}>Open</button>
 					</div>
-					<div>
-						<button onClick={clickToggleLog}>Log</button>
-					</div>
-				</Swipe_Main>
+				</MainContent>
 				<Swipe
-					contentRef={refMain}
+					title='Content'
 					isActive={isActive}
 					onSetInactive={() => { setIsActive(false); }}
 				>
-					<SwipeHeader
-						backToSectionText='Content'
-						onSetInactive={() => { setIsActive(false); }}
-					/>
+					<div>
+						<p>Hello!</p>
+					</div>
 				</Swipe>
-				{logRender}
-			</Swipe_RootContainer >
+			</RootContainer >
 		);
 	}, {
 		setup: FixtureSetup.root
@@ -163,7 +114,7 @@ const Multi_Container = styled.div`
 
 const multiStyle = css`
 	width: 100vw;
-	height: 100%;
+	height: 100vh;
 	scroll-snap-align: start;
 	scroll-snap-stop: always;
 	flex-shrink: 0;
@@ -184,38 +135,15 @@ const Multi_Green = styled.div`
 	background-color: ${themeTokens.rawColor.green.subtle};
 `;
 
-const Swipe_RootContainer = styled.div`
+const RootContainer = styled.div`
 	position: relative;
 	flex: 1;
 	display: flex;
 	align-items: stretch;
 	overflow: hidden;
-
 `;
 
-const Swipe_Main = styled.div`
-	will-change: transform;
-	/* transition: transform .1s ease; */
+const MainContent = styled.div`
 	flex: 1;
-	z-index: 0;
-	position: absolute;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	background-color: ${themeTokens.rawColor.green.subtle};
 	padding: 1rem;
-`;
-
-const Swipe_Log = styled.div`
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 3;
-	padding: 1rem;
-	background-color: white;
-	color: black;
-	overflow: scroll;
 `;

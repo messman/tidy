@@ -53,7 +53,7 @@ export const AppLayoutCompactNav: React.FC = () => {
 const Container = styled.div`
 	position: relative;
 	height: ${appCompactNavHeight};
-	background-color: ${themeTokens.background.gradient};
+	background: ${themeTokens.background.gradient};
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

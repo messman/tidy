@@ -107,4 +107,5 @@ const View = styled.div`
 	flex-shrink: 0;
 	display: flex;
 	overflow-y: auto;
+	position: relative;
 `;

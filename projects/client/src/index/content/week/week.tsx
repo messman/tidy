@@ -4,50 +4,10 @@ import { wrapForBatchLoad } from '@/index/core/data/batch-load-control';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { DefaultErrorLoad } from '@/index/core/data/loader';
 import { Panel, SpacePanelEdge, SpacePanelGridPadding } from '@/index/core/layout/layout-panel';
+import { LayoutBreakpointRem } from '@/index/core/layout/window-layout';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { WeekDay } from './week-day';
-
-const Container = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-	padding: ${SpacePanelGridPadding.value};
-`;
-
-const ButtonsContainer = styled.div`
-	display: flex;
-	flex-wrap: wrap;
-	gap: .5rem;
-	padding: ${SpacePanelEdge.value};
-`;
-
-const buttonInactiveStyles = css`
-	background-color: ${themeTokens.background.tint.medium};
-	color: ${themeTokens.text.subtle};
-`;
-
-const buttonActiveStyles = css`
-	background-color: ${themeTokens.background.tint.darkest};
-`;
-
-const Button = styled.div<{ $isActive: boolean; }>`
-	display: inline-block;
-	margin: 0;
-	padding: .25rem .75rem;
-	border: 0;
-	border-radius: 2rem;
-	background-color: ${themeTokens.background.tint.darkest};
-	${fontStyles.text.medium}
-	cursor: pointer;
-	${p => p.$isActive ? buttonActiveStyles : buttonInactiveStyles}
-`;
-
-enum Section {
-	weather,
-	beach,
-	tide
-}
 
 export const Week: React.FC = wrapForBatchLoad(DefaultErrorLoad, () => {
 	const { week } = useBatchResponseSuccess();
@@ -87,30 +47,82 @@ export const Week: React.FC = wrapForBatchLoad(DefaultErrorLoad, () => {
 	}
 
 	return (
-		<Container>
-			<Panel>
-				<ButtonsContainer>
-					<Button
-						$isActive={state.has(Section.weather)}
-						onClick={createToggleSection(Section.weather)}
-					>
-						Weather
-					</Button>
-					<Button
-						$isActive={state.has(Section.beach)}
-						onClick={createToggleSection(Section.beach)}
-					>
-						Beach
-					</Button>
-					<Button
-						$isActive={state.has(Section.tide)}
-						onClick={createToggleSection(Section.tide)}
-					>
-						Tides
-					</Button>
-				</ButtonsContainer>
-			</Panel>
-			{daysRender}
-		</Container>
+		<CenteringContainer>
+			<Container>
+				<Panel>
+					<ButtonsContainer>
+						<Button
+							$isActive={state.has(Section.weather)}
+							onClick={createToggleSection(Section.weather)}
+						>
+							Weather
+						</Button>
+						<Button
+							$isActive={state.has(Section.beach)}
+							onClick={createToggleSection(Section.beach)}
+						>
+							Beach
+						</Button>
+						<Button
+							$isActive={state.has(Section.tide)}
+							onClick={createToggleSection(Section.tide)}
+						>
+							Tides
+						</Button>
+					</ButtonsContainer>
+				</Panel>
+				{daysRender}
+			</Container>
+		</CenteringContainer>
 	);
 });
+
+const CenteringContainer = styled.div`
+	width: 100%;
+	height: fit-content;
+	display: flex;
+	justify-content: center;
+`;
+
+const Container = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: ${SpacePanelGridPadding.value};
+	width: 100%;
+	max-width: ${LayoutBreakpointRem.c30}rem;
+`;
+
+const ButtonsContainer = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem;
+	padding: ${SpacePanelEdge.value};
+`;
+
+const buttonInactiveStyles = css`
+	background-color: ${themeTokens.background.tint.medium};
+	color: ${themeTokens.text.subtle};
+`;
+
+const buttonActiveStyles = css`
+	background-color: ${themeTokens.background.tint.darkest};
+`;
+
+const Button = styled.div<{ $isActive: boolean; }>`
+	display: inline-block;
+	margin: 0;
+	padding: .25rem .75rem;
+	border: 0;
+	border-radius: 2rem;
+	background-color: ${themeTokens.background.tint.darkest};
+	${fontStyles.text.medium}
+	cursor: pointer;
+	${p => p.$isActive ? buttonActiveStyles : buttonInactiveStyles}
+`;
+
+enum Section {
+	weather,
+	beach,
+	tide
+}
