@@ -12,6 +12,7 @@ export const NowTideDebug: React.FC = () => {
 	const {
 		portland,
 		portlandAdjustment,
+		portlandComputed,
 		computed,
 		astroComputed,
 		ofsInterval,
@@ -48,10 +49,13 @@ export const NowTideDebug: React.FC = () => {
 					<Text>OFS: {tide(ofsInterval.height)} (interval data)</Text>
 					<Text>OFS/Astro Computed: {tide(computed.height)}</Text>
 				</SubsectionContainer>
-				{portland && portlandAdjustment !== null && (
+				{portland && portlandAdjustment !== null && portlandComputed !== null && (
 					<SubsectionContainer>
 						<Text>Portland: {tideAtTime(portland.height, portland.time)}, {Math.round(meta.referenceTime.diff(portland.time, 'minutes').minutes)} minutes off</Text>
 						<Text>Adjusted uses OFS/Astro Next/Prev</Text>
+						<Text>Portland Computed: <TideHeightTextUnit height={portlandComputed.height} precision={1} /></Text>
+						<Text>Previous: {tideAtTime(portlandComputed.previousExtreme.height, portlandComputed.previousExtreme.time)}</Text>
+						<Text>Next: {tideAtTime(portlandComputed.nextExtreme.height, portlandComputed.nextExtreme.time)}</Text>
 					</SubsectionContainer>
 				)}
 				<SubsectionContainer>

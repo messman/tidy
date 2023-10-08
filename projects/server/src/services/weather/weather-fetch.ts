@@ -4,7 +4,7 @@ import { serverErrors, ServerPromise } from '../../api/error';
 import { settings } from '../../env';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
-import { makeRequest } from '../network/request';
+import { makeRequestJson } from '../network/request';
 import { createWeatherPointHourlyId, degreesToDirection, fixFetchedWeather, getIndicator, WeatherFetched, WithoutIndicator } from './weather-shared';
 
 /*
@@ -59,7 +59,7 @@ async function fetchWeather(ctx: LogContext, config: BaseConfig): ServerPromise<
 	// Don't include API key in log statement, just in case.
 	const url = `${openWeatherDataUrl}&lat=${fixedLatitude}&lon=${fixedLongitude}&appid=${apiKey}`;
 
-	const response = await makeRequest<OpenWeatherResponse>(ctx, 'OpenWeather - fetch', url);
+	const response = await makeRequestJson<OpenWeatherResponse>(ctx, 'OpenWeather - fetch', url);
 	if (isServerError(response)) {
 		return response;
 	}

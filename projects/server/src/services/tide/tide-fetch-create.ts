@@ -66,6 +66,7 @@ export function createTides(config: BaseConfig, seed: TestSeed): TideFetched {
 			ofsStation: { lat: constant.latitude, lon: constant.longitude },
 			portland: { height: computed.height, time: referenceTime },
 			portlandAdjustment: 0,
+			portlandComputed: null,
 			astroComputed: computed,
 			computed: computed,
 			ofsComputed: computed,

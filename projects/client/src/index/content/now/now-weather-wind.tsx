@@ -107,7 +107,7 @@ export const NowWeatherWind: React.FC = () => {
 		const oppositeWindDirectionText = oppositeWindDirection[windDirectionText];
 		const knots = Math.round((wind * 0.868976) * 10) / 10;
 
-		return `${knots} knots from ${windDirectionText} to ${oppositeWindDirectionText}`;
+		return `${knots} knots from ${windDirectionText} to ${oppositeWindDirectionText}.`;
 	})();
 
 	return (

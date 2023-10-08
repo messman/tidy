@@ -3,7 +3,7 @@ import { constant, isServerError, TidePointExtreme } from '@wbtdevlocal/iso';
 import { serverErrors, ServerPromise } from '../../api/error';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
-import { makeRequest } from '../network/request';
+import { makeRequestJson } from '../network/request';
 import { getStartOfDayBefore } from '../time';
 import { createTidePointExtremeId } from './tide-shared';
 
@@ -16,10 +16,12 @@ import { createTidePointExtremeId } from './tide-shared';
 */
 
 export interface TideFetchedNOAA {
-	/** Current observed water level data from Portland. */
-	currentPortland: TideFetchedNOAACurrent | null;
 	/** Astronomical predictions for Wells. */
-	extrema: TidePointExtreme[];
+	wellsExtrema: TidePointExtreme[];
+	/** Astronomical predictions for Portland. */
+	portlandExtrema: TidePointExtreme[];
+	/** Current observed water level data from Portland. */
+	portlandCurrent: TideFetchedNOAACurrent | null;
 }
 
 export interface TideFetchedNOAACurrent {
@@ -28,22 +30,27 @@ export interface TideFetchedNOAACurrent {
 }
 
 export async function fetchTidesNOAA(ctx: LogContext, config: BaseConfig): ServerPromise<TideFetchedNOAA> {
-	const extrema = await getPredictions(ctx, config);
-	if (isServerError(extrema)) {
-		return extrema;
+	const wellsExtrema = await getPredictionsForStation(ctx, config, constant.tideStations.wells);
+	if (isServerError(wellsExtrema)) {
+		return wellsExtrema;
 	}
-	const current = await getCurrentFromPortland(ctx);
-	if (isServerError(current)) {
-		return current;
+	const portlandExtrema = await getPredictionsForStation(ctx, config, constant.tideStations.portland);
+	if (isServerError(portlandExtrema)) {
+		return portlandExtrema;
+	}
+	const portlandCurrent = await getCurrentFromPortland(ctx);
+	if (isServerError(portlandCurrent)) {
+		return portlandCurrent;
 	}
 	return {
-		currentPortland: current,
-		extrema
+		wellsExtrema,
+		portlandExtrema,
+		portlandCurrent
 	};
 }
 
 
-async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromise<TidePointExtreme[]> {
+async function getPredictionsForStation(ctx: LogContext, config: BaseConfig, station: number): ServerPromise<TidePointExtreme[]> {
 	/*
 		Note: these predictions are based on astronomical tide (gravitational effects of the moon and sun
 		and the rotation of the Earth), but not based on wind, pressure, or river flow. That's what GoMOFS is for.
@@ -51,7 +58,6 @@ async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromis
 	*/
 
 	const { referenceTime, futureCutoff } = config;
-	const { wells } = constant.tideStations;
 
 	const pastCutoff = getStartOfDayBefore(referenceTime);
 
@@ -59,7 +65,7 @@ async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromis
 	const hoursBetween = Math.ceil(futureCutoff.diff(pastCutoff, 'hours').hours);
 
 	const predictionInput: NOAAPredictionInput = Object.assign({}, defaultNOAAInput, ({
-		station: wells,
+		station,
 		product: 'predictions',
 		datum: 'mllw', // From https://tidesandcurrents.noaa.gov/datum_options.html
 		interval: 'hilo', // hi/lo, not just 6 minute intervals
@@ -67,7 +73,7 @@ async function getPredictions(ctx: LogContext, config: BaseConfig): ServerPromis
 		range: hoursBetween
 	} as NOAAPredictionInput));
 
-	const predictionResponse = await makeRequest<NOAAPredictionOutput>(ctx, 'Tides - prediction', createRequestUrl(predictionInput));
+	const predictionResponse = await makeRequestJson<NOAAPredictionOutput>(ctx, 'Tides - prediction', createRequestUrl(predictionInput));
 	if (isServerError(predictionResponse)) {
 		return predictionResponse;
 	}
@@ -118,7 +124,7 @@ async function getCurrentFromPortland(ctx: LogContext): ServerPromise<TideFetche
 		date: "latest"
 	} as NOAACurrentLevelInput));
 
-	const portlandLevelResponse = await makeRequest<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(portlandLevelInput));
+	const portlandLevelResponse = await makeRequestJson<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(portlandLevelInput));
 	if (isServerError(portlandLevelResponse)) {
 		return portlandLevelResponse;
 	}

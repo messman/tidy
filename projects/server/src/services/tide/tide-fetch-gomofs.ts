@@ -170,7 +170,7 @@ async function getForecastUrl(ctx: LogContext, config: BaseConfig): ServerPromis
 	*/
 
 	const referenceInUtc = config.referenceTime.setZone('utc');
-	const firstTryTimeUtc = getClosestQuarterTime(referenceInUtc.minus({ hour: 7 })); // Subtract some time first time to ensure we get forecast data to cover reference time
+	const firstTryTimeUtc = getClosestQuarterTime(referenceInUtc.minus({ hour: 13 })); // Subtract some time first time to ensure we get forecast data to cover reference time
 	const secondTryTimeUtc = getClosestQuarterTime(firstTryTimeUtc.minus({ hour: 1 })); // Subtract an hour to ensure different time
 	const thirdTryTimeUtc = getClosestQuarterTime(secondTryTimeUtc.minus({ hour: 1 })); // Subtract an hour to ensure different time
 
@@ -298,7 +298,7 @@ async function getWaterLevels(ctx: LogContext, baseUrl: string, stationIndex: nu
 		const meters = parseFloat(text as string);
 		const feet = 3.28084 * meters;
 		const feetMLLW = feet + 4.77; // https://tidesandcurrents.noaa.gov/datums.html?id=8419317
-		return Math.round(feetMLLW * 100) / 100;
+		return Math.round(feetMLLW * 1000) / 1000;
 	});
 
 	return waterLevels;
@@ -318,7 +318,7 @@ function getCurrentAndExtrema(referenceTime: DateTime, oceanTimes: DateTime[], w
 		});
 	}
 
-	let beforeReferenceTime: WaterLevelWithTime = null!;
+	let interval: WaterLevelWithTime = null!;
 	let indexOfFirstOfSame: number = -1;
 	// Will have to go through and check for switches from increasing to decreasing.
 	let isIncreasing: boolean | undefined = undefined;
@@ -336,71 +336,155 @@ function getCurrentAndExtrema(referenceTime: DateTime, oceanTimes: DateTime[], w
 	*/
 	for (let i = 1; i < waterLevelsWithTime.length; i++) {
 		const { time, value } = waterLevelsWithTime[i];
-		const { time: previousTime, value: previousValue } = waterLevelsWithTime[i - 1];
+		const { value: previousValue, time: previousTime } = waterLevelsWithTime[i - 1];
 
 		// Check for our current water level
-		if (!beforeReferenceTime && referenceTime < time) {
-			beforeReferenceTime = waterLevelsWithTime[i - 1];
+		if (!interval) {
+			if (referenceTime < time) {
+
+				const secondsFromReferenceToPrevious = referenceTime.diff(previousTime, 'seconds').seconds;
+				const secondsFromNextToPrevious = time.diff(previousTime, 'seconds').seconds;
+				const percentDiff = secondsFromReferenceToPrevious / secondsFromNextToPrevious;
+				const range = Math.abs(value - previousValue);
+				const offset = range * percentDiff;
+				const newValue = previousValue + ((value > previousValue ? 1 : -1) * offset);
+				interval = {
+					time: referenceTime,
+					value: Math.round(newValue * 100) / 100
+				};
+			}
 		}
 
+		const isValueSameAsPrevious = value === previousValue;
 		// Figure out if we are currently or have just been seeing the same value.
-		let isOrWasInStretchOfSameValue = false;
-		if (value === previousValue) {
-			if (indexOfFirstOfSame === -1) {
-				indexOfFirstOfSame = i - 1;
-				isOrWasInStretchOfSameValue = true;
-			}
-		}
-		else if (indexOfFirstOfSame !== -1) {
-			const numEntriesBetween = (i - 1) - indexOfFirstOfSame + 1;
-			// We had some in a row of the same value (likely 2).
-			if (numEntriesBetween % 2 === 0) {
-				const start = waterLevelsWithTime[indexOfFirstOfSame];
-				const halfwayTime = DateTime.fromMillis(start.time.toMillis() + ((previousTime.toMillis() - start.time.toMillis()) / 2), { zone: previousTime.zone });
-
-				// Even number
-				extrema.push({
-					id: createTidePointExtremeId(halfwayTime, 'gomofs'),
-					time: halfwayTime,
-					height: previousValue,
-					isLow: value > previousValue,
-				});
-			}
-			else {
-				// Odd number, just use middle
-				const middle = waterLevelsWithTime[indexOfFirstOfSame + (((i - 1) - indexOfFirstOfSame) / 2)];
-				extrema.push({
-					id: createTidePointExtremeId(middle.time, 'gomofs'),
-					time: middle.time,
-					height: middle.value,
-					isLow: value > middle.value,
-				});
-			}
-			indexOfFirstOfSame = -1;
-			isOrWasInStretchOfSameValue = true;
+		if (isValueSameAsPrevious && indexOfFirstOfSame === -1) {
+			// Mark the start of this section of same-ness.
+			indexOfFirstOfSame = i - 1;
 		}
 
-		const isNowIncreasing = value > previousValue;
-		if (!isOrWasInStretchOfSameValue && isIncreasing !== undefined && isNowIncreasing !== isIncreasing) {
+		const isNowIncreasing = isValueSameAsPrevious ? undefined : value > previousValue;
+		if (isNowIncreasing !== undefined && isIncreasing !== undefined && isNowIncreasing !== isIncreasing) {
 			/*
-				We're outside of any same-value stuffs, and switched from increasing to decreasing.
-				Could be the real peak was between i-2 and i-1, or between i-1 and i.
+				We are at some sort of inflection point here. we know it either went from up to down or down to up,
+				plus we're no longer at a range of same values.
+				In these cases, typically we're *past* the actual hi/lo point. 
+
+				Here are some scenarios:
+
+				P = previous points, N = this point
+				
+				Easiest case... it was the last point
+				.           P
+				.      .         .
+				.   .               .
+				. .                   .
+				.P                      N
+
+				Easy case... it was between previous and now
+				.           .
+				.      P         .
+				.   .               N
+				. .                   .
+				.P                      .
+
+				Harder case - peak was actually between n-1 and n-2!
+				.           .
+				.      .         P
+				.   P               .
+				. .                   .
+				..                      N
+
+				Another hard case - peak was again between two previous points; same values
+				.           .
+				.      .         .
+				.   P               P
+				. .                   .
+				..                      N
+
+				Case of same values
+				.           
+				.      P    P    P
+				.   .               .
+				. .                   .
+				..                      N
 			*/
-			//const { time: twoBackTime, value: twoBackValue } = waterLevelsWithTime[i - 2];
+
+			//let extreme: TidePointExtreme = null!;
+
+			const firstPointIndex = indexOfFirstOfSame !== -1 ? indexOfFirstOfSame : i - 2;
+			const firstPoint = waterLevelsWithTime[firstPointIndex];
+			const previous = waterLevelsWithTime[i - 1];
+			const current = waterLevelsWithTime[i];
+			const peak = getPolynomialPeak(firstPoint, previous, current);
+
 			extrema.push({
-				id: createTidePointExtremeId(previousTime, 'gomofs'),
-				time: previousTime,
-				height: previousValue,
-				isLow: value > previousValue,
+				id: createTidePointExtremeId(peak.time, 'gomofs'),
+				time: peak.time,
+				height: peak.value,
+				isLow: isNowIncreasing,
 			});
+
+			// console.log(peak);
+
+			// if (indexOfFirstOfSame !== -1) {
+			// 	const numEntriesBetween = (i - 1) - indexOfFirstOfSame + 1;
+			// 	// We had some in a row of the same value (likely 2).
+			// 	if (numEntriesBetween % 2 === 0) {
+			// 		const start = waterLevelsWithTime[indexOfFirstOfSame];
+			// 		const halfwayTime = DateTime.fromMillis(start.time.toMillis() + ((previousTime.toMillis() - start.time.toMillis()) / 2), { zone: previousTime.zone });
+
+			// 		// Even number
+			// 		extreme = {
+			// 			id: createTidePointExtremeId(halfwayTime, 'gomofs'),
+			// 			time: halfwayTime,
+			// 			height: previousValue,
+			// 			isLow: value > previousValue,
+			// 		};
+			// 	}
+			// 	else {
+			// 		// Odd number, just use middle
+			// 		const middle = waterLevelsWithTime[indexOfFirstOfSame + (((i - 1) - indexOfFirstOfSame) / 2)];
+			// 		extreme = {
+			// 			id: createTidePointExtremeId(middle.time, 'gomofs'),
+			// 			time: middle.time,
+			// 			height: middle.value,
+			// 			isLow: value > middle.value,
+			// 		};
+			// 	}
+			// }
+
+
+			// /*
+			// 	We're outside of any same-value stuffs, and switched from increasing to decreasing.
+			// 	Could be the real peak was between i-2 and i-1, or between i-1 and i.
+			// */
+			// //const { time: twoBackTime, value: twoBackValue } = waterLevelsWithTime[i - 2];
+			// extreme = {
+			// 	id: createTidePointExtremeId(previousTime, 'gomofs'),
+			// 	time: previousTime,
+			// 	height: previousValue,
+			// 	isLow: value > previousValue,
+			// };
+
+			// if (extreme) {
+			// 	extrema.push(extreme);
+			// }
 		}
-		isIncreasing = isNowIncreasing;
+
+
+		// Set for next
+		if (!isValueSameAsPrevious) {
+			indexOfFirstOfSame = -1;
+		}
+		if (isNowIncreasing !== undefined) {
+			isIncreasing = isNowIncreasing;
+		}
 	}
 
 
 	return {
-		current: beforeReferenceTime.value,
-		currentTime: beforeReferenceTime.time,
+		current: interval.value,
+		currentTime: interval.time,
 		extrema
 	};
 }
@@ -550,4 +634,42 @@ function parseAscii(ascii: string): ParsedAscii {
 	});
 
 	return parsed;
+}
+
+
+
+function getPolynomialPeak(point1: WaterLevelWithTime, point2: WaterLevelWithTime, point3: WaterLevelWithTime): WaterLevelWithTime {
+	/*
+		From https://stackoverflow.com/a/16896810 - Lagrange polynomial interpolation
+	*/
+	const firstTime = point1.time.valueOf();
+
+	const x1 = point1.time.valueOf() - firstTime;
+	const y1 = point1.value;
+	const x2 = point2.time.valueOf() - firstTime;
+	const y2 = point2.value;
+	const x3 = point3.time.valueOf() - firstTime;
+	const y3 = point3.value;
+
+	const a = (y1 / ((x1 - x2) * (x1 - x3))) + (y2 / ((x2 - x1) * (x2 - x3))) + (y3 / ((x3 - x1) * (x3 - x2)));
+	const b = -y1 * (x2 + x3) / ((x1 - x2) * (x1 - x3)) - y2 * (x1 + x3) / ((x2 - x1) * (x2 - x3)) - y3 * (x1 + x2) / ((x3 - x1) * (x3 - x2));
+	const c = y1 * x2 * x3 / ((x1 - x2) * (x1 - x3)) + y2 * x1 * x3 / ((x2 - x1) * (x2 - x3)) + y3 * x1 * x2 / ((x3 - x1) * (x3 - x2));
+
+	/*
+		From https://www.wikihow.com/Find-the-Maximum-or-Minimum-Value-of-a-Quadratic-Function-Easily
+	*/
+	//const isMin = a > 0;
+	// x = -b/2a
+	const peakX = Math.round(- (b / (2 * a))); // Round to nearest millisecond
+	// y = ax^2 + bx + c
+	const peakY = (a * Math.pow(peakX, 2)) + (b * peakX) + c;
+
+	const roundedToSeconds = Math.round((peakX + firstTime) / 1000) * 1000;
+	const time = DateTime.fromMillis(roundedToSeconds, { zone: point1.time.zone });
+
+	const peakPoint: WaterLevelWithTime = {
+		time: time,
+		value: Math.round(peakY * 1000) / 1000
+	};
+	return peakPoint;
 }

@@ -41,6 +41,10 @@ export interface TidePointCurrentSource {
 	/** How much we decided to adjust the Portland value by to compensate for time and distance. */
 	portlandAdjustment: number | null;
 	/**
+	 * Computed by using time to check between the portland astro data.
+	*/
+	portlandComputed: TidePointFromExtremes | null;
+	/**
 	 * Computed by using time to check between the computed astro/ofs extremes. Likely inaccurate at the extremes.
 	*/
 	computed: TidePointFromExtremes;
