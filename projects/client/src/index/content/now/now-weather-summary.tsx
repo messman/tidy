@@ -22,10 +22,6 @@ const TextContainer = styled.div`
 	padding: 0 ${SpacePanelEdge.value};
 `;
 
-const DescriptionText = styled.div`
-	${fontStyles.text.small}
-`;
-
 const IconContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -56,7 +52,6 @@ export const NowWeatherSummary: React.FC = () => {
 							It's {mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, current.status).itIsShort}
 						</TitleText>
 					</IconContainer>
-					<DescriptionText>Weather description goes here.</DescriptionText>
 				</TextContainer>
 				<NowWeatherSummaryHourly />
 			</Container>

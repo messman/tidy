@@ -4,9 +4,9 @@ import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { Icon } from '@/index/core/icon/icon';
 import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
-import { TextUnit, TimeTextUnit } from '@/index/core/text/text-unit';
+import { TimeTextUnit } from '@/index/core/text/text-unit';
 import { themeTokens } from '@/index/core/theme/theme-root';
-import { getDateDayOfWeek, getDateLong } from '@/index/core/time/time';
+import { getDateLong } from '@/index/core/time/time';
 import { icons } from '@wbtdevlocal/assets';
 import { BeachTimeDay } from '@wbtdevlocal/iso';
 import { WeatherIconDayNight } from '../common/weather/weather-icon';
@@ -40,13 +40,13 @@ const Text = styled.div`
 
 const WeatherTempBarStretch = styled(WeatherTempBar)`
 	flex: 1;
-	max-width: 10rem; // Avoid excessive temp bar width
+	max-width: 5rem; // Avoid excessive temp bar width
 `;
 
 const SunRiseSetEntry = styled.div`
 	display: flex;
 	align-items: center;
-	gap: .5rem;
+	gap: .25rem;
 `;
 
 const SunRiseSetContainer = styled.div`
@@ -103,7 +103,6 @@ export const WeekDayWeather: React.FC<WeekDayWeatherProps> = (props) => {
 						<Text>{roundedHigh}&deg;</Text>
 					</TempContainer>
 				</WeatherTempContainer>
-				<Text>Description will be filled in here.</Text>
 				<SunRiseSetContainer>
 					<SunRiseSetEntry>
 						<SunRiseSetIcon type={icons.astroSunrise} />

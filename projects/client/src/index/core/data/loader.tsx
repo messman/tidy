@@ -55,12 +55,11 @@ const CenterContainer = styled.div`
 `;
 
 const LargeSpinnerIcon = styled(Icon)`
-	color: ${themeTokens.text.onBackground};
+	color: ${themeTokens.text.distinct}; // Cannot have opacity
 	width: 4rem;
 	height: 4rem;
 `;
 
 const TextContainer = styled.div`
 	text-align: left;
-
 `;
