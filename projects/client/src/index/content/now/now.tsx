@@ -12,7 +12,6 @@ import { NowWeather } from './now-weather';
 export const Now: React.FC = wrapForBatchLoad(DefaultErrorLoad, () => {
 	return (
 		<CenteringContainer>
-
 			<Container>
 				<NowBeach />
 				<NowTide />

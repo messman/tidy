@@ -1,11 +1,11 @@
 /**
- * Takes in a Figma hex color definition like `("AABBCC", 0)` and creates an alpha hexadecimal notation like `"#AABBCC00`
+ * Takes in a Figma hex color definition like `("#AABBCC", 0)` and creates an alpha hexadecimal notation like `"#AABBCC00`
  * Converts [0, 100] to 00-FF. 
- * @param hex The value without the hash symbol, like `AABBCC`.
+ * @param hex The value with the hash symbol, like `#AABBCC`.
  * @param percent The percent opacity/alpha, like `88`.
 */
 function alphaHex(hex: string, percent: number): string {
-	return `#${hex}${Math.floor((percent / 100) * 255).toString(16).toUpperCase().padStart(2, '0')}`;
+	return `${hex}${Math.floor((percent / 100) * 255).toString(16).toUpperCase().padStart(2, '0')}`;
 }
 
 export type RawColorSet = {
@@ -65,11 +65,11 @@ export const lightTokens = {
 		/** High contrast. Not for body text. */
 		distinct: '#FFF',
 		/** Lesser contrast. Body text. */
-		subtle: alphaHex('E9F7FF', 65),
+		subtle: alphaHex('#E9F7FF', 65),
 		/** On the background directly, where the text needs to be darker. */
-		onBackground: alphaHex('010C15', 60),
+		onBackground: alphaHex('#010C15', 60),
 		link: '#7df9c6',
-		dark: alphaHex('102C46', 75)
+		dark: alphaHex('#102C46', 75)
 	},
 
 	outline: {
@@ -88,7 +88,7 @@ export const lightTokens = {
 		positive: '#3ACE15',
 		unsure: '#EDDB37',
 		negative: '#EB5D5D',
-		base: alphaHex('a3a29b', 90),
+		base: alphaHex('#a3a29b', 90),
 	},
 
 	lunar: {
@@ -103,16 +103,29 @@ export const lightTokens = {
 	},
 
 	beachDiagram: {
+		base: '#999',
+		baseSide: '#888',
+		roadTop: '#555',
+		roadSide: '#888', // '#555',
+		wall: '#BFBFBF',
+		wallTop: '#CCC',
+		wallSide: '#888', // '#AEAEAE',
+		wallText: '#8d9398',
 		sand: '#E7DEC0',
-		sandDarker: '#C9BD9E',
-		ocean: alphaHex('45ADE8', 90),
-		oceanSide: alphaHex('2C9AD8', 90)
+		sandSide: '#888', // '#c1b7a5',
+		sandFootstep: '#d0c8b0',
+		sandWet: '#cdc3a4',
+		ocean: alphaHex('#2980b2', 95),
+		oceanTop: alphaHex('#45ADE8', 75),
+		oceanTopDark: alphaHex('#2e8abf', 95),
+		oceanSide: alphaHex('#3a9dd6', 75),
+		oceanSideDark: alphaHex('#2377a8', 95)
 	},
 
 	tideBar: {
-		line: alphaHex('002B52', 39),
-		lineTip: alphaHex('002B52', 39),
-		lineNow: alphaHex('FFFFFF', 50),
+		line: alphaHex('#002B52', 39),
+		lineTip: alphaHex('#002B52', 39),
+		lineNow: alphaHex('#FFFFFF', 50),
 		lineTipNow: '#FFFFFF',
 	},
 

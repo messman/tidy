@@ -1,13 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { AttrsComponent } from '@/index/core/primitive/primitive-styled';
-import { visualCssConstant, WaterSideCompute } from './visual-css-shared';
+import { visualCssConstant, VisualCssDimensions } from './visual-css-shared';
 
 const foamCount = 30;
 const foamPaddingShift = 2;
 
 export interface VisualCssFoamProps {
-	compute: WaterSideCompute;
+	compute: VisualCssDimensions;
 };
 
 export const VisualCssFoam: React.FC<VisualCssFoamProps> = (props) => {
@@ -17,7 +17,7 @@ export const VisualCssFoam: React.FC<VisualCssFoamProps> = (props) => {
 		return i * ((visualCssConstant.objectDepth - foamPaddingShift) / (foamCount - 1));
 	});
 
-	const waveFoamRender = compute.heightOverflow > 0 ? null : foams.map((top) => {
+	const waveFoamRender = compute.waterHeight > compute.sandHeight ? null : foams.map((top) => {
 		return (
 			<VisualCssFoamPiece key={top} $top={top} $compute={compute} />
 		);
@@ -32,7 +32,7 @@ export const VisualCssFoam: React.FC<VisualCssFoamProps> = (props) => {
 
 
 type VisualCssFoamContainerProps = {
-	$compute: WaterSideCompute;
+	$compute: VisualCssDimensions;
 };
 
 /** The top of the water, what the viewer really sees */
@@ -40,7 +40,7 @@ const VisualCssFoamContainer = styled.div.attrs((props: VisualCssFoamContainerPr
 	const { $compute } = props;
 
 	const style: Partial<CSSStyleDeclaration> = {
-		right: `${$compute.width}px`,
+		right: `${$compute.waterSurfaceLength}px`,
 		transform: `translateZ(${$compute.heightTriangle}px)`
 	};
 	return {
@@ -63,7 +63,7 @@ const VisualCssFoamContainer = styled.div.attrs((props: VisualCssFoamContainerPr
 
 type VisualCssFoamPieceProps = {
 	$top: number;
-	$compute: WaterSideCompute;
+	$compute: VisualCssDimensions;
 };
 
 const foamSize = 4;
@@ -74,7 +74,7 @@ const VisualCssFoamPiece = styled.div.attrs((props: VisualCssFoamPieceProps) => 
 
 	const style: Partial<CSSStyleDeclaration> = {
 		top: `${$top - 2}px`,
-		right: `${$compute.width}px`,
+		right: `${$compute.waterSurfaceLength}px`,
 		transform: `translateZ(-${foamSize * .25}px)`
 	};
 	return {

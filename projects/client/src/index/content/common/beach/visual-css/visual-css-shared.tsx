@@ -1,52 +1,152 @@
 import * as React from 'react';
+import { css } from 'styled-components';
 import { constant } from '@wbtdevlocal/iso';
 
-/** The "front side", meaning the side that viewers see most that lends to the 3d effect. */
-const objectFrontSideWidth = 150;
-/** Depth, as in, the length of the beach-only side and length of the water-only side. */
-const objectDepth = 100;
-/** The height of just the sand. Used for matching up the diorama height of beach access to the real height. */
-const objectSandHeight = 10;
-/** The length needed for the sand at its slope to go from high to low. */
-const sandHypotenuse = Math.sqrt(Math.pow(objectSandHeight, 2) + Math.pow(objectFrontSideWidth, 2));
-/** The angle of decline for the sand. */
-const sandAngleDeg = Math.atan(objectSandHeight / objectFrontSideWidth) * 180 / Math.PI;
+/*
+	Top-Down View:
+
+	* Road
+	* v
+	* v
+	* v
+	* Wall
+	* v
+	* Sand that is angled down
+	* v
+	* v
+	* v
+	* v           Water v
+	* v                 v
+	* v                 v
+	* v                 v
+	* v                 v
+	* Sand evened out   v
+	* v                 v
+	* v                 v
+	* v                 v
+	* v                 v
+
+	Cross-section:
+
+		  Wall
+	Road  ----
+	------    
+			  **              Water
+							* ---------------------------------
+										 * 
+	0									                    * 
+																			  * 
+*/
+
+export const perspectiveStyle = css`
+	perspective: 3000px;
+`;
+
+const platformBaseSize = 8;
+
+const platformWidthBeachLength = 240;
+
+const platformHeightBufferEachEnd = 40;
+const platformHeightWallToMinTide = 150;
+
+const roadDepth = platformHeightBufferEachEnd;
+const roadHeight = 36;
+
+const wallHeight = 40;
+const wallDepth = 9;
+
+const sandHeight = 20;
+const sandAdjacentFlat = platformHeightWallToMinTide + platformHeightBufferEachEnd;
+const sandHypotenuse = Math.sqrt(Math.pow(sandHeight, 2) + Math.pow(sandAdjacentFlat, 2));
+const sandAngleDeg = Math.atan(sandHeight / sandAdjacentFlat) * 180 / Math.PI;
+
+
+const waterAnimationHeight = 1;
+
+const platformHeightTotal = roadDepth + wallDepth + sandAdjacentFlat;
 
 export const visualCssConstant = {
-	objectFrontSideWidth,
-	objectDepth,
-	objectSandHeight,
+	/** Size of the base underneath */
+	platformBaseSize,
+	/** Length, like what you would walk down the beach. */
+	platformWidthBeachLength,
+	/** The side from wall to water. The cross-section. */
+	platformHeightTotal,
+	/** The side from wall to water. The cross-section. */
+	platformHeightWallToMinTide,
+	roadHeight,
+	/** Depth of the road section. */
+	roadDepth,
+	/** The height of just the sand. Used for matching up the diorama height of beach access to the real height. */
+	sandHeight,
+	/** The sand area if it were totally flat. Used for calculating hypotenuse. */
+	sandAdjacentFlat,
+	/** The length needed for the sand at its slope to go from high to low. */
 	sandHypotenuse,
-	sandAngleDeg
+	/** The angle of decline for the sand. */
+	sandAngleDeg,
+	/** Height of the wall */
+	wallHeight,
+	/** Depth of the wall */
+	wallDepth,
+	/** Animation height in diagram units */
+	waterAnimationHeight
+} as const;
+
+
+export interface VisualCssDimensions {
+	/** The "width of the water surface" that is visible at the top of the diorama. Y axis from the bottom. */
+	waterSurfaceLength: number;
+	/** Height of the water translated from feet. Z axis. */
+	waterHeight: number;
+	/** Distance along the hypotenuse that is available beach space. */
+	beachDistanceToWater: number;
+	/** Distance along the hypotenuse that is available beach space when the animation is at peak. */
+	beachDistanceToWaterWithAnimation: number;
 };
 
-export type WaterSideCompute = {
-	/** The "width of the water surface" that is visible at the top of the diorama. */
-	width: number;
-	/** The height of the water that is used for the "triangle" up against the sand. This is clamped to not be taller than the sand itself. */
-	heightTriangle: number;
-	/** If the water level is higher than the sand, we should render additional rectangles atop our water triangles to continue the effect. */
-	heightOverflow: number;
-};
+export function useVisualCssDimensions(waterLevelHeight: number): VisualCssDimensions {
+	return React.useMemo<VisualCssDimensions>(() => {
+		const { sandHeight, sandAngleDeg, sandAdjacentFlat, waterAnimationHeight } = visualCssConstant;
 
-export function useWaterSideCompute(height: number): WaterSideCompute {
+		/*
+			Top of sand
+			*
+			*       *    beach distance to water
+			*       *       *
+			*       *       *       *       |                         water surface length          |
+			*       *       *       *       *********************************************************-
+			*       *       *       *       *       *
+			*       *       *       *       *       *       *
+			*       *       *       *       *       *       *       *                                 Water height
+			*       *       *       *       *       *       *       *       *
+			*       *       *       *       *       *       *       *       *       *
+			*       *       *       *       *       *       *       *       Sand angle deg  *
+			*       *       *       *       *       *       *       *       *       *       *       *-
+										sand adjacent flat
+		*/
 
-	return React.useMemo<WaterSideCompute>(() => {
 		// Clamp the height so our animations never get too crazy.
 		// diagramSandHeight / constant height = X / water level height
-		const clampedHeight = Math.min(12, Math.max(0.5, height));
-		// Get the total height the water should be.
-		const waterSideHeight = (objectSandHeight * clampedHeight) / constant.beachAccess.bestGuessBeachHeight;
-		// Get just the height we can draw with triangles.
-		const clampedTriangleHeight = Math.min(objectSandHeight, waterSideHeight);
+		const clampedHeight = Math.min(12, Math.max(0.5, waterLevelHeight));
+		// Convert the height to our units.
+		const waterHeight = sandHeight * (clampedHeight / constant.beachAccess.bestGuessBeachHeight);
+
 		// Get the angle of the triangle opposite of the downward sand slope.
 		const complementaryAngle = 90 - sandAngleDeg;
 		// Get the width of the triangle, matching the total width of the top of the water.
-		const waterSideWidth = Math.tan(complementaryAngle / 180 * Math.PI) * clampedTriangleHeight;
+		const waterSurfaceLength = Math.tan(complementaryAngle / 180 * Math.PI) * waterHeight;
+
+		const beachDistanceToWater = Math.max(0, Math.sqrt(Math.pow(sandAdjacentFlat - waterSurfaceLength, 2) + Math.pow(sandHeight - waterHeight, 2)));
+
+		const waterSurfaceLengthWithAnimation = waterHeight > sandHeight ? 0 : Math.tan(complementaryAngle / 180 * Math.PI) * (waterHeight + waterAnimationHeight);
+		const beachDistanceToWaterWithAnimation = waterHeight + waterAnimationHeight > sandHeight ? 0 : Math.max(0, Math.sqrt(Math.pow(sandAdjacentFlat - waterSurfaceLengthWithAnimation, 2) + Math.pow(sandHeight - (waterHeight + waterAnimationHeight), 2)));
+
 		return {
-			width: waterSideWidth,
-			heightTriangle: clampedTriangleHeight,
-			heightOverflow: Math.max(0, waterSideHeight - objectSandHeight)
+			waterSurfaceLength,
+			waterHeight,
+			beachDistanceToWater,
+			beachDistanceToWaterWithAnimation
 		};
-	}, [height]);
+	}, [waterLevelHeight]);
 }

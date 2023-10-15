@@ -65,4 +65,4 @@ export const constant = {
 
 	/** Number of minutes before sunrise and after sunset where we can still have beach time. */
 	sunLightBufferMinutes: 30
-};
+} as const;

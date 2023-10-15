@@ -4,6 +4,7 @@ import { SpacePanelGridGap } from '@/index/core/layout/layout-panel';
 import { NowBeachAccess } from './now-beach-access';
 import { NowBeachAccessHighlights } from './now-beach-highlights';
 import { NowBeachUpcoming } from './now-beach-upcoming';
+import { NowBeachVisual } from './now-beach-visual';
 import { Section } from './section';
 
 // const NowBeachHow_Title = styled.div`
@@ -42,6 +43,7 @@ export const NowBeach: React.FC<NowBeachProps> = (props) => {
 	return (
 		<Section>
 			<NowBeach_Container>
+				<NowBeachVisual />
 				<NowBeachAccess />
 				<NowBeachAccessHighlights />
 				<NowBeachUpcoming />
