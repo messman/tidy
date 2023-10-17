@@ -5,12 +5,12 @@ import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { FontWeight } from '@/index/core/primitive/primitive-design';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { TimeDurationTextUnit } from '@/index/core/text/text-unit';
-import { AstroSolarEventType, mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrentContextual, WeatherPointHourly, WeatherStatusType, WithDaytime } from '@wbtdevlocal/iso';
+import { AstroSolarEventType, mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrent, WeatherPointHourly, WeatherStatusType, WithDaytime } from '@wbtdevlocal/iso';
 import { TideLevelIcon } from '../common/tide/tide-level-icon';
 import { WeatherIconDayNight } from '../common/weather/weather-icon';
 import { weatherStatusDescription } from '../common/weather/weather-utility';
 
-function getTideDescription(current: TidePointCurrentContextual): string {
+function getTideDescription(current: TidePointCurrent): string {
 	const { direction, division } = current;
 	if (direction === TideLevelDirection.turning) {
 		return `It's ${division === TideLevelDivision.low ? 'low' : 'high'} tide`;
@@ -106,7 +106,7 @@ export const NowBeachAccessHighlights: React.FC = () => {
 			set: 'The sun is setting',
 			civilDusk: 'Losing light'
 		};
-		//astroInfoRender = mapNumberEnumValue(AstroSolarEventType, typeToText, solarEvent.type); TODO
+		astroInfoRender = mapNumberEnumValue(AstroSolarEventType, typeToText, solarEvent.type);
 	}
 	else {
 		const next = getSolarEventById(astro.sun.nextRiseSetTwilightId);
@@ -119,7 +119,7 @@ export const NowBeachAccessHighlights: React.FC = () => {
 				set: 'Almost sunset',
 				civilDusk: 'Almost dusk'
 			};
-			//astroInfoRender = mapNumberEnumValue(AstroSolarEventType, typeToText, next.type); TODO
+			astroInfoRender = mapNumberEnumValue(AstroSolarEventType, typeToText, next.type);
 		}
 	}
 

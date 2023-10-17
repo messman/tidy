@@ -35,13 +35,15 @@ export interface WeekDayTideProps {
 
 export const WeekDayTide: React.FC<WeekDayTideProps> = (props) => {
 	const { day, isTop, isBottom } = props;
-	const { meta, now, getTideExtremeById, tideExtrema } = useBatchResponseSuccess();
+	const { meta, now, getTideExtremeById, week } = useBatchResponseSuccess();
 
 	const current = day.day.hasSame(meta.referenceTime, 'day') ? now.tide.current : undefined;
 
 	const extrema = day.tides.extremaIds.map((id) => {
 		return getTideExtremeById(id);
 	});
+
+	const { min, max } = week.tideRange;
 
 	return (
 		<Panel
@@ -59,8 +61,8 @@ export const WeekDayTide: React.FC<WeekDayTideProps> = (props) => {
 					current={current}
 					currentTime={meta.referenceTime}
 					extrema={extrema}
-					min={getTideExtremeById(tideExtrema.minId).height}
-					max={getTideExtremeById(tideExtrema.maxId).height}
+					min={min}
+					max={max}
 				/>
 			</Container>
 		</Panel>

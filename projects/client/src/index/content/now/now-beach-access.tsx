@@ -4,7 +4,7 @@ import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { Panel, PanelPadding } from '@/index/core/layout/layout-panel';
 import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
 import { TimeDurationTextUnit } from '@/index/core/text/text-unit';
-import { TideLevelBeachStatus } from '@wbtdevlocal/iso';
+import { TideLevelBeachStatus, TideLevelDirection } from '@wbtdevlocal/iso';
 
 const LargeText = styled.div`
 	${fontStyles.stylized.statistic};
@@ -13,7 +13,7 @@ const LargeText = styled.div`
 export const NowBeachAccess: React.FC = () => {
 	const { meta, now } = useBatchResponseSuccess();
 
-	const { beachStatus, beachChange } = now.tide.current;
+	const { beachStatus, beachChange, direction } = now.tide.current;
 	let render: JSX.Element = null!;
 
 	const timeDuration = (
@@ -22,7 +22,7 @@ export const NowBeachAccess: React.FC = () => {
 		</LargeText>
 	);
 
-	if (beachStatus === TideLevelBeachStatus.covering) {
+	if (beachStatus === TideLevelBeachStatus.between && direction === TideLevelDirection.rising) {
 		render = (
 			<>
 				<MediumBodyText>The tide is covering up the last of the beach...</MediumBodyText>
@@ -39,7 +39,7 @@ export const NowBeachAccess: React.FC = () => {
 			</>
 		);
 	}
-	else if (beachStatus === TideLevelBeachStatus.uncovering) {
+	else if (beachStatus === TideLevelBeachStatus.between && direction === TideLevelDirection.falling) {
 		render = (
 			<>
 				<MediumBodyText>The beach is gradually uncovering...</MediumBodyText>

@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { ErrorBoundary } from '@/index/core/error/error-boundary';
 import { SVGIconUrlLoadProvider } from '@/index/core/icon/icon-url';
 import { DocumentVisibilityProvider, WindowDimensionsProvider, WindowMediaLayoutProvider } from '@messman/react-common';
-import { AppNavigationProvider } from './app/index-area/app-navigation';
 import { AppLayout } from './app/layout/layout-app';
 import { BatchResponseProvider } from './core/data/data';
 import { DataSeedProvider } from './core/data/data-seed';
@@ -23,7 +22,6 @@ const App: React.FC = () => {
 		provider(RequestFetchProvider, {}),
 		provider(DataSeedProvider, {}),
 		provider(BatchResponseProvider, {}),
-		provider(AppNavigationProvider, {}),
 		provider(SVGIconUrlLoadProvider, {}),
 	];
 

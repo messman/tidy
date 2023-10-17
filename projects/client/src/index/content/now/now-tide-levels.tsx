@@ -11,13 +11,15 @@ const Statistic = styled.div`
 `;
 
 export const NowTideLevels: React.FC = () => {
-	const { tideExtrema, getTideExtremeById, now, meta } = useBatchResponseSuccess();
+	const { getTideExtremeById, now, week, meta } = useBatchResponseSuccess();
 	const { previousId, current, nextId } = now.tide;
 
 	const extrema = [
 		getTideExtremeById(previousId),
 		getTideExtremeById(nextId),
 	];
+
+	const { min, max } = week.tideRange;
 
 	return (
 		<Panel title="Water Level">
@@ -29,8 +31,8 @@ export const NowTideLevels: React.FC = () => {
 				extrema={extrema}
 				current={current}
 				currentTime={meta.referenceTime}
-				min={getTideExtremeById(tideExtrema.minId).height}
-				max={getTideExtremeById(tideExtrema.maxId).height}
+				min={min}
+				max={max}
 			/>
 			<SpacePanelEdge.Block />
 		</Panel>

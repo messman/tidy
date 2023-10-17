@@ -46,7 +46,6 @@ export const NowTideDebug: React.FC = () => {
 				<SubsectionContainer>
 					<Text>Final value: {tide(now.tide.current.height)}</Text>
 					{portland && portlandAdjustment !== null && <Text>Portland: {tide(portlandAdjustment)} (raw {tide(portland.height)})</Text>}
-					<Text>OFS: {tide(ofsInterval.height)} (interval data)</Text>
 					<Text>OFS/Astro Computed: {tide(computed.height)}</Text>
 				</SubsectionContainer>
 				{portland && portlandAdjustment !== null && portlandComputed !== null && (

@@ -105,7 +105,7 @@ export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) 
 
 		// Yay maps!
 		const tideExtremeMap = new Map<string, TidePointExtreme>(
-			(state.success?.tideExtrema.extrema || []).map((extreme) => {
+			(state.success?.tideExtrema || []).map((extreme) => {
 				return [extreme.id, extreme];
 			})
 		);

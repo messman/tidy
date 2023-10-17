@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import {
-	constant, isServerError, Range, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeComp, TidePointExtremeDay,
+	constant, isServerError, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeComp, TidePointExtremeDay,
 	TidePointFromExtremes
 } from '@wbtdevlocal/iso';
 import { ServerPromise } from '../../api/error';
@@ -364,32 +364,6 @@ function getTidePointBeachChanges(extrema: TidePointExtreme[]): TidePointBeachCh
 	return changes;
 }
 
-
-/** Gets minimum and maximum extrema from an array as [min, max]. */
-function getTideMinMax(extrema: TidePointExtreme[]): [TidePointExtreme, TidePointExtreme] {
-	if (!extrema || !extrema.length) {
-		throw new Error('Cannot get min and max of empty array');
-	}
-	let minHeight: number = Infinity;
-	let maxHeight: number = -Infinity;
-
-	let minEvent: TidePointExtreme = null!;
-	let maxEvent: TidePointExtreme = null!;
-
-	extrema.forEach(function (t) {
-		if (t.height < minHeight) {
-			minHeight = t.height;
-			minEvent = t;
-		}
-		if (t.height > maxHeight) {
-			maxHeight = t.height;
-			maxEvent = t;
-		}
-	});
-
-	return [minEvent, maxEvent];
-};
-
 /** If within this time (on either side), say we're at the extreme. */
 const currentExtremeBoundMinutes = 10;
 
@@ -507,9 +481,9 @@ export interface TideAdditionalContext {
 	previousId: string;
 	currentId: string | null;
 	nextId: string;
-	range: Range<TidePointExtreme>;
 	beachChanges: TidePointBeachChange[];
 	extremeDays: TidePointExtremeDay[];
+	extremaMap: Map<string, TidePointExtreme>;
 }
 
 export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFetched): TideAdditionalContext {
@@ -553,32 +527,6 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 		}
 	}
 
-	// if (current) {
-	// 	currentBeachStatus = current.isLow ? TideLevelBeachStatus.uncovered : TideLevelBeachStatus.covered;
-	// }
-	// else if (previous.isLow) {
-	// 	currentBeachStatus = TideLevelBeachStatus.uncovered;
-	// 	if (currentPointHeight > coveredActual) {
-	// 		currentBeachStatus = TideLevelBeachStatus.covered;
-	// 	}
-	// 	else if (currentPointHeight > covering) {
-	// 		currentBeachStatus = TideLevelBeachStatus.covering;
-	// 	}
-	// }
-	// else {
-	// 	currentBeachStatus = TideLevelBeachStatus.covered;
-	// 	if (currentPointHeight < uncovered) {
-	// 		currentBeachStatus = TideLevelBeachStatus.uncovered;
-	// 	}
-	// 	else if (currentPointHeight < uncovering) {
-	// 		currentBeachStatus = TideLevelBeachStatus.uncovering;
-	// 	}
-	// }
-
-	// Now find when it will next change (just for 
-
-	const [min, max] = getTideMinMax(extrema);
-
 	/*
 		Calculate the direction and division based on what we now know.
 		For division: top 25% is upper; middle 50% is mid; lower 25% is lower.
@@ -598,6 +546,10 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 
 	const extremeDays = getTideExtremeDays(extrema, referenceTime);
 
+	const extremaMap = new Map<string, TidePointExtreme>(extrema.map((extreme) => {
+		return [extreme.id, extreme];
+	}));
+
 	return {
 		current: {
 			height: currentHeight,
@@ -607,14 +559,11 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 			beachChange: nextMajorBeachChange.time
 		},
 		beachChanges: changes,
-		range: {
-			min,
-			max
-		},
 		previousId: previous.id,
 		currentId: current?.id || null,
 		nextId: next.id,
-		extremeDays
+		extremeDays,
+		extremaMap
 	};
 }
 

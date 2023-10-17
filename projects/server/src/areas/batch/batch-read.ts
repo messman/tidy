@@ -13,7 +13,7 @@ import { dateForZone } from '../../services/time';
 import { readWeather } from '../../services/weather/weather-fetch';
 import { createWeather } from '../../services/weather/weather-fetch-create';
 import { getWeatherAdditionalContext, WeatherFetched } from '../../services/weather/weather-shared';
-import { getBeachTimeDays } from './beach';
+import { getBeachTimeDays, getDailyTempRangeFromWeek, getTideMinMaxFromWeek } from './beach';
 
 /** The main function. Calls APIs. */
 export async function readBatch(ctx: LogContext): ServerPromise<Batch> {
@@ -69,18 +69,16 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 	};
 
 	const tideAdditional = getTideAdditionalContext(config, tideFetched);
-	const { range, current, currentId, nextId, previousId } = tideAdditional;
+	const { current, currentId, nextId, previousId, extremaMap } = tideAdditional;
 	const astroAdditional = getAstroAdditionalContext(config, astroFetched, weatherFetched.moonPhaseDaily);
 	const { sunRelativity, sunCloseDays, todayAstroDay, solarEventMap, days: astroDays, isIncreasedEffect, future } = astroAdditional;
-	const { filteredHourlyWithSun, isCurrentDaytime, indicatorChangeHourlyId, tempRange } = getWeatherAdditionalContext(config, weatherFetched, solarEventMap, astroDays);
+	const { filteredHourlyWithSun, isCurrentDaytime, indicatorChangeHourlyId } = getWeatherAdditionalContext(config, weatherFetched, solarEventMap, astroDays);
+
+	const days = getBeachTimeDays(config, tideFetched, tideAdditional, astroFetched, astroAdditional, weatherFetched);
 
 	return {
 		meta,
-		tideExtrema: {
-			extrema: tideFetched.extrema,
-			minId: range.min.id,
-			maxId: range.max.id
-		},
+		tideExtrema: tideFetched.extrema,
 		solarEvents: astroFetched.solarEvents,
 		now: {
 			astro: {
@@ -117,8 +115,9 @@ function createBatchContent(_ctx: LogContext, config: BaseConfig, tideFetched: T
 			}
 		},
 		week: {
-			days: getBeachTimeDays(config, tideFetched, tideAdditional, astroFetched, astroAdditional, weatherFetched),
-			tempRange,
+			days,
+			tideRange: getTideMinMaxFromWeek(days, extremaMap),
+			tempRange: getDailyTempRangeFromWeek(days),
 		},
 	};
 }

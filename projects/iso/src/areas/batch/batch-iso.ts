@@ -28,11 +28,7 @@ export interface Batch {
 	meta: BatchMeta;
 
 	/** Tide extrema data, which is referenced in multiple areas. */
-	tideExtrema: {
-		extrema: TidePointExtreme[];
-		minId: string;
-		maxId: string;
-	};
+	tideExtrema: TidePointExtreme[];
 	solarEvents: AstroSolarEvent[];
 
 	/** Content for the current situation. */
@@ -105,6 +101,8 @@ export interface BatchNowAstro {
 export interface BatchWeek {
 	/** Overall min and max of temperature for this range. */
 	tempRange: Range<number>;
+	/** Overall min and max of water levels for this range. */
+	tideRange: Range<number>;
 	/** Beach times by day for the next few days. */
 	days: BeachTimeDay[];
 }

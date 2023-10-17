@@ -5,9 +5,9 @@ import { StyledFC } from '@/index/core/primitive/primitive-styled';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
-import { mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrentContextual } from '@wbtdevlocal/iso';
+import { mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrent } from '@wbtdevlocal/iso';
 
-export type TidePointCurrentSimplified = Pick<TidePointCurrentContextual, "division" | "direction">;
+export type TidePointCurrentSimplified = Pick<TidePointCurrent, "division" | "direction">;
 
 /** A tide status that should never happen with real data, but may be used for loading. */
 export const unknownTide: TidePointCurrentSimplified = { direction: TideLevelDirection.turning, division: TideLevelDivision.mid };

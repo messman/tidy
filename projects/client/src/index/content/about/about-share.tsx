@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { BaseButton, Button } from '@/index/core/form/button';
 import { Panel, PanelPadding } from '@/index/core/layout/layout-panel';
 import { useSafeTimer } from '@/index/core/lifecycle/timer';
-import { borderRadiusStyle, Spacing } from '@/index/core/primitive/primitive-design';
+import { borderRadiusStyle } from '@/index/core/primitive/primitive-design';
 import { MediumBodyText } from '@/index/core/text/text-shared';
 import { DEFINE } from '@/index/define';
 import { setClipboard } from '@messman/react-common';
 import { icons } from '@wbtdevlocal/assets';
-import { PanelParagraph, SectionContainer, SectionHeading } from './about-shared';
+import { SectionContainer, SectionHeading } from './about-shared';
 
 enum ShareStatus {
 	default,

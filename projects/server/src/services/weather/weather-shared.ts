@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import {
-	AstroDay, AstroLunarPhaseDay, AstroSolarEvent, AstroSunDay, AstroSunRiseSet, mapNumberEnumValue, Range, WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly,
-	WeatherStatusType, WeatherWindDirection, WithDaytime
+	AstroDay, AstroLunarPhaseDay, AstroSolarEvent, AstroSunDay, AstroSunRiseSet, mapNumberEnumValue, WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WeatherStatusType,
+	WeatherWindDirection, WithDaytime
 } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { createTimeIterator } from './iterator';
@@ -141,10 +141,6 @@ export function fixFetchedWeather(config: BaseConfig, fetchedWeather: WeatherFet
 	};
 }
 
-/** Filters hourly weather to a lesser amount suitable for ios weather-like hourly scrolling. */
-function filterHourlyWeather(config: BaseConfig, entry: WeatherPointHourly): boolean {
-	return entry.time < config.referenceTime.plus({ hours: 30 });
-}
 
 /**
  * Figures out if it's daytime at each hour
@@ -209,16 +205,6 @@ function getHourlyWeatherWithDaytimeAndSun(referenceTime: DateTime, solarEventMa
 	});
 }
 
-/** Get the range of max and min for the daily high and low temperatures. */
-function getDailyTempRange(daily: WeatherPointDaily[]): Range<number> {
-	return daily.reduce<Range<number>>((output, daily) => {
-		return {
-			min: Math.min(output.min, daily.minTemp),
-			max: Math.max(output.max, daily.maxTemp)
-		};
-	}, { min: Infinity, max: -Infinity });
-}
-
 /** Find the first hourly weather value that is a different indicator than the current weather. */
 function getIndicatorChangeHourlyId(currentWeatherIndicator: WeatherIndicator, hourly: WeatherPointHourly[]): string | null {
 	return hourly.find((hourly) => {
@@ -230,13 +216,13 @@ export interface WeatherAdditionalContext {
 	filteredHourlyWithSun: (WithDaytime<WeatherPointHourly> | AstroSunRiseSet)[];
 	isCurrentDaytime: boolean;
 	indicatorChangeHourlyId: string | null;
-	tempRange: Range<number>;
 }
 
 export function getWeatherAdditionalContext(config: BaseConfig, fetched: WeatherFetched, solarEventMap: Map<string, AstroSolarEvent>, astroDays: AstroDay[]): WeatherAdditionalContext {
 
+	// Filter hourly weather to a lesser amount suitable for ios weather-like hourly scrolling.
 	const hourly = fetched.hourly.filter((entry) => {
-		return filterHourlyWeather(config, entry);
+		return entry.time < config.referenceTime.plus({ hours: 30 });
 	});
 
 	const sunDayMap = new Map<number, AstroSunDay>();
@@ -247,7 +233,6 @@ export function getWeatherAdditionalContext(config: BaseConfig, fetched: Weather
 	return {
 		filteredHourlyWithSun: getHourlyWeatherWithDaytimeAndSun(config.referenceTime, solarEventMap, sunDayMap, hourly),
 		isCurrentDaytime: getIsCurrentDaytime(solarEventMap, sunDayMap, fetched.current.time),
-		tempRange: getDailyTempRange(fetched.daily),
 		indicatorChangeHourlyId: getIndicatorChangeHourlyId(fetched.current.indicator, hourly)
 	};
 }

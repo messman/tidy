@@ -44,7 +44,7 @@ export interface ChartHourlyProps {
 
 export const ChartHourly: React.FC<ChartHourlyProps> = (props) => {
 	const { day } = props;
-	const { meta, tideExtrema, getTideExtremeById } = useBatchResponseSuccess();
+	const { meta, getTideExtremeById, week } = useBatchResponseSuccess();
 	const { referenceTime } = meta;
 
 	const rangesWithSplitDay: ChartHourlyFillProps[] = [];
@@ -97,8 +97,7 @@ export const ChartHourly: React.FC<ChartHourlyProps> = (props) => {
 		];
 	}, [day, getTideExtremeById]);
 
-	const min = getTideExtremeById(tideExtrema.minId).height;
-	const max = getTideExtremeById(tideExtrema.maxId).height;
+	const { min, max } = week.tideRange;
 
 	let currentTimeRender: React.ReactNode = null;
 	const isToday = referenceTime >= day.day.startOf('day') && referenceTime <= day.day.endOf('day');
