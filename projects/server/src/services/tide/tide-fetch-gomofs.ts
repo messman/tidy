@@ -409,7 +409,6 @@ function getCurrentAndExtrema(referenceTime: DateTime, oceanTimes: DateTime[], w
 				..                      N
 			*/
 
-			//let extreme: TidePointExtreme = null!;
 
 			const firstPointIndex = indexOfFirstOfSame !== -1 ? indexOfFirstOfSame : i - 2;
 			const firstPoint = waterLevelsWithTime[firstPointIndex];
@@ -417,12 +416,43 @@ function getCurrentAndExtrema(referenceTime: DateTime, oceanTimes: DateTime[], w
 			const current = waterLevelsWithTime[i];
 			const peak = getPolynomialPeak(firstPoint, previous, current);
 
-			extrema.push({
-				id: createTidePointExtremeId(peak.time, 'gomofs'),
-				time: peak.time,
-				height: peak.value,
-				isLow: isNowIncreasing,
-			});
+			/*
+				A wrinkle: sometimes you'll have values like this:
+
+				3.3
+				3.2
+				3.1
+				3.0
+				2.9 <---
+				3.0
+				3.1
+				3.0 <--
+				3.1
+				3.2
+				3.3
+
+				Basically sometimes you can have a "lack of smoothness" in the data.
+				To solve for this, when we get to an inflection point, we will "look ahead"
+				to check that we don't flip again soon. 
+			*/
+			const height = peak.value;
+			let min = height;
+			let max = height;
+			for (let j = Math.max(0, firstPointIndex - 10); j < Math.min(waterLevelsWithTime.length, firstPointIndex + 10); j++) {
+				const lookAheadBehind = waterLevelsWithTime[j];
+				min = Math.min(min, lookAheadBehind.value);
+				max = Math.max(max, lookAheadBehind.value);
+			}
+
+			// Height must be the min or max value after looking ahead, else it wasn't a true peak
+			if (height === min || height === max) {
+				extrema.push({
+					id: createTidePointExtremeId(peak.time, 'gomofs'),
+					time: peak.time,
+					height,
+					isLow: isNowIncreasing,
+				});
+			}
 
 			// console.log(peak);
 
