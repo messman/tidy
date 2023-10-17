@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { visualCssConstant, VisualCssDimensions } from './visual-css-shared';
 
-const wetSandBuffer = 3;
-
 export interface VisualCssSandProps {
 	dimensions: VisualCssDimensions;
 	children?: React.ReactNode;
@@ -16,12 +14,11 @@ export const VisualCssSand: React.FC<VisualCssSandProps> = (props) => {
 	const { beachDistanceToWaterWithAnimation } = dimensions;
 
 	const background = (() => {
-
-		if (beachDistanceToWaterWithAnimation <= wetSandBuffer) {
+		if (beachDistanceToWaterWithAnimation <= visualCssConstant.sandFoamBuffer) {
 			return themeTokens.beachDiagram.sandWet;
 		}
 
-		const percentChange = Math.round(((beachDistanceToWaterWithAnimation - wetSandBuffer) / visualCssConstant.sandHypotenuse) * 10000) / 100;
+		const percentChange = Math.round(((beachDistanceToWaterWithAnimation - visualCssConstant.sandFoamBuffer) / visualCssConstant.sandHypotenuse) * 10000) / 100;
 
 		return `linear-gradient(${themeTokens.beachDiagram.sand} 0%, ${themeTokens.beachDiagram.sand} ${percentChange}%, ${themeTokens.beachDiagram.sandWet} ${percentChange}%, ${themeTokens.beachDiagram.sandWet} 100%)`;
 	})();

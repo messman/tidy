@@ -1,17 +1,16 @@
 import * as React from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { perspectiveStyle, visualCssConstant, VisualCssDimensions } from './visual-css-shared';
 
 export interface VisualCssWaterProps {
 	dimensions: VisualCssDimensions;
+	children: React.ReactNode;
 };
 
 export const VisualCssWater: React.FC<VisualCssWaterProps> = (props) => {
-	const { dimensions } = props;
+	const { dimensions, children } = props;
 	const { waterSurfaceLength } = dimensions;
-
-
 
 	const percentRaw = (1 - (waterSurfaceLength / visualCssConstant.platformHeightTotal)) * 100;
 	const percent = Math.round(percentRaw * 100) / 100;
@@ -20,12 +19,16 @@ export const VisualCssWater: React.FC<VisualCssWaterProps> = (props) => {
 	const topBackground = `linear-gradient(${themeTokens.beachDiagram.oceanTop} ${percent}%, ${themeTokens.beachDiagram.oceanTopDark} ${percentDark}%)`;
 	const leftBackground = `linear-gradient(${themeTokens.beachDiagram.oceanSide} ${percent}%, ${themeTokens.beachDiagram.oceanSideDark} ${percentDark}%)`;
 
+	// Make up for the animation height we remove in the keyframes
+	const waterHeight = dimensions.waterHeight + visualCssConstant.waterAnimationHeight;
+
 	return (
 		<WaterContainer>
 			<WaterContainerChild>
-				<WaterLeftHeightSide style={{ width: `${dimensions.waterHeight}px`, background: leftBackground }} />
-				<WaterFrontWidthSide style={{ height: `${dimensions.waterHeight}px` }} />
-				<WaterTop style={{ transform: `translateZ(${dimensions.waterHeight}px)`, background: topBackground }} />
+				<WaterLeftHeightSide style={{ width: `${waterHeight}px`, background: leftBackground }} />
+				<WaterFrontWidthSide style={{ height: `${waterHeight}px` }} />
+				<WaterTop style={{ transform: `translateZ(${waterHeight}px)`, background: topBackground }} />
+				{children}
 			</WaterContainerChild>
 		</WaterContainer>
 	);
@@ -33,10 +36,10 @@ export const VisualCssWater: React.FC<VisualCssWaterProps> = (props) => {
 
 const waterAnimation = keyframes`
 	${'0%'} {
-		transform: translateZ(0px);
+		transform: translateZ(${-visualCssConstant.waterAnimationHeight}px);
 	}
 	${'100%'} {
-		transform: translateZ(${visualCssConstant.waterAnimationHeight}px);
+		transform: translateZ(0px);
 	}
 `;
 
@@ -45,8 +48,8 @@ const transitionDuration = '1s';
 const WaterContainer = styled.div`
 	position: absolute;
 	bottom: 0px;
-	left: 2px;
-	width: calc(100% - 2px);
+	left: 1px;
+	width: calc(100% - 1px);
 	height: 100%;
 	
 	animation-name: ${waterAnimation};

@@ -1,19 +1,26 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { Button } from '@/index/core/form/button';
 import { SpacePanelGridPadding } from '@/index/core/layout/layout-panel';
 import { LayoutBreakpointRem } from '@/index/core/layout/window-layout';
-import { Cosmos, CosmosFixture } from '@/test';
+import { MediumBodyText } from '@/index/core/text/text-shared';
+import { CosmosFixture } from '@/test';
 import { FixtureSetup } from '@/test/cosmos-fixture';
 import { VisualCss } from './visual-css';
 
 export default CosmosFixture.create(() => {
 
-	const height = Cosmos.useControlValue("Height", 5);
+	const [height, setHeight] = React.useState(6);
 
 	return (
 		<CenteringContainer>
 			<Container>
 				<VisualCss waterLevelHeight={height} />
+				<div>
+					<MediumBodyText>{height.toString()}</MediumBodyText>
+					<Button onClick={() => { setHeight(p => p - 1); }}>Minus 1</Button>
+					<Button onClick={() => { setHeight(p => p + 1); }}>Plus 1</Button>
+				</div>
 			</Container>
 		</CenteringContainer>
 	);

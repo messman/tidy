@@ -39,27 +39,29 @@ import { constant } from '@wbtdevlocal/iso';
 */
 
 export const perspectiveStyle = css`
-	perspective: 3000px;
+	perspective: 200000px; // Ridiculously high value required for iOS
 `;
 
-const platformBaseSize = 8;
+const platformBaseSize = 20;
+const platformOffsetSize = 20;
 
-const platformWidthBeachLength = 240;
+const platformWidthBeachLength = 200;
 
-const platformHeightBufferEachEnd = 40;
-const platformHeightWallToMinTide = 150;
+const platformHeightBufferEachEnd = 20;
+const platformHeightWallToMinTide = 160;
 
 const roadDepth = platformHeightBufferEachEnd;
-const roadHeight = 36;
+const roadHeight = 30;
 
-const wallHeight = 40;
+const wallHeight = 32;
 const wallDepth = 9;
 
-const sandHeight = 20;
+const sandHeight = 16;
 const sandAdjacentFlat = platformHeightWallToMinTide + platformHeightBufferEachEnd;
 const sandHypotenuse = Math.sqrt(Math.pow(sandHeight, 2) + Math.pow(sandAdjacentFlat, 2));
 const sandAngleDeg = Math.atan(sandHeight / sandAdjacentFlat) * 180 / Math.PI;
 
+const sandFoamBuffer = 3;
 
 const waterAnimationHeight = 1;
 
@@ -68,6 +70,7 @@ const platformHeightTotal = roadDepth + wallDepth + sandAdjacentFlat;
 export const visualCssConstant = {
 	/** Size of the base underneath */
 	platformBaseSize,
+	platformOffsetSize,
 	/** Length, like what you would walk down the beach. */
 	platformWidthBeachLength,
 	/** The side from wall to water. The cross-section. */
@@ -85,6 +88,8 @@ export const visualCssConstant = {
 	sandHypotenuse,
 	/** The angle of decline for the sand. */
 	sandAngleDeg,
+	/** Buffer for animating wet sand and the foam */
+	sandFoamBuffer,
 	/** Height of the wall */
 	wallHeight,
 	/** Depth of the wall */

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { matrixArrayToCssMatrix } from '@/index/core/draw/matrix';
 import { Panel } from '@/index/core/layout/layout-panel';
 import { borderRadiusStyle } from '@/index/core/primitive/primitive-design';
 import { themeTokens } from '@/index/core/theme/theme-root';
@@ -47,7 +46,7 @@ export const VisualCss: React.FC<VisualCssProps> = (props) => {
 
 	const refSize = useElementSize(10, (width, _height) => {
 		const clamped = Math.min(10000, Math.max(10, width));
-		const scale = clamped / 200;
+		const scale = clamped / 300;
 		setScale(scale);
 	});
 
@@ -84,10 +83,8 @@ export const VisualCss: React.FC<VisualCssProps> = (props) => {
 				return {
 					...p,
 					activeRotation: {
-						// z: Math.min(rotationZMax, Math.max(rotationZMin, p.startRotation.z + zDegrees)),
-						// x: Math.min(rotationXMax, Math.max(rotationXMin, p.startRotation.x + xDegrees))
-						z: p.startRotation.z + zDegrees,
-						x: p.startRotation.x + xDegrees
+						z: Math.min(rotationZMax, Math.max(rotationZMin, p.startRotation.z + zDegrees)),
+						x: Math.min(rotationXMax, Math.max(rotationXMin, p.startRotation.x + xDegrees))
 					}
 				};
 			});
@@ -98,7 +95,7 @@ export const VisualCss: React.FC<VisualCssProps> = (props) => {
 	);
 
 	const { x, z } = rotationState.activeRotation;
-	const transform = `rotateX(${x}deg) rotateZ(${z}deg) scale(${scale}) scaleZ(${scale}) translateX(${visualCssConstant.wallHeight / 2}px) translateY(-${visualCssConstant.roadDepth / 2}px) translateZ(-${visualCssConstant.wallHeight / 2}px)`;
+	const transform = `rotateX(${x}deg) rotateZ(${z}deg) scale(${scale}) scaleZ(${scale})  translateZ(-${visualCssConstant.wallHeight / 2}px)`;
 
 	return (
 		<Panel>
@@ -108,16 +105,16 @@ export const VisualCss: React.FC<VisualCssProps> = (props) => {
 						<BeachDiagram_Platform style={{ transform }}>
 							<PlatformBaseHeightSide />
 							<PlatformBaseWidthSide />
+							<PlatformBaseTop />
 							<VisualCssRoad />
 							<VisualCssWall />
 							<VisualCssSand dimensions={dimensions}>
 								<VisualCssFootprints dimensions={dimensions} />
+								<VisualCssFoam dimensions={dimensions} />
 								{/* <p>Z: {z.toString()} X: {x.toString()}</p> */}
 							</VisualCssSand>
-							<VisualCssWater dimensions={dimensions} />
-							{/* 
-							<VisualCssFoam compute={compute} /> */}
-
+							<VisualCssWater dimensions={dimensions}>
+							</VisualCssWater>
 						</BeachDiagram_Platform >
 					)}
 				</BeachDiagram_Container>
@@ -152,12 +149,21 @@ const BeachDiagram_Platform = styled.div`
 	${perspectiveStyle}
 `;
 
+const PlatformBaseTop = styled.div`
+	position: absolute;
+	top: -${visualCssConstant.platformOffsetSize}px;
+	left: -${visualCssConstant.platformOffsetSize}px;
+	width: ${(visualCssConstant.platformOffsetSize * 2) + visualCssConstant.platformWidthBeachLength}px;
+	height: ${(visualCssConstant.platformOffsetSize * 2) + visualCssConstant.platformHeightTotal}px;
+	background-color: ${themeTokens.beachDiagram.baseTop};
+`;
+
 const PlatformBaseHeightSide = styled.div`
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: -${visualCssConstant.platformOffsetSize}px;
+	left: -${visualCssConstant.platformOffsetSize}px;
 	width: ${visualCssConstant.platformBaseSize}px;
-	height: ${visualCssConstant.platformHeightTotal}px;
+	height: ${(visualCssConstant.platformOffsetSize * 2) + visualCssConstant.platformHeightTotal}px;
 
 	background-color: ${themeTokens.beachDiagram.baseSide};
 	
@@ -167,27 +173,15 @@ const PlatformBaseHeightSide = styled.div`
 
 const PlatformBaseWidthSide = styled.div`
 	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: ${visualCssConstant.platformWidthBeachLength}px;
+	bottom: -${visualCssConstant.platformOffsetSize}px;
+	left: -${visualCssConstant.platformOffsetSize}px;
+	width: ${(visualCssConstant.platformOffsetSize * 2) + visualCssConstant.platformWidthBeachLength}px;
 	height: ${visualCssConstant.platformBaseSize}px;
 
 	background-color: ${themeTokens.beachDiagram.base};
 
 	transform-origin: 0 100%;
 	transform: rotateX(90deg);
-`;
-
-
-
-
-const DebugZero = styled.div`
-	width: 1px;
-	height: 1px;
-	outline: 1px solid red;
-	position: absolute;
-	top: 0;
-	left: 0;
 `;
 
 type Position = [x: number, y: number];
