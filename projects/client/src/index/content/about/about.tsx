@@ -1,11 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Swipe } from '@/index/app/layout/layout-swipe';
+import { tab, useNav } from '@/index/app/nav/nav-context';
 import { SpacePanelGridGap, SpacePanelGridListPadding, SpacePanelGridPadding } from '@/index/core/layout/layout-panel';
 import { Block } from '@/index/core/layout/layout-shared';
 import { getLayoutFromWidth, LayoutBreakpointRem } from '@/index/core/layout/window-layout';
+import { usePreviousNotUndefined } from '@/index/utility/previous';
 import { useWindowMediaLayout } from '@messman/react-common';
-import { mapNumberEnumValue } from '@wbtdevlocal/iso';
+import { isKeyOfEnum, keyForNumberEnumValue, mapNumberEnumValue } from '@wbtdevlocal/iso';
 import { AboutAbout } from './about-about';
 import { AboutDataWarning } from './about-data-warning';
 import { AboutDev } from './about-dev';
@@ -32,18 +34,22 @@ const sectionKeyContent = {
 
 export const About: React.FC = () => {
 
+	const { pathForTab, selectTabWithPath } = useNav();
+
 	const { widthBreakpoint } = useWindowMediaLayout();
 	const { isCompact, isWide } = getLayoutFromWidth(widthBreakpoint);
 
 	const refCompactMain = React.useRef<HTMLDivElement>(null!);
 
-	const [isCompactSwipeActive, setIsCompactSwipeActive] = React.useState(false);
-	const [sectionKey, setSectionKey] = React.useState<SectionKey>(SectionKey.share);
-
 	function selectSection(key: SectionKey): void {
-		setSectionKey(key);
-		setIsCompactSwipeActive(true);
+		selectTabWithPath(tab.about, keyForNumberEnumValue(SectionKey, key));
 	}
+
+	const path = pathForTab(tab.about);
+	const sectionKey = path && isKeyOfEnum(SectionKey, path) ? SectionKey[path] : null;
+	const previousSectionKey = usePreviousNotUndefined(sectionKey ?? undefined);
+	const alwaysSectionKey = sectionKey ?? previousSectionKey ?? SectionKey.about;
+	const SectionComponent = mapNumberEnumValue(SectionKey, sectionKeyContent, alwaysSectionKey);
 
 	if (isWide) {
 		return (
@@ -82,8 +88,6 @@ export const About: React.FC = () => {
 		);
 	}
 
-	const SectionComponent = mapNumberEnumValue(SectionKey, sectionKeyContent, sectionKey);
-
 	return (
 		<CompactContainer>
 			<CompactMain ref={refCompactMain}>
@@ -119,11 +123,11 @@ export const About: React.FC = () => {
 			</CompactMain>
 			<Swipe
 				title='About'
-				isActive={isCompactSwipeActive}
-				onSetInactive={() => { setIsCompactSwipeActive(false); }}
+				isActive={sectionKey !== null}
+				onSetInactive={() => { selectTabWithPath(tab.about, ''); }}
 			>
 				<CompactContent>
-					<SectionComponent key={sectionKey} />
+					<SectionComponent key={alwaysSectionKey} />
 				</CompactContent>
 			</Swipe>
 		</CompactContainer>

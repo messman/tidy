@@ -10,6 +10,7 @@ import { NowTide } from './now-tide';
 import { NowWeather } from './now-weather';
 
 export const Now: React.FC = wrapForBatchLoad(DefaultErrorLoad, () => {
+
 	return (
 		<CenteringContainer>
 			<Container>
@@ -38,3 +39,4 @@ const Container = styled.div`
 	padding: ${SpacePanelGridPadding.value};
 	max-width: ${LayoutBreakpointRem.c30}rem;
 `;
+

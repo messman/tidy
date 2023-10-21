@@ -5,13 +5,14 @@ import { Learn } from '@/index/content/learn/learn';
 import { Now } from '@/index/content/now/now';
 import { Week } from '@/index/content/week/week';
 import { LayoutBreakpointRem } from '@/index/core/layout/window-layout';
+import { mergeRefs } from '@/index/utility/refs';
 import { ElementIntersect, useElementIntersect, useLatestForEffect, useWindowMediaLayout } from '@messman/react-common';
 import { Nav } from '../nav/nav';
 import { Tab, tab, useNav } from '../nav/nav-context';
 
 export const AppLayout: React.FC = () => {
 
-	const { selectedTab, selectTabByScroll, wasTabSelectedByScroll } = useNav();
+	const { selectedTab, selectTabByScroll, wasTabSelectedByScroll, refTabNowScroll, refTabWeekScroll, refTabLearnScroll, refTabAboutScroll } = useNav();
 
 	const { widthBreakpoint } = useWindowMediaLayout();
 
@@ -64,16 +65,16 @@ export const AppLayout: React.FC = () => {
 		<LayoutRoot>
 			{isUpperNav && <Nav isLower={false} />}
 			<ViewRoot ref={rootRef}>
-				<View ref={refViewNow}>
+				<View ref={mergeRefs(refViewNow, refTabNowScroll)}>
 					<Now />
 				</View>
-				<View ref={refViewWeek}>
+				<View ref={mergeRefs(refViewWeek, refTabWeekScroll)}>
 					<Week />
 				</View>
-				<View ref={refViewLearn}>
+				<View ref={mergeRefs(refViewLearn, refTabLearnScroll)}>
 					<Learn />
 				</View>
-				<View ref={refViewAbout}>
+				<View ref={mergeRefs(refViewAbout, refTabAboutScroll)}>
 					<About />
 				</View>
 			</ViewRoot>

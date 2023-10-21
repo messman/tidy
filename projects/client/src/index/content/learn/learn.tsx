@@ -1,11 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Swipe } from '@/index/app/layout/layout-swipe';
+import { tab, useNav } from '@/index/app/nav/nav-context';
 import { Panel, PanelPadding, SpacePanelGridGap, SpacePanelGridListPadding, SpacePanelGridPadding } from '@/index/core/layout/layout-panel';
 import { getLayoutFromWidth, LayoutBreakpointRem } from '@/index/core/layout/window-layout';
 import { OutLink } from '@/index/core/text/text-link';
+import { usePreviousNotUndefined } from '@/index/utility/previous';
 import { useWindowMediaLayout } from '@messman/react-common';
-import { mapNumberEnumValue } from '@wbtdevlocal/iso';
+import { isKeyOfEnum, keyForNumberEnumValue, mapNumberEnumValue } from '@wbtdevlocal/iso';
 import { learnCausesQuestion, LearnEntryCauses } from './learn-entry-causes';
 import { learnConsistencyQuestion, LearnEntryConsistency } from './learn-entry-consistency';
 import { LearnEntryFrequency, learnFrequencyQuestion } from './learn-entry-frequency';
@@ -28,18 +30,22 @@ const questionKeyAnswers = {
 
 export const Learn: React.FC = () => {
 
+	const { pathForTab, selectTabWithPath } = useNav();
+
 	const { widthBreakpoint } = useWindowMediaLayout();
 	const { isCompact, isWide } = getLayoutFromWidth(widthBreakpoint);
 
 	const refCompactList = React.useRef<HTMLDivElement>(null!);
 
-	const [isCompactSwipeActive, setIsCompactSwipeActive] = React.useState(false);
-	const [questionKey, setQuestionKey] = React.useState<QuestionKey>(QuestionKey.cause);
-
 	function selectQuestion(key: QuestionKey): void {
-		setQuestionKey(key);
-		setIsCompactSwipeActive(true);
+		selectTabWithPath(tab.learn, keyForNumberEnumValue(QuestionKey, key));
 	}
+
+	const path = pathForTab(tab.learn);
+	const questionKey = path && isKeyOfEnum(QuestionKey, path) ? QuestionKey[path] : null;
+	const previousQuestionKey = usePreviousNotUndefined(questionKey ?? undefined);
+	const alwaysQuestionKey = questionKey ?? previousQuestionKey ?? QuestionKey.cause;
+	const AnswerComponent = mapNumberEnumValue(QuestionKey, questionKeyAnswers, alwaysQuestionKey);
 
 	if (isWide) {
 		return (
@@ -75,8 +81,6 @@ export const Learn: React.FC = () => {
 		);
 	}
 
-	const AnswerComponent = mapNumberEnumValue(QuestionKey, questionKeyAnswers, questionKey);
-
 	return (
 		<CompactContainer>
 			<CompactList ref={refCompactList}>
@@ -104,11 +108,11 @@ export const Learn: React.FC = () => {
 			</CompactList>
 			<Swipe
 				title='Learn'
-				isActive={isCompactSwipeActive}
-				onSetInactive={() => { setIsCompactSwipeActive(false); }}
+				isActive={questionKey !== null}
+				onSetInactive={() => { selectTabWithPath(tab.learn, ''); }}
 			>
 				<CompactContent>
-					<AnswerComponent key={questionKey} />
+					{AnswerComponent && <AnswerComponent key={alwaysQuestionKey} />}
 				</CompactContent>
 			</Swipe>
 		</CompactContainer>

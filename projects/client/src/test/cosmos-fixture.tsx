@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { NavProvider } from '@/index/app/nav/nav-context';
+import { NavProvider, Tab } from '@/index/app/nav/nav-context';
 import { BatchResponseProvider, useBatchResponse } from '@/index/core/data/data';
 import { DataSeedProvider, useDataSeed } from '@/index/core/data/data-seed';
 import { DefaultErrorLoad } from '@/index/core/data/loader';
@@ -30,11 +30,12 @@ export interface FixtureProps {
 	providers?: ProviderWithProps[];
 	/** If true, wraps the test in a loader so as to not show loading or error states for the main request. */
 	isSuccessOnly?: boolean;
+	tab?: Tab;
 }
 
 export function create(Component: React.FC, props: FixtureProps): React.FC {
 	return () => {
-		const { setup, providers: additionalProviders, isSuccessOnly } = props;
+		const { setup, providers: additionalProviders, isSuccessOnly, tab } = props;
 
 		// #REF_PROVIDERS - update in all areas, if appropriate
 		const providers: ProviderWithProps[] = [
@@ -45,7 +46,7 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 			provider(DataSeedProvider, {}),
 			provider(BatchResponseProvider, {}),
 			provider(SVGIconUrlLoadProvider, {}),
-			provider(NavProvider, {})
+			provider(NavProvider, { initialSelectedTab: tab })
 		];
 
 		if (additionalProviders) {

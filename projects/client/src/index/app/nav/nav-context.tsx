@@ -24,18 +24,33 @@ export interface NavOutput {
 	/** If selected, clears its path */
 	selectTab: (tab: Tab) => void;
 	selectTabByScroll: (tab: Tab) => void;
+
+	refTabNowScroll: React.RefObject<HTMLElement>;
+	refTabWeekScroll: React.RefObject<HTMLElement>;
+	refTabLearnScroll: React.RefObject<HTMLElement>;
+	refTabAboutScroll: React.RefObject<HTMLElement>;
 }
 
 const [NavContextProvider, useNavContext] = createContextConsumer<NavOutput>();
 
 export const useNav = useNavContext;
 
-export const NavProvider: React.FC<React.PropsWithChildren> = (props) => {
-	const { children } = props;
+export interface NavProviderProps {
+	initialSelectedTab?: Tab;
+	children?: React.ReactNode;
+}
+
+export const NavProvider: React.FC<NavProviderProps> = (props) => {
+	const { initialSelectedTab = tab.now, children } = props;
+
+	const refTabNowScroll = React.useRef<HTMLElement>(null!);
+	const refTabWeekScroll = React.useRef<HTMLElement>(null!);
+	const refTabLearnScroll = React.useRef<HTMLElement>(null!);
+	const refTabAboutScroll = React.useRef<HTMLElement>(null!);
 
 	const [state, setState] = React.useState<NavState>(() => {
 		return {
-			selectedTab: tab.now,
+			selectedTab: initialSelectedTab,
 			tabPath: new Map<Tab, string>(),
 			wasTabSelectedByScroll: false,
 		};
@@ -66,6 +81,18 @@ export const NavProvider: React.FC<React.PropsWithChildren> = (props) => {
 					if (tab === prev.selectedTab) {
 						const newMap = new Map(prev.tabPath);
 						newMap.set(tab, '');
+
+						const refTab: Record<Tab, React.RefObject<HTMLElement>> = {
+							now: refTabNowScroll,
+							week: refTabWeekScroll,
+							learn: refTabLearnScroll,
+							about: refTabAboutScroll
+						};
+						const element = refTab[tab].current;
+						if (element) {
+							element.scrollTo({ top: 0, behavior: 'smooth' });
+						}
+
 						return {
 							...prev,
 							tabPath: newMap,
@@ -89,7 +116,11 @@ export const NavProvider: React.FC<React.PropsWithChildren> = (props) => {
 						wasTabSelectedByScroll: true
 					};
 				});
-			}
+			},
+			refTabNowScroll,
+			refTabWeekScroll,
+			refTabLearnScroll,
+			refTabAboutScroll
 		};
 	}, [selectedTab, tabPath, wasTabSelectedByScroll]);
 
