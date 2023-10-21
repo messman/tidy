@@ -44,33 +44,32 @@ export const NowTideDebug: React.FC = () => {
 		<Panel title="Water Level - Debug">
 			<Container>
 				<SubsectionContainer>
-					<Text>Final value: {tide(now.tide.current.height)}</Text>
-					{portland && portlandAdjustment !== null && <Text>Portland: {tide(portlandAdjustment)} (raw {tide(portland.height)})</Text>}
+					<Text>Used: {tide(now.tide.current.height)}</Text>
 					<Text>OFS/Astro Computed: {tide(computed.height)}</Text>
+					{portland && portlandAdjustment !== null && portlandComputed !== null && <Text>Portland: {tide(portlandAdjustment)} = (time-adjust {tide(portland.height)}) / {tide(portlandComputed.height)} * {tide(astroComputed.height)}</Text>}
 				</SubsectionContainer>
 				{portland && portlandAdjustment !== null && portlandComputed !== null && (
 					<SubsectionContainer>
 						<Text>Portland: {tideAtTime(portland.height, portland.time)}, {Math.round(meta.referenceTime.diff(portland.time, 'minutes').minutes)} minutes off</Text>
-						<Text>Adjusted uses OFS/Astro Next/Prev</Text>
-						<Text>Portland Computed: <TideHeightTextUnit height={portlandComputed.height} precision={1} /></Text>
+						<Text>Portland Astro: {tide(portlandComputed.height)}</Text>
 						<Text>Previous: {tideAtTime(portlandComputed.previousExtreme.height, portlandComputed.previousExtreme.time)}</Text>
 						<Text>Next: {tideAtTime(portlandComputed.nextExtreme.height, portlandComputed.nextExtreme.time)}</Text>
 					</SubsectionContainer>
 				)}
 				<SubsectionContainer>
-					<Text>OFS/Astro Computed: <TideHeightTextUnit height={computed.height} precision={1} /></Text>
+					<Text>OFS/Astro Computed: {tide(computed.height)}</Text>
 					<Text>Previous: {tideAtTime(computed.previousExtreme.height, computed.previousExtreme.time)}</Text>
 					<Text>Next: {tideAtTime(computed.nextExtreme.height, computed.nextExtreme.time)}</Text>
 				</SubsectionContainer>
 
 				<SubsectionContainer>
-					<Text>Astro Computed: <TideHeightTextUnit height={astroComputed.height} precision={1} /></Text>
+					<Text>Astro Computed: {tide(astroComputed.height)}</Text>
 					<Text>Previous: {tideAtTime(astroComputed.previousExtreme.height, astroComputed.previousExtreme.time)}</Text>
 					<Text>Next: {tideAtTime(astroComputed.nextExtreme.height, astroComputed.nextExtreme.time)}</Text>
 				</SubsectionContainer>
 
 				<SubsectionContainer>
-					<Text>OFS Computed: <TideHeightTextUnit height={ofsComputed.height} precision={1} /></Text>
+					<Text>OFS Computed: {tide(ofsComputed.height)}</Text>
 					<Text>Previous: {tideAtTime(ofsComputed.previousExtreme.height, ofsComputed.previousExtreme.time)}</Text>
 					<Text>Next: {tideAtTime(ofsComputed.nextExtreme.height, ofsComputed.nextExtreme.time)}</Text>
 				</SubsectionContainer>

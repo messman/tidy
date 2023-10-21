@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
+import { TidePointExtremeComp } from '@wbtdevlocal/iso';
 import { TideChart } from '../common/tide/tide-chart';
 import { TideHeightTextUnit } from '../common/tide/tide-common';
 
@@ -12,12 +13,13 @@ const Statistic = styled.div`
 
 export const NowTideLevels: React.FC = () => {
 	const { getTideExtremeById, now, week, meta } = useBatchResponseSuccess();
-	const { previousId, current, nextId } = now.tide;
+	const { previousId, currentId, current, nextId } = now.tide;
 
 	const extrema = [
 		getTideExtremeById(previousId),
+		currentId ? getTideExtremeById(currentId) : undefined,
 		getTideExtremeById(nextId),
-	];
+	].filter(x => !!x) as TidePointExtremeComp[];
 
 	const { min, max } = week.tideRange;
 
@@ -25,7 +27,6 @@ export const NowTideLevels: React.FC = () => {
 		<Panel title="Water Level">
 			<SpacePanelEdge.PadA>
 				<Statistic><TideHeightTextUnit height={current.height} precision={1} /></Statistic>
-
 			</SpacePanelEdge.PadA>
 			<TideChart
 				extrema={extrema}

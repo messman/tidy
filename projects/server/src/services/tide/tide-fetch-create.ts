@@ -58,7 +58,7 @@ export function createTides(config: BaseConfig, seed: TestSeed): TideFetched {
 
 	return {
 		waterTemp,
-		current: computed.height,
+		current: tideRandomizer.shake(-5, 11, 1, computed.height, .25, true),
 		source: {
 			ofsRetries: 0,
 			ofsOffset: 1000,
