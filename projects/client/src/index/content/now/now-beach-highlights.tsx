@@ -8,7 +8,7 @@ import { TimeDurationTextUnit } from '@/index/core/text/text-unit';
 import { AstroSolarEventType, mapNumberEnumValue, TideLevelDirection, TideLevelDivision, TidePointCurrent, WeatherPointHourly, WeatherStatusType, WithDaytime } from '@wbtdevlocal/iso';
 import { TideLevelIcon } from '../common/tide/tide-level-icon';
 import { WeatherIconDayNight } from '../common/weather/weather-icon';
-import { weatherStatusDescription } from '../common/weather/weather-utility';
+import { capitalizeFirst, weatherStatusDescription } from '../common/weather/weather-utility';
 
 function getTideDescription(current: TidePointCurrent): string {
 	const { direction, division } = current;
@@ -48,10 +48,6 @@ const TallerText = styled.div`
 	line-height: 2rem;
 `;
 
-function capitalizeFirstLetter(value: string): string {
-	return value.charAt(0).toUpperCase() + value.slice(1);
-}
-
 
 export const NowBeachAccessHighlights: React.FC = () => {
 	const { meta, now, getSolarEventById } = useBatchResponseSuccess();
@@ -90,7 +86,7 @@ export const NowBeachAccessHighlights: React.FC = () => {
 
 			weatherInfoRender = (
 				<>
-					{capitalizeFirstLetter(statusDescription.itIsShort)} conditions in about <TimeDurationTextUnit startTime={meta.referenceTime} stopTime={firstHourlyChangedIndicator.time} />
+					{capitalizeFirst(statusDescription.futureConditions)} conditions in about <TimeDurationTextUnit startTime={meta.referenceTime} stopTime={firstHourlyChangedIndicator.time} />
 				</>
 			);
 		}

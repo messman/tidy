@@ -8,15 +8,26 @@ import { TimeTextUnit } from '@/index/core/text/text-unit';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getDateLong } from '@/index/core/time/time';
 import { icons } from '@wbtdevlocal/assets';
-import { BeachTimeDay } from '@wbtdevlocal/iso';
-import { WeatherIconDayNight } from '../common/weather/weather-icon';
+import { BeachTimeDay, mapNumberEnumValue, WeatherStatusType } from '@wbtdevlocal/iso';
+import { WeatherIcon, WeatherIconDayNight } from '../common/weather/weather-icon';
 import { WeatherTempBar } from '../common/weather/weather-temp-bar';
+import { capitalizeFirst, weatherStatusDescription } from '../common/weather/weather-utility';
 
 const WeatherTempContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 1.5rem;
+`;
+
+const WeatherTempIconsContainer = styled.div`
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+`;
+
+const WeatherWarningIcon = styled(WeatherIcon)`
+	color: ${themeTokens.inform.unsure};
 `;
 
 const TempContainer = styled.div`
@@ -40,7 +51,7 @@ const Text = styled.div`
 
 const WeatherTempBarStretch = styled(WeatherTempBar)`
 	flex: 1;
-	max-width: 4rem; // Avoid excessive temp bar width
+	max-width: 5rem; // Avoid excessive temp bar width
 `;
 
 const SunRiseSetEntry = styled.div`
@@ -73,10 +84,29 @@ export const WeekDayWeather: React.FC<WeekDayWeatherProps> = (props) => {
 
 	const isCurrentDay = day.day.hasSame(meta.referenceTime, 'day');
 
-	const { minTemp, maxTemp, status } = day.weather;
+	const { minTemp, maxTemp, status, pop } = day.weather;
 
 	const roundedLow = Math.round(minTemp);
 	const roundedHigh = Math.round(maxTemp);
+
+	const { futureConditions, shouldUseCaution, isRainImplied } = mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, status);
+
+	const shouldUseCautionText = shouldUseCaution ? ' - use caution' : '';
+
+	const popText = (() => {
+		const roundedPercent = Math.round((pop * 100) / 5) * 5;
+
+		if ((roundedPercent <= 5 || roundedPercent >= 95) && isRainImplied) {
+			return null;
+		}
+		if (roundedPercent <= 0) {
+			return ' No significant chance of precipitation for the day.';
+		}
+		return ` ${roundedPercent}% chance of precipitation for the day.`;
+	})();
+
+	// Only show the temp range when it's the only panel showing
+	const isOnlyPanelShowing = isTop && isBottom;
 
 	return (
 		<Panel
@@ -86,23 +116,27 @@ export const WeekDayWeather: React.FC<WeekDayWeatherProps> = (props) => {
 		>
 			<Container>
 				<WeatherTempContainer>
-					<WeatherIconDayNight
-						isDay={true}
-						rain={null}
-						status={status}
-					/>
+					<WeatherTempIconsContainer>
+						<WeatherIconDayNight
+							isDay={true}
+							rain={null}
+							status={status}
+						/>
+						{shouldUseCaution && <WeatherWarningIcon rain={0} type={icons.informWarningSolid} />}
+					</WeatherTempIconsContainer>
 					<TempContainer>
 						<Text>{roundedLow}&deg;</Text>
 						<WeatherTempBarStretch
 							value={isCurrentDay ? now.weather.current.temp : undefined}
 							low={roundedLow}
 							high={roundedHigh}
-							max={week.tempRange.max}
-							min={week.tempRange.min}
+							max={isOnlyPanelShowing ? week.tempRange.max : undefined}
+							min={isOnlyPanelShowing ? week.tempRange.min : undefined}
 						/>
 						<Text>{roundedHigh}&deg;</Text>
 					</TempContainer>
 				</WeatherTempContainer>
+				<Text>{capitalizeFirst(futureConditions)} conditions expected{shouldUseCautionText}.{popText}</Text>
 				<SunRiseSetContainer>
 					<SunRiseSetEntry>
 						<SunRiseSetIcon type={icons.astroSunrise} />

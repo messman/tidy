@@ -24,8 +24,8 @@ const LunarPhaseIcon_Container = styled.span`
 	align-items: center;
 	background-color: ${themeTokens.lunar.background};
 	border-radius: ${borderRadiusSmallerValue};
-	width: 2.25rem;
-	height: 2.25rem;
+	width: 2rem;
+	height: 2rem;
 `;
 
 const LunarPhaseIcon_Icon = styled(Icon)`

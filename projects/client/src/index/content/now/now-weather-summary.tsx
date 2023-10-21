@@ -5,7 +5,7 @@ import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { mapNumberEnumValue, WeatherStatusType } from '@wbtdevlocal/iso';
 import { WeatherIconDayNight } from '../common/weather/weather-icon';
-import { weatherStatusDescription } from '../common/weather/weather-utility';
+import { capitalizeFirst, weatherStatusDescription } from '../common/weather/weather-utility';
 import { NowWeatherSummaryHourly } from './now-weather-summary-hourly';
 
 const Container = styled.div`
@@ -41,7 +41,6 @@ export const NowWeatherSummary: React.FC = () => {
 		<Panel title="Weather">
 			<Container>
 				<TextContainer>
-
 					<IconContainer>
 						<WeatherIconDayNight
 							isDay={current.isDaytime}
@@ -49,7 +48,7 @@ export const NowWeatherSummary: React.FC = () => {
 							status={current.status}
 						/>
 						<TitleText>
-							It's {mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, current.status).itIsShort}
+							{capitalizeFirst(mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, current.status).nowItIs)}
 						</TitleText>
 					</IconContainer>
 				</TextContainer>

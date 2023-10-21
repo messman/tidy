@@ -1,120 +1,180 @@
 import { WeatherStatusType } from '@wbtdevlocal/iso';
 
-export interface WeatherStatusDescription {
-	/** Fill in the blank: "It's _____ and 70 degrees." No capitalization. */
-	itIsShort: string;
-	/** Fill in the blank: "____ soon". Capitalization. */
-	//soon: string;
-	/** Capitalized description of the status. */
-	conditions: string;
+/** Capitalizes the first letter. */
+export function capitalizeFirst<T extends string>(phrase: T) {
+	return (phrase[0].toUpperCase() + phrase.slice(1)) as Capitalize<typeof phrase>;
 }
+
+export interface WeatherStatusDescription {
+	/** "It's _____ and 70 degrees." No capitalization. */
+	nowItIs: string;
+	/** "_____ conditions expected" */
+	futureConditions: string;
+	shouldUseCaution: boolean;
+	isRainImplied: boolean;
+}
+
 export const weatherStatusDescription: Record<keyof typeof WeatherStatusType, WeatherStatusDescription> = {
 	unknown: {
-		itIsShort: 'unknown',
-		conditions: 'Weather conditions are unknown.'
+		nowItIs: 'unknown weather',
+		futureConditions: 'unknown weather',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	clear: {
-		itIsShort: 'clear',
-		conditions: 'Fair and clear.'
+		nowItIs: 'clear',
+		futureConditions: 'fair and clear',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	clear_hot: {
-		itIsShort: 'clear',
-		conditions: `High-heat conditions; proceed with care.`
+		nowItIs: 'clear',
+		futureConditions: 'high-heat',
+		shouldUseCaution: true,
+		isRainImplied: false
 	},
 	clear_cold: {
-		itIsShort: 'clear',
-		conditions: `Chilly conditions; proceed with care.`
+		nowItIs: 'clear',
+		futureConditions: 'chilly',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	clouds_few: {
-		itIsShort: 'lightly cloudy',
-		conditions: 'A few clouds in the sky.'
+		nowItIs: 'lightly cloudy',
+		futureConditions: 'lightly cloudy',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	clouds_some: {
-		itIsShort: 'lightly cloudy',
-		conditions: 'Partly cloudy conditions.'
+		nowItIs: 'partly cloudy',
+		futureConditions: 'partly cloudy',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	clouds_most: {
-		itIsShort: 'mostly cloudy',
-		conditions: 'Cloudy conditions.'
+		nowItIs: 'mostly cloudy',
+		futureConditions: 'cloudy',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	clouds_over: {
-		itIsShort: 'overcast',
-		conditions: 'Fully cloudy conditions.'
+		nowItIs: 'overcast',
+		futureConditions: 'overcast',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	rain_drizzle: {
-		itIsShort: 'drizzling',
-		conditions: 'Drizzling and light rain conditions.'
+		nowItIs: 'drizzling',
+		futureConditions: 'drizzle / light rain',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	rain_light: {
-		itIsShort: 'lightly rainy',
-		conditions: 'Light rain in the area.'
+		nowItIs: 'lightly rainy',
+		futureConditions: 'light rain',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	rain_medium: {
-		itIsShort: 'rainy',
-		conditions: 'Rainy conditions.'
+		nowItIs: 'rainy',
+		futureConditions: 'rainy',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	rain_heavy: {
-		itIsShort: 'rainy',
-		conditions: 'Heavy rain conditions in the area.'
+		nowItIs: 'very rainy',
+		futureConditions: 'heavy rain',
+		shouldUseCaution: true,
+		isRainImplied: true
 	},
 	rain_freeze: {
-		itIsShort: 'rainy',
-		conditions: 'Freezing rain conditions.'
+		nowItIs: 'rainy',
+		futureConditions: 'freezing rain',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	snow_light: {
-		itIsShort: 'snowy',
-		conditions: 'There is light snow in the area.'
+		nowItIs: 'snowy',
+		futureConditions: 'light snow',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	snow_medium: {
-		itIsShort: 'snowing',
-		conditions: 'Snow conditions.'
+		nowItIs: 'snowing',
+		futureConditions: 'snowy',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	snow_heavy: {
-		itIsShort: 'snowing',
-		conditions: 'Heavy snow conditions.'
+		nowItIs: 'very snowy',
+		futureConditions: 'heavy snow',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	snow_sleet: {
-		itIsShort: 'sleeting',
-		conditions: 'Sleet in the area.'
+		nowItIs: 'sleeting',
+		futureConditions: 'sleet',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	snow_rain: {
-		itIsShort: 'snowy',
-		conditions: 'Snow and rain conditions.'
+		nowItIs: 'rainy / snowy',
+		futureConditions: 'snow and rain',
+		shouldUseCaution: false,
+		isRainImplied: true
 	},
 	thun_light: {
-		itIsShort: 'potentially stormy',
-		conditions: 'Light or scattered thunderstorms in the area.'
+		nowItIs: 'potentially stormy',
+		futureConditions: 'light / scattered thunderstorm',
+		shouldUseCaution: true,
+		isRainImplied: true
 	},
 	thun_medium: {
-		itIsShort: 'stormy',
-		conditions: 'Thunderstorm conditions.'
+		nowItIs: 'stormy',
+		futureConditions: 'thunderstorm',
+		shouldUseCaution: true,
+		isRainImplied: true
 	},
 	thun_heavy: {
-		itIsShort: 'stormy',
-		conditions: 'Heavy thunderstorms nearby.'
+		nowItIs: 'stormy',
+		futureConditions: 'heavy thunderstorm',
+		shouldUseCaution: true,
+		isRainImplied: true
 	},
 	intense_storm: {
-		itIsShort: 'stormy',
-		conditions: 'Intense and dangerous storm conditions. Use caution.'
+		nowItIs: 'stormy',
+		futureConditions: 'intense / dangerous storm',
+		shouldUseCaution: true,
+		isRainImplied: true
 	},
 	intense_other: {
-		itIsShort: 'intense',
-		conditions: 'Intense and dangerous weather conditions. Use caution!'
+		nowItIs: 'intense weather',
+		futureConditions: 'intense / dangerous weather',
+		shouldUseCaution: true,
+		isRainImplied: false
 	},
 	dust: {
-		itIsShort: 'dusty',
-		conditions: 'Dust in the air.'
+		nowItIs: 'dusty',
+		futureConditions: 'dusty',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	smoke: {
-		itIsShort: 'smoky',
-		conditions: 'Smoke is in the air.'
+		nowItIs: 'smoky',
+		futureConditions: 'smoky',
+		shouldUseCaution: true,
+		isRainImplied: false
 	},
 	haze: {
-		itIsShort: 'hazy',
-		conditions: 'Hazy conditions.'
+		nowItIs: 'hazy',
+		futureConditions: 'hazy',
+		shouldUseCaution: false,
+		isRainImplied: false
 	},
 	fog: {
-		itIsShort: 'foggy',
-		conditions: 'Fog and mist conditions.'
+		nowItIs: 'foggy / misty',
+		futureConditions: 'foggy / misty',
+		shouldUseCaution: false,
+		isRainImplied: false
 	}
 };
