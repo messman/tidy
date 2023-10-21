@@ -33,7 +33,7 @@ export const AppLayout: React.FC = () => {
 	const refViewAbout = useElementIntersect({ rootRef, threshold }, createOnIntersect(tab.about));
 
 	const refCallback = useLatestForEffect(() => {
-		console.log({ selectedTab, wasTabSelectedByScroll });
+		//console.log({ selectedTab, wasTabSelectedByScroll });
 		if (wasTabSelectedByScroll) {
 			return;
 		}
@@ -108,4 +108,5 @@ const View = styled.div`
 	display: flex;
 	overflow-y: auto;
 	position: relative;
+	min-width: 0;
 `;

@@ -17,9 +17,10 @@ const Grid = styled.div`
 `;
 
 const GridRowCurrent = styled.div`
-	background-color: ${themeTokens.background.tint.lightest};
 	grid-column: 1 / span 4;
 	place-self: stretch stretch;
+
+	background-color: ${themeTokens.background.tint.lightest};
 `;
 
 const GridItem = styled.div`

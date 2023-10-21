@@ -50,7 +50,7 @@ export const lightTokens = {
 		gradient: 'radial-gradient(1055.01% 100.76% at 39.01% -0.00%, #83DAF5 13.54%, #287AC6 100%)',
 		glass: {
 			gradient: 'rgba(9, 81, 121, 0.41)',
-			blendMode: 'luminosity'
+			backdropFilter: 'blur(4px) saturate(130%)'
 		},
 		tint: {
 			lightest: 'rgba(219, 235, 248, 0.15)',
@@ -58,6 +58,7 @@ export const lightTokens = {
 			medium: 'rgba(0, 38, 60, 0.20)',
 			darker: 'rgba(0, 38, 60, 0.30)',
 			darkest: 'rgba(0, 38, 60, 0.50)',
+			backdropFilter: ''
 		}
 	},
 
@@ -103,9 +104,9 @@ export const lightTokens = {
 	},
 
 	beachDiagram: {
-		base: alphaHex('#78cfea', 100),
-		baseTop: alphaHex('#83DAF5', 100),
-		baseSide: alphaHex('#69bed7', 100),
+		base: '#DDDDDD',
+		baseTop: '#EEEEEE',
+		baseSide: '#CCCCCC',
 		roadTop: '#777',
 		roadSide: '#666',
 		wall: '#C2C2C2',

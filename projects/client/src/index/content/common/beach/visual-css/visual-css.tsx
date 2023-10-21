@@ -46,7 +46,7 @@ export const VisualCss: React.FC<VisualCssProps> = (props) => {
 
 	const refSize = useElementSize(10, (width, _height) => {
 		const clamped = Math.min(10000, Math.max(10, width));
-		const scale = clamped / 300;
+		const scale = clamped / 275;
 		setScale(scale);
 	});
 

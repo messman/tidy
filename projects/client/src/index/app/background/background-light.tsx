@@ -87,7 +87,7 @@ function createLightRender(): CanvasRender {
 					beams.push(createBeam(-i, randomY));
 				}
 			}
-			console.log({ beamsCreatedForHeight, canvasHeight, beamsCreatedForHeightAsX, canvasHeightAsX });
+			//console.log({ beamsCreatedForHeight, canvasHeight, beamsCreatedForHeightAsX, canvasHeightAsX });
 			beamsCreatedForHeight = canvasHeight;
 		}
 	}

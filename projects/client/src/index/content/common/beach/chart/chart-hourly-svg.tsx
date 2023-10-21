@@ -19,6 +19,8 @@ export const FillSVG = styled(SVGPath)`
 	height: 100%;
 	width: 100%;
 	fill: ${themeTokens.background.tint.medium};
+	
+
 	opacity: .75;
 `;
 

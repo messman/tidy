@@ -24,12 +24,14 @@ export const Now: React.FC = wrapForBatchLoad(DefaultErrorLoad, () => {
 
 const CenteringContainer = styled.div`
 	width: 100%;
+	min-width: 0; // IDK why
 	height: fit-content;
 	display: flex;
 	justify-content: center;
 `;
 
 const Container = styled.div`
+	min-width: 0; // IDK why
 	display: flex;
 	flex-direction: column;
 	gap: 1.5rem;

@@ -10,9 +10,9 @@ const IndicatorContainer = styled.div`
 	position: relative;
 	height: ${dotSize};
 	border-radius: ${borderRadius};
-	background: ${themeTokens.background.tint.medium};
 	overflow: hidden;
 	padding-right: ${dotSize}; // Used to ensure that as we offset from the left we don't get cut off
+	background-color: ${themeTokens.background.tint.medium};
 `;
 
 const IndicatorOffsetContainer = styled.div`

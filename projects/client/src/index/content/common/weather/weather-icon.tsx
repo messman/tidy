@@ -30,8 +30,8 @@ const Container = styled.div`
 	height: 2rem;
 	display: inline-flex;
 	justify-content: center;
-	background-color: ${themeTokens.background.tint.darker};
 	border-radius: ${borderRadiusSmallerValue};
+	background-color: ${themeTokens.background.tint.darker};
 `;
 
 const ContainerTransparent = styled(Container)`

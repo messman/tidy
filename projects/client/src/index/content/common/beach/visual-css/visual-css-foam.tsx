@@ -55,17 +55,13 @@ const foamAnimation = keyframes`
 		height: 0px;
 		opacity: 0;
 	}
-	${'5%'} {
-		opacity: 0;
-		height: 0px;
-	}
 	${'50%'} {
 		bottom: calc(100% - ${visualCssConstant.sandFoamBuffer}px);
 		height: ${visualCssConstant.sandFoamBuffer}px;
 		opacity: 1;
 	}
-	${'65%'} {
-		opacity: 1;
+	${'75%'} {
+		opacity: .75;
 	}
 	${'100%'} {
 		bottom: 0;

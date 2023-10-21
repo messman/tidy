@@ -42,8 +42,8 @@ export const perspectiveStyle = css`
 	perspective: 200000px; // Ridiculously high value required for iOS
 `;
 
-const platformBaseSize = 20;
-const platformOffsetSize = 20;
+const platformBaseSize = 10;
+const platformOffsetSize = 0;
 
 const platformWidthBeachLength = 200;
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { AnimationDuration } from '@/index/core/animation/animation';
 import { IconInputType, SizedIcon } from '@/index/core/icon/icon';
+import { backgroundGlassStyle } from '@/index/core/layout/layout-shared';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
@@ -56,11 +57,13 @@ export const Nav: React.FC<NavProps> = (props) => {
 };
 
 const Container = styled.div`
-	background-color: ${themeTokens.background.tint.medium};
+	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: .5rem;
+
+	${backgroundGlassStyle}
 `;
 
 interface NavItemProps {
@@ -108,7 +111,7 @@ const NavItem_SelectionBar = styled.div<{ $isLower: boolean; }>`
 	left: 0;
 `;
 
-const NavItem_Text = styled.text`
+const NavItem_Text = styled.div`
 	${fontStyles.text.small};
 `
 

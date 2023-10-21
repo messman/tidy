@@ -107,7 +107,7 @@ function createBubbleRender(): CanvasRender {
 		const x = Math.round(pickFrom([minX, maxX], Math.random()));
 
 		const style = pickNextStyle();
-		console.log({ canvasWidth, minX, maxX, x });
+		//console.log({ canvasWidth, minX, maxX, x });
 		//console.log({ style });
 		bubbleGroups.push({
 			createdAt: now,

@@ -22,6 +22,7 @@ export const AboutIcon: React.FC = () => {
 const Container = styled.div`
 	position: relative;
 	display: inline-block;
+	margin-top: 2rem;
 `;
 
 const BrandIcon = styled(Icon)`

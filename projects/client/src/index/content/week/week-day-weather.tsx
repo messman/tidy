@@ -40,7 +40,7 @@ const Text = styled.div`
 
 const WeatherTempBarStretch = styled(WeatherTempBar)`
 	flex: 1;
-	max-width: 5rem; // Avoid excessive temp bar width
+	max-width: 4rem; // Avoid excessive temp bar width
 `;
 
 const SunRiseSetEntry = styled.div`

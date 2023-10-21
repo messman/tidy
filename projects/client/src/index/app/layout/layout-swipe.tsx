@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { ClickWrapperButton } from '@/index/core/form/button';
 import { SizedIcon } from '@/index/core/icon/icon';
 import { SpacePanelEdge } from '@/index/core/layout/layout-panel';
+import { backgroundGlassStyle } from '@/index/core/layout/layout-shared';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { asPercentString } from '@/index/core/time/time';
@@ -203,7 +204,7 @@ const SwipeHeader_Container = styled.div`
 	width: 100%;
 	display: flex;
 	align-items: center;
-	background: ${themeTokens.background.tint.medium};
+	${backgroundGlassStyle}
 	transform: translateY(-100%);
 	z-index: 2;
 `;

@@ -89,7 +89,7 @@ export const VisualCssFootprints: React.FC<VisualCssFootprintsProps> = (props) =
 				setTravelAngle(travelAngle);
 				// Inversely proportional to position!
 				turnIndex = stepIndex + Math.round(((1 - Math.abs(yPositionFromMiddle)) * 15));
-				console.log({ stepIndex, yPositionInRange, yPositionEqualizer, travelAngle, turnIndex });
+				//console.log({ stepIndex, yPositionInRange, yPositionEqualizer, travelAngle, turnIndex });
 			}
 			step();
 			stepIndex++;

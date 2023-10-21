@@ -32,6 +32,7 @@ const SVGContainer = styled.div`
 	width: 100%;
 	overflow: hidden;
 	border-radius: ${borderRadiusSmallerValue};
+
 	background-color: ${themeTokens.background.tint.medium};
 `;
 

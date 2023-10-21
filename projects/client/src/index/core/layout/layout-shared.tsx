@@ -4,6 +4,22 @@ import { Spacing } from '../primitive/primitive-design';
 import { StyledForwardRef } from '../primitive/primitive-styled';
 import { themeTokens } from '../theme/theme-root';
 
+/*
+	Blend Modes - DO NOT USE THEM
+
+	blend modes only take effect on the backgrounds that are in the same stacking context.
+	Meaning, if you want to blend with the background, everything has to be in the same stacking context as the background.
+	That means you can't use transforms, z-index, opacity, isolation, or filters. That's a no-go.
+	Use backdrop-filter instead!
+	https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context
+*/
+
+export const backgroundGlassStyle = css`
+	background-color: ${themeTokens.background.glass.gradient};
+	backdrop-filter: ${themeTokens.background.glass.backdropFilter};
+`;
+
+
 function createPadding(padding: string) {
 	return styled.div`
 		padding: ${padding};

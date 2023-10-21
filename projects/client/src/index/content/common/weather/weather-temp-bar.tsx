@@ -14,8 +14,8 @@ const ColorContainer = styled.div`
 	position: relative;
 	height: ${dotSize};
 	border-radius: ${borderRadius};
-	background: ${themeTokens.background.tint.medium};
 	overflow: hidden;
+	background-color: ${themeTokens.background.tint.medium};
 `;
 
 const ColorBackground = styled.div`
@@ -80,8 +80,8 @@ const Container = styled.div`
 	position: relative;
 	height: ${dotSize};
 	border-radius: ${borderRadius};
-	background: ${themeTokens.background.tint.medium};
 	overflow: hidden;
+	background-color: ${themeTokens.background.tint.medium};
 `;
 
 const OffsetContainer = styled.div`
