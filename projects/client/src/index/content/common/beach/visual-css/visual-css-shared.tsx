@@ -51,9 +51,9 @@ const platformHeightBufferEachEnd = 20;
 const platformHeightWallToMinTide = 160;
 
 const roadDepth = platformHeightBufferEachEnd;
-const roadHeight = 30;
+const roadHeight = 33;
 
-const wallHeight = 32;
+const wallHeight = 36;
 const wallDepth = 9;
 
 const sandHeight = 16;
@@ -133,7 +133,7 @@ export function useVisualCssDimensions(waterLevelHeight: number): VisualCssDimen
 
 		// Clamp the height so our animations never get too crazy.
 		// diagramSandHeight / constant height = X / water level height
-		const clampedHeight = Math.min(12, Math.max(0.5, waterLevelHeight));
+		const clampedHeight = Math.min(13, Math.max(0.5, waterLevelHeight));
 		// Convert the height to our units.
 		const waterHeight = sandHeight * (clampedHeight / constant.beachAccess.bestGuessBeachHeight);
 

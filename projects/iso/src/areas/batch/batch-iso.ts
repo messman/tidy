@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { enumKeys } from '../../utility/enum';
 import { AstroDay, AstroLunarFuture, AstroLunarPhase, AstroSolarEvent, AstroSunDay, AstroSunRiseSet } from '../astro/astro-iso';
-import { TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeDay } from '../tide/tide-iso';
+import { TidePointCurrent, TidePointCurrentSource, TidePointExtremeComp, TidePointExtremeDay } from '../tide/tide-iso';
 import { WeatherIndicator, WeatherPointCurrent, WeatherPointDaily, WeatherPointHourly, WithDaytime } from '../weather/weather-iso';
 
 export enum Seed {
@@ -28,7 +28,7 @@ export interface Batch {
 	meta: BatchMeta;
 
 	/** Tide extrema data, which is referenced in multiple areas. */
-	tideExtrema: TidePointExtreme[];
+	tideExtrema: TidePointExtremeComp[];
 	solarEvents: AstroSolarEvent[];
 
 	/** Content for the current situation. */

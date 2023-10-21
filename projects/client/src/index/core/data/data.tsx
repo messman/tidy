@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CONSTANT } from '@/index/constant';
 import { DEFINE } from '@/index/define';
 import { createContextConsumer } from '@messman/react-common';
-import { ApiRouteBatchLatest, ApiRouteBatchSeed, apiRoutes, AstroSolarEvent, Batch, TidePointExtreme } from '@wbtdevlocal/iso';
+import { ApiRouteBatchLatest, ApiRouteBatchSeed, apiRoutes, AstroSolarEvent, Batch, TidePointExtremeComp } from '@wbtdevlocal/iso';
 import { useSafeTimer } from '../lifecycle/timer';
 import { useDataSeed } from './data-seed';
 import { RequestResult, RequestResultError } from './request';
@@ -10,7 +10,7 @@ import { ApiRequestOptions, useApiRequest } from './request-hook';
 
 export interface BatchWithHelpers extends Batch {
 	/** Typed optimistically, but returns `null` if there is no data. */
-	getTideExtremeById: (id: string) => TidePointExtreme;
+	getTideExtremeById: (id: string) => TidePointExtremeComp;
 	/** Typed optimistically, but returns `null` if there is no data. */
 	getSolarEventById: (id: string) => AstroSolarEvent;
 }
@@ -104,7 +104,7 @@ export const BatchResponseProvider: React.FC<React.PropsWithChildren> = (props) 
 	const value = React.useMemo<BatchResponseOutput>(() => {
 
 		// Yay maps!
-		const tideExtremeMap = new Map<string, TidePointExtreme>(
+		const tideExtremeMap = new Map<string, TidePointExtremeComp>(
 			(state.success?.tideExtrema || []).map((extreme) => {
 				return [extreme.id, extreme];
 			})
