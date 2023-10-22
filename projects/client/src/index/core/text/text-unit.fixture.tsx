@@ -22,13 +22,13 @@ export default CosmosFixture.create(() => {
 			<TimeTextUnit dateTime={localDateTime} />
 			<Block.Dog16 />
 			<MediumBodyText>
-				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={minutesOnlyFromLocal} /> of sunlight.
+				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={minutesOnlyFromLocal} isPrecise={true} /> of sunlight.
 			</MediumBodyText>
 			<MediumBodyText>
-				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={hoursOnlyFromLocal} /> of sunlight.
+				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={hoursOnlyFromLocal} isPrecise={true} /> of sunlight.
 			</MediumBodyText>
 			<MediumBodyText>
-				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={fromLocal} /> of sunlight.
+				You can expect <TimeDurationTextUnit startTime={localDateTime} stopTime={fromLocal} isPrecise={true} /> of sunlight.
 			</MediumBodyText>
 			<Block.Dog16 />
 			<MediumBodyText>

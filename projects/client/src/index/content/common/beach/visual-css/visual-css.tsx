@@ -19,11 +19,11 @@ interface Rotation {
 }
 
 const rotationXMin = 10; // How top-down the view can be
-const rotationXDefault = 50;
+const rotationXDefault = 60;
 const rotationXMax = 80; // How scrunched the view can be
 
 const rotationZMin = -85; // How far down the beach you can look
-const rotationZDefault = -20;
+const rotationZDefault = -45;
 const rotationZMax = -15; // How straight-on you can look
 
 

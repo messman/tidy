@@ -7,8 +7,7 @@ import { SpacePanelGridGap } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { getTimeTwelveHourString } from '@/index/core/time/time';
-import { NowBeachAccess } from './now-beach-access';
-import { NowBeachAccessHighlights } from './now-beach-highlights';
+import { NowBeachHighlights } from './now-beach-highlights';
 import { NowBeachHow } from './now-beach-how';
 import { NowBeachUpcoming } from './now-beach-upcoming';
 import { NowBeachVisual } from './now-beach-visual';
@@ -36,8 +35,7 @@ export const NowBeach: React.FC = (props) => {
 					</LabelRightContainer>
 				</LabelContainer>
 				<NowBeachVisual />
-				<NowBeachAccess />
-				<NowBeachAccessHighlights />
+				<NowBeachHighlights />
 				<NowBeachUpcoming />
 				<NowBeachHow />
 			</NowBeach_Container>

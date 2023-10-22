@@ -91,7 +91,7 @@ export function getDurationDescription(from: DateTime, to: DateTime): string {
 	const minutes = Math.abs(duration.minutes);
 
 	if (minutes < 1) {
-		return 'moments';
+		return 'a few moments';
 	}
 	if (minutes < 5) {
 		return 'a few minutes';
@@ -135,7 +135,7 @@ export function getDurationDescription(from: DateTime, to: DateTime): string {
 		minutesAppend = '';
 	}
 	else if (minutesAfterHour < 45) {
-		minutesAppend = ' and a half';
+		minutesAppend = '.5';
 	}
 	else {
 		// Use the next hour.

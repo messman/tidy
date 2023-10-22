@@ -71,7 +71,7 @@ export const NowAstroDaylight: React.FC = () => {
 		<FlexPanel title="Daylight">
 			<Container>
 				<TextContainer>
-					<StatisticText><TimeDurationTextUnit startTime={rise.time} stopTime={set.time} /></StatisticText>
+					<StatisticText><TimeDurationTextUnit startTime={rise.time} stopTime={set.time} isPrecise={true} /></StatisticText>
 					<UnitText>total daylight</UnitText>
 				</TextContainer>
 				{<DescriptionText>{timeDiffText}Midday {referenceTime > midday.time ? 'was' : 'is'} at <TimeTextUnit dateTime={midday.time} />.</DescriptionText>}

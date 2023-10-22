@@ -51,12 +51,12 @@ const platformHeightBufferEachEnd = 20;
 const platformHeightWallToMinTide = 160;
 
 const roadDepth = platformHeightBufferEachEnd;
-const roadHeight = 33;
+const roadHeight = 40;
 
-const wallHeight = 36;
+const wallHeight = 45;
 const wallDepth = 9;
 
-const sandHeight = 16;
+const sandHeight = 25;
 const sandAdjacentFlat = platformHeightWallToMinTide + platformHeightBufferEachEnd;
 const sandHypotenuse = Math.sqrt(Math.pow(sandHeight, 2) + Math.pow(sandAdjacentFlat, 2));
 const sandAngleDeg = Math.atan(sandHeight / sandAdjacentFlat) * 180 / Math.PI;

@@ -28,6 +28,7 @@ const Container = styled.div`
 	position: relative;
 	width: 2rem;
 	height: 2rem;
+	flex-shrink: 0;
 	display: inline-flex;
 	justify-content: center;
 	border-radius: ${borderRadiusSmallerValue};

@@ -205,10 +205,11 @@ function getHourlyWeatherWithDaytimeAndSun(referenceTime: DateTime, solarEventMa
 	});
 }
 
-/** Find the first hourly weather value that is a different indicator than the current weather. */
+/** Find the first hourly weather value that is a significantly different indicator than the current weather. */
 function getIndicatorChangeHourlyId(currentWeatherIndicator: WeatherIndicator, hourly: WeatherPointHourly[]): string | null {
 	return hourly.find((hourly) => {
-		return hourly.indicator !== currentWeatherIndicator;
+		// Ignore going from bad to okay
+		return hourly.indicator !== currentWeatherIndicator && !(currentWeatherIndicator === WeatherIndicator.bad && hourly.indicator === WeatherIndicator.okay);
 	})?.id || null;
 }
 

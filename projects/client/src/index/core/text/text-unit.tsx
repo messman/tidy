@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import styled from 'styled-components';
-import { getTimeTwelveHour } from '../time/time';
+import { getDurationDescription, getTimeTwelveHour } from '../time/time';
 
 export interface TextUnitProps {
 	text: string,
@@ -51,21 +51,29 @@ export const TimeTextUnit: React.FC<TimeTextUnitProps> = (props) => {
 export interface TimeDurationTextUnitProps {
 	startTime: DateTime;
 	stopTime: DateTime;
+	/** If true, uses exact hours and minutes instead of a description that gets less precise the longer the time. */
+	isPrecise: boolean;
 }
 
 export const TimeDurationTextUnit: React.FC<TimeDurationTextUnitProps> = (props) => {
-	// Probably one of the coolest things Luxon does:
-	const duration = props.stopTime.diff(props.startTime, ['hours', 'minutes']);
+	const { startTime, stopTime, isPrecise } = props;
 
-	const hours = duration.hours > 0 ? (<TextUnit text={duration.hours.toString()} unit='h' />) : null;
+	if (isPrecise) {
+		// Probably one of the coolest things Luxon does:
+		const duration = stopTime.diff(startTime, ['hours', 'minutes']);
 
-	const roundedMinutes = Math.round(duration.minutes);
-	const minutes = roundedMinutes > 0 ? (<TextUnit text={roundedMinutes.toString()} unit='m' />) : null;
-	const space = (!!hours && !!minutes) ? (<>&nbsp;</>) : null;
+		const hours = duration.hours > 0 ? (<TextUnit text={duration.hours.toString()} unit='h' />) : null;
 
-	return (
-		<>
-			{hours}{space}{minutes}
-		</>
-	);
+		const roundedMinutes = Math.round(duration.minutes);
+		const minutes = roundedMinutes > 0 ? (<TextUnit text={roundedMinutes.toString()} unit='m' />) : null;
+		const space = (!!hours && !!minutes) ? (<>&nbsp;</>) : null;
+
+		return (
+			<>
+				{hours}{space}{minutes}
+			</>
+		);
+	}
+
+	return <>{getDurationDescription(startTime, stopTime)}</>;
 };
