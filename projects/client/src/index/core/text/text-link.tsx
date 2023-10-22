@@ -33,9 +33,10 @@ const BasicLink = styled.a`
 	}
 `;
 
-export interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'title'> {
+export interface LinkProps {
 	href: string;
-	title: string;
+	title?: string;
+	children: string;
 }
 
 /**
@@ -43,16 +44,20 @@ export interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorEle
  * in a new tab or window.
  */
 export const OutLink: React.FC<LinkProps> = (props) => {
-	const { children, href, rel, target, title, ...otherProps } = props;
+	const { children, href, title } = props;
 	if (!href) {
 		return null;
 	}
-	const text = (props.children as string) || href;
-	const combinedTitle = `${title} (Opens in new tab)`;
+	const text = children;
+	const combinedTitle = `${title || text} (Opens in new tab)`;
+
+	// Split on the last space, and ensure the icon is connected to that last word with a special span.
+	const words = text.split(' ');
+	const lastWord = words.at(-1);
+	const otherWords = words.length > 1 ? words.slice(0, words.length - 1).join(' ') : '';
 	return (
-		<BasicLink href={href} rel="noreferrer noopener" target="_blank" title={combinedTitle} {...otherProps}>
-			{text}
-			<OutLinkIcon type={icons.toolLinkOut} />
+		<BasicLink href={href} rel="noreferrer noopener" target="_blank" title={combinedTitle}>
+			{otherWords} <NonBreakingText>{lastWord}<OutLinkIcon type={icons.toolLinkOut} /></NonBreakingText>
 		</BasicLink>
 	);
 };
@@ -61,6 +66,10 @@ const OutLinkIcon = styled(Icon)`
 	/** Use em to match to font */
 	width: .8em;
 	margin-left: .125rem;
+`;
+
+const NonBreakingText = styled.span`
+	white-space: nowrap;
 `;
 
 export const WrapperLink = styled.a`

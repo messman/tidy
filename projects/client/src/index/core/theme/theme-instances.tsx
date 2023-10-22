@@ -117,6 +117,7 @@ export const lightTokens = {
 		sandSide: '#c1b7a5',
 		sandFootstep: '#d0c8b0',
 		sandWet: '#cdc3a4',
+		sandText: '#b8ae8d',
 		ocean: alphaHex('#2980b2', 95),
 		oceanTop: alphaHex('#45ADE8', 75),
 		oceanTopDark: alphaHex('#2e8abf', 95),

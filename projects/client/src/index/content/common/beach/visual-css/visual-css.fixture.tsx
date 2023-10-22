@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { Button } from '@/index/core/form/button';
 import { SpacePanelGridPadding } from '@/index/core/layout/layout-panel';
 import { LayoutBreakpointRem } from '@/index/core/layout/window-layout';
@@ -10,7 +11,9 @@ import { VisualCss } from './visual-css';
 
 export default CosmosFixture.create(() => {
 
-	const [height, setHeight] = React.useState(6);
+	const { now } = useBatchResponseSuccess();
+
+	const [height, setHeight] = React.useState(now.tide.current.height);
 
 	return (
 		<CenteringContainer>
@@ -25,7 +28,8 @@ export default CosmosFixture.create(() => {
 		</CenteringContainer>
 	);
 }, {
-	setup: FixtureSetup.root
+	setup: FixtureSetup.root,
+	isSuccessOnly: true
 });
 
 

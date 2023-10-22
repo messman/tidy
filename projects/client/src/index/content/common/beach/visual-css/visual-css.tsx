@@ -9,6 +9,7 @@ import { VisualCssFootprints } from './visual-css-footprints';
 import { VisualCssRoad } from './visual-css-road';
 import { VisualCssSand } from './visual-css-sand';
 import { perspectiveStyle, useVisualCssDimensions, visualCssConstant } from './visual-css-shared';
+import { VisualCssText } from './visual-css-text';
 import { VisualCssWall } from './visual-css-wall';
 import { VisualCssWater } from './visual-css-water';
 
@@ -18,11 +19,11 @@ interface Rotation {
 }
 
 const rotationXMin = 10; // How top-down the view can be
-const rotationXDefault = 60;
+const rotationXDefault = 50;
 const rotationXMax = 80; // How scrunched the view can be
 
 const rotationZMin = -85; // How far down the beach you can look
-const rotationZDefault = -50;
+const rotationZDefault = -20;
 const rotationZMax = -15; // How straight-on you can look
 
 
@@ -46,7 +47,7 @@ export const VisualCss: React.FC<VisualCssProps> = (props) => {
 
 	const refSize = useElementSize(10, (width, _height) => {
 		const clamped = Math.min(10000, Math.max(10, width));
-		const scale = clamped / 275;
+		const scale = clamped / 275; // arbitrary
 		setScale(scale);
 	});
 
@@ -115,6 +116,7 @@ export const VisualCss: React.FC<VisualCssProps> = (props) => {
 							</VisualCssSand>
 							<VisualCssWater dimensions={dimensions}>
 							</VisualCssWater>
+							<VisualCssText dimensions={dimensions} />
 						</BeachDiagram_Platform >
 					)}
 				</BeachDiagram_Container>

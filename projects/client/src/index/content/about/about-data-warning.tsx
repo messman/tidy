@@ -8,24 +8,34 @@ export const AboutDataWarning: React.FC = () => {
 			<SectionHeading>Data & Warnings</SectionHeading>
 			<Panel>
 				<PanelParagraph>
-					This app attempts to tell you the best time to go on the beach by accounting for tides, sunlight, and some weather conditions.
-					There may be more factors, such as air quality, storm advisories, etc., that would make it a bad idea to actually go on the beach.
-					Use this app at your own risk. Comply with all local laws, regulations, and advisories. Keep Wells clean.
+					This app uses publicly-available data from NOAA (National Oceanic and Atmospheric Administration)
+					to present the best time(s) of day to go out on the beach, or "beach time".
+					More specifically, this app checks traditional astronomical tide charts, newer observational forecast systems, and water
+					level measurements from Portland, Maine, and interprets that data into a (hopefully) accurate water level
+					for Wells. This water level is compared against a value for the height of the beach itself to learn how much
+					beach is available/accessible.
 				</PanelParagraph>
 				<PanelParagraph>
-					This data is not guaranteed to be accurate. Much of the presented data is a prediction/forecast and not a fully-accurate recorded measurement.
-					Do not rely on this data for any activities that require accurate data for safety.
+					This app also calculates and presents the times for dusk and dawn.
+					It can only be beach time if there is enough of both beach space and daylight.
 				</PanelParagraph>
 				<PanelParagraph>
-					This app uses publicly-available data from NOAA (National Oceanic and Atmospheric Administration) and OpenWeather.
-					Live observations are recorded from NOAA station 8419317 located on the Wells Town Dock on Harbor Road.
-					Live water level observations may sometimes come from NOAA station 8418150 in Portland.
+					Weather conditions (from OpenWeather) are presented alongside the beach times, but "beach time" in this app
+					does not explicitly account for weather.
 				</PanelParagraph>
 				<PanelParagraph>
-					Apparent sunrise and apparent sunset are calculated based on formulas from NOAA.
-					Sunrise is defined here as the minute when the sun will appear to first break over the horizon.
-					Sunset is defined here as the minute when the sun will no longer appear on the horizon.
-					This app makes considerations for the amount of light that may exist before sunrise or after sunset.
+					This data is unfortunately not guaranteed to be accurate; measuring and predicting water levels and daylight is hard.
+					Much of the presented data is a prediction/forecast and not a fully-accurate recorded measurement.
+				</PanelParagraph>
+				<PanelParagraph>
+					There are many other factors, such as air quality, storm advisories, states of emergency, etc.,
+					that affect whether you should actually go on the beach.
+					Do not rely solely on this app for activities that require accurate data for safety.
+					Use this app and its data at your own risk;
+					this app and its developer are not liable for your choices.
+				</PanelParagraph>
+				<PanelParagraph>
+					Comply with all local laws, regulations, and advisories. Keep Wells clean.
 				</PanelParagraph>
 			</Panel>
 		</SectionContainer>
