@@ -7,42 +7,17 @@ import { fontStyles } from '@/index/core/text/text-shared';
 import { TimeDurationTextUnit } from '@/index/core/text/text-unit';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
-import {
-	AstroSolarEventType, mapNumberEnumValue, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, WeatherPointHourly, WeatherStatusType, WithDaytime
-} from '@wbtdevlocal/iso';
+import { AstroSolarEventType, mapNumberEnumValue, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, WeatherStatusType } from '@wbtdevlocal/iso';
 import { TideLevelIcon } from '../common/tide/tide-level-icon';
 import { WeatherIcon, WeatherIconDayNight } from '../common/weather/weather-icon';
-import { capitalizeFirst, weatherStatusDescription } from '../common/weather/weather-utility';
+import { weatherStatusDescription } from '../common/weather/weather-utility';
 
 export const NowBeachHighlights: React.FC = () => {
 	const { meta, now, getSolarEventById } = useBatchResponseSuccess();
 
 	const { tide, weather, astro } = now;
 
-	const weatherCurrentStatusText = capitalizeFirst(mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, weather.current.status).nowItIs);
-	let weatherTextRender: React.ReactNode = <>{weatherCurrentStatusText}</>;
-
-	const firstHourlyChangedIndicator = React.useMemo<WithDaytime<WeatherPointHourly> | null>(() => {
-		if (!weather.indicatorChangeHourlyId) {
-			return null;
-		}
-		const index = weather.hourly.findIndex((hourly) => hourly.id === weather.indicatorChangeHourlyId);
-		return weather.hourly[index] as WithDaytime<WeatherPointHourly>;
-	}, [weather.hourly, weather.indicatorChangeHourlyId]);
-
-	if (firstHourlyChangedIndicator) {
-		const isComingUp = !!firstHourlyChangedIndicator && firstHourlyChangedIndicator.time.diff(meta.referenceTime, 'hours').hours < 4;
-
-		if (isComingUp) {
-			const statusDescription = mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, firstHourlyChangedIndicator.status);
-
-			weatherTextRender = (
-				<>
-					{weatherCurrentStatusText} &mdash; {statusDescription.futureConditions} conditions in <TimeDurationTextUnit startTime={meta.referenceTime} stopTime={firstHourlyChangedIndicator.time} isPrecise={false} />
-				</>
-			);
-		}
-	}
+	const weatherCurrentStatusText = `It's ${mapNumberEnumValue(WeatherStatusType, weatherStatusDescription, weather.current.status).nowItIs}`;
 
 	const astroRender: React.ReactNode = (() => {
 
@@ -60,20 +35,20 @@ export const NowBeachHighlights: React.FC = () => {
 		const { type } = (current || next);
 
 		if (type === AstroSolarEventType.civilDawn) {
-			textRender = current ? 'Sun is rising soon' : 'Almost dawn';
+			textRender = current ? 'The sun is rising soon' : 'It\s almost dawn';
 			iconRender = <WeatherSunIcon rain={0} type={icons.astroSunrise} />;
 		}
 		else if (type === AstroSolarEventType.rise) {
-			textRender = current ? 'Sun is rising' : 'Almost sunrise';
+			textRender = current ? 'The sun is rising' : 'It\s almost sunrise';
 			iconRender = <WeatherSunIcon rain={0} type={icons.astroSunrise} />;
 		}
 		// Skip mid-day
 		else if (type === AstroSolarEventType.set) {
-			textRender = current ? 'Sun is setting' : 'Almost sunset';
+			textRender = current ? 'The sun is setting' : 'It\s almost sunset';
 			iconRender = <WeatherSunIcon rain={0} type={icons.astroSundown} />;
 		}
 		else if (type === AstroSolarEventType.civilDusk) {
-			textRender = current ? 'Sun has set' : 'Almost dusk';
+			textRender = current ? 'The sun has set' : 'It\'s almost dusk';
 			iconRender = <WeatherSunIcon rain={0} type={icons.astroSundown} />;
 		}
 
@@ -96,11 +71,11 @@ export const NowBeachHighlights: React.FC = () => {
 					<TideLevelIcon tide={tide.current} />
 					<NowBeachHighlightsTide />
 				</IconWithTextContainer>
+				{astroRender}
 				<IconWithTextContainer>
 					<WeatherIconDayNight isDay={weather.current.isDaytime} rain={0} status={weather.current.status} />
-					<TallerText>{weatherTextRender}</TallerText>
+					<TallerText>{weatherCurrentStatusText}</TallerText>
 				</IconWithTextContainer>
-				{astroRender}
 			</HighlightsContainer>
 		</Panel>
 	);
@@ -129,25 +104,11 @@ const TallerText = styled.div`
 	padding-top: .25rem; // to make total height of one line align to icon
 `;
 
-const MediumText = styled.div`
-	${fontStyles.text.mediumRegular};
-	`;
-
-const LargeBeachTideText = styled.div`
-	${fontStyles.stylized.emphasis};
-	margin-top: .25rem;
-`;
-
 export const NowBeachHighlightsTide: React.FC = () => {
 	const { meta, now } = useBatchResponseSuccess();
 
 	const { beachStatus, beachChange, direction } = now.tide.current;
 
-	const timeDuration = (
-		<LargeBeachTideText>
-			<TimeDurationTextUnit startTime={meta.referenceTime} stopTime={beachChange} isPrecise={false} />
-		</LargeBeachTideText>
-	);
 
 	const tideDescription = getTideDescription(now.tide.current);
 
@@ -181,11 +142,9 @@ export const NowBeachHighlightsTide: React.FC = () => {
 	})();
 
 	return (
-		<div>
-			<TallerText>{firstLine}...</TallerText>
-			{timeDuration}
-			<MediumText>{secondLine}</MediumText>
-		</div>
+		<TallerText>
+			{firstLine} &mdash; <TimeDurationTextUnit startTime={meta.referenceTime} stopTime={beachChange} isPrecise={false} /> {secondLine}
+		</TallerText>
 	);
 };
 
