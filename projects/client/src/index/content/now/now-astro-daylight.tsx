@@ -39,8 +39,10 @@ const FlexPanel = styled(Panel)`
 
 export const NowAstroDaylight: React.FC = () => {
 
-	const { now, getSolarEventById } = useBatchResponseSuccess();
+	const { meta, now, getSolarEventById } = useBatchResponseSuccess();
+	const { referenceTime } = meta;
 	const { yesterday, today } = now.astro.sun;
+
 
 	const rise = getSolarEventById(today.riseId);
 	const set = getSolarEventById(today.setId);
@@ -72,7 +74,7 @@ export const NowAstroDaylight: React.FC = () => {
 					<StatisticText><TimeDurationTextUnit startTime={rise.time} stopTime={set.time} /></StatisticText>
 					<UnitText>total daylight</UnitText>
 				</TextContainer>
-				{<DescriptionText>{timeDiffText}Midday was at <TimeTextUnit dateTime={midday.time} />.</DescriptionText>}
+				{<DescriptionText>{timeDiffText}Midday {referenceTime > midday.time ? 'was' : 'is'} at <TimeTextUnit dateTime={midday.time} />.</DescriptionText>}
 			</Container>
 		</FlexPanel>
 	);

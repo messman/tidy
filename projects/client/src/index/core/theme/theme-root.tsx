@@ -41,13 +41,6 @@ export const GlobalStyles = createGlobalStyle`
 		${p => p.theme.variableDefinitions};
 	}
 
-	html {
-		font-family: ${fontFamily};
-		font-weight: ${FontWeight.regular};
-		font-size: ${fontDefaultSize};
-		box-sizing: border-box;
-	}
-	
 	html, body, #react-root, #root {
 		margin: 0;
 		padding: 0;
@@ -57,12 +50,22 @@ export const GlobalStyles = createGlobalStyle`
 		overscroll-behavior: none;
 	}
 
-	body {
+	html {
+		font-family: ${fontFamily};
+		font-weight: ${FontWeight.regular};
+		font-size: ${fontDefaultSize};
+		box-sizing: border-box;
 		// #REF_BROWSER_STYLE
 		// Background-color here is to cover notches and other browser-covered areas
-		background-color: ${themeTokens.background.dark};
-		padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
+		background: ${themeTokens.background.base};
 		color: ${themeTokens.text.distinct};
+
+		// https://itnext.io/make-your-pwas-look-handsome-on-ios-fd8fdfcd5777
+		padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
+		min-height: calc(100% + env(safe-area-inset-top)) !important;
+	}
+	
+	body {
 	}
 	
 	#react-root, #root {

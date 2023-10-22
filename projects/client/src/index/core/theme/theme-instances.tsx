@@ -43,10 +43,10 @@ export const lightTokens = {
 	},
 
 	background: {
-		/** For top navigation. */
-		light: '#FFF',
-		/** For bottom navigation and side gutters. */
-		dark: '#206981',
+		top: '#55b5d7',
+		bottom: '#0c5ea0',
+		/** the safe-area of the page (iOS PWA, for example). */
+		base: 'linear-gradient(to bottom, #55b5d7 0% 49%, #0c5ea0 51% 100%)',
 		gradient: 'radial-gradient(1055.01% 100.76% at 39.01% -0.00%, #83DAF5 13.54%, #287AC6 100%)',
 		glass: {
 			gradient: 'rgba(9, 81, 121, 0.41)',

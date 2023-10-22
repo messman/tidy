@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { AnimationDuration } from '@/index/core/animation/animation';
 import { IconInputType, SizedIcon } from '@/index/core/icon/icon';
-import { backgroundGlassStyle } from '@/index/core/layout/layout-shared';
 import { fontStyles } from '@/index/core/text/text-shared';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
@@ -19,7 +18,7 @@ export const Nav: React.FC<NavProps> = (props) => {
 	const { selectedTab, selectTab } = useNav();
 
 	return (
-		<Container>
+		<Container style={{ backgroundColor: isLower ? themeTokens.background.bottom : themeTokens.background.top }}>
 			<NavItem
 				icon={icons.coreNewSparkle}
 				isSelected={selectedTab === tab.now}
@@ -62,8 +61,6 @@ const Container = styled.div`
 	justify-content: center;
 	align-items: center;
 	gap: .5rem;
-
-	${backgroundGlassStyle}
 `;
 
 interface NavItemProps {
