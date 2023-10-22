@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { BackgroundProvider } from '@/index/app/background/background';
 import { NavProvider, Tab } from '@/index/app/nav/nav-context';
 import { BatchResponseProvider, useBatchResponse } from '@/index/core/data/data';
 import { DataSeedProvider, useDataSeed } from '@/index/core/data/data-seed';
@@ -46,7 +47,8 @@ export function create(Component: React.FC, props: FixtureProps): React.FC {
 			provider(DataSeedProvider, {}),
 			provider(BatchResponseProvider, {}),
 			provider(SVGIconUrlLoadProvider, {}),
-			provider(NavProvider, { initialSelectedTab: tab })
+			provider(NavProvider, { initialSelectedTab: tab }),
+			provider(BackgroundProvider, {})
 		];
 
 		if (additionalProviders) {

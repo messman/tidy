@@ -99,7 +99,7 @@ export const Canvas: React.FC<CanvasProps> = (props) => {
 	React.useEffect(() => {
 		const canvas = refCanvas.current;
 
-		if (!canvas || !render || key === 0 || !width || !height || !render) {
+		if (!canvas || !render || key === 0 || !width || !height) {
 			return;
 		}
 
@@ -119,6 +119,10 @@ export const Canvas: React.FC<CanvasProps> = (props) => {
 
 		return () => {
 			window.cancelAnimationFrame(requestAnimationFrameId);
+			const context = canvas.getContext('2d');
+			if (context) {
+				context.clearRect(0, 0, canvas.width, canvas.height);
+			}
 		};
 	}, [key, width, height, render]);
 

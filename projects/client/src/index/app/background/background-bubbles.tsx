@@ -14,7 +14,7 @@ interface BubblesProps {
 	isActive: boolean;
 }
 
-export const Bubbles: React.FC<BubblesProps> = (props) => {
+export const BackgroundBubbles: React.FC<BubblesProps> = (props) => {
 	const { isActive } = props;
 
 	const [render] = React.useState(() => {

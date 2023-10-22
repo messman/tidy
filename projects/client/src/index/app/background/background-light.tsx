@@ -8,7 +8,7 @@ interface LightProps {
 	isActive: boolean;
 }
 
-export const Light: React.FC<LightProps> = (props) => {
+export const BackgroundLight: React.FC<LightProps> = (props) => {
 	const { isActive } = props;
 
 	const [render] = React.useState(() => {

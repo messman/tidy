@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CosmosFixture } from '@/test';
 import { useControlValue } from '@/test/cosmos';
 import { FixtureSetup } from '@/test/cosmos-fixture';
-import { Light } from './background-light';
+import { BackgroundLight } from './background-light';
 
 export default CosmosFixture.create(() => {
 
@@ -10,7 +10,7 @@ export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<Light isActive={isActive} />
+			<BackgroundLight isActive={isActive} />
 			<p>{isActive ? "Active" : "Not active"}</p>
 		</>
 	);

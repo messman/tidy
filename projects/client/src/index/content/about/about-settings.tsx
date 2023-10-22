@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useBackgroundSetting } from '@/index/app/background/background';
 import { Toggle } from '@/index/core/form/toggle';
 import { Panel, PanelPadding } from '@/index/core/layout/layout-panel';
 import { Block } from '@/index/core/layout/layout-shared';
@@ -8,7 +9,7 @@ import { SectionContainer, SectionHeading } from './about-shared';
 
 export const AboutSettings: React.FC = () => {
 
-	const [useBackgroundAnimations, setUseBackgroundAnimations] = React.useState(true);
+	const { hasAnimation, setHasAnimation } = useBackgroundSetting();
 
 	return (
 		<SectionContainer>
@@ -19,8 +20,8 @@ export const AboutSettings: React.FC = () => {
 					<Block.Dog16 />
 					<EntriesContainer>
 						<ToggleEntry
-							value={useBackgroundAnimations}
-							onValueChange={() => setUseBackgroundAnimations(p => !p)}
+							value={hasAnimation}
+							onValueChange={() => setHasAnimation(!hasAnimation)}
 						>
 							Background animations
 						</ToggleEntry>

@@ -7,6 +7,7 @@ import { Week } from '@/index/content/week/week';
 import { LayoutBreakpointRem } from '@/index/core/layout/window-layout';
 import { mergeRefs } from '@/index/utility/refs';
 import { ElementIntersect, useElementIntersect, useLatestForEffect, useWindowMediaLayout } from '@messman/react-common';
+import { Background } from '../background/background';
 import { Nav } from '../nav/nav';
 import { Tab, tab, useNav } from '../nav/nav-context';
 
@@ -63,6 +64,7 @@ export const AppLayout: React.FC = () => {
 
 	return (
 		<LayoutRoot>
+			<Background />
 			{isUpperNav && <Nav isLower={false} />}
 			<ViewRoot ref={rootRef}>
 				<View ref={mergeRefs(refViewNow, refTabNowScroll)}>
@@ -84,6 +86,7 @@ export const AppLayout: React.FC = () => {
 };
 
 const LayoutRoot = styled.div`
+	position: relative;
 	flex: 1;
 	width: 100%;
 	height: 100%;

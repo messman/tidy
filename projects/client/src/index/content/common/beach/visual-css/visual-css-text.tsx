@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { Icon } from '@/index/core/icon/icon';
+import { FontWeight } from '@/index/core/primitive/primitive-design';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 import { TideLevelDirection } from '@wbtdevlocal/iso';
@@ -74,6 +75,7 @@ const TextContainer = styled.div`
 
 const Text = styled.div`
 	font-size: ${textFontSize}px;
+	font-weight: ${FontWeight.medium};
 `;
 
 const TextSizedIcon = styled(Icon)`

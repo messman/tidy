@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CosmosFixture } from '@/test';
 import { useControlValue } from '@/test/cosmos';
-import { Bubbles } from './background-bubbles';
+import { BackgroundBubbles } from './background-bubbles';
 
 export default CosmosFixture.create(() => {
 
@@ -9,7 +9,7 @@ export default CosmosFixture.create(() => {
 
 	return (
 		<>
-			<Bubbles isActive={isActive} />
+			<BackgroundBubbles isActive={isActive} />
 			<p>{isActive ? "Active" : "Not active"}</p>
 		</>
 	);
