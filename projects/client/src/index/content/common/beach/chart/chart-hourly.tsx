@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { borderRadiusSmallerValue } from '@/index/core/primitive/primitive-design';
 import { themeTokens } from '@/index/core/theme/theme-root';
@@ -19,12 +19,27 @@ const CurrentTimeContainer = styled.div`
 	justify-content: center;
 `;
 
-const CurrentTimeIndicator = styled.div`
-	width: 2px;
-	border-radius: 1px;
-	background-color: ${themeTokens.rawColor.orange.distinct};
-	flex-shrink: 0;
+const currentTimeFlash = keyframes`
+	from {
+		background-color: ${themeTokens.text.distinct};
+	}
+	to {
+		background-color: ${themeTokens.rawColor.orange.distinct};
+	}
 `;
+
+const CurrentTimeIndicator = styled.div`
+	width: 3px;
+	border-radius: 1.5px;
+	flex-shrink: 0;
+
+	animation-name: ${currentTimeFlash};
+	animation-timing-function: linear;
+	animation-duration: 1s;
+	animation-direction: alternate;
+	animation-iteration-count: infinite;
+`;
+
 
 const SVGContainer = styled.div`
 	position: relative;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
-import { fontStyles, MediumBodyText } from '@/index/core/text/text-shared';
+import { fontStyles } from '@/index/core/text/text-shared';
 import { TimeDurationTextUnit } from '@/index/core/text/text-unit';
 import { mapNumberEnumValue, WeatherPointHourly, WeatherStatusType, WithDaytime } from '@wbtdevlocal/iso';
 import { WeatherIconDayNight } from '../common/weather/weather-icon';
