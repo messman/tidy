@@ -15,7 +15,7 @@ export const CONSTANT = {
 
 	elementSizeSmallThrottleTimeout: seconds(0),
 	elementSizeLargeThrottleTimeout: seconds(0),
-};
+} as const;
 
 // Make these public on the window for us to easily check
 (window as any)['CONSTANT'] = CONSTANT;

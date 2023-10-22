@@ -29,16 +29,26 @@ export const Swipe: React.FC<SwipeProps> = (props) => {
 	const refSwipeContainer = React.useRef<HTMLDivElement>(null!);
 	const refOpacityContainer = React.useRef<HTMLDivElement>(null!);
 	const refHeader = React.useRef<HTMLDivElement>(null!);
-	const refWasActive = React.useRef(isActive);
 
-	// Track whether we are becoming active, and scroll into view.
+
+	/*
+		Track whether we are becoming active, and scroll into view.
+		The default state is out of view.
+		On mount, if we should be active, we should scroll instantly into view
+		(for example like after resizing). 
+	*/
+	const refWasActive = React.useRef<boolean | null>(null);
 	React.useLayoutEffect(() => {
 		const container = refSwipeContainer.current;
-		if ((refWasActive.current === isActive) || !container) {
+		if (!container) {
 			return;
 		}
+		const oldIsActive = refWasActive.current;
 		refWasActive.current = isActive;
-		scrollToEnd(container, !isActive);
+		const isLeft = !isActive;
+		const isSmooth = oldIsActive !== null;
+
+		scrollToSide(container, isLeft, isSmooth);
 	}, [isActive]);
 
 	// Track whether we have been fully scrolled away and hide.
@@ -136,10 +146,10 @@ export const Swipe: React.FC<SwipeProps> = (props) => {
 };
 
 
-function scrollToEnd(element: HTMLElement, isLeft: boolean) {
+function scrollToSide(element: HTMLElement, isLeft: boolean, isSmooth: boolean) {
 	element.scrollTo({
 		left: isLeft ? 0 : element.scrollWidth,
-		behavior: 'smooth'
+		behavior: isSmooth ? 'smooth' : 'instant'
 	});
 }
 

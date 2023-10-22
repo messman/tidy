@@ -16,7 +16,7 @@ import { AboutSectionButton } from './about-section-button';
 import { AboutSettings } from './about-settings';
 import { AboutShare } from './about-share';
 
-enum SectionKey {
+export enum SectionKey {
 	share,
 	settings,
 	about,

@@ -9,28 +9,10 @@ import { themeTokens } from '@/index/core/theme/theme-root';
 import { getTimeTwelveHourString } from '@/index/core/time/time';
 import { NowBeachAccess } from './now-beach-access';
 import { NowBeachAccessHighlights } from './now-beach-highlights';
+import { NowBeachHow } from './now-beach-how';
 import { NowBeachUpcoming } from './now-beach-upcoming';
 import { NowBeachVisual } from './now-beach-visual';
 import { Section } from './section';
-
-// const NowBeachHow_Title = styled.div`
-// 	${fontStyles.stylized.capitalized};
-// 	color: ${themeTokens.text.subtle};
-// `;
-
-// type NowBeachHowProps = {
-
-// };
-
-// const NowBeachHow: React.FC<NowBeachHowProps> = (props) => {
-// 	const { } = props;
-
-// 	return (
-// 		<PanelPadded>
-// 			<NowBeachHow_Title>How It Works &amp; Disclaimer</NowBeachHow_Title>
-// 		</PanelPadded>
-// 	);
-// };
 
 const NowBeach_Container = styled.div`
 	display: flex;
@@ -38,12 +20,7 @@ const NowBeach_Container = styled.div`
 	gap: ${SpacePanelGridGap.value};
 `;
 
-export type NowBeachProps = {
-
-};
-
-/** */
-export const NowBeach: React.FC<NowBeachProps> = (props) => {
+export const NowBeach: React.FC = (props) => {
 	const { } = props;
 
 	const { success, isLoading } = useBatchResponse();
@@ -62,7 +39,7 @@ export const NowBeach: React.FC<NowBeachProps> = (props) => {
 				<NowBeachAccess />
 				<NowBeachAccessHighlights />
 				<NowBeachUpcoming />
-				{/* <NowBeachHow /> */}
+				<NowBeachHow />
 			</NowBeach_Container>
 		</Section>
 	);
@@ -73,7 +50,7 @@ const LabelContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	${fontStyles.text.mediumHeavy};
+	${fontStyles.lead.large};
 	color: ${themeTokens.text.onBackground};
 `;
 

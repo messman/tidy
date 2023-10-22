@@ -5,10 +5,9 @@ import { Icon } from '@/index/core/icon/icon';
 import { themeTokens } from '@/index/core/theme/theme-root';
 import { icons } from '@wbtdevlocal/assets';
 import { TideLevelDirection } from '@wbtdevlocal/iso';
-import { TideHeightTextUnit } from '../../tide/tide-common';
 import { visualCssConstant, VisualCssDimensions } from './visual-css-shared';
 
-const textHeight = 28;
+const textHeight = 30;
 const textFontSize = 22;
 const textFloat = 1;
 
@@ -23,7 +22,7 @@ export const VisualCssText: React.FC<VisualCssTextProps> = (props) => {
 
 	const { now, getTideExtremeById } = useBatchResponseSuccess();
 	const { current, currentId } = now.tide;
-	const { direction, height } = current;
+	const { direction } = current;
 	const currentExtreme = currentId ? getTideExtremeById(currentId) : null;
 
 	const icon = (() => {
@@ -47,10 +46,10 @@ export const VisualCssText: React.FC<VisualCssTextProps> = (props) => {
 		`translateY(-${sandHypotenuse - beachDistanceToWaterWithAnimation + 5}px) rotateX(-${sandAngleDeg}deg) translateZ(${waterHeight + waterAnimationHeight + textFloat}px)`;
 
 	return (
-		<TextContainer style={{ transform, color: isShowingOnWater ? themeTokens.text.subtle : themeTokens.beachDiagram.sandText }}>
+		<TextContainer style={{ transform, color: isShowingOnWater ? themeTokens.beachDiagram.oceanText : themeTokens.beachDiagram.sandText }}>
 			{icon}
 			<Text>
-				{statusText}&nbsp;&nbsp;<TideHeightTextUnit height={height} />
+				{statusText}
 			</Text>
 		</TextContainer>
 	);
