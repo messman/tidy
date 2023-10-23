@@ -6,7 +6,7 @@ module.exports = function getDefine(isDevelopment) {
 	const buildVersion = packageJson.version;
 
 	// Version of the server API to use.
-	const apiOrigin = '';//isDevelopment ? '' : 'https://wellsbeachtime-api-v4-0.herokuapp.com';
+	const apiOrigin = isDevelopment ? '' : 'https://wellsbeachtime-api-v4-0.herokuapp.com';
 	const apiRoot = apiOrigin + '/api';
 
 	/*
