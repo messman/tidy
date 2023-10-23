@@ -39,7 +39,9 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = (props) => {
 						<ButtonFullWidthContainer>
 							<Button onClick={onClickRefresh}>Refresh</Button>
 						</ButtonFullWidthContainer>
-						{additional}
+						<AdditionalTextContainer>
+							{additional}
+						</AdditionalTextContainer>
 					</Container>
 				</Panel>
 			</ContainerWidthConstraint>
@@ -87,4 +89,8 @@ const TextContainer = styled.div`
 	flex-direction: column;
 	gap: .125rem;
 	align-items: center;
+`;
+
+const AdditionalTextContainer = styled.div`
+	width: 100%;
 `;

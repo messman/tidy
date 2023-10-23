@@ -107,43 +107,47 @@ const TallerText = styled.div`
 export const NowBeachHighlightsTide: React.FC = () => {
 	const { meta, now } = useBatchResponseSuccess();
 
-	const { beachStatus, beachChange, direction } = now.tide.current;
-
+	const { beachStatus, beachCycleNextBetween, direction } = now.tide.current;
 
 	const tideDescription = getTideDescription(now.tide.current);
+	/*
+		See #REF_BEACH_CYCLE_NEXT_BETWEEN
+	*/
+	const hasNoReturnToBetween = beachCycleNextBetween === null;
 
-	const [firstLine, secondLine] = (() => {
-
+	const currentStatusLine: string = (() => {
 		if (beachStatus === TideLevelBeachStatus.between && direction === TideLevelDirection.rising) {
-			return [
-				'The tide is covering up the last of the beach',
-				'until the beach begins to uncover again'
-			];
-		}
-		else if (beachStatus === TideLevelBeachStatus.covered) {
-			return [
-				tideDescription,
-				'until the beach begins to uncover'
-			];
+			return 'The tide is covering up the last of the beach' + (hasNoReturnToBetween ? ', but will start to fall again soon' : '');
 		}
 		else if (beachStatus === TideLevelBeachStatus.between && direction === TideLevelDirection.falling) {
-			return [
-				'The beach is gradually uncovering',
-				'until the tide covers the beach again'
-			];
+			return 'The beach is gradually uncovering' + (hasNoReturnToBetween ? ', but will fully cover again soon' : '');
 		}
-		else if (beachStatus === TideLevelBeachStatus.uncovered) {
-			return [
-				tideDescription,
-				'until the tide covers the beach'
-			];
+		else return tideDescription;
+	})();
+
+	const nextStatusRender: React.ReactNode = (() => {
+		if (hasNoReturnToBetween) {
+			return null;
 		}
-		return null!; // Won't happen
+
+		let untilText: string = null!;
+		if (beachStatus === TideLevelBeachStatus.covered || (beachStatus === TideLevelBeachStatus.between && direction === TideLevelDirection.rising)) {
+			// This is for coming back down. If currently rising, add "again" to make it clear we're coming back.
+			untilText = 'until the beach begins to uncover' + (direction === TideLevelDirection.rising ? ' again' : '');
+		}
+		else if (beachStatus === TideLevelBeachStatus.uncovered || (beachStatus === TideLevelBeachStatus.between && direction === TideLevelDirection.falling)) {
+			// This is for coming back up. If current falling, add "again" for same reason as above.
+			untilText = 'until the tide gets close to the top of the beach' + (direction === TideLevelDirection.falling ? ' again' : '');
+		}
+
+		return (
+			<>&mdash; <TimeDurationTextUnit startTime={meta.referenceTime} stopTime={beachCycleNextBetween} isPrecise={false} /> {untilText}</>
+		);
 	})();
 
 	return (
 		<TallerText>
-			{firstLine} &mdash; <TimeDurationTextUnit startTime={meta.referenceTime} stopTime={beachChange} isPrecise={false} /> {secondLine}
+			{currentStatusLine} {nextStatusRender}
 		</TallerText>
 	);
 };

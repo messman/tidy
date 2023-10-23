@@ -21,10 +21,10 @@ const CurrentTimeContainer = styled.div`
 
 const currentTimeFlash = keyframes`
 	from {
-		background-color: ${themeTokens.text.distinct};
+		opacity: 1;
 	}
 	to {
-		background-color: ${themeTokens.rawColor.orange.distinct};
+		opacity: .4;
 	}
 `;
 
@@ -33,9 +33,11 @@ const CurrentTimeIndicator = styled.div`
 	border-radius: 1.5px;
 	flex-shrink: 0;
 
+	background-color: ${themeTokens.text.distinct};
+
 	animation-name: ${currentTimeFlash};
 	animation-timing-function: linear;
-	animation-duration: 1s;
+	animation-duration: 1.5s;
 	animation-direction: alternate;
 	animation-iteration-count: infinite;
 `;

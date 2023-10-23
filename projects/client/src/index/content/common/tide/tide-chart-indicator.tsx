@@ -31,24 +31,20 @@ const IndicatorTrail = styled.div`
 	border-bottom-right-radius: ${borderRadius};
 `;
 
-const IndicatorTrailCurrent = styled(IndicatorTrail)`
-	background-color: ${themeTokens.tideBar.lineNow};
-`;
-
 const currentFlashAnimation = keyframes`
 	from {
-		opacity: 0;
+		opacity: 1;
 	}
 	to {
-		opacity: 1;
+		opacity: .55;
 	}
 `;
 
-const IndicatorTrailCurrentFlash = styled(IndicatorTrail)`
+const IndicatorTrailCurrent = styled(IndicatorTrail)`
 	background-color: ${themeTokens.tideBar.lineNow};
-	
+
 	animation-name: ${currentFlashAnimation};
-	animation-duration: 1.6s;
+	animation-duration: 1.5s;
 	animation-iteration-count: infinite;
 	animation-direction: alternate;
 	animation-timing-function: linear;
@@ -78,24 +74,14 @@ export const TideChartIndicator: React.FC<TideChartIndicatorProps> = (props) => 
 
 	const Trail = isCurrent ? IndicatorTrailCurrent : IndicatorTrail;
 
-	const currentTrailPulseRender = (() => {
-		if (!isCurrent) {
-			return null;
-		}
-		return (
-			<IndicatorTrailCurrentFlash style={{ width: `calc(${asPercentString(percent)} + ${dotSize})` }} />
-		);
-	})();
 	const Dot = isCurrent ? IndicatorDotCurrent : IndicatorDot;
 
 	return (
 		<IndicatorContainer>
 			<IndicatorOffsetContainer>
-
 				<Trail
 					style={{ width: `calc(${asPercentString(percent)} + ${dotSize})` }}
 				/>
-				{currentTrailPulseRender}
 				<Dot
 					style={{ left: asPercentString(percent) }}
 				/>

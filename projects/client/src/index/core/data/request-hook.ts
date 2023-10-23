@@ -63,7 +63,7 @@ export function useApiRequest<TApiRoute extends ApiRoute>(route: TApiRoute, call
 				// Start.
 				makeApiRequest(route, input, {
 					...options,
-					abortController: abortControllerRef.current,
+					abortController: abortControllerRef.current!,
 					fetchFunc: fetchFunc
 				})
 					.then((result) => {

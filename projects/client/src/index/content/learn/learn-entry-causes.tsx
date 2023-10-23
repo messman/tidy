@@ -10,9 +10,7 @@ export const LearnEntryCauses: React.FC = () => {
 			<QuestionText>{learnCausesQuestion}</QuestionText>
 			<Panel>
 				<AnswerParagraph>
-					The primary source of the tides is the moon's gravitational pull. The power of this gravitational pull affects areas differently as the Earth rotates.
-				</AnswerParagraph>
-				<AnswerParagraph>
+					The primary source of the tides is the moon's gravitational pull.
 					As the moon and Earth move, the moon's gravitational pull causes Earth and its oceans to bulge out directly
 					toward the moon and directly away from the moon. These two bulges are the high tides,
 					and areas far from these bulges will be the low tides.

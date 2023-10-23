@@ -11,7 +11,7 @@ export const CONSTANT = {
 	fetchStillWaitingTimeout: seconds(8),
 
 	/** Time to wait since last successful fetch before either fetching again or restarting the application. */
-	appRefreshTimeout: minutes(7),
+	appRefreshTimeout: minutes(4),
 
 	elementSizeSmallThrottleTimeout: seconds(0),
 	elementSizeLargeThrottleTimeout: seconds(0),

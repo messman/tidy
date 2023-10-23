@@ -64,9 +64,9 @@ export const AppLayout: React.FC = () => {
 
 	return (
 		<LayoutRoot>
-			<Background />
 			{isUpperNav && <Nav isLower={false} />}
 			<ViewRoot ref={rootRef}>
+				<Background />
 				<View ref={mergeRefs(refViewNow, refTabNowScroll)}>
 					<Now />
 				</View>
@@ -86,7 +86,6 @@ export const AppLayout: React.FC = () => {
 };
 
 const LayoutRoot = styled.div`
-	position: relative;
 	flex: 1;
 	width: 100%;
 	height: 100%;
@@ -95,6 +94,7 @@ const LayoutRoot = styled.div`
 `;
 
 const ViewRoot = styled.div`
+	position: relative;
 	flex: 1;
 	display: flex;
 	overflow-x: scroll;

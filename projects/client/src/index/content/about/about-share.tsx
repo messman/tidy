@@ -16,6 +16,7 @@ enum ShareStatus {
 	failure
 }
 
+// Remember navigator share is only available on HTTPS
 const canUseDeviceShare = !!navigator.share || DEFINE.isDevelopment;
 const site = 'https://wellsbeachtime.com';
 

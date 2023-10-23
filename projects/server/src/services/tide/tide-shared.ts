@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import {
-	constant, isServerError, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeComp, TidePointExtremeDay,
-	TidePointFromExtremes
+	constant, isServerError, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointBeachChange, TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeComp,
+	TidePointExtremeDay, TidePointFromExtremes
 } from '@wbtdevlocal/iso';
 import { ServerPromise } from '../../api/error';
 import { BaseConfig } from '../config';
@@ -181,6 +181,7 @@ export async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPro
 		// At this point we don't have a ton of logic guiding us.... it's just a "this should hopefully be close enough" thing.
 		// We're saying it's half "astro/OFS data" and half "what portland is telling us it should be in Wells".
 		current = (oldCurrent + portlandAdjusted) / 2;
+		current = Math.round(current * 100) / 100;
 	}
 
 	return {
@@ -269,11 +270,7 @@ function computeHeightAtTimeBetweenPredictions(previousExtreme: TidePointExtreme
 	return heightWithPrecision;
 }
 
-export interface TidePointBeachChange {
-	time: DateTime;
-	/** This is the exact point where we move from the previous status TO this one. */
-	toStatus: TideLevelBeachStatus;
-}
+
 
 function computeTimeForTideHeight(heightPercent: number, fromTime: DateTime, toTime: DateTime): DateTime {
 	// Clamp
@@ -501,10 +498,10 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 	const [previous, current, next] = getTidePreviousNext(extrema, currentHeight, referenceTime);
 	const changes = getTidePointBeachChanges(extrema);
 
-	// Figure out our current beach status and the next one. 
-	// For the next one, have it be the first for an actual swap.
+	// Figure out our current beach status and the next significant one. 
+	let previousBeachStatus: TideLevelBeachStatus = null!;
 	let currentBeachStatus: TideLevelBeachStatus = null!;
-	let nextMajorBeachChange: TidePointBeachChange = null!;
+	let beachCycleNextBetween: DateTime | null = null;
 	for (let i = 0; i < changes.length; i++) {
 		const beachSwap = changes[i];
 		if (beachSwap.time < referenceTime) {
@@ -513,17 +510,45 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 		// Once we get to the first status past our reference time, grab the status of the one before.
 		if (currentBeachStatus === null) {
 			currentBeachStatus = changes[i - 1].toStatus;
+			previousBeachStatus = changes[i - 2].toStatus;
 		}
-		// Then look for the next major change. Could come in the same run of this loop, or in a later run of the the loop.
-		if (currentBeachStatus !== null) {
-			const previousStatus = changes[i - 1].toStatus;
-			if (
-				(previousStatus === TideLevelBeachStatus.uncovered && beachSwap.toStatus !== TideLevelBeachStatus.uncovered)
-				|| (previousStatus !== TideLevelBeachStatus.uncovered && beachSwap.toStatus === TideLevelBeachStatus.uncovered)
-			) {
-				nextMajorBeachChange = beachSwap;
+		/*
+			#REF_BEACH_CYCLE_NEXT_BETWEEN
+
+			We're looking for the next return to the "between" status without moving back to the "previous" status.
+			As in, as long as we aren't in one of these scenarios:
+			- uncovered -> between -> uncovered
+			- covered -> between -> covered
+			Then we are fine. In these scenarios above, it's hard to tell the user about when they can go on the beach / leave the beach.
+
+			These are the all possibilities (prev -> current -> next):
+			- uncovered to between (rising)
+				- to covered (next one after this)
+				- to uncovered again (null case)
+			- between to covered (rising)
+				- to between (what we want)
+			- between to uncovered (falling)
+				- to between (what we want)
+			- covered to between (falling)
+				- to uncovered (next one after this)
+				- to covered again (null case)
+
+			(Note: *Beach time* cares only about uncovered to between and between to uncovered.)
+		*/
+		if (
+			currentBeachStatus !== null
+			&& previousBeachStatus !== null
+		) {
+			if (currentBeachStatus === TideLevelBeachStatus.between && beachSwap.toStatus === previousBeachStatus) {
+				// We got back to our old status without finding what we were looking for. This is a null case as defined above.
 				break;
 			}
+			else if (beachSwap.toStatus === TideLevelBeachStatus.between) {
+				// This is what we are looking for - first time we get back to the between status, we must be coming from the opposite direction
+				beachCycleNextBetween = beachSwap.time;
+				break;
+			}
+			// Keep searching (should just be one more max)
 		}
 	}
 
@@ -556,7 +581,7 @@ export function getTideAdditionalContext(config: BaseConfig, fetchedTide: TideFe
 			direction: currentDirection,
 			division: currentDivision,
 			beachStatus: currentBeachStatus,
-			beachChange: nextMajorBeachChange.time
+			beachCycleNextBetween
 		},
 		beachChanges: changes,
 		previousId: previous.id,

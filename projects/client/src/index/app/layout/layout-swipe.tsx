@@ -149,7 +149,7 @@ export const Swipe: React.FC<SwipeProps> = (props) => {
 function scrollToSide(element: HTMLElement, isLeft: boolean, isSmooth: boolean) {
 	element.scrollTo({
 		left: isLeft ? 0 : element.scrollWidth,
-		behavior: isSmooth ? 'smooth' : 'instant'
+		behavior: isSmooth ? 'smooth' : ('instant' as 'smooth') // TS v4 issue, fixed in v5
 	});
 }
 

@@ -6,6 +6,7 @@ import { SVGIconUrlLoadProvider } from '@/index/core/icon/icon-url';
 import { DocumentVisibilityProvider, WindowDimensionsProvider, WindowMediaLayoutProvider } from '@messman/react-common';
 import { BackgroundProvider } from './app/background/background';
 import { AppLayout } from './app/layout/layout-app';
+import { NavProvider, tab } from './app/nav/nav-context';
 import { BatchResponseProvider } from './core/data/data';
 import { DataSeedProvider } from './core/data/data-seed';
 import { RequestFetchProvider } from './core/data/request-fetch-provider';
@@ -25,6 +26,7 @@ const App: React.FC = () => {
 		provider(DataSeedProvider, {}),
 		provider(BatchResponseProvider, {}),
 		provider(SVGIconUrlLoadProvider, {}),
+		provider(NavProvider, { initialSelectedTab: tab.now }),
 		provider(BackgroundProvider, {})
 	];
 

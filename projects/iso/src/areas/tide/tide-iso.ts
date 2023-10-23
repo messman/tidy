@@ -80,8 +80,14 @@ export interface TidePointCurrent {
 	direction: TideLevelDirection;
 	/** An indication of whether the beach is covered, including the "fuzzy" time in-between. */
 	beachStatus: TideLevelBeachStatus;
-	/** When the beach is going to be covered / uncovered next compared to right now. */
-	beachChange: DateTime;
+	/**
+	 * The next time that the beach status will return to the "between" status after going to a high or low.
+	 * If the high or low occurs *while in the "between" status*, this will be null (very rare / unlikely).
+	 * Use to let the user know when they can return to the beach or when the beach will begin covering.
+	 * 
+	 * See #REF_BEACH_CYCLE_NEXT_BETWEEN
+	*/
+	beachCycleNextBetween: DateTime | null;
 }
 
 /** This is a span of time, not a specific point in time. */
@@ -92,6 +98,12 @@ export enum TideLevelBeachStatus {
 	between,
 	/** Solidly covered. */
 	covered,
+}
+
+export interface TidePointBeachChange {
+	time: DateTime;
+	/** This is the exact point where we move from the previous status TO this one. */
+	toStatus: TideLevelBeachStatus;
 }
 
 export interface TidePointExtreme {

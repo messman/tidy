@@ -129,7 +129,7 @@ export const lightTokens = {
 	tideBar: {
 		line: alphaHex('#002B52', 39),
 		lineTip: alphaHex('#002B52', 39),
-		lineNow: alphaHex('#FFFFFF', 50),
+		lineNow: alphaHex('#FFFFFF', 70),
 		lineTipNow: '#FFFFFF',
 	},
 
