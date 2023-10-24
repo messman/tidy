@@ -12,7 +12,7 @@ cd ../../../
 ROOT_PATH=$(pwd)
 echo $ROOT_PATH
 
-HEROKU_APP=wellsbeachtime-api-v4-0
+HEROKU_APP=wellsbeachtime-v2023-api # #REF_API_CONNECTION
 HEROKU_REGISTRY=registry.heroku.com/${HEROKU_APP}/web
 
 DOCKER_BUILDKIT=1 docker build --platform linux/amd64 . \

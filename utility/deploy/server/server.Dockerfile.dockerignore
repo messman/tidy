@@ -10,6 +10,7 @@
 !projects/server/types
 !projects/server/package-lock.json
 !projects/server/package.json
+!projects/server/start.sh
 !projects/server/tsconfig.json
 
 !utility/deploy/server/build-server.sh
