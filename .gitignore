@@ -2,11 +2,14 @@
 TODO.txt
 NOTES.txt
 deploy-*.txt
+local-machine
 
 node_modules
 dist
 dist-icons
+prod-dist
 npm-debug.log
+*-secret.*
 
 **/test/**/*.js
 **/test/**/*.js.map
