@@ -36,7 +36,7 @@ app.set('json replacer', createSerializationReplacer());
 	it just prevents other websites from calling straight to us without a proxy.
 	You need authentication / IP rate limiting to prevent other requests.
 */
-const allowedDomain = settings.isDev ? '*' : 'https://wellsbeachtime.com';
+const allowedDomain = settings.isDev ? '*' : 'https://wellsbeachtime.com'; // #REF_API_CONNECTION
 baseLogger.info(settings.isDev ? 'Using open CORS settings for development' : `Restricting via CORS to '${allowedDomain}'`);
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', allowedDomain);

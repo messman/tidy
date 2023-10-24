@@ -168,8 +168,9 @@ module.exports = () => {
 	/** @type {any} */
 	const copyPlugin = new CopyPlugin({
 		patterns: [
-			{ from: 'src/static/images', to: './' },
 			{ from: 'src/static/favicons', to: './' },
+			{ from: 'src/static/headers', to: './' },
+			{ from: 'src/static/images', to: './' },
 		]
 	});
 

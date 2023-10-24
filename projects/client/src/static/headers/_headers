@@ -1,0 +1,5 @@
+# https://developers.cloudflare.com/pages/platform/headers#harden-security-for-an-application
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer

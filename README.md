@@ -1,38 +1,40 @@
 # Wells Beach Time
 
-**Status:** _Version 4 Redesign In-Progress_
+Parts of the Wells Beach area in Wells, Maine are inaccessible at a certain tidal height.
+As locals, my family and I have witnessed many a tourist make a long walk from their rental to the beach, with chairs and games in tow,
+just to see that they'll have to wait quite awhile before they can spread out on the sand.
 
-A mobile-first web app that uses free & public U.S. government and private data to show a simple view of tide, weather, and sunlight information.
-Currently, this application only works for **Wells, Maine**. It was made primarily for my parents, who live in Wells. It is open to use by all.
+This is a mobile-first web app for use by residents and visitors to Wells, Maine to inform beachgoers about the right time
+to go out onto the beaches of Wells.
 
-## Features
+This app uses publicly-available data from NOAA (National Oceanic and Atmospheric Administration) to present the best time(s) of day to go out on the beach, or "beach time".
+More specifically, this app checks traditional astronomical tide charts, newer observational forecast systems, and water
+level measurements from Portland, Maine, and interprets that data into a (hopefully) accurate water level
+for Wells. This water level is compared against a value for the height of the beach itself to learn how much beach is available/accessible.
+This app also calculates and presents the times for dusk and dawn. It can only be beach time if there is enough of both beach space and daylight.
 
-- View a quick summary of the last major tide event (low/high) and next major tide event (high/low), the sunrise and sunset of the current day, and current weather information.
-- Information can be copied to your clipboard and shared with others.
-- All times are shown local to Wells, Maine, and properly adjust for DST. 
-- The site is fully responsive - looks good on your iPhone or on a desktop.
-- See an in-depth view of the next 36+ hours - expected tide events, sunrise and sunset, and weather all on one full-screen timeline.
-- See a summary view of the next 6 days.
-- Change preferences that remain for future visits to the app - like light/dark theme.
+Weather conditions (from OpenWeather) are presented alongside the beach times, but "beach time" in this app does not explicitly account for weather.
 
-## Feature To-do & Issues
+## Unique Features
 
-See the issues section for more information - but features include:
+- Shows a live diagram of the estimated water level
+- Calculates and shows the best time to go out on the beach over a period of 5-6 days by checking water levels and sunrise/sunset
+- Uses multiple tide sources (traditional astronomical tide charts, the GoMOFS system, and Portland tidal measurements) for more accurate
+  water level and hi/lo predictions
+- Share the app via QR code, native sharing, or copy-to-clipboard
+- Read FAQs about the tides
 
-- Allow the user to add their own location, or at least support a few more locations for everyone
+## Major Feature To-do & Issues
+
+Features that will be high priority in the future include:
+
 - Support for metric system
-- Refresh timer
-- Changelog system
-- Add basic information about how tides work
-- Add indication of where the user can interact with components (touch points)
+- Better support for reporting API failures
+- Emergency weather alerts
+- Donation system
+- More educational information, including images
 
-And issues include:
-
-- Optimization!
-- Certain iOS bugs
-- Ability to view the settings page even when there is an error
-
-This project is important, but not my top priority - so development will not be quick.
+The developer typically does one major update per year.
 
 ## Credits
 
@@ -42,7 +44,7 @@ This project is important, but not my top priority - so development will not be 
 
 ## Tech
 
-This is a TypeScript frontend and TypeScript Node.js backend.
+This is a React/TypeScript frontend and TypeScript Node.js backend.
 
 Some of the major tech used:
 - `TypeScript` because, of course.

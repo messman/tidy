@@ -28,6 +28,7 @@ function verifyClientKey(ctx: RequestContext, key: unknown): ServerError | null 
 		});
 	}
 	if (key !== settings.CLIENT_KEY) {
+		// #REF_CLIENT_KEY
 		return serverErrors.internal.mismatch(ctx, key, settings.CLIENT_KEY!, {
 			hiddenArea: 'verify client key'
 		});
