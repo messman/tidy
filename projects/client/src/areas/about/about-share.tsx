@@ -14,7 +14,7 @@ enum ShareStatus {
 }
 
 const canShare = !!navigator.share;
-const site = 'https://wellsbeachtime.com';
+const site = 'https://old.wellsbeachtime.com';
 
 export const AboutShare: React.FC = () => {
 
