@@ -49,12 +49,12 @@ export const ChartHourlySVG: React.FC<ChartHourlySVGProps> = React.memo((props) 
 	// Convert tide data into point data.
 	const points = extrema.map<Point>((extreme) => {
 		return {
-			x: extreme.time.valueOf() - minX,
+			x: scaleTime(extreme.time.valueOf() - minX),
 			y: extreme.height
 		};
 	});
 
-	const viewBox = makeRect(0, allExtremaMin, day.endOf('day').valueOf() - minX, allExtremaMax);
+	const viewBox = makeRect(0, allExtremaMin, scaleTime(day.endOf('day').valueOf() - minX), allExtremaMax);
 	const output = createChartLine(points, viewBox, verticalPaddingFactor);
 
 	return (
@@ -64,3 +64,7 @@ export const ChartHourlySVG: React.FC<ChartHourlySVGProps> = React.memo((props) 
 		</>
 	);
 });
+
+function scaleTime(time: number): number {
+	return Math.round((time / (60 * 1000)) * 100) / 100;
+}
