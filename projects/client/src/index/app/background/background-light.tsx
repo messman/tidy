@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as seedrandom from 'seedrandom';
 import { Canvas, CanvasRender, RenderInput } from './canvas';
 
-const DEBUG = false;
+const DEBUG = true;
 
 interface LightProps {
 	isActive: boolean;
@@ -16,7 +16,7 @@ export const BackgroundLight: React.FC<LightProps> = (props) => {
 	});
 
 	return (
-		<Canvas render={isActive ? render : null} />
+		<Canvas render={isActive ? render : null} name="light" />
 	);
 };
 
@@ -148,8 +148,8 @@ function createLightRender(): CanvasRender {
 		const topMidpointX = Math.round((topLeftX + topRightX) / 2);
 		const bottomMidpointX = Math.round((bottomLeftX + bottomRightX) / 2);
 		const gradient = ctx.createLinearGradient(topMidpointX, 0, bottomMidpointX, canvasHeight);
-		gradient.addColorStop(0, "rgba(255, 244, 147, 0.05)");
-		gradient.addColorStop(1, "rgba(255, 244, 147, 0.01)");
+		gradient.addColorStop(0, "rgba(255, 244, 147, 0.06)");
+		gradient.addColorStop(1, "rgba(255, 244, 147, 0.015)");
 
 		ctx.save();
 		ctx.moveTo(topLeftX, 0);

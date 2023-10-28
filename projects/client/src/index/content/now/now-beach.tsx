@@ -48,7 +48,7 @@ const LabelContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	${fontStyles.lead.large};
+	${fontStyles.text.mediumHeavy};
 	color: ${themeTokens.text.onBackground};
 `;
 

@@ -65,21 +65,23 @@ export const AppLayout: React.FC = () => {
 	return (
 		<LayoutRoot>
 			{isUpperNav && <Nav isLower={false} />}
-			<ViewRoot ref={rootRef}>
+			<ViewsContainer>
 				<Background />
-				<View ref={mergeRefs(refViewNow, refTabNowScroll)}>
-					<Now />
-				</View>
-				<View ref={mergeRefs(refViewWeek, refTabWeekScroll)}>
-					<Week />
-				</View>
-				<View ref={mergeRefs(refViewLearn, refTabLearnScroll)}>
-					<Learn />
-				</View>
-				<View ref={mergeRefs(refViewAbout, refTabAboutScroll)}>
-					<About />
-				</View>
-			</ViewRoot>
+				<ViewRoot ref={rootRef} style={{ overflowX: isUpperNav ? 'hidden' : 'auto' }}>
+					<View ref={mergeRefs(refViewNow, refTabNowScroll)}>
+						<Now />
+					</View>
+					<View ref={mergeRefs(refViewWeek, refTabWeekScroll)}>
+						<Week />
+					</View>
+					<View ref={mergeRefs(refViewLearn, refTabLearnScroll)}>
+						<Learn />
+					</View>
+					<View ref={mergeRefs(refViewAbout, refTabAboutScroll)}>
+						<About />
+					</View>
+				</ViewRoot>
+			</ViewsContainer>
 			{!isUpperNav && <Nav isLower={true} />}
 		</LayoutRoot>
 	);
@@ -93,11 +95,19 @@ const LayoutRoot = styled.div`
 	flex-direction: column;
 `;
 
+const ViewsContainer = styled.div`
+	position: relative;
+	flex: 1;
+	display: flex;
+	overflow: hidden;
+	width: 100vw;
+`;
+
 const ViewRoot = styled.div`
 	position: relative;
 	flex: 1;
 	display: flex;
-	overflow-x: scroll;
+	// overflow-x set by style
 	overflow-y: hidden;
 	scroll-snap-type: x mandatory;
 	width: 100vw;

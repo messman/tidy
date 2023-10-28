@@ -50,7 +50,7 @@ export const lightTokens = {
 		gradient: 'radial-gradient(1055.01% 100.76% at 39.01% -0.00%, #83DAF5 13.54%, #287AC6 100%)',
 		glass: {
 			gradient: 'rgba(9, 81, 121, 0.41)',
-			backdropFilter: 'blur(4px) saturate(130%)'
+			backdropFilter: 'blur(3px) saturate(130%)'
 		},
 		tint: {
 			lightest: 'rgba(219, 235, 248, 0.15)',

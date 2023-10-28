@@ -22,7 +22,7 @@ export const BackgroundBubbles: React.FC<BubblesProps> = (props) => {
 	});
 
 	return (
-		<Canvas render={isActive ? render : null} />
+		<Canvas render={isActive ? render : null} name="bubbles" />
 	);
 };
 
@@ -32,8 +32,8 @@ const renderPadding = 20;
 const createGroupTimeRange = [800, 2300] as const;
 const bubbleDiameterRange = [5, 12] as const;
 const bubbleAmplitudeRange = [1, 5] as const;
-const bubbleSpeedRange = [.27, .42] as const;
-const bubbleJiggleSpeed = .015;
+const bubbleSpeedRange = [.25, .35] as const;
+const bubbleJiggleSpeed = .014;
 const bubbleOffsetY = 200;
 
 const bubbleStyles = ["a", "b", "c", "d", "e"] as const;

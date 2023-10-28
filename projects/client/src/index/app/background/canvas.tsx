@@ -21,10 +21,11 @@ interface BubbleState {
 
 export interface CanvasProps {
 	render: CanvasRender | null;
+	name: string;
 }
 
 export const Canvas: React.FC<CanvasProps> = (props) => {
-	const { render } = props;
+	const { render, name } = props;
 
 	const [state, setState] = React.useState<BubbleState>(() => {
 		return {
@@ -103,7 +104,7 @@ export const Canvas: React.FC<CanvasProps> = (props) => {
 			return;
 		}
 
-		const context = canvas.getContext("2d")!;
+		const context = canvas.getContext("2d", { alpha: false })!;
 
 		// Set up animation loop
 		let requestAnimationFrameId: number = -1;
@@ -127,7 +128,7 @@ export const Canvas: React.FC<CanvasProps> = (props) => {
 	}, [key, width, height, render]);
 
 	return (
-		<CanvasElement ref={refSetCanvas}></CanvasElement>
+		<CanvasElement ref={refSetCanvas} data-animation={name} ></CanvasElement>
 	);
 };
 
