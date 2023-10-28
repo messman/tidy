@@ -50,10 +50,10 @@ module.exports = () => {
 	const output = {
 		// Template for naming bundles
 		// https://webpack.js.org/guides/caching/
-		filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
+		filename: isDevelopment ? '[name].js' : '[name].[fullhash].[contenthash].js',
 		// Template for naming code-split bundles
 		chunkFilename: 'chunk.[name].js',
-		hashDigestLength: 10,
+		hashDigestLength: 16,
 		path: path.resolve(__dirname, './dist'),
 
 	};
