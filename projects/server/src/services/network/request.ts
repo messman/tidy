@@ -3,7 +3,7 @@ import { serverErrors, ServerPromise } from '../../api/error';
 import { LogContext } from '../logging/pino';
 
 // Set larger request timeout because OFS takes awhile to pull from
-const requestTimeout = 15_000;
+const requestTimeout = 20_000;
 
 export async function makeRequestJson<T>(ctx: LogContext, serviceName: string, url: string): ServerPromise<T> {
 	return await makeRequest<T>(ctx, serviceName, url, async (res) => {
@@ -26,7 +26,7 @@ async function makeRequest<T>(ctx: LogContext, serviceName: string, url: string,
 		else {
 			return serverErrors.internal.service(ctx, serviceName, {
 				hiddenArea: 'fetch non-ok error',
-				hiddenLog: { status: res.status, statusText: res.statusText }
+				hiddenLog: { status: res.status, statusText: res.statusText, url }
 			});
 		}
 	} catch (e) {

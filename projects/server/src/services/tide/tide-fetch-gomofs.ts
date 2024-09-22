@@ -9,6 +9,8 @@ import { createTidePointExtremeId } from './tide-shared';
 /*
 	The GoMOFS System 
 
+	NOTE: See here for news if something has changed: https://tidesandcurrents.noaa.gov/ofs/gomofs/gomofs.html
+
 	Our traditional method of getting tidal information includes getting information from NOAA's observation API:
 	- Getting the list of official listed HI/LO tides for the time before and after our date
 	- Getting a reading of the current water level
@@ -56,11 +58,11 @@ import { createTidePointExtremeId } from './tide-shared';
 				Highs are usually a bit above the stated high, but wthe forecast will sometimes add on even more to the high than that.
 				Lows are more muted.
 	- The THREDDS server that holds the data: https://opendap.co-ops.nos.noaa.gov/thredds/catalog/NOAA/GOMOFS/MODELS/catalog.html
-		- Example catalog for a day: https://opendap.co-ops.nos.noaa.gov/thredds/catalog/NOAA/GOMOFS/MODELS/2023/09/24/catalog.html?dataset=NOAA/GOMOFS/MODELS/2023/09/24/nos.gomofs.stations.forecast.20230924.t00z.nc
-			- Choose "nos.gomofs.stations.forecast.______" to get to the forecast entry.
-		- Example forecast entry: https://opendap.co-ops.nos.noaa.gov/thredds/catalog/NOAA/GOMOFS/MODELS/2023/09/24/catalog.html?dataset=NOAA/GOMOFS/MODELS/2023/09/24/nos.gomofs.stations.forecast.20230924.t00z.nc
+		- NOTE - on 2024-09-09, the filename changed from nos.gomofs.stations.forecast.20240909.t00z.nc to something like gomofs.t18z.20240910.stations.forecast.nc
+		- Example catalog for a day: https://opendap.co-ops.nos.noaa.gov/thredds/catalog/NOAA/GOMOFS/MODELS/2024/09/10/catalog.html?dataset=NOAA/GOMOFS/MODELS/2024/09/10/gomofs.t00z.20240910.stations.forecast.nc
+			- Choose "gomofs.____.stations.forecast.nc" to get to the forecast entry.
 			- Choose the link beside "OPENDAP" to get to the HTML tool.
-		- Example HTML tool for an entry: https://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/2023/09/24/nos.gomofs.stations.forecast.20230924.t00z.nc.html
+		- Example HTML tool for an entry: https://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/2024/09/10/gomofs.t00z.20240910.stations.forecast.nc.html
 			- Click the checkbox next to a data type to mark that data to be returned.
 			- When you see "0:1:126", that means "[startIndex]:[step]:[length]": so "give me each 1 of between index 0 and index 125 (126 things)"; so "4:1:4" means "give me each 1 between index 4 and index 4 (1 thing)"
 
@@ -82,7 +84,7 @@ import { createTidePointExtremeId } from './tide-shared';
 	Dataset {
 		Float64 lon_rho[station = 126];
 		Float64 lat_rho[station = 126];
-	} NOAA/GOMOFS/MODELS/2023/09/20/nos.gomofs.stations.forecast.20230920.t18z.nc;
+	} NOAA/GOMOFS/MODELS/2024/09/10/gomofs.t18z.20230920.stations.forecast.nc;
 	---------------------------------------------
 	lon_rho[126]
 	-66.942022325, -67.1953163, -68.20549009999999, -70.209506975, -70.55615997500001, -70.70682335, -71.01374055, -69.941268925, -70.67153355, -70.77109145, -70.10110664999999, 1.0E37, 1.0E37, -66.942022325, -67.1953163, -68.20549009999999, -70.209506975, -70.55615997500001, -71.03917885, -70.67644885, -70.10110664999999, 1.0E37, -70.5643444, -70.4253578, -69.35647965, -68.99869155, -68.111175525, -67.615856175, -65.90480805000001, -71.11997794999999, -71.02762795000001, -70.67141725, -70.67153355, -70.64943885, -70.571785, -70.4178276, -70.17131045, -70.1465168, -70.1465168, -70.09479139999999, -69.6263981, -69.360561375, -69.250461575, -69.130052575, -69.002758, -68.20549009999999, -68.107406625, -67.88546372500001, -67.30900765, -67.1953163, -66.942022325, -66.6008282, -65.927814475, 1.0E37, -67.1796131, -67.309276575, -67.8465767, -68.18991659999999, -68.4401665, -68.6040287, -68.80705835, -68.80705835, 1.0E37, -68.892719275, -69.77279854999999, 1.0E37, -70.201908125, -70.3321495, -70.37117384999999, -70.6984844, -70.71015739999999, -70.807209025, -70.769645675, -70.61053085, 1.0E37, -70.8544769, -70.95158769999999, -70.88757325, -70.96068385000001, -70.708581925, -70.64028357499998, -70.16631890000001, -70.6640358, -70.6648064, -70.49143980000001, -70.15187452500001, 1.0E37, -70.70612335, -70.712615975, -69.9446106, -70.05307962500001, -70.7997322, -70.29529575000001, -70.65457915, -70.89403150000001, -69.9946518, -70.92792130000001, -70.67153355, -70.761642475, -70.5869217, -70.5511532, -70.92896845, -70.8501339, -70.72494125, -70.5000038, 1.0E37, -71.18834875, 1.0E37, 1.0E37, 1.0E37, 1.0E37, 1.0E37, 1.0E37, 1.0E37, -71.45525359999999, -71.4895649, -71.76013375, -71.5508385, -71.5735874, -71.588071825, -71.617010125, -70.83008575000001, -69.85131835, -66.27776717500001, -61.264434825, -62.077562349999994
@@ -182,7 +184,7 @@ async function getForecastUrl(ctx: LogContext, config: BaseConfig): ServerPromis
 		const padMonth = month.toString().padStart(2, '0');
 		const padDay = day.toString().padStart(2, '0');
 		const padHour = hour.toString().padStart(2, '0');
-		const baseUrl = `https://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/${year}/${padMonth}/${padDay}/nos.gomofs.stations.forecast.${year}${padMonth}${padDay}.t${padHour}z.nc`;
+		const baseUrl = `https://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/${year}/${padMonth}/${padDay}/gomofs.t${padHour}z.${year}${padMonth}${padDay}.stations.forecast.nc`;
 		// Just try to get some simple small data to prove it's accessible
 		const trySimpleGetUrl = `${baseUrl}.ascii?ntimes`;
 
@@ -526,7 +528,7 @@ async function getWaterTemp(ctx: LogContext, baseUrl: string, stationIndex: numb
 		We'll get the last one (29), since that's supposedly the closest to the surface.
 		[ocean_time][station][s_rho]
 
-		Test: https://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/2023/09/23/nos.gomofs.stations.forecast.20230923.t00z.nc.ascii?s_rho%5B0:1:29%5D,temp%5B1:1:1%5D%5B4:1:4%5D%5B0:1:29%5D
+		Test: https://opendap.co-ops.nos.noaa.gov/thredds/dodsC/NOAA/GOMOFS/MODELS/2024/09/10/gomofs.t00z.20240910.stations.forecast.nc.ascii?s_rho%5B0:1:29%5D,temp%5B1:1:1%5D%5B4:1:4%5D%5B0:1:29%5D
 	*/
 
 	const waterTempUrl = `${baseUrl}.ascii?temp%5B0:1:720%5D%5B${stationIndex}:1:${stationIndex}%5D%5B29:1:29%5D`;

@@ -5,7 +5,7 @@ export const CONSTANT = {
 	/** Minimum time to wait for fetch response. */
 	fetchMinTimeout: seconds(.2),
 	/** Maximum time to wait for fetch response. */
-	fetchMaxTimeout: seconds(15),
+	fetchMaxTimeout: seconds(25),
 
 	/** Time before max where an update is shown to the user to reassure them. */
 	fetchStillWaitingTimeout: seconds(8),
