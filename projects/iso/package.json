@@ -11,6 +11,9 @@
 	},
 	"author": "Andrew Messier",
 	"license": "MIT",
+	"publishConfig": {
+		"tag": "latest"
+	},
 	"peerDependencies": {
 		"luxon": "^3.3.0"
 	},

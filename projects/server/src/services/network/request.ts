@@ -19,6 +19,7 @@ export async function makeRequestAscii(ctx: LogContext, serviceName: string, url
 
 async function makeRequest<T>(ctx: LogContext, serviceName: string, url: string, asType: (res: Response) => Promise<T>): ServerPromise<T> {
 	try {
+		ctx.logger.debug(`Making request to ${serviceName} at ${url} with timeout ${requestTimeout}ms`, { url, serviceName, requestTimeout });
 		const res = await nodeFetch(url, { timeout: requestTimeout });
 		if (res.ok) {
 			return await asType(res);

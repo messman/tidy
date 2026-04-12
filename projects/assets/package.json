@@ -21,6 +21,9 @@
 		"url": "https://github.com/messman/tidy/issues"
 	},
 	"homepage": "https://github.com/messman/tidy#readme",
+	"publishConfig": {
+		"tag": "latest"
+	},
 	"peerDependencies": {
 		"react": "*",
 		"react-dom": "*"

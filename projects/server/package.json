@@ -43,5 +43,8 @@
 	"bugs": {
 		"url": "https://github.com/messman/tidy/issues"
 	},
-	"homepage": "https://github.com/messman/tidy#readme"
+	"homepage": "https://github.com/messman/tidy#readme",
+	"publishConfig": {
+		"tag": "latest"
+	}
 }

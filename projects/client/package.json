@@ -28,6 +28,9 @@
 		"url": "https://github.com/messman/tidy/issues"
 	},
 	"homepage": "https://github.com/messman/tidy#readme",
+	"publishConfig": {
+		"tag": "latest"
+	},
 	"dependencies": {
 		"@messman/react-common": "^3.3.0",
 		"@messman/react-common-transition": "^7.1.0",
