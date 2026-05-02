@@ -18,7 +18,7 @@ module.exports = function getDefine(isDevelopment) {
 		buildTime: JSON.stringify(buildTime),
 		isDevelopment: JSON.stringify(isDevelopment),
 		apiRoot: JSON.stringify(apiRoot),
-		clientKey: JSON.stringify("2023.10.23"), // #REF_CLIENT_KEY
+		clientKey: JSON.stringify("2026.05.02"), // #REF_CLIENT_KEY
 	};
 	return DEFINE;
 };
