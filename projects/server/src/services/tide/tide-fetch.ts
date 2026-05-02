@@ -10,6 +10,14 @@ import { createTidePointExtremeId } from './tide-shared';
 /*
 	From https://tidesandcurrents.noaa.gov/api/
 
+	We fetch from three locations:
+	- Wells, ME - for predictions. This station is no longer operating, but it had worked well since 2017-ish, and is what we have historical data for.
+		- https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
+	- Portland, ME - for predictions and current water level
+		- https://tidesandcurrents.noaa.gov/stationhome.html?id=8418150
+	- Seavey Island, NH (near Portsmouth NH) - for predictions and current water level	
+		- https://tidesandcurrents.noaa.gov/stationhome.html?id=8419870
+
 	Sample URLs:
 	https://tidesandcurrents.noaa.gov/api/datagetter?application=wells_beach_time&station=8419317&format=json&time_zone=lst_ldt&units=english&product=predictions&datum=mllw&interval=hilo&begin_date=20200425%2000%3A00&range=240
 	https://tidesandcurrents.noaa.gov/api/datagetter?application=wells_beach_time&station=8419317&format=json&time_zone=lst_ldt&units=english&product=water_level&datum=mllw&date=latest
@@ -21,10 +29,19 @@ export interface TideFetchedNOAA {
 	/** Astronomical predictions for Portland. */
 	portlandExtrema: TidePointExtreme[];
 	/** Current observed water level data from Portland. */
-	portlandCurrent: TideFetchedNOAACurrent | null;
+	portlandCurrent: TideFetchedNOAACurrent;
+	/** Astronomical predictions for Seavey Island. */
+	seaveyIslandExtrema: TidePointExtreme[];
+	/** Current observed water level data from Seavey Island. */
+	seaveyIslandCurrent: TideFetchedNOAACurrent;
 }
 
 export interface TideFetchedNOAACurrent {
+	waterLevel: TideFetchedNOAACurrentDatum;
+	waterTemp: TideFetchedNOAACurrentDatum;
+}
+
+export interface TideFetchedNOAACurrentDatum {
 	value: number;
 	time: DateTime;
 }
@@ -38,14 +55,44 @@ export async function fetchTidesNOAA(ctx: LogContext, config: BaseConfig): Serve
 	if (isServerError(portlandExtrema)) {
 		return portlandExtrema;
 	}
-	const portlandCurrent = await getCurrentFromPortland(ctx);
+	const seaveyIslandExtrema = await getPredictionsForStation(ctx, config, constant.tideStations.seaveyIsland);
+	if (isServerError(seaveyIslandExtrema)) {
+		return seaveyIslandExtrema;
+	}
+
+	/*
+		Unfortunately, the Wells station is no longer operating. It had worked well since 2017-ish, but had a pause
+		in 2019 and shut down in 2022.
+
+		To make up for the lack of current water level data in Wells, we used to use the Portland station + GoMOFS data.
+		However, the GoMOFS data is often unavailable (server issues).
+
+		So instead, we will use Portland + Seavey Island, the two closest stations.
+
+		OFS pages for each, for comparison:
+		- Wells: https://tidesandcurrents.noaa.gov/ofs/ofs_station.html?stname=Wells&ofs=gom&stnid=8419317&subdomain=0
+		- Portland: https://tidesandcurrents.noaa.gov/ofs/ofs_station.html?stname=Portland&ofs=gom&stnid=8418150&subdomain=0
+		- Seavey Island: https://tidesandcurrents.noaa.gov/ofs/ofs_station.html?stname=Seavey%20Island&ofs=gom&stnid=8419870&subdomain=0
+
+		Also, note that because this is observational data, it can be a little on the later side.
+	*/
+
+	const portlandCurrent = await getCurrentForStation(ctx, constant.tideStations.portland);
 	if (isServerError(portlandCurrent)) {
 		return portlandCurrent;
 	}
+
+	const seaveyIslandCurrent = await getCurrentForStation(ctx, constant.tideStations.seaveyIsland);
+	if (isServerError(seaveyIslandCurrent)) {
+		return seaveyIslandCurrent;
+	}
+
 	return {
 		wellsExtrema,
 		portlandExtrema,
-		portlandCurrent
+		portlandCurrent,
+		seaveyIslandExtrema,
+		seaveyIslandCurrent
 	};
 }
 
@@ -100,47 +147,63 @@ async function getPredictionsForStation(ctx: LogContext, config: BaseConfig, sta
 	return extrema;
 }
 
+async function getCurrentForStation(ctx: LogContext, station: number): ServerPromise<TideFetchedNOAACurrent> {
 
-
-async function getCurrentFromPortland(ctx: LogContext): ServerPromise<TideFetchedNOAACurrent | null> {
-	const { portland } = constant.tideStations;
-
-	/*
-		Unfortunately, the Wells station is no longer operating. It had worked well since 2017-ish, but had a pause
-		in 2019 and shut down in 2022.
-
-		We use Portland instead, which is regularly about half a foot higher water level than Wells when compared through
-		OFS (a different system):
-		- Wells: https://tidesandcurrents.noaa.gov/ofs/ofs_station.html?stname=Wells&ofs=gom&stnid=8419317&subdomain=0
-		- Portland: https://tidesandcurrents.noaa.gov/ofs/ofs_station.html?stname=Portland&ofs=gom&stnid=8418150&subdomain=0
-
-		Also, note that because this is observational data, it can be a little on the later side.
-	*/
-
-	const portlandLevelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
-		station: portland,
+	// Water level
+	const levelInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
+		station,
 		product: "water_level",
 		datum: "mllw",
 		date: "latest"
 	} as NOAACurrentLevelInput));
 
-	const portlandLevelResponse = await makeRequestJson<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(portlandLevelInput));
-	if (isServerError(portlandLevelResponse)) {
-		return portlandLevelResponse;
+	const levelResponse = await makeRequestJson<NOAACurrentLevelOutput>(ctx, 'Tides - level', createRequestUrl(levelInput));
+	if (isServerError(levelResponse)) {
+		return levelResponse;
 	}
-	else if (isNOAARawErrorResponse(portlandLevelResponse)) {
-		// Could not get the water level from Portland.
-		ctx.logger.warn('Tide level response from Portland is an error - no water level available', {
-			message: portlandLevelResponse.error?.message || 'No message'
+	else if (isNOAARawErrorResponse(levelResponse)) {
+		// We need this information, so if it fails, let's get out.
+		return serverErrors.internal.service(ctx, 'Tides - level', {
+			hiddenArea: 'Service returned an error object',
+			hiddenLog: { message: levelResponse.error?.message || 'No message' }
 		});
-		// Portland failed? Aw man.
-		return null;
 	}
+	const waterLevelData = levelResponse.data[0];
 
-	const data = portlandLevelResponse.data[0];
+	// Water temperature
+	const tempInput: NOAACurrentLevelInput = Object.assign({}, defaultNOAAInput, ({
+		station,
+		product: "water_temperature",
+		datum: "mllw",
+		date: "latest"
+	} as NOAACurrentLevelInput));
+
+	const tempResponse = await makeRequestJson<NOAACurrentLevelOutput>(ctx, 'Tides - temperature', createRequestUrl(tempInput));
+	if (isServerError(tempResponse)) {
+		return tempResponse;
+	}
+	else if (isNOAARawErrorResponse(tempResponse)) {
+		// Could not get the water temperature from the station.
+		ctx.logger.warn('Tide temperature response from station is an error - no water temperature available', {
+			message: tempResponse.error?.message || 'No message'
+		});
+		// Station failed? Aw man.
+		return serverErrors.internal.service(ctx, 'Tides - temperature', {
+			hiddenArea: 'Service returned an error object',
+			hiddenLog: { message: tempResponse.error?.message || 'No message' }
+		});
+	}
+	const waterTempData = tempResponse.data[0];
+
 	return {
-		value: parseHeight(data.v),
-		time: toDateTimeFromNOAAString(data.t)
+		waterLevel: {
+			value: parseHeight(waterLevelData.v),
+			time: toDateTimeFromNOAAString(waterLevelData.t)
+		},
+		waterTemp: {
+			value: parseHeight(waterTempData.v),
+			time: toDateTimeFromNOAAString(waterTempData.t)
+		}
 	};
 }
 

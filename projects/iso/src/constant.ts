@@ -18,14 +18,17 @@ export const constant = {
 	 */
 	tideStations: {
 		/**
-		   *  https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
-		   */
+		 *  https://tidesandcurrents.noaa.gov/stationhome.html?id=8419317
+		 */
 		wells: 8419317,
 		/**
-		 * An alternative NOAA station, like https://tidesandcurrents.noaa.gov/stationhome.html?id=8418150
-		 * in case the Wells station does not measure water level (it has a history of going down)
+		 * https://tidesandcurrents.noaa.gov/stationhome.html?id=8418150
 		 */
-		portland: 8418150
+		portland: 8418150,
+		/**
+		 * https://tidesandcurrents.noaa.gov/stationhome.html?id=8419870
+		 */
+		seaveyIsland: 8419870
 	},
 
 	beachAccess: {

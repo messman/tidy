@@ -1,13 +1,12 @@
 import { DateTime } from 'luxon';
 import {
-	constant, isServerError, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointBeachChange, TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeComp,
-	TidePointExtremeDay, TidePointFromExtremes
+	constant, isServerError, TideLevelBeachStatus, TideLevelDirection, TideLevelDivision, TidePointBeachChange, TidePointCurrent, TidePointCurrentSource, TidePointExtreme, TidePointExtremeDay,
+	TidePointFromExtremes
 } from '@wbtdevlocal/iso';
 import { ServerPromise } from '../../api/error';
 import { BaseConfig } from '../config';
 import { LogContext } from '../logging/pino';
 import { fetchTidesNOAA } from './tide-fetch';
-import { fetchTidesGoMOFS } from './tide-fetch-gomofs';
 
 export function createTidePointExtremeId(time: DateTime, source: string): string {
 	return `tide-${source}-${time.toMillis()}`;
@@ -17,14 +16,16 @@ export interface TideFetched {
 	waterTemp: number;
 	current: number;
 	source: TidePointCurrentSource;
-	extrema: TidePointExtremeComp[];
+	extrema: TidePointExtreme[];
 }
 
 export async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPromise<TideFetched> {
-	const fetchedTideGoMOFS = await fetchTidesGoMOFS(ctx, config);
-	if (isServerError(fetchedTideGoMOFS)) {
-		return fetchedTideGoMOFS;
-	}
+
+	// We no longer should rely on GoMOFS - the server is down randomly for hours at a time.
+	// const fetchedTideGoMOFS = await fetchTidesGoMOFS(ctx, config);
+	// if (isServerError(fetchedTideGoMOFS)) {
+	// 	return fetchedTideGoMOFS;
+	// }
 
 	const fetchedTideNOAA = await fetchTidesNOAA(ctx, config);
 	if (isServerError(fetchedTideNOAA)) {
@@ -33,194 +34,197 @@ export async function fetchTides(ctx: LogContext, config: BaseConfig): ServerPro
 
 	/*
 		The data we have:
-		- (Likely) current water level from Portland, plus time
+		- Current water level and temp from Portland, plus time
+			- Not the same height system basis as Wells
+			- May be time-delayed more than our other data
+		- Current water level and temp from Seavey Island, plus time
 			- Not the same height system basis as Wells
 			- May be time-delayed more than our other data
 		- Astronomical tide extremes from NOAA for Portland
 			- Doesn't take weather into account
+		- Astronomical tide extremes from NOAA for Seavey Island
+			- Doesn't take weather into account
 		- Astronomical tide extremes from NOAA for Wells
 			- Doesn't take weather into account
-		- GoMOFS water level, plus time
-			- Taken from forecasts, <=6 minutes behind
-		- GoMOFS extremes
-			- Taken from forecasts, slightly inaccurate
+		// - GoMOFS water level, plus time
+		// 	- Taken from forecasts, <=6 minutes behind
+		// - GoMOFS extremes
+		// 	- Taken from forecasts, slightly inaccurate
 		
 		**None of this data is exactly correct**. Don't strive for perfection.
-		From research, it seems like:
-		- Astro tide extremes are typically too low on their highs, but accurate on lows
-		- GoMOFS forecasts make up for the above, but can be a little *too* high;
-			actually slightly more inaccurate than the Astro tide extremes at highs.
 
 		So the plan is to return this data structure:
 		- "extrema"
-			a combination of astro tide extremes and their GoMOFS equivalents
+			Just using the Wells astro extremes, so that it matches to what people expect.
 		- "current"
-			a combination of 
-			1. The Portland value, compensated for Wells
-			2. The GoMOFS current water level
-			3. The computed value from the extrema above
+			a combination of
+			1. The Wells extremes
+			2. The Portland value, compensated for Wells, compared against its own extremes
+			3. The Seavey Island value, compensated for Wells, compared against its own extremes
 		- "source"
 			All the extra data for us to use to review the effectiveness of this
 	*/
 
-	const { approxStationOffset, extrema: ofsExtrema, forecastEntryTimeUtc, retries, station, waterLevel: ofsWaterLevel, waterLevelTime: ofsWaterLevelTime, waterTemp } = fetchedTideGoMOFS;
-	const { portlandCurrent, portlandExtrema, wellsExtrema } = fetchedTideNOAA;
+	const { portlandCurrent, portlandExtrema, wellsExtrema, seaveyIslandCurrent, seaveyIslandExtrema } = fetchedTideNOAA;
+
+	// First, let's take care of water level. Let's say it's just the average of the Portland and Seavey Island values.
+	const waterTemp = (portlandCurrent.waterTemp.value + seaveyIslandCurrent.waterTemp.value) / 2;
+
+	// /*
+	// 	We've got to somehow match up the OFS and astronomical extreme data. They likely have slightly different times.
+	// 	Also, we don't have an OFS extreme for every astronomical extreme.
+	// */
+	// const extremaComp: TidePointExtremeComp[] = [];
+
+	// // Offset each extreme so we always know the order is ofs->astro.
+	// const offsetOfsExtrema = ofsExtrema.map((point) => {
+	// 	return {
+	// 		...point,
+	// 		offsetTime: point.time.minus({ hour: 1 })
+	// 	};
+	// });
+	// let ofsExtremaIndex = 0;
+	// wellsExtrema.forEach((wellsAstroExtreme) => {
+	// 	const ofs = offsetOfsExtrema[ofsExtremaIndex];
+	// 	if (!ofs || ofs.offsetTime > wellsAstroExtreme.time) {
+	// 		// No OFS extreme to use
+	// 		extremaComp.push({
+	// 			...wellsAstroExtreme,
+	// 			astro: {
+	// 				height: wellsAstroExtreme.height,
+	// 				time: wellsAstroExtreme.time
+	// 			},
+	// 			ofs: null
+	// 		});
+	// 		return;
+	// 	}
+
+	// 	// We have two extremes to merge
+	// 	// Set up for next
+	// 	ofsExtremaIndex++;
+
+	// 	// Let's just do an average of these values.
+	// 	const compTime = DateTime.fromMillis((wellsAstroExtreme.time.toMillis() + ofs.time.toMillis()) / 2, { zone: wellsAstroExtreme.time.zone });
+	// 	const compHeight = (wellsAstroExtreme.height + ofs.height) / 2;
+
+	// 	extremaComp.push({
+	// 		id: createTidePointExtremeId(compTime, 'comp'),
+	// 		time: compTime,
+	// 		height: compHeight,
+	// 		isLow: wellsAstroExtreme.isLow,
+	// 		astro: {
+	// 			height: wellsAstroExtreme.height,
+	// 			time: wellsAstroExtreme.time
+	// 		},
+	// 		ofs: {
+	// 			height: ofs.height,
+	// 			time: ofs.time
+	// 		}
+	// 	});
+	// });
+	//const computedCurrent = getComputedBetweenPredictions(config, extremaComp);
+
+	const wellsAstroComputed = getComputedBetweenPredictions(config.referenceTime, wellsExtrema);
 
 	/*
-		We've got to somehow match up the OFS and astronomical extreme data. They likely have slightly different times.
-		Also, we don't have an OFS extreme for every astronomical extreme.
+		The Seavey Island and Portland values are the only real observations we have, so they are important.
+		Having two, and them being on either side of the Wells location, means we can just do some averaging.
+
+		Let's get a factor by which each water level measurement is above / below its astronomical prediction,
+		and then apply those factors to the Wells astronomical prediction.
+
+		--- 
+
+		According to the bottom of https://tidesandcurrents.noaa.gov/datum_options.html, it's nearly impossible to
+		accurately compare one station's values to another. There are so many potential variation points.
+		
+		Then there's the difference of it being slightly more "in the bay", though this seems somewhat negligible:
+		https://tidesandcurrents.noaa.gov/ofs/ofs_mapplots.html?ofsregion=gom&subdomain=0&model_type=wl_nowcast
+
 	*/
-	const extremaComp: TidePointExtremeComp[] = [];
 
-	// Offset each extreme so we always know the order is ofs->astro.
-	const offsetOfsExtrema = ofsExtrema.map((point) => {
-		return {
-			...point,
-			offsetTime: point.time.minus({ hour: 1 })
-		};
-	});
-	let ofsExtremaIndex = 0;
-	wellsExtrema.forEach((wellsAstroExtreme) => {
-		const ofs = offsetOfsExtrema[ofsExtremaIndex];
-		if (!ofs || ofs.offsetTime > wellsAstroExtreme.time) {
-			// No OFS extreme to use
-			extremaComp.push({
-				...wellsAstroExtreme,
-				astro: {
-					height: wellsAstroExtreme.height,
-					time: wellsAstroExtreme.time
-				},
-				ofs: null
-			});
-			return;
-		}
+	// Get the computed value at the measurement time, not the reference time, so we can compare to our own measurement.
+	const portlandComputed = getComputedBetweenPredictions(portlandCurrent.waterLevel.time, portlandExtrema);
+	// Now get the difference factor.
+	const portlandDifferenceFactor = portlandCurrent.waterLevel.value / portlandComputed.height;
 
-		// We have two extremes to merge
-		// Set up for next
-		ofsExtremaIndex++;
+	// Same for Seavey Island.
+	const seaveyIslandComputed = getComputedBetweenPredictions(seaveyIslandCurrent.waterLevel.time, seaveyIslandExtrema);
+	const seaveyIslandDifferenceFactor = seaveyIslandCurrent.waterLevel.value / seaveyIslandComputed.height;
 
-		// Let's just do an average of these values.
-		const compTime = DateTime.fromMillis((wellsAstroExtreme.time.toMillis() + ofs.time.toMillis()) / 2, { zone: wellsAstroExtreme.time.zone });
-		const compHeight = (wellsAstroExtreme.height + ofs.height) / 2;
+	// Now, Seavey Island is about half the distance from Wells as Portland is. So let's wright it slightly higher.
+	const combinedDifferenceFactor = (portlandDifferenceFactor * 0.4) + (seaveyIslandDifferenceFactor * 0.6);
 
-		extremaComp.push({
-			id: createTidePointExtremeId(compTime, 'comp'),
-			time: compTime,
-			height: compHeight,
-			isLow: wellsAstroExtreme.isLow,
-			astro: {
-				height: wellsAstroExtreme.height,
-				time: wellsAstroExtreme.time
-			},
-			ofs: {
-				height: ofs.height,
-				time: ofs.time
-			}
-		});
-	});
+	// And now, apply to the Wells astronomical prediction to get a rough current value.
+	let current = wellsAstroComputed.height * combinedDifferenceFactor;
+	current = Math.round(current * 100) / 100;
 
-	const computedCurrent = getComputedBetweenPredictions(config, extremaComp);
-	const wellsAstroComputed = getComputedBetweenPredictions(config, wellsExtrema);
-	// Let this be our height if we can't scale by portland at all.
-	let current = computedCurrent.height;
 
-	let portlandAdjusted: number | null = null;
-	let portlandComputed: TidePointFromExtremes | null = null;
-	if (portlandCurrent) {
-		/*
-			What's the goal of using Portland? Well, it's close by, and it's the only real measurement we have.
-			So if we can adjust it to Wells somehow, we can maybe get more accurate information.
-			The main way we can see this helping is after storms when water levels have increased in multiple areas - if we 
-			can detect that in Portland, we can adjust for it in Wells also.
+	// if (portlandCurrent) {
 
-			For our users, it might make even more confusion, because not only does it seems like we're not using the regular
-			hi/lo charts, but if the Portland value changes the value we say is the "current water level", then it would seem like
-			those adjusted hi/lo that we use are still not fully accurate. But oh well.
+	// 	const { nextExtreme, height } = portlandComputed;
 
-			For compensation:
+	// 	/*
+	// 		For the time: let's just do something simple and rough. Pull our Portland value toward the next extreme (linearly) based on the time diff.
+	// 		This will mean that when the Portland value is at the extremes and is outside the range (like it's reporting 12 feet but the high is only supposed to be 10)
+	// 		the portland value will become a bit more muted, but just by the amount of the time difference.
+	// 	*/
+	// 	const secondsBetweenMeasuredAndReferenceTime = config.referenceTime.diff(portlandCurrent.time, 'seconds').seconds;
+	// 	const secondsBetweenMeasuredAndNextExtremeTime = nextExtreme.time.diff(portlandCurrent.time, 'seconds').seconds;
+	// 	const percentDiff = secondsBetweenMeasuredAndReferenceTime / secondsBetweenMeasuredAndNextExtremeTime;
+	// 	const range = Math.abs(nextExtreme.height - portlandCurrent.value);
+	// 	const offsetAmount = (nextExtreme.isLow ? -1 : 1) * range * percentDiff;
+	// 	const portlandAdjustedForTime = portlandCurrent.value + offsetAmount;
 
-			Portland value is (1) a different height system and (2) a little later than the computed values.
-			That we know for sure. But we don't really know about *to what extent* those are factors.
+	// 	/*
+	// 		So we have adjusted for time, and potentially slightly muted the portland value (as in, brought it closer to the astronomical value).
+	// 		Now compare it to that astronomical value, and get some sort of factor of "how portland's measured value is differing from astronomical expectation".
+	// 		We can take that factor and apply it to the Wells astronomical expectation to get some value like "how Wells water level is likely differing from 
+	// 		astronomical expectation", and we can modify our computed current value accordingly.
 
-			For the height:
-			According to the bottom of https://tidesandcurrents.noaa.gov/datum_options.html, it's nearly impossible to
-			accurately compare one station's values to another. There are so many potential variation points.
-			
-			Then there's the difference of it being slightly more "in the bay", though this seems somewhat negligible:
-			https://tidesandcurrents.noaa.gov/ofs/ofs_mapplots.html?ofsregion=gom&subdomain=0&model_type=wl_nowcast
+	// 		Now compare this to the computed (astronomical) height, and use that to push up/down our understanding of Wells.
 
-		*/
-		portlandComputed = getComputedBetweenPredictions(config, portlandExtrema);
-		const { nextExtreme, height } = portlandComputed;
+	// 	*/
+	// 	const portlandAdjustedToAstroFactor = portlandAdjustedForTime / height;
+	// 	portlandAdjusted = wellsAstroComputed.height * portlandAdjustedToAstroFactor;
 
-		/*
-			For the time: let's just do something simple and rough. Pull our Portland value toward the next extreme (linearly) based on the time diff.
-			This will mean that when the Portland value is at the extremes and is outside the range (like it's reporting 12 feet but the high is only supposed to be 10)
-			the portland value will become a bit more muted, but just by the amount of the time difference.
-		*/
-		const secondsBetweenMeasuredAndReferenceTime = config.referenceTime.diff(portlandCurrent.time, 'seconds').seconds;
-		const secondsBetweenMeasuredAndNextExtremeTime = nextExtreme.time.diff(portlandCurrent.time, 'seconds').seconds;
-		const percentDiff = secondsBetweenMeasuredAndReferenceTime / secondsBetweenMeasuredAndNextExtremeTime;
-		const range = Math.abs(nextExtreme.height - portlandCurrent.value);
-		const offsetAmount = (nextExtreme.isLow ? -1 : 1) * range * percentDiff;
-		const portlandAdjustedForTime = portlandCurrent.value + offsetAmount;
-
-		/*
-			So we have adjusted for time, and potentially slightly muted the portland value (as in, brought it closer to the astronomical value).
-			Now compare it to that astronomical value, and get some sort of factor of "how portland's measured value is differing from astronomical expectation".
-			We can take that factor and apply it to the Wells astronomical expectation to get some value like "how Wells water level is likely differing from 
-			astronomical expectation", and we can modify our computed current value accordingly.
-
-			Now compare this to the computed (astronomical) height, and use that to push up/down our understanding of Wells.
-
-		*/
-		const portlandAdjustedToAstroFactor = portlandAdjustedForTime / height;
-		portlandAdjusted = wellsAstroComputed.height * portlandAdjustedToAstroFactor;
-
-		const oldCurrent = current;
-		// At this point we don't have a ton of logic guiding us.... it's just a "this should hopefully be close enough" thing.
-		// We're saying it's half "astro/OFS data" and half "what portland is telling us it should be in Wells".
-		current = (oldCurrent + portlandAdjusted) / 2;
-		current = Math.round(current * 100) / 100;
-	}
+	// }
 
 	return {
 		waterTemp,
 		current,
-		extrema: extremaComp,
+		extrema: wellsExtrema,
 		source: {
-			computed: computedCurrent,
-			ofsComputed: getComputedBetweenPredictions(config, ofsExtrema),
-			astroComputed: wellsAstroComputed,
-			portland: portlandCurrent ? { height: portlandCurrent.value, time: portlandCurrent.time } : null,
-			portlandAdjustment: portlandCurrent ? portlandAdjusted : null,
-			portlandComputed: portlandComputed,
-			ofsInterval: {
-				height: ofsWaterLevel,
-				time: ofsWaterLevelTime
+			wellsAstroComputed,
+			combinedDifferenceFactor,
+			portland: {
+				waterTemp: portlandCurrent.waterTemp,
+				waterLevel: { height: portlandCurrent.waterLevel.value, time: portlandCurrent.waterLevel.time },
+				astroComputed: portlandComputed,
+				waterLevelDifferenceFactor: portlandDifferenceFactor
 			},
-			ofsEntryTimeUtc: forecastEntryTimeUtc,
-			ofsRetries: retries,
-			ofsStation: station,
-			ofsOffset: approxStationOffset,
+			seaveyIsland: {
+				waterTemp: seaveyIslandCurrent.waterTemp,
+				waterLevel: { height: seaveyIslandCurrent.waterLevel.value, time: seaveyIslandCurrent.waterLevel.time },
+				astroComputed: seaveyIslandComputed,
+				waterLevelDifferenceFactor: seaveyIslandDifferenceFactor
+			}
 		}
 	} satisfies TideFetched;
 }
-
 
 /**
  * Based on the reference time, get what we think the height is.
  * This logic is based off the same logic used for beach access height time.
  */
-export function getComputedBetweenPredictions(config: BaseConfig, extrema: TidePointExtreme[]): TidePointFromExtremes {
-	const { referenceTime } = config;
+export function getComputedBetweenPredictions(time: DateTime, extrema: TidePointExtreme[]): TidePointFromExtremes {
 
 	// get previous and next
 	let previous: TidePointExtreme = null!;
 	let next: TidePointExtreme = null!;
 
 	for (let i = 0; i < extrema.length; i++) {
-		if (extrema[i].time >= referenceTime) {
+		if (extrema[i].time >= time) {
 			previous = extrema[i - 1];
 			next = extrema[i];
 			break;
@@ -230,8 +234,8 @@ export function getComputedBetweenPredictions(config: BaseConfig, extrema: TideP
 	return {
 		previousExtreme: previous,
 		nextExtreme: next,
-		time: referenceTime,
-		height: computeHeightAtTimeBetweenPredictions(previous, next, referenceTime)
+		time: time,
+		height: computeHeightAtTimeBetweenPredictions(previous, next, time)
 	};
 }
 

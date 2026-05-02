@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { constant, TidePoint, TidePointExtremeComp } from '@wbtdevlocal/iso';
+import { TidePoint, TidePointExtreme } from '@wbtdevlocal/iso';
 import { BaseConfig } from '../config';
 import { combineSeed, randomizer, TestSeed } from '../test/randomize';
 import { getStartOfDayBefore } from '../time';
@@ -28,7 +28,7 @@ export function createTides(config: BaseConfig, seed: TestSeed): TideFetched {
 
 	const startHighOrLowOffset = tideRandomizer.randomInt(0, 1, true);
 
-	const extrema = eventTimes.map<TidePointExtremeComp>((time, index) => {
+	const extrema = eventTimes.map<TidePointExtreme>((time, index) => {
 		const isLow = (index + startHighOrLowOffset) % 2 === 0;
 		const height = isLow ? tideRandomizer.randomFloat(-.5, 1.5, 1, true) : tideRandomizer.randomFloat(7, 11, 1, true);
 
@@ -41,18 +41,16 @@ export function createTides(config: BaseConfig, seed: TestSeed): TideFetched {
 			};
 		}
 
-		const extreme: TidePointExtremeComp = {
+		const extreme: TidePointExtreme = {
 			id: createTidePointExtremeId(time, 'test'),
 			time,
 			height: ofs ? ofs.height : height,
-			isLow,
-			astro: { time, height },
-			ofs
+			isLow
 		};
 		return extreme;
 	});
 
-	const computed = getComputedBetweenPredictions(config, extrema);
+	const computed = getComputedBetweenPredictions(config.referenceTime, extrema);
 
 	const waterTemp = tideRandomizer.randomInt(45, 70, true);
 
@@ -60,17 +58,31 @@ export function createTides(config: BaseConfig, seed: TestSeed): TideFetched {
 		waterTemp,
 		current: tideRandomizer.shake(-5, 11, 1, computed.height, .25, true),
 		source: {
-			ofsRetries: 0,
-			ofsOffset: 1000,
-			ofsEntryTimeUtc: referenceTime.setZone('utc'),
-			ofsStation: { lat: constant.latitude, lon: constant.longitude },
-			portland: { height: computed.height, time: referenceTime },
-			portlandAdjustment: 0,
-			portlandComputed: null,
-			astroComputed: computed,
-			computed: computed,
-			ofsComputed: computed,
-			ofsInterval: { height: computed.height, time: referenceTime },
+			wellsAstroComputed: computed,
+			combinedDifferenceFactor: 1,
+			portland: {
+				waterLevel: { height: computed.height, time: referenceTime },
+				waterLevelDifferenceFactor: 0,
+				astroComputed: computed,
+				waterTemp: { value: waterTemp, time: referenceTime }
+			},
+			seaveyIsland: {
+				waterLevel: { height: computed.height, time: referenceTime },
+				waterLevelDifferenceFactor: 0,
+				astroComputed: computed,
+				waterTemp: { value: waterTemp, time: referenceTime }
+			}
+			// ofsRetries: 0,
+			// ofsOffset: 1000,
+			// ofsEntryTimeUtc: referenceTime.setZone('utc'),
+			// ofsStation: { lat: constant.latitude, lon: constant.longitude },
+			// portland: { waterLevel: computed.height, time: referenceTime },
+			// portlandAdjustment: 0,
+			// portlandComputed: null,
+			// astroComputed: computed,
+			// computed: computed,
+			// ofsComputed: computed,
+			// ofsInterval: { height: computed.height, time: referenceTime },
 		},
 		extrema
 	};

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useBatchResponseSuccess } from '@/index/core/data/data';
 import { Panel, SpacePanelEdge } from '@/index/core/layout/layout-panel';
 import { fontStyles } from '@/index/core/text/text-shared';
-import { TidePointExtremeComp } from '@wbtdevlocal/iso';
+import { TidePointExtreme } from '@wbtdevlocal/iso';
 import { TideChart } from '../common/tide/tide-chart';
 import { TideHeightTextUnit } from '../common/tide/tide-common';
 
@@ -19,7 +19,7 @@ export const NowTideLevels: React.FC = () => {
 		getTideExtremeById(previousId),
 		currentId ? getTideExtremeById(currentId) : undefined,
 		getTideExtremeById(nextId),
-	].filter(x => !!x) as TidePointExtremeComp[];
+	].filter(x => !!x) as TidePointExtreme[];
 
 	const { min, max } = week.tideRange;
 
