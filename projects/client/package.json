@@ -1,6 +1,6 @@
 {
 	"name": "@wbtdevlocal/client",
-	"version": "2023.10.23",
+	"version": "2026.05.02",
 	"description": "A mobile-first web app that uses NOAA data to show a simple view of tide information.",
 	"main": "dist/index.js",
 	"scripts": {
